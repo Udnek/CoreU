@@ -3,7 +3,7 @@ package me.udnek.coreu.rpgu.component.ability.property.type;
 import me.udnek.coreu.custom.attribute.CustomAttribute;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.registry.AbstractRegistrable;
-import me.udnek.coreu.rpgu.component.ability.Ability;
+import me.udnek.coreu.rpgu.component.ability.RPGUItemAbility;
 import me.udnek.coreu.rpgu.component.ability.property.AttributeBasedProperty;
 import me.udnek.coreu.rpgu.component.ability.property.function.Modifiers;
 import me.udnek.coreu.rpgu.component.ability.property.function.MultiLineDescription;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.function.Function;
 
-public class AttributeBasedPropertyType extends AbstractRegistrable implements CustomComponentType<Ability<?>, AttributeBasedProperty> {
+public class AttributeBasedPropertyType extends AbstractRegistrable implements CustomComponentType<RPGUItemAbility<?>, AttributeBasedProperty> {
 
     protected AttributeBasedProperty defaultComponent;
     protected String rawId;
@@ -29,7 +29,7 @@ public class AttributeBasedPropertyType extends AbstractRegistrable implements C
         this.translation = translation;
         this.divideValueBy20 = divideValueBy20;
         this.attribute = attribute;
-        defaultComponent =  new AttributeBasedProperty(defaultValue, this);
+        defaultComponent = new AttributeBasedProperty(defaultValue, this);
     }
 
 

@@ -1,8 +1,6 @@
 package me.udnek.coreu.custom.component;
 
 import me.udnek.coreu.CoreU;
-import me.udnek.coreu.mgu.ability.MGUAbilityHolderComponent;
-import me.udnek.coreu.mgu.player.MGUPlayer;
 import me.udnek.coreu.custom.component.instance.*;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockType;
 import me.udnek.coreu.custom.item.CustomItem;
@@ -43,11 +41,6 @@ public interface CustomComponentType<HolderType, Component extends CustomCompone
 
     CustomComponentType<CustomBlockType, HopperInteractingBlock>
             HOPPER_INTERACTING_BLOCK = register(new ConstructableComponentType<>("hopper_interacting_block", HopperInteractingBlock.DENY));
-
-    // MGU
-
-    CustomComponentType<MGUPlayer, MGUAbilityHolderComponent> MGU_ABILITY_HOLDER = register(new ConstructableComponentType<>(
-            "mgu_ability_holder", MGUAbilityHolderComponent.DEFAULT, MGUAbilityHolderComponent::new));
 
 
     @NotNull Component getDefault();

@@ -8,19 +8,19 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
-public class Functions {
+public class PropertyFunctions {
 
     public static final boolean IS_DEBUG = false;
 
-    public static @NotNull AttributeFunction ATTRIBUTE(@NotNull CustomAttribute attribute, @NotNull PropertyFunction<LivingEntity, Double> base){
+    public static @NotNull AttributeFunction ATTRIBUTE(@NotNull CustomAttribute attribute, @NotNull RPGUPropertyFunction<LivingEntity, Double> base){
         return new AttributeFunction(attribute, base);
     }
     public static @NotNull AttributeFunction ATTRIBUTE(@NotNull CustomAttribute attribute, double base){
         return new AttributeFunction(attribute, base);
     }
 
-    public static <Context, Value extends Number> @NotNull PropertyFunction<Context, Value> CONSTANT(@NotNull Value value){
-        return new PropertyFunction<>() {
+    public static <Context, Value extends Number> @NotNull RPGUPropertyFunction<Context, Value> CONSTANT(@NotNull Value value){
+        return new RPGUPropertyFunction<>() {
 
             @Override
             public boolean isZeroConstant() {return value.doubleValue() == 0;}
@@ -46,15 +46,14 @@ public class Functions {
 
         };
     }
-    public static <Context> @NotNull PropertyFunction<Context, Integer> CEIL(PropertyFunction<Context, Double> function){
-        return new PropertyFunction<>() {
+    public static <Context> @NotNull RPGUPropertyFunction<Context, Integer> CEIL(RPGUPropertyFunction<Context, Double> function){
+        return new RPGUPropertyFunction<>() {
             @Override
             public boolean isConstant() {return function.isConstant();}
 
             @Override
             public boolean isZeroConstant() {return function.isZeroConstant();}
 
-            @Override
             public @NotNull Integer getBase() {
                 return (int) Math.ceil(function.getBase());
             }
@@ -71,8 +70,8 @@ public class Functions {
             }
         };
     }
-    public static <Context> @NotNull PropertyFunction<Context, Integer> FLOOR(PropertyFunction<Context, Double> function){
-        return new PropertyFunction<>() {
+    public static <Context> @NotNull RPGUPropertyFunction<Context, Integer> FLOOR(RPGUPropertyFunction<Context, Double> function){
+        return new RPGUPropertyFunction<>() {
 
             @Override
             public boolean isZeroConstant() {return function.isZeroConstant();}
@@ -80,7 +79,6 @@ public class Functions {
             @Override
             public boolean isConstant() {return function.isConstant();}
 
-            @Override
             public @NotNull Integer getBase() {
                 return (int) Math.floor(function.getBase());
             }

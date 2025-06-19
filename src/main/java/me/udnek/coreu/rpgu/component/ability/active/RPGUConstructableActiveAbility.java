@@ -1,12 +1,12 @@
 package me.udnek.coreu.rpgu.component.ability.active;
 
-import me.udnek.coreu.rpgu.component.ability.AbstractAbility;
+import me.udnek.coreu.rpgu.component.ability.RPGUItemAbstractAbility;
 import me.udnek.coreu.rpgu.lore.ability.ActiveAbilityLorePart;
 import me.udnek.coreu.util.LoreBuilder;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class ConstructableActiveAbility<ActivationContext> extends AbstractAbility<ActivationContext> implements ActiveAbility<ActivationContext>{
+public abstract class RPGUConstructableActiveAbility<ActivationContext> extends RPGUItemAbstractAbility<ActivationContext> implements RPGUItemActiveAbility<ActivationContext> {
 
     public void addLoreLines(@NotNull ActiveAbilityLorePart componentable){
         getComponents().forEach(c -> c.describe(componentable));

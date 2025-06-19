@@ -1,13 +1,13 @@
 package me.udnek.coreu.rpgu.component.ability.passive;
 
-import me.udnek.coreu.rpgu.component.ability.AbstractAbility;
+import me.udnek.coreu.rpgu.component.ability.RPGUItemAbstractAbility;
 import me.udnek.coreu.rpgu.lore.AttributesLorePart;
 import me.udnek.coreu.rpgu.lore.ability.PassiveAbilityLorePart;
 import me.udnek.coreu.util.LoreBuilder;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class ConstructablePassiveAbility<ActivationContext> extends AbstractAbility<ActivationContext> implements PassiveAbility<ActivationContext> {
+public abstract class RPGUConstructablePassiveAbility<ActivationContext> extends RPGUItemAbstractAbility<ActivationContext> implements RPGUItemPassiveAbility<ActivationContext> {
 
 
     public void addLoreLines(@NotNull PassiveAbilityLorePart componentable){
@@ -26,7 +26,8 @@ public abstract class ConstructablePassiveAbility<ActivationContext> extends Abs
             lorePart = attributesLorePart;
         }
 
-        lorePart.setEquipmentSlot(getSlot());
+        // TODO WORK AROUND SET<SLOT>
+        lorePart.setEquipmentSlot(getSlot().stream().findFirst().orElseThrow());
         lorePart.setHeader(Component.translatable("passive_ability.rpgu.title"));
         addLoreLines(lorePart);
     }

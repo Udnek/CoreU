@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
-public interface PropertyFunction<Context, Value> extends Function<Context, Value> {
+public interface RPGUPropertyFunction<Context, Value> extends Function<Context, Value> {
     @NotNull Value getBase();
     @Override
     @NotNull Value apply(@NotNull Context context);

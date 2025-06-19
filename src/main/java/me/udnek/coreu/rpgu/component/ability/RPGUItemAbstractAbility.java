@@ -4,15 +4,19 @@ import me.udnek.coreu.custom.component.AbstractComponentHolder;
 import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.custom.equipmentslot.slot.SingleSlot;
 import me.udnek.coreu.custom.equipmentslot.universal.UniversalInventorySlot;
-import me.udnek.coreu.rpgu.component.RPGUComponentTypes;
-import me.udnek.coreu.rpgu.component.ability.property.AbilityProperty;
+import me.udnek.coreu.rpgu.component.RPGUComponents;
+import me.udnek.coreu.rpgu.component.ability.property.RPGUAbilityProperty;
 import me.udnek.coreu.util.Either;
+import me.udnek.coreu.util.LoreBuilder;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class AbstractAbility<ActivationContext> extends AbstractComponentHolder<Ability<?>, AbilityProperty<?, ?>> implements Ability<ActivationContext> {
+public abstract class RPGUItemAbstractAbility<ActivationContext> extends AbstractComponentHolder<RPGUItemAbility<?>, RPGUAbilityProperty<?, ?>> implements RPGUItemAbility<ActivationContext> {
+
+    private static final int INFINITE_COOLDOWN = 100*60*60*20;
+    private static final int INFINITE_COOLDOWN_THRESHOLD = INFINITE_COOLDOWN/2;
 
     public void activate(@NotNull CustomItem customItem,
                          @NotNull LivingEntity livingEntity,
@@ -31,12 +35,14 @@ public abstract class AbstractAbility<ActivationContext> extends AbstractCompone
             return;
         }
         ActionResult result = action(customItem, player, slot, activationContext);
-        if (result == ActionResult.FULL_COOLDOWN || result == ActionResult.PENALTY_COOLDOWN){
-            double cooldown = getComponents().getOrDefault(RPGUComponentTypes.ABILITY_COOLDOWN).get(player);
-            if (result == ActionResult.PENALTY_COOLDOWN) cooldown = cooldown * getComponents().getOrDefault(RPGUComponentTypes.ABILITY_MISS_USAGE_COOLDOWN_MULTIPLIER).get(player);
-            if (cooldown > 0) customItem.setCooldown(player, (int) cooldown);
+        if (result == ActionResult.INFINITE_COOLDOWN) infiniteCooldown(customItem, player);
+        else if (result == ActionResult.FULL_COOLDOWN || result == ActionResult.PENALTY_COOLDOWN){
+            double cooldown = getComponents().getOrDefault(RPGUComponents.ABILITY_COOLDOWN_TIME).get(player);
+            if (result == ActionResult.PENALTY_COOLDOWN) cooldown = cooldown * getComponents().getOrDefault(RPGUComponents.ABILITY_MISS_USAGE_COOLDOWN_MULTIPLIER).get(player);
+            if (cooldown > 0) cooldown(customItem, player, (int) Math.ceil(cooldown));
         }
     }
+
     @Override
     public void activate(@NotNull CustomItem customItem, @NotNull LivingEntity livingEntity, @NotNull Either<UniversalInventorySlot, SingleSlot> slot, @NotNull ActivationContext activationContext){
         activate(customItem, livingEntity, false, slot, activationContext);
@@ -45,7 +51,14 @@ public abstract class AbstractAbility<ActivationContext> extends AbstractCompone
     protected abstract @NotNull ActionResult action(@NotNull CustomItem customItem, @NotNull LivingEntity livingEntity,
                                                  @NotNull Either<UniversalInventorySlot, SingleSlot> slot, @NotNull ActivationContext activationContext);
 
+
+    @Override
+    public void getLore(@NotNull LoreBuilder loreBuilder) {
+
+    }
+
     public enum ActionResult {
+        INFINITE_COOLDOWN,
         FULL_COOLDOWN,
         PENALTY_COOLDOWN,
         NO_COOLDOWN

@@ -7,44 +7,46 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
-public class AttributeFunction implements PropertyFunction<LivingEntity, Double> {
+public class AttributeFunction implements RPGUPropertyFunction<LivingEntity, Double> {
 
     protected CustomAttribute attribute;
-    protected PropertyFunction<LivingEntity, Double> base;
+    protected RPGUPropertyFunction<LivingEntity, Double> function;
 
-    public AttributeFunction(@NotNull CustomAttribute attribute, @NotNull PropertyFunction<LivingEntity, Double> base){
+    public AttributeFunction(@NotNull CustomAttribute attribute, @NotNull RPGUPropertyFunction<LivingEntity, Double> function){
         this.attribute = attribute;
-        this.base = base;
+        this.function = function;
     }
 
     public AttributeFunction(@NotNull CustomAttribute attribute, double base){
-        this(attribute, Functions.CONSTANT(base));
+        this(attribute, PropertyFunctions.CONSTANT(base));
     }
 
     @Override
+    public @NotNull Double getBase() {return function.getBase();}
+
+    @Override
     public boolean isConstant() {
-        return isZeroConstant();
+        return function.isConstant();
     }
 
     @Override
     public boolean isZeroConstant() {
-        return base.isZeroConstant();
+        return function.isZeroConstant();
     }
 
-    @Override
-    public @NotNull Double getBase() {
-        return base.getBase();
+    public @NotNull Double getFunction() {
+        return function.getBase();
     }
 
     @Override
     public @NotNull Double apply(@NotNull LivingEntity livingEntity) {
-        return attribute.calculateWithBase(livingEntity, base.apply(livingEntity));
+        return attribute.calculateWithBase(livingEntity, function.apply(livingEntity));
     }
 
     @Override
     public @NotNull MultiLineDescription describeWithModifier(@NotNull Function<Double, Double> modifier) {
-        if (Functions.IS_DEBUG) return base.describeWithModifier(modifier).addToBeginning(Component.text("attr(")).add(Component.text(")"));
-        return base.describeWithModifier(modifier);
+        if (PropertyFunctions.IS_DEBUG) return function.describeWithModifier(modifier).addToBeginning(Component.text("attr(")).add(Component.text(")"));
+        return function.describeWithModifier(modifier);
     }
 }
 
