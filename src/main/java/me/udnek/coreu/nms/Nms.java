@@ -544,17 +544,16 @@ public class Nms {
     }
 
 
-    public void follow(@NotNull org.bukkit.entity.Mob follower, @NotNull org.bukkit.entity.Entity target){
+    public void moveTo(@NotNull org.bukkit.entity.Mob follower, @NotNull Location location){
         PathNavigation followerNavigation = ((Mob) ((CraftEntity) follower).getHandle()).getNavigation();
-        Location targetLocation = target.getLocation();
-        Path path = followerNavigation.createPath(targetLocation.getX(), targetLocation.getY(), targetLocation.getZ(), 0);
+        Path path = followerNavigation.createPath(location.getX(), location.getY(), location.getZ(), 0);
         if (path != null) followerNavigation.moveTo(path, 1D);
     }
 
-    public void stop(@NotNull org.bukkit.entity.Mob follower) {
-        PathNavigation followerNavigation = ((Mob) ((CraftEntity) follower).getHandle()).getNavigation();
-        followerNavigation.moveTo((Path) null, 1D);
+    public void stopMoving(@NotNull org.bukkit.entity.Mob mob) {
+        ((Mob) NmsUtils.toNmsEntity(mob)).getNavigation().moveTo((Path) null, 1D);
     }
+
 
     ///////////////////////////////////////////////////////////////////////////
     // BIOME
