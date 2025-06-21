@@ -64,7 +64,7 @@ public class CoordinateWand extends ConstructableCustomItem {
 
             Component component = Component.text("Location: ").color(NamedTextColor.GOLD);
             TextComponent copy = Component.text("[X: " + x + ", Y: " + y + ", Z: " + z + ", Yaw: " + round(location.getYaw()) + ", Pitch: "
-                            + round(location.getPitch()) + "]")
+                            + round(location.getPitch()) + ", Player Facing " + player.getFacing() + "]")
                     .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, x + ", " + y + ", " + z + ", " + round(location.getYaw()) + ", "
                             + round(location.getPitch())));
 

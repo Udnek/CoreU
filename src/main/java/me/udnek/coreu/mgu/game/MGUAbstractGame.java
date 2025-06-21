@@ -39,7 +39,7 @@ public abstract class MGUAbstractGame implements MGUGameInstance{
             }
             case LEAVE -> leave(Objects.requireNonNull(context.mguPlayer()), context);
             case DEBUG -> {
-                getDebug().forEach(component -> context.sender().sendMessage(component));
+                getDebug(context).forEach(component -> context.sender().sendMessage(component));
                 yield MGUCommandType.ExecutionResult.SUCCESS;
             }
             case COORDINATE_WAND -> {
@@ -66,7 +66,7 @@ public abstract class MGUAbstractGame implements MGUGameInstance{
     }
 
 
-    public @NotNull List<Component> getDebug(){
+    public @NotNull List<Component> getDebug(MGUCommandContext context){
         List<Component> list = new ArrayList<>();
         list.add(Component.text("Game debug data: " + getId()));
         list.add(Component.text("isRunning: " + isRunning));
