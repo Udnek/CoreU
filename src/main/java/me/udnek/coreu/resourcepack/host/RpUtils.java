@@ -116,19 +116,23 @@ public class RpUtils {
         return hexString.toString();
     }
 
-    public static void updateServerProperties() throws IOException {
-        RPInfo rpInfo = SerializableDataManager.read(new RPInfo(), CoreU.getInstance());
+    public static void updateServerProperties(){
+        try {
+            RPInfo rpInfo = SerializableDataManager.read(new RPInfo(), CoreU.getInstance());
 
-        Properties properties = new Properties();
-        FileInputStream inStream = new FileInputStream("server.properties");
-        properties.load(inStream);
-        inStream.close();
+            Properties properties = new Properties();
+            FileInputStream inStream = new FileInputStream("server.properties");
+            properties.load(inStream);
+            inStream.close();
 
-        properties.setProperty("resource-pack", "http://" + rpInfo.ip + ":" + rpInfo.port + "/1");
-        properties.setProperty("resource-pack-sha1", rpInfo.checksum_zip);
+            properties.setProperty("resource-pack", "http://" + rpInfo.ip + ":" + rpInfo.port + "/1");
+            properties.setProperty("resource-pack-sha1", rpInfo.checksum_zip);
 
-        FileOutputStream fos = new FileOutputStream("server.properties");
-        properties.store(fos, "pohui");
-        fos.close();
+            FileOutputStream fos = new FileOutputStream("server.properties");
+            properties.store(fos, "pohui");
+            fos.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

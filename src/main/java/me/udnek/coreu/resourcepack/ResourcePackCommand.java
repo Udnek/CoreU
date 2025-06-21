@@ -61,12 +61,12 @@ public class ResourcePackCommand implements TabExecutor, CommandExecutor {
                 info.checksum_zip = RpUtils.calculateZipFolderSHA(zipFilePath.toFile());
             }
             info.checksum_folder = checksum;
-            RpUtils.updateServerProperties();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
         SerializableDataManager.write(info, CoreU.getInstance());
+        RpUtils.updateServerProperties();
 
         LogUtils.pluginWarning("If your sound does not play, remove '<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>' in plugin's pom!");
         return true;
