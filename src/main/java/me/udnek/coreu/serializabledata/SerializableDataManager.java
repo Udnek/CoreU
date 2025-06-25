@@ -27,6 +27,7 @@ public class SerializableDataManager {
         return data;
     }
     private static @Nullable String readRaw(@NotNull String path){
+        loadConfig();
         return config.getString(path);
     }
     ///////////////////////////////////////////////////////////////////////////
@@ -39,7 +40,9 @@ public class SerializableDataManager {
         writeRaw(data, getPath(data, plugin));
     }
     private static void writeRaw(@NotNull SerializableData serializableData, @NotNull String path){
+        loadConfig();
         config.set(path, serializableData.serialize());
+        saveConfig();
     }
     ///////////////////////////////////////////////////////////////////////////
     // INITIAL
@@ -63,7 +66,10 @@ public class SerializableDataManager {
         return String.join(".", path);
     }
 
-    public static void loadConfig() {config = CoreU.getInstance().getConfig();}
+    public static void loadConfig() {
+        config = CoreU.getInstance().getConfig();
+    }
     public static void saveConfig() {
-        CoreU.getInstance().saveConfig();}
+        CoreU.getInstance().saveConfig();
+    }
 }

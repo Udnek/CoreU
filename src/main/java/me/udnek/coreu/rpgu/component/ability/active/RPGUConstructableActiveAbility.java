@@ -17,7 +17,7 @@ public abstract class RPGUConstructableActiveAbility<ActivationContext> extends 
     public void getLore(@NotNull LoreBuilder loreBuilder){
         ActiveAbilityLorePart lorePart = new ActiveAbilityLorePart();
         loreBuilder.set(55, lorePart);
-        lorePart.setHeader(Component.translatable("active_ability.rpgu.title"));
+        lorePart.setHeader(Component.translatable("rpgu_active_ability.coreu.title"));
         addLoreLines(lorePart);
     }
 }

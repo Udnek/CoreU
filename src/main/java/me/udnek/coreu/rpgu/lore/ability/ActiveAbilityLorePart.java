@@ -45,7 +45,7 @@ public class ActiveAbilityLorePart implements AbilityLorePart {
 
     @Override
     public void addAbilityDescription(@NotNull String rawItemName, int line){
-        addAbilityDescription(Component.translatable(rawItemName + ".active_ability." + line));
+        addAbilityDescription(Component.translatable(rawItemName + ".rpgu_active_ability." + line));
     }
 
     @Override

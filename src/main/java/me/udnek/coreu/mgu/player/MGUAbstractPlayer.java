@@ -37,7 +37,7 @@ public abstract class MGUAbstractPlayer extends AbstractComponentHolder<MGUPlaye
 
     public List<CustomItem> getAllItemAbilities(){
         List<CustomItem> items = new ArrayList<>();
-        for (ItemStack stack : getPlayer().getInventory().getContents()) {
+        for (ItemStack stack : getPlayer().getInventory()) {
             CustomItem.consumeIfCustom(stack, items::add);
         }
         return items;

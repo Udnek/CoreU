@@ -14,11 +14,6 @@ public class RPInfo implements SerializableData {
     public @NotNull String ip = "127.0.0.1";
     public int port = 25566;
 
-    public RPInfo(@NotNull String extractDirectory, @NotNull String checksum){
-        this.extractDirectory = extractDirectory;
-        this.checksum_zip = checksum;
-    }
-
     public RPInfo(){}
 
     @Override
@@ -32,13 +27,12 @@ public class RPInfo implements SerializableData {
     }
     @Override
     public void deserialize(@Nullable String data) {
-        if (data == null) return;
-        Map<String, Object> map = SerializableData.deserializeMap(data);
-        extractDirectory = map.get("extract_directory").toString();
-        checksum_zip = map.get("checksum_zip").toString();
-        checksum_folder = map.get("checksum_folder").toString();
-        ip = map.get("ip").toString();
-        port = Integer.parseInt(map.get("port").toString());
+        Map<String, String> map = SerializableData.deserializeMap(data);
+        extractDirectory = map.getOrDefault("extract_directory", "");
+        checksum_zip = map.getOrDefault("checksum_zip", "");
+        checksum_folder = map.getOrDefault("checksum_folder", "");
+        ip = map.getOrDefault("ip", "127.0.0.1");
+        port = Integer.parseInt(map.getOrDefault("port", "25565"));
     }
     @Override
     public @NotNull String getDataName() {

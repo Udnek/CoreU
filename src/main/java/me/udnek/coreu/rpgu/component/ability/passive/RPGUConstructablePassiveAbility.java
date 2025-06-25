@@ -28,7 +28,7 @@ public abstract class RPGUConstructablePassiveAbility<ActivationContext> extends
 
         // TODO WORK AROUND SET<SLOT>
         lorePart.setEquipmentSlot(getSlot().stream().findFirst().orElseThrow());
-        lorePart.setHeader(Component.translatable("passive_ability.rpgu.title"));
+        lorePart.setHeader(Component.translatable("rpgu_passive_ability.coreu.title"));
         addLoreLines(lorePart);
     }
 }

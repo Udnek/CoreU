@@ -94,9 +94,7 @@ public final class CoreU extends JavaPlugin implements ResourcePackablePlugin {
     }
 
     @Override
-    public void onDisable() {
-        SerializableDataManager.saveConfig();
-    }
+    public void onDisable() {}
 
     @Override
     public @NotNull Priority getPriority() {

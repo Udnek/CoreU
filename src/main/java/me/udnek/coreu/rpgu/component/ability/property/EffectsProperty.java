@@ -65,7 +65,7 @@ public class EffectsProperty implements RPGUAbilityProperty<LivingEntity, List<P
         List<Component> args = new ArrayList<>();
         args.add(Component.translatable(data.type.translationKey()));
 
-        String translation = "ability.rpgu.effects.";
+        String translation = "rpgu_ability_property.coreu.effects.";
         if (!data.amplifier.isZeroConstant()) {
             translation += "with_amplifier";
             args.add(data.amplifier.isConstant() ? Component.translatable("potion.potency." + data.amplifier.getBase()) : data.amplifier.describe().join());
@@ -84,7 +84,7 @@ public class EffectsProperty implements RPGUAbilityProperty<LivingEntity, List<P
     @Override
     public void describe(@NotNull AbilityLorePart componentable) {
         if (effects.size() > 1){
-            componentable.addAbilityStat(Component.translatable("ability.rpgu.effects", Component.empty()));
+            componentable.addAbilityStat(Component.translatable("rpgu_ability_property.coreu.effects", Component.empty()));
             for (int i = 0; i < effects.size(); i++) {
                 componentable.addAbilityStatDoubleTab(describeSingle(i));
             }
@@ -94,7 +94,7 @@ public class EffectsProperty implements RPGUAbilityProperty<LivingEntity, List<P
                 text = text.append(describeSingle(i));
                 if (i != effects.size()-1) text = text.append(Component.text(", "));
             }
-            componentable.addAbilityStat(Component.translatable("ability.rpgu.effects", List.of(text)));
+            componentable.addAbilityStat(Component.translatable("rpgu_ability_property.coreu.effects", List.of(text)));
         }
     }
 

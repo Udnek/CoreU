@@ -184,7 +184,7 @@ public class AttributeLoreGenerator {
     }
 
     public static @NotNull Component addTab(@NotNull Component noOuter){
-        return ComponentU.translatableWithInsertion("equipment.rpgu.description_line", noOuter).decoration(TextDecoration.ITALIC, false);
+        return ComponentU.translatableWithInsertion("rpgu_equipment.coreu.description_tab", noOuter).decoration(TextDecoration.ITALIC, false);
     }
 
 }

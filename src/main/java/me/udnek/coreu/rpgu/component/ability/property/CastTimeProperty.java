@@ -29,7 +29,7 @@ public class CastTimeProperty implements RPGUAbilityProperty<Player, Integer> {
 
     @Override
     public void describe(@NotNull AbilityLorePart componentable) {
-        componentable.addAbilityStat(Component.translatable("ability.rpgu.cast_time", Component.text(Utils.roundToTwoDigits(getBase()/20d))));
+        componentable.addAbilityStat(Component.translatable("rpgu_ability_property.coreu.cast_time", Component.text(Utils.roundToTwoDigits(getBase()/20d))));
     }
 
     @Override

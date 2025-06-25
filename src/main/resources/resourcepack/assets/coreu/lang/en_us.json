@@ -1,5 +1,26 @@
 {
   "slot.coreu.active_hand": "When active:",
   "slot.coreu.dumb_inventory": "When in Inventory:",
-  "item.coreu.coordinate_wand": "Coordinate Wand"
+  "item.coreu.coordinate_wand": "Coordinate Wand",
+
+  "rpgu_equipment.coreu.description_tab": " %s",
+
+  "rpgu_active_ability.coreu.title": "Active Ability:",
+  "rpgu_passive_ability.coreu.title": "Passive Ability:",
+
+  "rpgu_ability_property.coreu.cast_range": "Cast Range: %s blocks",
+  "rpgu_ability_property.coreu.area_of_effect": "AOE: %s blocks",
+  "rpgu_ability_property.coreu.cooldown_time": "Cooldown: %s seconds",
+  "rpgu_ability_property.coreu.cast_time": "Cast Time: %s seconds",
+  "rpgu_ability_property.coreu.duration": "Duration: %s seconds",
+  "rpgu_ability_property.coreu.damage": "Damage: %s",
+  "rpgu_ability_property.coreu.effects": "Effects: %s",
+  "rpgu_ability_property.coreu.effects.with_amplifier_with_duration": "%s %s (%s seconds)",
+  "rpgu_ability_property.coreu.effects.with_amplifier_no_duration": "%s %s",
+  "rpgu_ability_property.coreu.effects.no_amplifier_with_duration": "%s (%s seconds)",
+  "rpgu_ability_property.coreu.effects.no_amplifier_no_duration": "%s",
+
+  "attribute.coreu.name.rpgu_cast_range": "Cast Range",
+  "attribute.coreu.name.rpgu_cooldown_time": "Cooldown Time",
+  "attribute.coreu.name.rpgu_area_of_effect": "Area of Effect"
 }

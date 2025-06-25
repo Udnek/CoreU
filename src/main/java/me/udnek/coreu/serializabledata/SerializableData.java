@@ -1,5 +1,6 @@
 package me.udnek.coreu.serializabledata;
 
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,8 +16,9 @@ public interface SerializableData{
         }
         return builder.toString();
     }
-    static @NotNull Map<String, Object> deserializeMap(@NotNull String string){
-        Map<String, Object> data = new HashMap<>();
+    static @NotNull Map<String, String> deserializeMap(@Nullable String string){
+        if (string == null) return Map.of();
+        Map<String, String> data = new HashMap<>();
         String[] split = string.split(";");
         for (String sub : split) {
             String[] keyAndValue = sub.split("=");
@@ -27,6 +29,14 @@ public interface SerializableData{
 
     @NotNull String serialize();
     void deserialize(@Nullable String data);
+
+    default void write(@NotNull Plugin plugin){
+        SerializableDataManager.write(this, plugin);
+    }
+
+    default void read(@NotNull Plugin plugin){
+        SerializableDataManager.read(this, plugin);
+    }
 
     @NotNull String getDataName();
 }
