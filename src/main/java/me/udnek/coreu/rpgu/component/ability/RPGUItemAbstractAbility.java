@@ -53,9 +53,7 @@ public abstract class RPGUItemAbstractAbility<ActivationContext> extends Abstrac
 
 
     @Override
-    public void getLore(@NotNull LoreBuilder loreBuilder) {
-
-    }
+    public void getLore(@NotNull LoreBuilder loreBuilder) {}
 
     public enum ActionResult {
         INFINITE_COOLDOWN,

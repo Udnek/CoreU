@@ -1,5 +1,7 @@
 package me.udnek.coreu;
 
+import com.comphenix.protocol.wrappers.WrappedGameProfile;
+import com.mojang.authlib.GameProfile;
 import me.udnek.coreu.mgu.MGUItems;
 import me.udnek.coreu.mgu.command.MGUCommand;
 import me.udnek.coreu.custom.attribute.ClearAttributeCommand;
@@ -26,6 +28,7 @@ import me.udnek.coreu.nms.PacketHandler;
 import me.udnek.coreu.resourcepack.ResourcePackCommand;
 import me.udnek.coreu.resourcepack.ResourcePackablePlugin;
 import me.udnek.coreu.resourcepack.host.RpHost;
+import me.udnek.coreu.resourcepack.host.RpUtils;
 import me.udnek.coreu.serializabledata.SerializableDataManager;
 import net.kyori.adventure.key.Key;
 import org.bukkit.Bukkit;
@@ -94,7 +97,8 @@ public final class CoreU extends JavaPlugin implements ResourcePackablePlugin {
     }
 
     @Override
-    public void onDisable() {}
+    public void onDisable() {
+    }
 
     @Override
     public @NotNull Priority getPriority() {

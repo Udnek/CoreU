@@ -19,6 +19,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Objects;
 
@@ -61,17 +62,19 @@ public class CoordinateWand extends ConstructableCustomItem {
             String x = round(location.getX() - origin.getFirst());
             String y = round(location.getY() - origin.get(1));
             String z = round(location.getZ() - origin.get(2));
+            String yaw = round(location.getYaw());
+            String pitch = round(location.getPitch());
 
             Component component = Component.text("Location: ").color(NamedTextColor.GOLD);
             TextComponent copy = Component.text(
                     "[X: " + x +
                             ", Y: " + y +
                             ", Z: " + z +
-                            ", Yaw: " + round(location.getYaw()) +
-                            ", Pitch: " + round(location.getPitch()) +
+                            ", Yaw: " + yaw +
+                            ", Pitch: " + pitch +
                             ", PlayerFacing: " + player.getFacing() + "]")
-                    .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, x + ", " + y + ", " + z + ", " + round(location.getYaw()) + ", "
-                            + round(location.getPitch())));
+                    .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD,
+                            x + ", " + y + ", " + z + ", " + yaw + "f, " + pitch+"f"));
 
             event.getPlayer().sendMessage(component.append(copy
                     .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT, Component.text("Click to copy")))
@@ -85,7 +88,7 @@ public class CoordinateWand extends ConstructableCustomItem {
 
             List<Double> origin =  Objects.requireNonNull(event.getItem())
                     .getPersistentDataContainer().get(ORIGIN_KEY, PersistentDataType.LIST.doubles());
-            if (origin == null || origin.isEmpty()) {origin = List.of(0d, 0d, 0d);}
+            if (origin == null || origin.isEmpty()) origin = List.of(0d, 0d, 0d);
 
             String x = round(location.getX() - origin.getFirst());
             String y = round(location.getY() - origin.get(1));
@@ -102,6 +105,9 @@ public class CoordinateWand extends ConstructableCustomItem {
     }
 
     public @NotNull String round(double number) {
-        return  Utils.roundToTwoDigits(number).replace(",", ".");
+        return new DecimalFormat("#.0#").format(number);
+    }
+    public @NotNull String round(float number) {
+        return new DecimalFormat("#.#").format(number);
     }
 }

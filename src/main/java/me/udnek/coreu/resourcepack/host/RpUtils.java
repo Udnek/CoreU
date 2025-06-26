@@ -129,7 +129,7 @@ public class RpUtils {
             properties.setProperty("resource-pack-sha1", rpInfo.checksum_zip);
 
             FileOutputStream fos = new FileOutputStream("server.properties");
-            properties.store(fos, "pohui");
+            properties.store(fos, "");
             fos.close();
         } catch (Exception e) {
             throw new RuntimeException(e);

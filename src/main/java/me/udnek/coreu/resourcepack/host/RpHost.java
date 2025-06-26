@@ -32,6 +32,7 @@ public class RpHost implements HttpHandler {
 
     public void start(){
         if (!Files.exists(getZipFilePath())) LogUtils.pluginWarning("Resourcepack was not generated! Use /resourcepack");
+        RpUtils.updateServerProperties();
 
         try {
             RPInfo rpInfo = SerializableDataManager.read(new RPInfo(), CoreU.getInstance());

@@ -20,6 +20,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,6 +34,7 @@ import static io.papermc.paper.datacomponent.DataComponentTypes.*;
 
 public abstract class ConstructableCustomItem extends AbstractComponentHolder<CustomItem, CustomItemComponent> implements CustomItemProperties, UpdatingCustomItem {
     private String id;
+    private boolean afterInitialized = false;
     protected ItemStack itemStack = null;
     protected List<Recipe> recipes = null;
     protected RepairData repairData = null;
@@ -57,9 +59,12 @@ public abstract class ConstructableCustomItem extends AbstractComponentHolder<Cu
     }
     @OverridingMethodsMustInvokeSuper
     public void initializeComponents(){}
+
+    @MustBeInvokedByOverriders
     @Override
     public void afterInitialization() {
         UpdatingCustomItem.super.afterInitialization();
+        afterInitialized = true;
         initializeComponents();
         repairData = initializeRepairData();
         generateRecipes(this::registerRecipe);
@@ -219,8 +224,10 @@ public abstract class ConstructableCustomItem extends AbstractComponentHolder<Cu
         modifyFinalItemStack(itemStack);
     }
     protected void modifyFinalItemStack(@NotNull ItemStack itemStack){}
+
     protected @NotNull ItemStack getItemNoClone(){
         if (itemStack == null){
+            Preconditions.checkArgument(id != null, "item has not been afterInitialized yet: " + getId());
             initializeItemStack();
             CustomItemGeneratedEvent event = new CustomItemGeneratedEvent(this, itemStack, getLoreBuilder(), getRepairData());
             event.callEvent();

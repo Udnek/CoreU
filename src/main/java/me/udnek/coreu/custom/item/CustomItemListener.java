@@ -101,7 +101,7 @@ public class CustomItemListener extends SelfRegisteringListener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void itemGenerates(CustomItemGeneratedEvent event){
         CustomItem customItem = event.getCustomItem();
         LoreBuilder builder = event.getLoreBuilder();

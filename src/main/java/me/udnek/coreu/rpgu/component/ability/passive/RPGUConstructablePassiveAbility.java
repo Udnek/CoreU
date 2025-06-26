@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public abstract class RPGUConstructablePassiveAbility<ActivationContext> extends RPGUItemAbstractAbility<ActivationContext> implements RPGUItemPassiveAbility<ActivationContext> {
 
 
-    public void addLoreLines(@NotNull PassiveAbilityLorePart componentable){
+    public void addPropertyLines(@NotNull PassiveAbilityLorePart componentable){
         getComponents().forEach(c -> c.describe(componentable));
     }
 
@@ -29,6 +29,6 @@ public abstract class RPGUConstructablePassiveAbility<ActivationContext> extends
         // TODO WORK AROUND SET<SLOT>
         lorePart.setEquipmentSlot(getSlot().stream().findFirst().orElseThrow());
         lorePart.setHeader(Component.translatable("rpgu_passive_ability.coreu.title"));
-        addLoreLines(lorePart);
+        addPropertyLines(lorePart);
     }
 }
