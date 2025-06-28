@@ -20,7 +20,7 @@ import java.util.*;
 public class CustomSidebar {
     private final String id;
     private Component title;
-    private Objective obj;
+    private Objective objective;
     private Map<Integer, Component> lines = new HashMap<>();
     private final List<Player> players = new ArrayList<>();
 
@@ -31,16 +31,16 @@ public class CustomSidebar {
 
     public void hide(@NotNull Player player){
         if (!players.remove(player)) return;
-        NmsUtils.sendPacket(player, new ClientboundSetObjectivePacket(obj, 1));
+        NmsUtils.sendPacket(player, new ClientboundSetObjectivePacket(objective, 1));
         NmsUtils.sendPacket(player, new ClientboundSetDisplayObjectivePacket(DisplaySlot.SIDEBAR, null));
     }
 
     public void show(@NotNull Player player){
         players.add(player);
-        obj = new Scoreboard().addObjective(id, ObjectiveCriteria.DUMMY, NmsUtils.toNmsComponent(title) ,
+        objective = new Scoreboard().addObjective(id, ObjectiveCriteria.DUMMY, NmsUtils.toNmsComponent(title) ,
                 ObjectiveCriteria.RenderType.INTEGER, false, BlankFormat.INSTANCE);
-        NmsUtils.sendPacket(player, new ClientboundSetObjectivePacket(obj, 0));
-        NmsUtils.sendPacket(player, new ClientboundSetDisplayObjectivePacket(DisplaySlot.SIDEBAR, obj));
+        NmsUtils.sendPacket(player, new ClientboundSetObjectivePacket(objective, 0));
+        NmsUtils.sendPacket(player, new ClientboundSetDisplayObjectivePacket(DisplaySlot.SIDEBAR, objective));
 
         for (Map.Entry<Integer, Component> entry : lines.entrySet()) {
             NmsUtils.sendPacket(player,
@@ -57,7 +57,7 @@ public class CustomSidebar {
     }
 
     public void update(@NotNull Player player) {
-        NmsUtils.sendPacket(player, new ClientboundSetObjectivePacket(obj, 2));
+        NmsUtils.sendPacket(player, new ClientboundSetObjectivePacket(objective, 2));
         for (Map.Entry<Integer, Component> entry : lines.entrySet()) {
             NmsUtils.sendPacket(player,
                     new ClientboundSetScorePacket(entry.getKey().toString(),

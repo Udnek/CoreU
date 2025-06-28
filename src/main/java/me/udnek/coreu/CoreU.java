@@ -3,6 +3,7 @@ package me.udnek.coreu;
 import com.comphenix.protocol.wrappers.WrappedGameProfile;
 import com.mojang.authlib.GameProfile;
 import me.udnek.coreu.mgu.MGUItems;
+import me.udnek.coreu.mgu.MGUManager;
 import me.udnek.coreu.mgu.command.MGUCommand;
 import me.udnek.coreu.custom.attribute.ClearAttributeCommand;
 import me.udnek.coreu.custom.attribute.CustomAttributeCommand;
@@ -24,6 +25,7 @@ import me.udnek.coreu.custom.registry.CustomRegistries;
 import me.udnek.coreu.custom.registry.CustomRegistry;
 import me.udnek.coreu.custom.registry.InitializationProcess;
 import me.udnek.coreu.custom.sound.CustomSoundCommand;
+import me.udnek.coreu.mgu.game.MGUGameInstance;
 import me.udnek.coreu.nms.PacketHandler;
 import me.udnek.coreu.resourcepack.ResourcePackCommand;
 import me.udnek.coreu.resourcepack.ResourcePackablePlugin;
@@ -31,8 +33,12 @@ import me.udnek.coreu.resourcepack.host.RpHost;
 import me.udnek.coreu.resourcepack.host.RpUtils;
 import me.udnek.coreu.serializabledata.SerializableDataManager;
 import net.kyori.adventure.key.Key;
+import net.minecraft.world.level.block.CoralBlock;
+import net.minecraft.world.level.block.CoralFanBlock;
+import net.minecraft.world.level.block.CoralPlantBlock;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -97,8 +103,7 @@ public final class CoreU extends JavaPlugin implements ResourcePackablePlugin {
     }
 
     @Override
-    public void onDisable() {
-    }
+    public void onDisable() {}
 
     @Override
     public @NotNull Priority getPriority() {

@@ -17,7 +17,7 @@ public enum MGUCommandType {
     JOIN("join", 1,true){
         @Override
         public @NotNull ExecutionResult execute(@NotNull CommandSender sender, @NotNull String[] args) {
-            MGUGameInstance game = Objects.requireNonNull(MGUManager.get().getActiveGame(args[1]));
+            MGUGameInstance game = Objects.requireNonNull(MGUManager.get().getGame(args[1]));
             if (MGUManager.get().getPlayer(((Player) sender)) != null) return new ExecutionResult(ExecutionResult.Type.FAIL, "executor is mguPlayer");
             return game.executeCommand(new MGUCommandContext(this, sender, args, game, game.getType()));
         }
@@ -71,20 +71,20 @@ public enum MGUCommandType {
 
     public boolean testArgs(@NotNull CommandSender sender, @NotNull String[] args){
         if (args.length < 2) return false;
-        MGUGameInstance game = MGUManager.get().getActiveGame(args[1]);
+        MGUGameInstance game = MGUManager.get().getGame(args[1]);
         if (game == null) return false;
         return game.testCommandArgs(new MGUCommandContext(this, sender, args, game, game.getType()));
     }
     public @NotNull List<String> getOptions(@NotNull CommandSender sender, @NotNull String[] args){
         if (args.length > 2){
-            MGUGameInstance game = MGUManager.get().getActiveGame(args[1]);
+            MGUGameInstance game = MGUManager.get().getGame(args[1]);
             if (game == null) return List.of();
             return game.getCommandOptions(new MGUCommandContext(this, sender, args, game, game.getType()));
         }
         return MGUManager.get().getActiveStringIds();
     }
     public @NotNull ExecutionResult execute(@NotNull CommandSender sender, @NotNull String[] args){
-        MGUGameInstance game = Objects.requireNonNull(MGUManager.get().getActiveGame(args[1]));
+        MGUGameInstance game = Objects.requireNonNull(MGUManager.get().getGame(args[1]));
         return game.executeCommand(new MGUCommandContext(this, sender, args, game, game.getType()));
     }
 

@@ -11,13 +11,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MGUManager {
+public class MGUManager{
 
     private static MGUManager instance;
     private final HashMap<MGUId, MGUGameInstance> games = new HashMap<>();
     private final Map<Player, MGUPlayer> players = new HashMap<>();
 
-    private MGUManager(){}
+    public MGUManager(){}
 
     public static @NotNull MGUManager get() {
         if (instance == null) instance = new MGUManager();
@@ -35,7 +35,11 @@ public class MGUManager {
         return ids;
     }
 
-    public @Nullable MGUGameInstance getActiveGame(@NotNull String id){
+    public @NotNull Map<MGUId, MGUGameInstance> getGames(){
+        return new HashMap<>(games);
+    }
+
+    public @Nullable MGUGameInstance getGame(@NotNull String id){
         for (Map.Entry<MGUId, MGUGameInstance> entry : games.entrySet()) {
             if (entry.getKey().asString().equals(id)) return entry.getValue();
         }

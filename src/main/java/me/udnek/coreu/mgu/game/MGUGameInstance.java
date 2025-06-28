@@ -18,6 +18,8 @@ public interface MGUGameInstance {
 
     boolean isRunning();
 
+    void stop();
+
     @NotNull MGUCommandType.ExecutionResult executeCommand(@NotNull MGUCommandContext context);
     @NotNull List<String> getCommandOptions(@NotNull MGUCommandContext context);
     boolean testCommandArgs(@NotNull MGUCommandContext context);
