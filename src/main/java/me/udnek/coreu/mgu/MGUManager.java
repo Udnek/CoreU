@@ -1,8 +1,14 @@
 package me.udnek.coreu.mgu;
 
+import me.udnek.coreu.CoreU;
 import me.udnek.coreu.mgu.game.MGUGameInstance;
 import me.udnek.coreu.mgu.player.MGUPlayer;
+import me.udnek.coreu.util.SelfRegisteringListener;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.server.PluginDisableEvent;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,22 +17,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MGUManager{
+public class MGUManager extends SelfRegisteringListener {
 
     private static MGUManager instance;
     private final HashMap<MGUId, MGUGameInstance> games = new HashMap<>();
     private final Map<Player, MGUPlayer> players = new HashMap<>();
 
-    public MGUManager(){}
+    public MGUManager(@NotNull Plugin plugin) {
+        super(plugin);
+    }
+
 
     public static @NotNull MGUManager get() {
-        if (instance == null) instance = new MGUManager();
+        if (instance == null) instance = new MGUManager(CoreU.getInstance());
         return instance;
     }
 
     // GAME
     public void registerGame(@NotNull MGUGameInstance game){
         this.games.put(game.getId(), game);
+    }
+
+    public void unregisterGame(@NotNull MGUGameInstance game){
+        this.games.remove(game.getId());
     }
 
     public @NotNull List<String> getActiveStringIds(){
@@ -58,6 +71,17 @@ public class MGUManager{
 
     public void unregisterPlayer(@NotNull MGUPlayer player){
         this.players.remove(player.getPlayer());
+    }
+
+    // EVENTS
+
+    @EventHandler
+    public void onShutdown(PluginDisableEvent event){
+        if (!Bukkit.getServer().isStopping()) return;
+        for (MGUGameInstance game : getGames().values()) {
+            if (game.isRunning()) game.stop();
+            unregisterGame(game);
+        }
     }
 }
 

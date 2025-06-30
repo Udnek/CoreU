@@ -31,6 +31,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.npc.VillagerProfession;
@@ -79,6 +80,7 @@ import org.bukkit.craftbukkit.v1_21_R3.generator.structure.CraftStructure;
 import org.bukkit.craftbukkit.v1_21_R3.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_21_R3.map.CraftMapCursor;
 import org.bukkit.craftbukkit.v1_21_R3.util.CraftLocation;
+import org.bukkit.craftbukkit.v1_21_R3.util.CraftVector;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
@@ -89,6 +91,7 @@ import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.map.MapCursor;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.StructureSearchResult;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -559,13 +562,17 @@ public class Nms {
     }
 
 
-    public void moveTo(@NotNull org.bukkit.entity.Mob follower, @NotNull Location location){
+    public void moveWithPathfind(@NotNull org.bukkit.entity.Mob follower, @NotNull Location location){
         PathNavigation followerNavigation = ((Mob) ((CraftEntity) follower).getHandle()).getNavigation();
         Path path = followerNavigation.createPath(location.getX(), location.getY(), location.getZ(), 0);
         if (path != null) followerNavigation.moveTo(path, 1D);
     }
 
-    public void stopMoving(@NotNull org.bukkit.entity.Mob mob) {
+    public void moveNaturally(@NotNull org.bukkit.entity.Entity entity, @NotNull Vector velocity){
+        NmsUtils.toNmsEntity(entity).move(MoverType.SELF, CraftVector.toNMS(velocity));
+    }
+
+    public void stopMovingWithPathfind(@NotNull org.bukkit.entity.Mob mob) {
         ((Mob) NmsUtils.toNmsEntity(mob)).getNavigation().moveTo((Path) null, 1D);
     }
 

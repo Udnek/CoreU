@@ -243,5 +243,4 @@ public class CustomBlockManager extends EntityLikeManager<TileState, CustomBlock
             }
         }
     }
-
 }

@@ -40,4 +40,10 @@ public abstract class MGUAbstractPlayer extends AbstractComponentHolder<MGUPlaye
     public @NotNull Player getPlayer() {
         return player;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof MGUPlayer mguPlayer) return mguPlayer.getPlayer().equals(player);
+        return false;
+    }
 }
