@@ -61,7 +61,7 @@ public interface CustomBlockType extends ComponentHolder<CustomBlockType, Custom
 
     void onDamage(@NotNull BlockDamageEvent event);
 
-    void place(@NotNull Location location);
+    void place(@NotNull Location location, @NotNull CustomBlockPlaceContext context);
     void destroy(@NotNull Location location);
     void onDestroy(@NotNull BlockFadeEvent event);
     void onDestroy(@NotNull BlockBurnEvent event);

@@ -16,6 +16,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.persistence.PersistentDataType;
@@ -137,13 +138,20 @@ public abstract class ConstructableCustomItem extends AbstractComponentHolder<Cu
     public void initializeAdditionalAttributes(@NotNull ItemStack itemStack){}
     public boolean addDefaultAttributes(){return false;}
 
+    @Override
+    public @Nullable List<ItemFlag> getTooltipHides() {
+        return List.of(ItemFlag.HIDE_ATTRIBUTES);
+    }
+
+    @Override
+    public @Nullable DataSupplier<ItemRarity> getRarity() {return DataSupplier.of(ItemRarity.COMMON);}
     ///////////////////////////////////////////////////////////////////////////
     // CREATING
     ///////////////////////////////////////////////////////////////////////////
     protected void setPersistentData(@NotNull ItemStack itemStack){
         itemStack.editMeta(itemMeta -> itemMeta.getPersistentDataContainer().set(PERSISTENT_DATA_CONTAINER_NAMESPACE, PersistentDataType.STRING, id));
     }
-    protected <T> void setData(@NotNull DataComponentType.Valued<T> type, @Nullable DataSupplier<T> supplier){
+    protected <T> void setData(@NotNull DataComponentType.Valued<@NotNull T> type, @Nullable DataSupplier<T> supplier){
         if (supplier == null) return;
         T value = supplier.get();
         if (value == null) itemStack.unsetData(type);
@@ -154,7 +162,7 @@ public abstract class ConstructableCustomItem extends AbstractComponentHolder<Cu
         if (value) itemStack.setData(type);
         else itemStack.resetData(type);
     }
-    protected <T extends ShownInTooltip<T>> void hideSpecificComponent(@NotNull DataComponentType.Valued<T> type){
+    protected <T extends ShownInTooltip<T>> void hideSpecificComponent(@NotNull DataComponentType.Valued<@NotNull T> type){
         T data = itemStack.getData(type);
         if (data == null) return;
         itemStack.setData(type, data.showInTooltip(false));

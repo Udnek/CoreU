@@ -1,6 +1,7 @@
 package me.udnek.coreu.custom.entitylike.block.constructabletype;
 
 import io.papermc.paper.datacomponent.DataComponentTypes;
+import me.udnek.coreu.custom.entitylike.block.CustomBlockPlaceContext;
 import me.udnek.coreu.custom.particle.instance.BlockCracksParticle;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
@@ -48,8 +49,12 @@ public abstract class DisplayBasedConstructableBlockType extends AbstactCustomBl
     public @Nullable BlockState getFakeState() {return DEFAULT_FAKE_STATE;}
 
     @Override
-    public void place(@NotNull Location location) {
-        super.place(location);
+    public void place(@NotNull Location location, @NotNull CustomBlockPlaceContext context) {
+        super.place(location, context);
+        placeAndReturnDisplay(location, context);
+    }
+
+    public @NotNull ItemDisplay placeAndReturnDisplay(@NotNull Location location, @NotNull CustomBlockPlaceContext context){
         Location displayLocation = location.toCenterLocation();
         displayLocation.setYaw(0);
         displayLocation.setPitch(0);
@@ -60,6 +65,7 @@ public abstract class DisplayBasedConstructableBlockType extends AbstactCustomBl
             transformation.getScale().set(1.00001);
             entity.setTransformation(transformation);
         }
+        return entity;
     }
 
     public boolean doSlightlyBiggerModel(){
@@ -71,11 +77,16 @@ public abstract class DisplayBasedConstructableBlockType extends AbstactCustomBl
     @Override
     public void onGenericDestroy(@NotNull Block block) {
         super.onGenericDestroy(block);
+        getDisplay(block).remove();
+    }
 
+
+    public @NotNull ItemDisplay getDisplay(@NotNull Block block){
         Collection<Entity> displays = block.getWorld().getNearbyEntities(block.getLocation().toCenterLocation(), 0.05, 0.05, 0.05);
         for (Entity display : displays) {
-            if (display.getType() == EntityType.ITEM_DISPLAY) display.remove();
+            if (display.getType() == EntityType.ITEM_DISPLAY) return (ItemDisplay) display;
         }
+        throw new RuntimeException("can not find display entity for block: " + block);
     }
 
     @Override

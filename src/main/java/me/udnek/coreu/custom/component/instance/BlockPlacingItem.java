@@ -2,6 +2,7 @@ package me.udnek.coreu.custom.component.instance;
 
 import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.component.CustomComponentType;
+import me.udnek.coreu.custom.entitylike.block.CustomBlockPlaceContext;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockType;
 import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.custom.item.CustomItemComponent;
@@ -24,7 +25,7 @@ public class BlockPlacingItem implements CustomItemComponent {
     }
 
     public void onPlace(@NotNull BlockPlaceEvent event){
-        block.place(event.getBlock().getLocation());
+        block.place(event.getBlock().getLocation(), new CustomBlockPlaceContext(event.getPlayer(), event.getBlockAgainst()));
     }
 
     @Override

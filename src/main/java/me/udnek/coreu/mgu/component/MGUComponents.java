@@ -1,4 +1,4 @@
-package me.udnek.coreu.mgu.ability;
+package me.udnek.coreu.mgu.component;
 
 import me.udnek.coreu.CoreU;
 import me.udnek.coreu.custom.component.ConstructableComponentType;

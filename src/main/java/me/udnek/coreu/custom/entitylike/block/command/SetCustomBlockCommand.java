@@ -1,5 +1,6 @@
 package me.udnek.coreu.custom.entitylike.block.command;
 
+import me.udnek.coreu.custom.entitylike.block.CustomBlockPlaceContext;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockType;
 import me.udnek.coreu.custom.registry.CustomRegistries;
 import org.bukkit.command.Command;
@@ -25,7 +26,7 @@ public class SetCustomBlockCommand implements TabExecutor, CommandExecutor {
         CustomBlockType blockType = CustomRegistries.BLOCK_TYPE.get(id);
         if (blockType == null) return false;
 
-        blockType.place(player.getLocation());
+        blockType.place(player.getLocation(), new CustomBlockPlaceContext(player, null));
 
         return true;
     }

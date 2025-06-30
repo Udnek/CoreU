@@ -129,6 +129,21 @@ public class Nms {
     // ITEMS
     ///////////////////////////////////////////////////////////////////////////
 
+    public @Nullable DyeColor getColorByDye(@NotNull Material dye){
+        if (!(NmsUtils.toNmsMaterial(dye) instanceof DyeItem dyeItem)) return null;
+        net.minecraft.world.item.DyeColor dyeColor = dyeItem.getDyeColor();
+        return new DyeColor(){
+            @Override
+            public @NotNull String name() {return dyeColor.name();}
+            @Override
+            public @NotNull Color textureDiffuseColor() {return Color.fromARGB(dyeColor.getTextureDiffuseColor());}
+            @Override
+            public @NotNull Color fireworkColor() {return Color.fromRGB(dyeColor.getFireworkColor());}
+            @Override
+            public @NotNull Color textColor() {return Color.fromRGB(dyeColor.getTextColor());}
+        };
+    }
+
     public boolean canAttackBlock(@NotNull org.bukkit.block.BlockState blockState, @NotNull Player player, @NotNull ItemStack itemStack){
         return NmsUtils.toNmsItemStack(itemStack).getItem().canAttackBlock(
                 NmsUtils.toNmsBlockState(blockState), NmsUtils.toNmsWorld(blockState.getWorld()), NmsUtils.toNmsBlockPos(blockState.getBlock()), NmsUtils.toNmsPlayer(player));

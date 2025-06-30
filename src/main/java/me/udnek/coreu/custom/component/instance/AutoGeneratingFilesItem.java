@@ -23,6 +23,7 @@ public interface AutoGeneratingFilesItem extends CustomItemComponent {
     HandHeld HANDHELD = new HandHeld();
     Bow BOW = new Bow();
     CustomModelDataColorable CUSTOM_MODEL_DATA_COLORABLE = new CustomModelDataColorable();
+    DyeColorable DYE_COLORABLE = new DyeColorable();
     Generated20x20 GENERATED_20X20 = new Generated20x20();
     Bow20x20 BOW_20X20 = new Bow20x20();
     Handheld20x20 HANDHELD_20X20 = new Handheld20x20();
@@ -128,6 +129,26 @@ public interface AutoGeneratingFilesItem extends CustomItemComponent {
             return definition;
         }
     }
+    class DyeColorable extends Generated{
+        @Override
+        public @NotNull JsonObject getDefinition(@NotNull Key itemModel) {
+            JsonObject definition = super.getDefinition(itemModel);
+            JsonElement tints = JsonParser.parseString(
+                    """
+                            {
+                            "tints": [
+                                  {
+                                    "type": "minecraft:dye",
+                                    "default": 0
+                                  }
+                            ]
+                            }
+                            """).getAsJsonObject().get("tints");
+            definition.get("model").getAsJsonObject().add("tints", tints);
+            return definition;
+        }
+    }
+
     class Bow extends Generated{
 
         @Override

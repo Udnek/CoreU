@@ -6,6 +6,7 @@ import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.component.CustomComponentMap;
 import me.udnek.coreu.custom.component.instance.RightClickableBlock;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockManager;
+import me.udnek.coreu.custom.entitylike.block.CustomBlockPlaceContext;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockType;
 import me.udnek.coreu.custom.registry.AbstractRegistrable;
 import me.udnek.coreu.nms.Nms;
@@ -53,7 +54,7 @@ public abstract class AbstactCustomBlockType extends AbstractRegistrable impleme
 
     @OverridingMethodsMustInvokeSuper
     @Override
-    public void place(@NotNull Location location){
+    public void place(@NotNull Location location, @NotNull CustomBlockPlaceContext context){
         TileState blockState = (TileState) getRealState().copy(location);
         blockState.getPersistentDataContainer().set(PDC_KEY, PersistentDataType.STRING, getId());
         blockState.update(true, false);
