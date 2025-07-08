@@ -18,7 +18,10 @@ public abstract class AbstractRegistrable implements Registrable{
     public abstract @NotNull String getRawId();
 
     @Override
-    public final @NotNull String getId() {return id;}
+    public final @NotNull String getId() {
+        Preconditions.checkArgument(id != null, "Id is not present (not registered yet probably)");
+        return id;
+    }
 
     @Override
     public String toString() {

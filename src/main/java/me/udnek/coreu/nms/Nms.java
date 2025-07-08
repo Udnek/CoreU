@@ -19,6 +19,7 @@ import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.network.protocol.common.custom.GameTestAddMarkerDebugPayload;
+import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundCooldownPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -536,9 +537,17 @@ public class Nms {
         showDebugBlock(player, location, color, time, "");
     }
 
+
     ///////////////////////////////////////////////////////////////////////////
     // ENTITY
     ///////////////////////////////////////////////////////////////////////////
+    public void sendBlockUpdatePacket(@NotNull Player player, @NotNull org.bukkit.block.BlockState blockState){
+        NmsUtils.sendPacket(player, new ClientboundBlockUpdatePacket(
+                new BlockPos(blockState.getX(), blockState.getY(), blockState.getZ()),
+                NmsUtils.toNmsBlockState(blockState))
+        );
+    }
+
     public void setSpinAttack(@NotNull Player player, int ticks, float damage, @Nullable ItemStack itemStack){
         NmsUtils.toNmsPlayer(player).startAutoSpinAttack(ticks, damage, NmsUtils.toNmsItemStack(itemStack));
     }

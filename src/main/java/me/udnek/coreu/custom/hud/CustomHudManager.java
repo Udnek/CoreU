@@ -23,7 +23,6 @@ public class CustomHudManager extends TickingTask {
 
     private CustomHudManager(){}
 
-
     public void addTicket(@NotNull JavaPlugin plugin, @NotNull CustomHud customHud){
         tickets.put(plugin, customHud);
     }
@@ -41,8 +40,8 @@ public class CustomHudManager extends TickingTask {
 
     @Override
     public void run() {
+        if (getAllTickets().isEmpty()) return;
         for (Player player : Bukkit.getOnlinePlayers()) {
-
             Component text = Component.empty();
 
             for (CustomHud customHud : getAllTickets().values()) {

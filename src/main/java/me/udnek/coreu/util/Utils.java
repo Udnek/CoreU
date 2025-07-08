@@ -3,6 +3,7 @@ package me.udnek.coreu.util;
 import com.destroystokyo.paper.ParticleBuilder;
 import com.google.common.base.Preconditions;
 import me.udnek.coreu.CoreU;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -33,6 +34,14 @@ public class Utils {
 
     public static <T> void consumeIfNotNull(@Nullable T object, @NotNull Consumer<@NotNull T> consumer){
         if (object != null) consumer.accept(object);
+    }
+
+    public static @NotNull TextColor mixColors(@NotNull TextColor from, @NotNull TextColor to, float progress){
+        Preconditions.checkArgument(0 <= progress && progress <= 1, "Progress must be between 0 and 1, but is: " + progress);
+        Vector fromV = new Vector(from.red()/255f, from.green()/255f, from.blue()/255f);
+        Vector toV = new Vector(to.red()/255f, to.green()/255f, to.blue()/255f);
+        fromV.multiply(1-progress).add(toV.multiply(progress));
+        return TextColor.color((float) fromV.getX(), (float) fromV.getY(), (float) fromV.getZ());
     }
 
     // WORLD

@@ -9,10 +9,11 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 public class CustomInventoryListener extends SelfRegisteringListener {
 
-    public CustomInventoryListener(JavaPlugin plugin) {
+    public CustomInventoryListener(@NotNull JavaPlugin plugin) {
         super(plugin);
     }
 

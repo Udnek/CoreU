@@ -49,7 +49,7 @@ public enum MGUCommandType {
         @Override
         public @NotNull ExecutionResult execute(@NotNull CommandSender sender, @NotNull String[] args) {
             sender.sendMessage("------------------");
-            sender.sendMessage("Current active games:");
+            sender.sendMessage("Currently active games:");
             for (String id : MGUManager.get().getActiveStringIds()) {
                 sender.sendMessage(id);
             }

@@ -85,8 +85,8 @@ public abstract class AbstactCustomBlockType extends AbstractRegistrable impleme
 
     @Override
     public void destroy(@NotNull Location location) {
-        location.getWorld().getBlockAt(location).setType(Material.AIR);
         onGenericDestroy(location.getBlock());
+        location.getBlock().setType(Material.AIR);
     }
 
     @Override

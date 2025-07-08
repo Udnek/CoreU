@@ -1,7 +1,9 @@
 package me.udnek.coreu.custom.inventory;
 
+import me.udnek.coreu.custom.item.CustomItem;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -21,10 +23,22 @@ public abstract class ConstructableCustomInventory implements CustomInventory{
         return inventory;
     }
 
+    public void setItem(int slot, @Nullable ItemStack stack){
+        getInventory().setItem(slot, stack);
+    }
+
+    public void setItem(int slot, @NotNull CustomItem item){
+        setItem(slot, item.getItem());
+    }
+
+    public void setItem(int slot, @NotNull Material material){
+        setItem(slot, new ItemStack(material));
+    }
+
     public void addItem(int slot, int amount){
         ItemStack item = getInventory().getItem(slot);
         if (item == null) return;
-        getInventory().setItem(slot, item.add(amount));
+        setItem(slot, item.add(amount));
     }
 
     public void takeItem(int slot, int amount){

@@ -2,6 +2,7 @@ package me.udnek.coreu;
 
 import com.comphenix.protocol.wrappers.WrappedGameProfile;
 import com.mojang.authlib.GameProfile;
+import me.udnek.coreu.custom.entitylike.entity.CustomEntityType;
 import me.udnek.coreu.mgu.MGUItems;
 import me.udnek.coreu.mgu.MGUManager;
 import me.udnek.coreu.mgu.command.MGUCommand;
@@ -33,6 +34,7 @@ import me.udnek.coreu.resourcepack.host.RpHost;
 import me.udnek.coreu.resourcepack.host.RpUtils;
 import me.udnek.coreu.serializabledata.SerializableDataManager;
 import net.kyori.adventure.key.Key;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.CoralBlock;
 import net.minecraft.world.level.block.CoralFanBlock;
 import net.minecraft.world.level.block.CoralPlantBlock;
@@ -59,6 +61,9 @@ public final class CoreU extends JavaPlugin implements ResourcePackablePlugin {
         instance = this;
 
         CustomRegistry<CustomRegistry<?>> registry = CustomRegistries.REGISTRY;
+        CustomItem item = MGUItems.COORDINATE_WAND;
+        CustomEntityType entityType = CustomEntityType.BLOCK_DISPLAY;
+
         // EVENTS
         new CustomItemListener(this);
         new CraftListener(this);
@@ -96,8 +101,6 @@ public final class CoreU extends JavaPlugin implements ResourcePackablePlugin {
                 InitializationProcess.start();
             }
         });
-
-        MGUItems.COORDINATE_WAND.getKey();
 
         new RpHost().start();
     }

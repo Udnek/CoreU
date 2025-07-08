@@ -15,7 +15,6 @@ public interface Registrable extends Keyed {
 
     @Override
     default @NotNull NamespacedKey getKey(){
-        Preconditions.checkArgument(getId() != null, "Id is not present (not registered yet probably)");
         return NamespacedKey.fromString(getId());
     }
 }

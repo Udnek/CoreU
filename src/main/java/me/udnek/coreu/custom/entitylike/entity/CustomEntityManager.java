@@ -38,7 +38,9 @@ public class CustomEntityManager extends EntityLikeManager<Entity, CustomEntityT
     private void loadEntities(@NotNull List<Entity> entities){
         for (Entity entity : entities) {
             CustomEntityType entityType = CustomEntityType.get(entity);
-            if (entityType != null) loadAny(entityType, entity);
+            if (entityType != null) {
+                loadAny(entityType, entity);
+            }
         }
     }
 
@@ -46,7 +48,9 @@ public class CustomEntityManager extends EntityLikeManager<Entity, CustomEntityT
     public void onEntitiesUnload(EntitiesUnloadEvent event){
         for (Entity entity : event.getEntities()) {
             CustomEntityType entityType = CustomEntityType.get(entity);
-            if (entityType != null) unloadAny(entityType, entity);
+            if (entityType != null) {
+                unloadAny(entityType, entity);
+            }
         }
     }
 

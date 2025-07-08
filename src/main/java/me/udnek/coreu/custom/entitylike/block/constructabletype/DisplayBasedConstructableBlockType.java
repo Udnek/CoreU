@@ -2,6 +2,9 @@ package me.udnek.coreu.custom.entitylike.block.constructabletype;
 
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockPlaceContext;
+import me.udnek.coreu.custom.entitylike.block.CustomBlockType;
+import me.udnek.coreu.custom.entitylike.entity.ConstructableCustomEntityType;
+import me.udnek.coreu.custom.entitylike.entity.CustomEntityType;
 import me.udnek.coreu.custom.particle.instance.BlockCracksParticle;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
@@ -58,7 +61,7 @@ public abstract class DisplayBasedConstructableBlockType extends AbstactCustomBl
         Location displayLocation = location.toCenterLocation();
         displayLocation.setYaw(0);
         displayLocation.setPitch(0);
-        ItemDisplay entity = (ItemDisplay) location.getWorld().spawnEntity(displayLocation, EntityType.ITEM_DISPLAY);
+        ItemDisplay entity = (ItemDisplay) CustomEntityType.BLOCK_DISPLAY.spawn(displayLocation);
         entity.setItemStack(getFakeDisplay());
         if (doSlightlyBiggerModel()){
             Transformation transformation = entity.getTransformation();
@@ -77,16 +80,23 @@ public abstract class DisplayBasedConstructableBlockType extends AbstactCustomBl
     @Override
     public void onGenericDestroy(@NotNull Block block) {
         super.onGenericDestroy(block);
-        getDisplay(block).remove();
+        ItemDisplay display = getDisplay(block);
+        if (display != null) display.remove();
     }
 
 
-    public @NotNull ItemDisplay getDisplay(@NotNull Block block){
-        Collection<Entity> displays = block.getWorld().getNearbyEntities(block.getLocation().toCenterLocation(), 0.05, 0.05, 0.05);
+    public @Nullable ItemDisplay getDisplay(@NotNull Block block){
+        Collection<Entity> displays = block.getWorld().getNearbyEntities(block.getLocation().toCenterLocation(), 0.5, 0.5, 0.5);
+        for (Entity display : displays) {
+            if (CustomEntityType.get(display) == CustomEntityType.BLOCK_DISPLAY) return (ItemDisplay) display;
+        }
+        // TODO REMOVE OLD
+        displays = block.getWorld().getNearbyEntities(block.getLocation().toCenterLocation(), 0.05, 0.05, 0.05);
         for (Entity display : displays) {
             if (display.getType() == EntityType.ITEM_DISPLAY) return (ItemDisplay) display;
         }
-        throw new RuntimeException("can not find display entity for block: " + block);
+        return null;
+        //throw new RuntimeException("can not find display entity for block: " + block);
     }
 
     @Override
@@ -104,5 +114,30 @@ public abstract class DisplayBasedConstructableBlockType extends AbstactCustomBl
         BlockState fakeState = getFakeState();
         if (fakeState == null) return false;
         return fakeState.getType() == Material.BARRIER;
+    }
+
+    public static class DisplayEntity extends ConstructableCustomEntityType<ItemDisplay>{
+
+        @Override
+        public @NotNull EntityType getVanillaType() {
+            return EntityType.ITEM_DISPLAY;
+        }
+
+        @Override
+        public void load(@NotNull Entity entity) {
+            if (CustomBlockType.get(entity.getLocation().getBlock()) != null) return;
+            entity.remove();
+        }
+
+        @Override
+        public void unload(@NotNull Entity entity) {
+            if (CustomBlockType.get(entity.getLocation().getBlock()) != null) return;
+            entity.remove();
+        }
+
+        @Override
+        public @NotNull String getRawId() {
+            return "block_display";
+        }
     }
 }

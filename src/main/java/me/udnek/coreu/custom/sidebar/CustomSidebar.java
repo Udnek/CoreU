@@ -37,8 +37,8 @@ public class CustomSidebar {
 
     public void show(@NotNull Player player){
         players.add(player);
-        objective = new Scoreboard().addObjective(id, ObjectiveCriteria.DUMMY, NmsUtils.toNmsComponent(title) ,
-                ObjectiveCriteria.RenderType.INTEGER, false, BlankFormat.INSTANCE);
+        objective = new Scoreboard().addObjective(
+                id, ObjectiveCriteria.DUMMY, NmsUtils.toNmsComponent(title) , ObjectiveCriteria.RenderType.INTEGER, false, BlankFormat.INSTANCE);
         NmsUtils.sendPacket(player, new ClientboundSetObjectivePacket(objective, 0));
         NmsUtils.sendPacket(player, new ClientboundSetDisplayObjectivePacket(DisplaySlot.SIDEBAR, objective));
 

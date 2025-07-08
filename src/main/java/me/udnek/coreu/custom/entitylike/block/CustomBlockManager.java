@@ -5,6 +5,7 @@ import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import me.udnek.coreu.CoreU;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.entitylike.EntityLikeManager;
+import me.udnek.coreu.nms.Nms;
 import me.udnek.coreu.nms.NmsUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
@@ -97,6 +98,7 @@ public class CustomBlockManager extends EntityLikeManager<TileState, CustomBlock
         breakData.progress.remove(event.getPlayer());
         if (breakData.progress.isEmpty()) breaking.remove(event.getBlock());
     }
+
 
     @Override
     public void run() {
@@ -220,10 +222,7 @@ public class CustomBlockManager extends EntityLikeManager<TileState, CustomBlock
             public void run() {
                 for (int i = packetId; i < blocksToSendPackets.size(); i++) {
                     BlockState blockState = blocksToSendPackets.get(i);
-                    NmsUtils.sendPacket(event.getPlayer(), new ClientboundBlockUpdatePacket(
-                            new BlockPos(blockState.getX(), blockState.getY(), blockState.getZ()),
-                            NmsUtils.toNmsBlockState(blockState))
-                    );
+                    Nms.get().sendBlockUpdatePacket(event.getPlayer(), blockState);
                 }
                 packetId += MAX_CUSTOM_BLOCK_PACKETS_PER_TICK;
                 if (packetId > blocksToSendPackets.size()-1) cancel();
