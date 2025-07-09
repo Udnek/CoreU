@@ -5,6 +5,7 @@ import me.udnek.coreu.CoreU;
 import me.udnek.coreu.custom.component.ComponentHolder;
 import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.entitylike.EntityLikeType;
+import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.custom.registry.CustomRegistries;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -52,7 +53,11 @@ public interface CustomBlockType extends ComponentHolder<CustomBlockType, Custom
         CustomBlockType blockType = get(block);
         if (blockType != null) consumer.accept(blockType);
     }
-    
+
+    /////////////////////
+
+    @Nullable CustomItem getItem();
+
     @Nullable BlockState getFakeState();
 
     float getCustomBreakProgress(@NotNull Player player, @NotNull Block block);

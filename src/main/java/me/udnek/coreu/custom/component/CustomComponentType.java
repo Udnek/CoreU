@@ -39,6 +39,9 @@ public interface CustomComponentType<HolderType, Component extends CustomCompone
     CustomComponentType<CustomBlockType, RightClickableBlock>
             RIGHT_CLICKABLE_BLOCK = register(new ConstructableComponentType<>("right_clickable_block", RightClickableBlock.EMPTY));
 
+    CustomComponentType<CustomBlockType, MiddleClickableBlock>
+            MIDDLE_CLICKABLE_BLOCK = register(new ConstructableComponentType<>("middle_clickable_block", MiddleClickableBlock.DEFAULT));
+
     CustomComponentType<CustomBlockType, HopperInteractingBlock>
             HOPPER_INTERACTING_BLOCK = register(new ConstructableComponentType<>("hopper_interacting_block", HopperInteractingBlock.DENY));
 

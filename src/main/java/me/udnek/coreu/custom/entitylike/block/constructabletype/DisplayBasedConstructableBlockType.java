@@ -5,6 +5,7 @@ import me.udnek.coreu.custom.entitylike.block.CustomBlockPlaceContext;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockType;
 import me.udnek.coreu.custom.entitylike.entity.ConstructableCustomEntityType;
 import me.udnek.coreu.custom.entitylike.entity.CustomEntityType;
+import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.custom.particle.instance.BlockCracksParticle;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
@@ -38,7 +39,10 @@ public abstract class DisplayBasedConstructableBlockType extends AbstractCustomB
         DEFAULT_REAL_STATE = state;
     }
 
-    public abstract @NotNull ItemStack getFakeDisplay();
+    public @NotNull ItemStack getFakeDisplay() {
+        CustomItem item = getItem();
+        return item != null ? item.getItem() : new ItemStack(Material.BAMBOO_PLANKS);
+    }
 
     @Override
     public @NotNull ItemStack getParticleBase() {return getFakeDisplay();}

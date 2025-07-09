@@ -2,6 +2,7 @@ package me.udnek.coreu.custom.entitylike.block;
 
 import com.destroystokyo.paper.event.block.BlockDestroyEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
+import io.papermc.paper.event.player.PlayerPickBlockEvent;
 import me.udnek.coreu.CoreU;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.entitylike.EntityLikeManager;
@@ -181,6 +182,14 @@ public class CustomBlockManager extends EntityLikeManager<TileState, CustomBlock
         CustomBlockType.consumeIfCustom(event.getSearchBlock(), block ->
                 block.getComponents().getOrDefault(CustomComponentType.HOPPER_INTERACTING_BLOCK).onHopperInteract(block, event)
         );
+    }
+
+    @EventHandler
+    public void onMiddleClick(PlayerPickBlockEvent event){
+        System.out.println("MIDDLE CLICKED: " + event.getSourceSlot() + " " + event.getTargetSlot());
+        CustomBlockType.consumeIfCustom(event.getBlock(),
+                type -> type.getComponents().getOrDefault(CustomComponentType.MIDDLE_CLICKABLE_BLOCK)
+                        .onMiddleClick(type, event));
     }
 
     @EventHandler
