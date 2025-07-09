@@ -71,17 +71,17 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
-import org.bukkit.craftbukkit.v1_21_R3.CraftChunk;
-import org.bukkit.craftbukkit.v1_21_R3.CraftServer;
-import org.bukkit.craftbukkit.v1_21_R3.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_21_R3.entity.CraftEntityType;
-import org.bukkit.craftbukkit.v1_21_R3.entity.CraftMob;
-import org.bukkit.craftbukkit.v1_21_R3.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_21_R3.generator.structure.CraftStructure;
-import org.bukkit.craftbukkit.v1_21_R3.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_21_R3.map.CraftMapCursor;
-import org.bukkit.craftbukkit.v1_21_R3.util.CraftLocation;
-import org.bukkit.craftbukkit.v1_21_R3.util.CraftVector;
+import org.bukkit.craftbukkit.v1_21_R5.CraftChunk;
+import org.bukkit.craftbukkit.v1_21_R5.CraftServer;
+import org.bukkit.craftbukkit.v1_21_R5.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_21_R5.entity.CraftEntityType;
+import org.bukkit.craftbukkit.v1_21_R5.entity.CraftMob;
+import org.bukkit.craftbukkit.v1_21_R5.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_21_R5.generator.structure.CraftStructure;
+import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_21_R5.map.CraftMapCursor;
+import org.bukkit.craftbukkit.v1_21_R5.util.CraftLocation;
+import org.bukkit.craftbukkit.v1_21_R5.util.CraftVector;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
@@ -101,6 +101,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class Nms {
 
@@ -149,8 +150,12 @@ public class Nms {
     }
 
     public boolean canAttackBlock(@NotNull org.bukkit.block.BlockState blockState, @NotNull Player player, @NotNull ItemStack itemStack){
-        return NmsUtils.toNmsItemStack(itemStack).getItem().canAttackBlock(
-                NmsUtils.toNmsBlockState(blockState), NmsUtils.toNmsWorld(blockState.getWorld()), NmsUtils.toNmsBlockPos(blockState.getBlock()), NmsUtils.toNmsPlayer(player));
+        return NmsUtils.toNmsItemStack(itemStack).getItem().canDestroyBlock(
+                NmsUtils.toNmsItemStack(itemStack),
+                NmsUtils.toNmsBlockState(blockState),
+                NmsUtils.toNmsWorld(blockState.getWorld()),
+                NmsUtils.toNmsBlockPos(blockState.getBlock()),
+                NmsUtils.toNmsPlayer(player));
     }
 
     public int getMaxAmountCanFitInBundle(@NotNull io.papermc.paper.datacomponent.item.BundleContents contents, @NotNull ItemStack itemStack){
@@ -286,7 +291,7 @@ public class Nms {
         List<MerchantRecipe> recipes = new ArrayList<>();
 
         Entity entity = ((CraftEntity) Bukkit.getOnlinePlayers().toArray()[0]).getHandle();
-        for (Map.Entry<VillagerProfession, Int2ObjectMap<VillagerTrades.ItemListing[]>> proffesionEntry : VillagerTrades.TRADES.entrySet()) {
+        for (Map.Entry<ResourceKey<VillagerProfession>, Int2ObjectMap<VillagerTrades.ItemListing[]>> proffesionEntry : VillagerTrades.TRADES.entrySet()) {
             Int2ObjectMap<VillagerTrades.ItemListing[]> tradesMap = proffesionEntry.getValue();
             for (VillagerTrades.ItemListing[] itemListings : tradesMap.values()) {
                 for (VillagerTrades.ItemListing itemListing : itemListings) {
@@ -373,19 +378,16 @@ public class Nms {
     public @NotNull List<String> getRegisteredLootTableIds(){
         List<String> ids = new ArrayList<>();
         ReloadableServerRegistries.Holder registries = ((CraftServer) Bukkit.getServer()).getServer().reloadableRegistries();
-        Collection<ResourceLocation> keys = registries.getKeys(Registries.LOOT_TABLE);
-        for (ResourceLocation key : keys) {
-            ids.add(key.toString());
-        }
+        Stream<ResourceLocation> keys = registries.lookup().lookup(Registries.LOOT_TABLE).get().listElementIds().map(ResourceKey::location);
+        keys.forEach(key -> ids.add(key.toString()));
         return ids;
     }
     public @NotNull List<org.bukkit.loot.LootTable> getRegisteredLootTables(){
         List<org.bukkit.loot.LootTable> lootTables = new ArrayList<>();
         ReloadableServerRegistries.Holder registries = ((CraftServer) Bukkit.getServer()).getServer().reloadableRegistries();
-        Collection<ResourceLocation> keys = registries.getKeys(Registries.LOOT_TABLE);
-        for (ResourceLocation key : keys) {
-            lootTables.add(registries.getLootTable(ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.parse(key.toString()))).craftLootTable);
-        }
+        Stream<ResourceLocation> keys = registries.lookup().lookup(Registries.LOOT_TABLE).get().listElementIds().map(ResourceKey::location);
+        keys.forEach(key ->
+            lootTables.add(registries.getLootTable(ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.parse(key.toString()))).craftLootTable));
         return lootTables;
     }
     public @NotNull org.bukkit.loot.LootTable getLootTable(@NotNull String id){

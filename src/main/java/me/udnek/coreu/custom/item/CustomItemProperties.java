@@ -56,8 +56,9 @@ public interface CustomItemProperties {
     // 2.30 fireworks
     @Nullable default DataSupplier<FoodProperties> getFood(){return null;} // 2.31 food
     @Nullable default Boolean getGlider(){return null;} // 2.32 glider
-    @Nullable default Boolean getHideAdditionalTooltip(){return null;} // 2.33 hide_additional_tooltip
-    @Nullable default Boolean getHideTooltip(){return null;} // 2.34 hide_tooltip
+    @Nullable default DataSupplier<TooltipDisplay> getTooltipDisplay(){return null;}
+    //@Nullable default Boolean getHideAdditionalTooltip(){return null;} // 2.33 hide_additional_tooltip
+    //@Nullable default Boolean getHideTooltip(){return null;} // 2.34 hide_tooltip
     @Nullable default DataSupplier<MusicInstrument> getMusicInstrument(){return null;} // 2.35 instrument
     // 2.36 intangible_projectile
     @Nullable default DataSupplier<Key> getItemModel(){return null;} // 2.37 item_model
@@ -85,7 +86,7 @@ public interface CustomItemProperties {
     @Nullable default DataSupplier<Tool> getTool(){return null;} // 2.59 tool
     // todo 2.60 tooltip_style
     @Nullable default DataSupplier<ItemArmorTrim> getTrim(){return null;} // 2.61 trim
-    @Nullable default DataSupplier<Unbreakable> getUnbreakable(){return null;} // 2.62 unbreakable
+    @Nullable default Boolean getUnbreakable(){return null;} // 2.62 unbreakable
     @Nullable default DataSupplier<UseCooldown> getUseCooldown(){return null;} // 2.63 use_cooldown
     @Nullable default DataSupplier<UseRemainder> getUseRemainder(){return null;} // 2.64 use_remainder
     // 2.65 writable_book_content

@@ -162,10 +162,14 @@ public abstract class ConstructableCustomItem extends AbstractComponentHolder<Cu
         if (value) itemStack.setData(type);
         else itemStack.resetData(type);
     }
-    protected <T extends ShownInTooltip<T>> void hideSpecificComponent(@NotNull DataComponentType.Valued<@NotNull T> type){
-        T data = itemStack.getData(type);
-        if (data == null) return;
-        itemStack.setData(type, data.showInTooltip(false));
+    protected void hideSpecificComponent(@NotNull DataComponentType type){
+        TooltipDisplay oldDisplay = itemStack.getDataOrDefault(TOOLTIP_DISPLAY, TooltipDisplay.tooltipDisplay().build());
+        TooltipDisplay.Builder builder = TooltipDisplay.tooltipDisplay().hideTooltip(oldDisplay.hideTooltip());
+        for (DataComponentType oldComponent : oldDisplay.hiddenComponents()) {
+            builder.addHiddenComponents(oldComponent);
+        }
+        builder.addHiddenComponents(type);
+        itemStack.setData(TOOLTIP_DISPLAY, builder.build());
     }
 
     protected void initializeItemStack(){
@@ -184,8 +188,7 @@ public abstract class ConstructableCustomItem extends AbstractComponentHolder<Cu
         setData(ITEM_NAME, getItemName());
         setData(LORE, getLore());
         setData(RARITY, getRarity());
-        setData(HIDE_TOOLTIP, getHideTooltip());
-        setData(HIDE_ADDITIONAL_TOOLTIP, getHideAdditionalTooltip());
+        setData(TOOLTIP_DISPLAY, getTooltipDisplay());
         setData(FOOD, getFood());
         setData(TOOL, getTool());
         setData(CUSTOM_NAME, getDisplayName());

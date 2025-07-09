@@ -1,7 +1,9 @@
 package me.udnek.coreu.custom.item;
 
+import io.papermc.paper.datacomponent.DataComponentType;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.ItemAttributeModifiers;
+import io.papermc.paper.datacomponent.item.TooltipDisplay;
 import me.udnek.coreu.CoreU;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.event.CustomItemGeneratedEvent;
@@ -30,6 +32,8 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
+
+import static io.papermc.paper.datacomponent.DataComponentTypes.TOOLTIP_DISPLAY;
 
 public class CustomItemListener extends SelfRegisteringListener {
     public CustomItemListener(@NotNull Plugin plugin) {
@@ -113,9 +117,12 @@ public class CustomItemListener extends SelfRegisteringListener {
         AttributeLoreGenerator.generateVanillaAttributes(event.getItemStack(), builder);
 
         if (VanillaItemManager.isReplaced(customItem)){
-            ItemAttributeModifiers attributeModifiers = event.getItemStack().getData(DataComponentTypes.ATTRIBUTE_MODIFIERS);
-            if (attributeModifiers == null) return;
-            event.getItemStack().setData(DataComponentTypes.ATTRIBUTE_MODIFIERS, attributeModifiers.showInTooltip(false));
+            TooltipDisplay oldDisplay = event.getItemStack().getDataOrDefault(TOOLTIP_DISPLAY, TooltipDisplay.tooltipDisplay().build());
+            TooltipDisplay.Builder displayBuilder = TooltipDisplay.tooltipDisplay().hideTooltip(oldDisplay.hideTooltip());
+            for (DataComponentType oldComponent : oldDisplay.hiddenComponents()) {
+                displayBuilder.addHiddenComponents(oldComponent);
+            }
+            displayBuilder.addHiddenComponents(DataComponentTypes.ATTRIBUTE_MODIFIERS);
         }
 
 

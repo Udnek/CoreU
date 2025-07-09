@@ -6,7 +6,7 @@ import me.udnek.coreu.nms.NmsUtils;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
-import net.minecraft.core.component.DataComponentPredicate;
+import net.minecraft.core.component.DataComponentExactPredicate;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import org.bukkit.Material;
@@ -74,16 +74,17 @@ public interface AdvancementCriterion extends Supplier<Criterion<?>>{
                 if (CustomItem.isCustom(itemStack)){
                     predicate = ItemPredicate.Builder.item()
                             .of(NmsUtils.getRegistry(Registries.ITEM), nmsItemStack.getItem())
-                            .hasComponents(
-                                    DataComponentPredicate.builder().expect(
+                            .withComponents(
+                                    DataComponentMatchers.Builder.components().exact(DataComponentExactPredicate.builder().expect(
                                             DataComponents.CUSTOM_DATA,
                                             nmsItemStack.getComponents().get(DataComponents.CUSTOM_DATA)
-                                    ).build()
+                                    ).build()).build()
                             );
                 } else {
                     predicate = ItemPredicate.Builder.item()
                             .of(NmsUtils.getRegistry(Registries.ITEM), nmsItemStack.getItem())
-                            .hasComponents(DataComponentPredicate.allOf(nmsItemStack.getComponents()));
+                            .withComponents(
+                                    DataComponentMatchers.Builder.components().exact(DataComponentExactPredicate.allOf(nmsItemStack.getComponents())).build());
                 }
             }
             return CriteriaTriggers.INVENTORY_CHANGED.createCriterion(new InventoryChangeTrigger.TriggerInstance(

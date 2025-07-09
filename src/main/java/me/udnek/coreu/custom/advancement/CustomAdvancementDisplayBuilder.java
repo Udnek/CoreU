@@ -5,9 +5,10 @@ import me.udnek.coreu.nms.NmsUtils;
 import net.kyori.adventure.text.serializer.json.JSONComponentSerializer;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.DisplayInfo;
+import net.minecraft.core.ClientAsset;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import org.bukkit.craftbukkit.v1_21_R3.util.CraftChatMessage;
+import org.bukkit.craftbukkit.v1_21_R5.util.CraftChatMessage;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -104,7 +105,7 @@ public class CustomAdvancementDisplayBuilder {
                 NmsUtils.toNmsItemStack(icon),
                 title == null ? Component.empty() : CraftChatMessage.fromJSON(JSONComponentSerializer.json().serialize(title)),
                 description == null ? Component.empty() : CraftChatMessage.fromJSON(JSONComponentSerializer.json().serialize(description)),
-                Optional.ofNullable(background == null ? null : ResourceLocation.parse(background)),
+                Optional.ofNullable(background == null ? null : new ClientAsset(ResourceLocation.parse(background))),
                 type,
                 showToast,
                 announceToChat,

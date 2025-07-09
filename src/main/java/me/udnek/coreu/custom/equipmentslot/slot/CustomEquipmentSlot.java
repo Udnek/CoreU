@@ -43,6 +43,8 @@ public interface CustomEquipmentSlot extends Translatable, Registrable{
 
     SingleSlot BODY = register(new ConstructableSingleSlot("body", EquipmentSlotGroup.BODY, EquipmentSlot.BODY, new BaseUniversalSlot(EquipmentSlot.BODY), "item.modifiers.body"));
 
+    SingleSlot SADDLE = register(new ConstructableSingleSlot("saddle", EquipmentSlotGroup.SADDLE, EquipmentSlot.SADDLE, new BaseUniversalSlot(EquipmentSlot.SADDLE), "item.modifiers.saddle"));
+
     static @NotNull CustomEquipmentSlot getFromVanilla(@NotNull EquipmentSlot slot){
         return switch (slot){
             case HEAD -> HEAD;
@@ -52,6 +54,7 @@ public interface CustomEquipmentSlot extends Translatable, Registrable{
             case HAND -> MAIN_HAND;
             case OFF_HAND -> OFF_HAND;
             case BODY -> BODY;
+            case SADDLE -> SADDLE;
         };
     }
     static @NotNull CustomEquipmentSlot getFromVanilla(@NotNull EquipmentSlotGroup slot){
@@ -64,6 +67,7 @@ public interface CustomEquipmentSlot extends Translatable, Registrable{
         if (slot == EquipmentSlotGroup.OFFHAND) return OFF_HAND;
         if (slot == EquipmentSlotGroup.ARMOR) return ARMOR;
         if (slot == EquipmentSlotGroup.BODY) return BODY;
+        if (slot == EquipmentSlotGroup.SADDLE) return SADDLE;
         return ANY_VANILLA;
     }
 

@@ -14,7 +14,7 @@
     <properties>
         <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <remapped.version>1.21.4-R0.1-SNAPSHOT</remapped.version>
+        <remapped.version>1.21.7-R0.1-SNAPSHOT</remapped.version>
     </properties>
 
     <build>
