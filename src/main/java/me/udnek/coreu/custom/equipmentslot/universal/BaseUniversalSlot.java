@@ -13,15 +13,17 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 public class BaseUniversalSlot implements UniversalInventorySlot {
-    protected @Nullable Integer slot = null;
-    protected @Nullable EquipmentSlot equipmentSlot = null;
+    public final @Nullable Integer slot;
+    public final @Nullable EquipmentSlot equipmentSlot;
 
     public BaseUniversalSlot(int slot){
         this.slot = slot;
+        equipmentSlot = null;
     }
 
     public BaseUniversalSlot(@NotNull EquipmentSlot slot){
         this.equipmentSlot = slot;
+        this.slot = null;
     }
 
     @Override

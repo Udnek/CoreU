@@ -186,7 +186,6 @@ public class CustomBlockManager extends EntityLikeManager<TileState, CustomBlock
 
     @EventHandler
     public void onMiddleClick(PlayerPickBlockEvent event){
-        System.out.println("MIDDLE CLICKED: " + event.getSourceSlot() + " " + event.getTargetSlot());
         CustomBlockType.consumeIfCustom(event.getBlock(),
                 type -> type.getComponents().getOrDefault(CustomComponentType.MIDDLE_CLICKABLE_BLOCK)
                         .onMiddleClick(type, event));
