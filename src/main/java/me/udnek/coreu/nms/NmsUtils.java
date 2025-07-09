@@ -2,6 +2,7 @@ package me.udnek.coreu.nms;
 
 import com.mojang.datafixers.util.Either;
 import me.udnek.coreu.nms.loot.util.NmsFields;
+import me.udnek.coreu.util.LogUtils;
 import me.udnek.coreu.util.Reflex;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.key.Keyed;
@@ -168,7 +169,7 @@ public class NmsUtils {
         return ((CraftPlayer) player).getHandle();
     }
     public static void sendPacket(@NotNull Player player, Packet<ClientGamePacketListener> packet){
-        toNmsPlayer(player).connection.sendPacket(packet);
+        toNmsPlayer(player).connection.send(packet);
     }
     // WORLD
     public static @NotNull Direction toNmsDirection(@NotNull BlockFace face){

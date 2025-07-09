@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.AccessFlag;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.List;
 
 public class LogUtils {
@@ -32,6 +33,22 @@ public class LogUtils {
                 log(message, TextColor.color(1f, 0,0f));
             }
             else if(field.accessFlags().contains(AccessFlag.FINAL)){
+                log(message, TextColor.color(1f, 1f, 0));
+            }
+            else {
+                log(message);
+            }
+        }
+    }
+
+    public static void logDeclaredMethods(@NotNull Object object){
+        Class<?> clazz = object.getClass();
+        for (Method method : clazz.getDeclaredMethods()) {
+            String message = method.toString();
+            if (method.accessFlags().contains(AccessFlag.PRIVATE)){
+                log(message, TextColor.color(1f, 0,0f));
+            }
+            else if(method.accessFlags().contains(AccessFlag.FINAL)){
                 log(message, TextColor.color(1f, 1f, 0));
             }
             else {

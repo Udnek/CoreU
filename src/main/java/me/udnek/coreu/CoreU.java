@@ -33,6 +33,7 @@ import me.udnek.coreu.resourcepack.ResourcePackablePlugin;
 import me.udnek.coreu.resourcepack.host.RpHost;
 import me.udnek.coreu.resourcepack.host.RpUtils;
 import me.udnek.coreu.serializabledata.SerializableDataManager;
+import me.udnek.coreu.util.LogUtils;
 import net.kyori.adventure.key.Key;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.CoralBlock;

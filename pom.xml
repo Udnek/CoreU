@@ -48,7 +48,7 @@
                 <groupId>net.md-5</groupId>
                 <artifactId>specialsource-maven-plugin</artifactId>
                 <!-- Get the latest version from https://mvnrepository.com/artifact/net.md-5/specialsource-maven-plugin -->
-                <version>2.0.3</version>
+                <version>2.0.4</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
