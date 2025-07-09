@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public abstract class AbstactCustomBlockType extends AbstractRegistrable implements CustomBlockType {
+public abstract class AbstractCustomBlockType extends AbstractRegistrable implements CustomBlockType {
 
     private final CustomComponentMap<CustomBlockType, CustomComponent<CustomBlockType>> components = new CustomComponentMap<>();
 

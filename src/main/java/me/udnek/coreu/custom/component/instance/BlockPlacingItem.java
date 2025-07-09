@@ -25,7 +25,7 @@ public class BlockPlacingItem implements CustomItemComponent {
     }
 
     public void onPlace(@NotNull BlockPlaceEvent event){
-        block.place(event.getBlock().getLocation(), new CustomBlockPlaceContext(event.getPlayer(), event.getBlockAgainst()));
+        block.place(event.getBlock().getLocation(), new CustomBlockPlaceContext(event.getPlayer(), event.getBlockAgainst(), event));
     }
 
     @Override

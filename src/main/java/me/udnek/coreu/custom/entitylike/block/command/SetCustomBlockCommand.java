@@ -26,7 +26,7 @@ public class SetCustomBlockCommand implements TabExecutor, CommandExecutor {
         CustomBlockType blockType = CustomRegistries.BLOCK_TYPE.get(id);
         if (blockType == null) return false;
 
-        blockType.place(player.getLocation(), new CustomBlockPlaceContext(player, null));
+        blockType.place(player.getLocation(), new CustomBlockPlaceContext(player, null, null));
 
         return true;
     }

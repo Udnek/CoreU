@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
-public abstract class DisplayBasedConstructableBlockType extends AbstactCustomBlockType {
+public abstract class DisplayBasedConstructableBlockType extends AbstractCustomBlockType {
 
     public static final BlockState DEFAULT_FAKE_STATE = Material.BARRIER.createBlockData().createBlockState();
     public static final TileState DEFAULT_REAL_STATE;
