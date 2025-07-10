@@ -71,17 +71,17 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
-import org.bukkit.craftbukkit.v1_21_R5.CraftChunk;
-import org.bukkit.craftbukkit.v1_21_R5.CraftServer;
-import org.bukkit.craftbukkit.v1_21_R5.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_21_R5.entity.CraftEntityType;
-import org.bukkit.craftbukkit.v1_21_R5.entity.CraftMob;
-import org.bukkit.craftbukkit.v1_21_R5.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_21_R5.generator.structure.CraftStructure;
-import org.bukkit.craftbukkit.v1_21_R5.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_21_R5.map.CraftMapCursor;
-import org.bukkit.craftbukkit.v1_21_R5.util.CraftLocation;
-import org.bukkit.craftbukkit.v1_21_R5.util.CraftVector;
+import org.bukkit.craftbukkit.CraftChunk;
+import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.entity.CraftEntity;
+import org.bukkit.craftbukkit.entity.CraftEntityType;
+import org.bukkit.craftbukkit.entity.CraftMob;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.craftbukkit.generator.structure.CraftStructure;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.map.CraftMapCursor;
+import org.bukkit.craftbukkit.util.CraftLocation;
+import org.bukkit.craftbukkit.util.CraftVector;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
@@ -580,7 +580,7 @@ public class Nms {
     }
 
     public void moveNaturally(@NotNull org.bukkit.entity.Entity entity, @NotNull Vector velocity){
-        NmsUtils.toNmsEntity(entity).move(MoverType.SELF, CraftVector.toNMS(velocity));
+        NmsUtils.toNmsEntity(entity).move(MoverType.SELF, CraftVector.toVec3(velocity));
     }
 
     public void stopMovingWithPathfind(@NotNull org.bukkit.entity.Mob mob) {

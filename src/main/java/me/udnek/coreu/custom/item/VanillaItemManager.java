@@ -279,7 +279,7 @@ public class VanillaItemManager extends SelfRegisteringListener {
                     case SmithingTrimRecipe recipe -> {
                         RecipeChoice template = choiceFunction.apply(recipe.getTemplate());
                         if (template == null) return null;
-                        return new SmithingTrimRecipe(recipe.getKey(), template, base, addition, recipe.willCopyDataComponents());
+                        return new SmithingTrimRecipe(recipe.getKey(), template, base, addition, recipe.getTrimPattern(),  recipe.willCopyDataComponents());
                     }
                     default -> throw new IllegalStateException("Unexpected value: " + smithingRecipe);
                 }

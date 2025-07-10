@@ -9,7 +9,7 @@ import net.minecraft.world.level.storage.loot.entries.LootPoolEntryType;
 import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import org.bukkit.craftbukkit.v1_21_R5.CraftLootTable;
+import org.bukkit.craftbukkit.CraftLootTable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
