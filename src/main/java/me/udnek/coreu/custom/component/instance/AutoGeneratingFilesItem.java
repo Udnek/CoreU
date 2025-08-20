@@ -96,7 +96,8 @@ public interface AutoGeneratingFilesItem extends CustomItemComponent {
                             "model": {
                                 "type": "minecraft:model",
                                 "model": "%model_path%"
-                            }
+                            },
+                            "oversized_in_gui": true
                         }
                         """, itemModel));
         }

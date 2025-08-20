@@ -32,7 +32,7 @@ public abstract class ConstructableCustomInventory implements CustomInventory{
     }
 
     public void setItem(int slot, @NotNull Material material){
-        setItem(slot, new ItemStack(material));
+        if (material.isItem()) setItem(slot, new ItemStack(material));
     }
 
     public void addItem(int slot, int amount){
