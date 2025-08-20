@@ -2,6 +2,7 @@ package me.udnek.coreu.nms;
 
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.IntImmutableList;
 import me.udnek.coreu.custom.enchantment.NmsEnchantmentContainer;
 import me.udnek.coreu.nms.loot.LootContextBuilder;
 import me.udnek.coreu.nms.loot.entry.NmsCustomLootEntryBuilder;
@@ -21,6 +22,8 @@ import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.network.protocol.common.custom.GameTestAddMarkerDebugPayload;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundCooldownPacket;
+import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
+import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.ReloadableServerRegistries;
@@ -72,6 +75,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
 import org.bukkit.craftbukkit.CraftChunk;
+import org.bukkit.craftbukkit.CraftEquipmentSlot;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftEntityType;
@@ -587,6 +591,18 @@ public class Nms {
         ((Mob) NmsUtils.toNmsEntity(mob)).getNavigation().moveTo((Path) null, 1D);
     }
 
+    public void sendFakeEquipment(@NotNull Player entity, @NotNull Player observer, @NotNull EquipmentSlot slot, @Nullable ItemStack item) {
+        NmsUtils.sendPacket(observer, new ClientboundSetEquipmentPacket(
+                NmsUtils.toNmsEntity(entity).getId(),
+                List.of(Pair.of(CraftEquipmentSlot.getNMS(slot), NmsUtils.toNmsItemStack(item)))
+                ));
+    }
+
+    public void sendFakeDestroyEntities(@NotNull List<org.bukkit.entity.Entity> entities, @NotNull Player observer) {
+        var idNmsEntities = new ArrayList<Integer>();
+        entities.forEach(entity ->  idNmsEntities.add(NmsUtils.toNmsEntity(entity).getId()));
+        NmsUtils.sendPacket(observer, new ClientboundRemoveEntitiesPacket(new IntImmutableList(idNmsEntities)));
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     // BIOME
