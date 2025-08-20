@@ -1,11 +1,10 @@
 package me.udnek.coreu.mgu;
 
 import me.udnek.coreu.CoreU;
+import me.udnek.coreu.custom.component.instance.AutoGeneratingFilesItem;
 import me.udnek.coreu.custom.component.instance.LeftClickableItem;
 import me.udnek.coreu.custom.component.instance.RightClickableItem;
 import me.udnek.coreu.custom.item.ConstructableCustomItem;
-import me.udnek.coreu.util.Utils;
-import me.udnek.coreu.custom.component.instance.AutoGeneratingFilesItem;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
