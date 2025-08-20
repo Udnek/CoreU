@@ -38,7 +38,6 @@ public class BaseUniversalSlot implements UniversalInventorySlot {
             return inventoryHolder.getInventory().getItem(slot);
         } else if (equipmentSlot != null) {
             if (entity instanceof Player player){
-                if (equipmentSlot == EquipmentSlot.BODY) return null;///TODO убрать 1.21.5
                 return player.getInventory().getItem(equipmentSlot);
             }else  {
                 EntityEquipment equipment = entity.getEquipment();
