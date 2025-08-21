@@ -2,7 +2,6 @@ package me.udnek.coreu.nms;
 
 import com.mojang.datafixers.util.Either;
 import me.udnek.coreu.nms.loot.util.NmsFields;
-import me.udnek.coreu.util.LogUtils;
 import me.udnek.coreu.util.Reflex;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.key.Keyed;
