@@ -5,6 +5,7 @@ import me.udnek.coreu.mgu.command.MGUCommandContext;
 import me.udnek.coreu.mgu.command.MGUCommandType;
 import me.udnek.coreu.mgu.player.MGUPlayer;
 import me.udnek.coreu.mgu.CoordinateWand;
+import me.udnek.coreu.util.Reflex;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -46,10 +47,15 @@ public abstract class MGUAbstractGame implements MGUGameInstance{
                 Objects.requireNonNull(context.player()).getInventory().addItem(createCoordinateWand());
                 yield MGUCommandType.ExecutionResult.SUCCESS;
             }
+            case EXECUTE -> execute(context);
             default -> MGUCommandType.ExecutionResult.SUCCESS;
         };
     }
 
+    protected @NotNull MGUCommandType.ExecutionResult execute(@NotNull MGUCommandContext context){
+        context.sender().sendMessage("This command doesn't do anything yet, override 'execute' method to add functionality");
+        return MGUCommandType.ExecutionResult.SUCCESS;
+    }
 
     @Override
     public @NotNull List<String> getCommandOptions(@NotNull MGUCommandContext context) {

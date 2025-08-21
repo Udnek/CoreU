@@ -72,7 +72,7 @@ commands:
       permission-message: "You do not have permission to use this command"
   mgu:
       description: "mgu"
-      usage: "/mgu <start/stop/join/leave/debug> [gameId]"
+      usage: "/mgu <start/stop/join/leave/debug/coordinate_want/execute> [gameId]"
       aliases: [coreu_minigame]
       permission: coreu.admin
       permission-message: "You do not have permission to use this command"
