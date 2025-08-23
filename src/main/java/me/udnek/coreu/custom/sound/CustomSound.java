@@ -18,4 +18,6 @@ public interface CustomSound extends Registrable {
     }
     void stop(@NotNull Player player);
     void stop(@NotNull Player player, @NotNull SoundCategory soundCategory);
+    void stopInHearableRadius(@NotNull Location location);
+    void stopInRadius(@NotNull Location location, float radius);
 }

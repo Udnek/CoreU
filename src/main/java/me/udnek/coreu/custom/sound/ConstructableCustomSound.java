@@ -2,6 +2,8 @@ package me.udnek.coreu.custom.sound;
 
 import com.google.common.base.Preconditions;
 import me.udnek.coreu.custom.registry.AbstractRegistrable;
+import net.minecraft.world.level.block.JukeboxBlock;
+import net.minecraft.world.level.block.NoteBlock;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.SoundCategory;
@@ -11,10 +13,10 @@ import org.jetbrains.annotations.Nullable;
 
 public class ConstructableCustomSound extends AbstractRegistrable implements CustomSound {
 
-    protected NamespacedKey path;
-    protected SoundCategory category;
-    protected float volume;
-    protected float pitch;
+    public final NamespacedKey path;
+    public final SoundCategory category;
+    public final float volume;
+    public final float pitch;
 
     public ConstructableCustomSound(@NotNull NamespacedKey path, @NotNull SoundCategory category, float volume, float pitch){
         this.path = path;
@@ -23,8 +25,12 @@ public class ConstructableCustomSound extends AbstractRegistrable implements Cus
         this.pitch = pitch;
     }
 
+    public ConstructableCustomSound(@NotNull NamespacedKey path, @NotNull SoundCategory category, float volume){
+        this(path, category, volume, 1F);
+    }
+
     public ConstructableCustomSound(@NotNull NamespacedKey path, @NotNull SoundCategory category){
-        this(path, category, 1F, 1F);
+        this(path, category, 1F);
     }
 
     @Override
@@ -72,4 +78,25 @@ public class ConstructableCustomSound extends AbstractRegistrable implements Cus
     public void stop(@NotNull Player player, @NotNull SoundCategory soundCategory) {
         player.stopSound(getSoundName(), soundCategory);
     }
+
+    @Override
+    public void stopInHearableRadius(@NotNull Location location) {
+        stopInRadius(location, volume*16);
+    }
+
+    @Override
+    public void stopInRadius(@NotNull Location location, float radius) {
+        location.getWorld().getNearbyPlayers(location, radius).forEach(this::stop);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
