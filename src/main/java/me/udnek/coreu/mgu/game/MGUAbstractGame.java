@@ -1,11 +1,10 @@
 package me.udnek.coreu.mgu.game;
 
+import me.udnek.coreu.mgu.CoordinateWand;
 import me.udnek.coreu.mgu.MGUId;
 import me.udnek.coreu.mgu.command.MGUCommandContext;
 import me.udnek.coreu.mgu.command.MGUCommandType;
 import me.udnek.coreu.mgu.player.MGUPlayer;
-import me.udnek.coreu.mgu.CoordinateWand;
-import me.udnek.coreu.util.Reflex;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

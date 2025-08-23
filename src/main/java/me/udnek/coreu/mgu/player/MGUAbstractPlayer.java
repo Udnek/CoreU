@@ -1,10 +1,10 @@
 package me.udnek.coreu.mgu.player;
 
+import me.udnek.coreu.custom.component.AbstractComponentHolder;
+import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.mgu.MGUManager;
 import me.udnek.coreu.mgu.game.MGUGameInstance;
-import me.udnek.coreu.custom.component.AbstractComponentHolder;
-import me.udnek.coreu.custom.component.CustomComponent;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;

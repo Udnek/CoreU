@@ -2,6 +2,7 @@ package me.udnek.coreu.custom.entitylike.block.constructabletype;
 
 import com.destroystokyo.paper.ParticleBuilder;
 import com.destroystokyo.paper.event.block.BlockDestroyEvent;
+import me.udnek.coreu.CoreU;
 import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.component.CustomComponentMap;
 import me.udnek.coreu.custom.component.instance.RightClickableBlock;
@@ -24,6 +25,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.loot.LootTable;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +45,6 @@ public abstract class AbstractCustomBlockType extends AbstractRegistrable implem
         return components;
     }
 
-
     public abstract @NotNull TileState getRealState();
     public abstract @Nullable ItemStack getParticleBase();
 
@@ -58,7 +59,12 @@ public abstract class AbstractCustomBlockType extends AbstractRegistrable implem
         TileState blockState = (TileState) getRealState().copy(location);
         blockState.getPersistentDataContainer().set(PDC_KEY, PersistentDataType.STRING, getId());
         blockState.update(true, false);
-        CustomBlockManager.getInstance().loadAny(this, blockState);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                CustomBlockManager.getInstance().loadAny(AbstractCustomBlockType.this, (TileState) location.getBlock().getState());
+            }
+        }.runTask(CoreU.getInstance());
         @Nullable SoundGroup soundGroup = getSoundGroup();
         if (soundGroup != null) {
             location.getWorld().playSound(location.toCenterLocation(), soundGroup.getPlaceSound(), SoundCategory.BLOCKS, soundGroup.getVolume(), soundGroup.getPitch());

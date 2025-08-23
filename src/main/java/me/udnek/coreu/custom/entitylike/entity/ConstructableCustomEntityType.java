@@ -1,5 +1,6 @@
 package me.udnek.coreu.custom.entitylike.entity;
 
+import me.udnek.coreu.CoreU;
 import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.component.CustomComponentMap;
 import me.udnek.coreu.custom.registry.AbstractRegistrable;
@@ -8,6 +9,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,7 +34,12 @@ public abstract class ConstructableCustomEntityType<T extends Entity> extends Ab
         T entity = spawnNewEntity(location);
         PersistentDataContainer persistentDataContainer = entity.getPersistentDataContainer();
         persistentDataContainer.set(PDC_NAMESPACE, PersistentDataType.STRING, getId());
-        CustomEntityManager.getInstance().loadAny(this, entity);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                CustomEntityManager.getInstance().loadAny(ConstructableCustomEntityType.this, entity);
+            }
+        }.runTask(CoreU.getInstance());
         return entity;
     }
 }

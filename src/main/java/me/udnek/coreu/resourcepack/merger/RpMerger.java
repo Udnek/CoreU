@@ -71,7 +71,7 @@ public class RpMerger {
             files.addAll(resourcePack.getAllFoundFiles());
         }
 
-        LogUtils.pluginLog("AutoAdding:");
+        LogUtils.pluginLog("AutoAdding...");
         List<VirtualRpJsonFile> toAdd = new ArrayList<>();
         for (CustomItem item : CustomRegistries.ITEM.getAll()) {
             toAdd.addAll(item.getComponents().getOrDefault(CustomComponentType.AUTO_GENERATING_FILES_ITEM).getFiles(item));
@@ -81,11 +81,11 @@ public class RpMerger {
         toAdd.addAll(event.getFiles());
         for (VirtualRpJsonFile file : toAdd) {
             if (files.contains(file)) continue;
-            LogUtils.pluginLog(file);
+            //LogUtils.pluginLog(file);
             files.add(file);
         }
         for (VirtualRpJsonFile file : event.getForcedFiles()) {
-            LogUtils.pluginLog(file);
+            //LogUtils.pluginLog(file);
             files.add(file);
         }
         LogUtils.pluginLog("Finished AutoAdding");

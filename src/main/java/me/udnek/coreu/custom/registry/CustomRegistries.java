@@ -1,7 +1,6 @@
 package me.udnek.coreu.custom.registry;
 
 import me.udnek.coreu.CoreU;
-import me.udnek.coreu.mgu.game.MGUGameType;
 import me.udnek.coreu.custom.attribute.CustomAttribute;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.effect.CustomEffect;
@@ -12,6 +11,7 @@ import me.udnek.coreu.custom.equipmentslot.slot.CustomEquipmentSlot;
 import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.custom.loot.LootTableRegistry;
 import me.udnek.coreu.custom.sound.CustomSound;
+import me.udnek.coreu.mgu.game.MGUGameType;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 

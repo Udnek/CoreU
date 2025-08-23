@@ -1,9 +1,9 @@
 package me.udnek.coreu.rpgu.component.ability;
 
 import me.udnek.coreu.custom.component.AbstractComponentHolder;
-import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.custom.equipmentslot.slot.SingleSlot;
 import me.udnek.coreu.custom.equipmentslot.universal.UniversalInventorySlot;
+import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.rpgu.component.RPGUComponents;
 import me.udnek.coreu.rpgu.component.ability.property.RPGUAbilityProperty;
 import me.udnek.coreu.util.Either;

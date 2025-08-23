@@ -2,7 +2,6 @@ package me.udnek.coreu.custom.item;
 
 import io.papermc.paper.datacomponent.DataComponentType;
 import io.papermc.paper.datacomponent.DataComponentTypes;
-import io.papermc.paper.datacomponent.item.ItemAttributeModifiers;
 import io.papermc.paper.datacomponent.item.TooltipDisplay;
 import me.udnek.coreu.CoreU;
 import me.udnek.coreu.custom.component.CustomComponentType;

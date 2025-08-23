@@ -1,11 +1,11 @@
 package me.udnek.coreu.mgu.component;
 
-import me.udnek.coreu.mgu.Resettable;
-import me.udnek.coreu.mgu.player.MGUPlayer;
 import me.udnek.coreu.custom.component.AbstractComponentHolder;
 import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.component.CustomComponentMap;
 import me.udnek.coreu.custom.component.CustomComponentType;
+import me.udnek.coreu.mgu.Resettable;
+import me.udnek.coreu.mgu.player.MGUPlayer;
 import org.jetbrains.annotations.NotNull;
 
 public class MGUPlayerDataHolder extends AbstractComponentHolder<MGUPlayerDataHolder, MGUPlayerData> implements CustomComponent<MGUPlayer>, Resettable {

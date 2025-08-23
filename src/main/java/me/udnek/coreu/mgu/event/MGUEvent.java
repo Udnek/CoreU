@@ -1,7 +1,7 @@
 package me.udnek.coreu.mgu.event;
 
-import me.udnek.coreu.mgu.game.MGUGameInstance;
 import me.udnek.coreu.custom.event.CustomEvent;
+import me.udnek.coreu.mgu.game.MGUGameInstance;
 import org.jetbrains.annotations.NotNull;
 
 public class MGUEvent extends CustomEvent {

@@ -3,7 +3,6 @@ package me.udnek.coreu.rpgu.component.ability.active;
 import com.destroystokyo.paper.ParticleBuilder;
 import me.udnek.coreu.rpgu.component.RPGUComponents;
 import me.udnek.coreu.util.Utils;
-
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.RayTraceResult;

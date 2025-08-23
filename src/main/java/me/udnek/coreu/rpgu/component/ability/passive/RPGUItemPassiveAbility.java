@@ -2,8 +2,8 @@ package me.udnek.coreu.rpgu.component.ability.passive;
 
 import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.equipmentslot.slot.CustomEquipmentSlot;
-import me.udnek.coreu.rpgu.component.ability.RPGUItemAbility;
 import me.udnek.coreu.rpgu.component.RPGUPassiveAbilityItem;
+import me.udnek.coreu.rpgu.component.ability.RPGUItemAbility;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
