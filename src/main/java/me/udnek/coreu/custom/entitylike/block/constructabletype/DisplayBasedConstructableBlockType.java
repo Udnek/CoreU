@@ -39,6 +39,15 @@ public abstract class DisplayBasedConstructableBlockType extends AbstractCustomB
         DEFAULT_REAL_STATE = state;
     }
 
+    @Override
+    public void load(@NotNull TileState tileState) {
+        if (getDisplay(tileState.getBlock()) != null) return;
+        placeAndReturnDisplay(tileState.getLocation(), CustomBlockPlaceContext.EMPTY);
+    }
+
+    @Override
+    public void unload(@NotNull TileState tileState) {}
+
     public @NotNull ItemStack getFakeDisplay() {
         CustomItem item = getItem();
         return item != null ? item.getItem() : new ItemStack(Material.BAMBOO_PLANKS);
@@ -48,9 +57,7 @@ public abstract class DisplayBasedConstructableBlockType extends AbstractCustomB
     public @NotNull ItemStack getParticleBase() {return getFakeDisplay();}
 
     @Override
-    public @NotNull TileState getRealState() {
-        return DEFAULT_REAL_STATE;
-    }
+    public @NotNull TileState getRealState() {return DEFAULT_REAL_STATE;}
 
     @Override
     public @Nullable BlockState getFakeState() {return DEFAULT_FAKE_STATE;}

@@ -10,6 +10,8 @@ import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 public interface CustomInventory extends InventoryHolder {
     static boolean isCustom(@NotNull Inventory inventory){
         return inventory.getHolder() instanceof CustomInventory;
@@ -31,5 +33,8 @@ public interface CustomInventory extends InventoryHolder {
     default boolean shouldAutoUpdateItems(){return true;}
     default boolean isOpened(@NotNull Player player){ return get(player.getOpenInventory().getTopInventory()) == this; }
     default boolean isOpenedByAnyone() { return !getInventory().getViewers().isEmpty(); }
+    default @NotNull List<Player> getViewers(){
+        return getInventory().getViewers().stream().map(human -> (Player) human).toList();
+    }
 }
 
