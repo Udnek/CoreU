@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -81,11 +82,12 @@ public class ItemUtils {
         return Material.getMaterial(name.toUpperCase()) != null;
     }
 
-    public static ItemStack getFromCustomItemOrMaterial(@NotNull String name){
-        if (CustomItem.idExists(name)) return CustomItem.get(name).getItem();
+    public static @Nullable ItemStack getFromCustomItemOrMaterial(@NotNull String name){
+        CustomItem customItem = CustomItem.get(name);
+        if (customItem != null) return customItem.getItem();
         Material material = Material.getMaterial(name.toUpperCase());
-        if (material == null) return new ItemStack(Material.AIR);
-        return new ItemStack(material);
+        if (material != null && material.isItem()) return new ItemStack(material);
+        return null;
     }
 
     @Deprecated
