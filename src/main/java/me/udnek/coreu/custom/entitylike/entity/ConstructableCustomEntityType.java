@@ -26,7 +26,7 @@ public abstract class ConstructableCustomEntityType<T extends Entity> extends Ab
     public abstract @NotNull EntityType getVanillaType();
 
     @MustBeInvokedByOverriders
-    public @NotNull T spawnNewEntity(@NotNull Location location){
+    protected @NotNull T spawnNewEntity(@NotNull Location location){
         return (T) location.getWorld().spawnEntity(location, getVanillaType());
     }
 
@@ -34,12 +34,8 @@ public abstract class ConstructableCustomEntityType<T extends Entity> extends Ab
         T entity = spawnNewEntity(location);
         PersistentDataContainer persistentDataContainer = entity.getPersistentDataContainer();
         persistentDataContainer.set(PDC_NAMESPACE, PersistentDataType.STRING, getId());
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                CustomEntityManager.getInstance().loadAny(ConstructableCustomEntityType.this, entity);
-            }
-        }.runTask(CoreU.getInstance());
+
+        CustomEntityManager.getInstance().loadAny(this, entity);
         return entity;
     }
 }

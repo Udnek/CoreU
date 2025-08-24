@@ -51,9 +51,11 @@ public class CustomEffectCommand implements CommandExecutor, TabExecutor {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] args) {
-        if (args.length > 2) return List.of("level");
-        if (args.length > 1) return List.of("duration");
+        if (args.length >= 4) return List.of();
+        if (args.length == 3) return List.of("level");
+        if (args.length == 2) return List.of("duration");
         List<String> ids = new ArrayList<>(Registry.EFFECT.stream().map(t -> t.key().asString()).toList());
+        ids.addAll(CustomRegistries.EFFECT.getIds());
         if (args.length > 0) ids.removeIf(id -> !id.contains(args[0]));
         return ids;
     }

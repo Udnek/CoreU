@@ -63,8 +63,8 @@ public abstract class DisplayBasedConstructableBlockType extends AbstractCustomB
     public @Nullable BlockState getFakeState() {return DEFAULT_FAKE_STATE;}
 
     @Override
-    public void place(@NotNull Location location, @NotNull CustomBlockPlaceContext context) {
-        super.place(location, context);
+    protected void internalPlace(@NotNull Location location, @NotNull CustomBlockPlaceContext context) {
+        super.internalPlace(location, context);
         placeAndReturnDisplay(location, context);
     }
 

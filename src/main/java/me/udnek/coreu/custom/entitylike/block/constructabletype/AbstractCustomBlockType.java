@@ -2,7 +2,6 @@ package me.udnek.coreu.custom.entitylike.block.constructabletype;
 
 import com.destroystokyo.paper.ParticleBuilder;
 import com.destroystokyo.paper.event.block.BlockDestroyEvent;
-import me.udnek.coreu.CoreU;
 import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.component.CustomComponentMap;
 import me.udnek.coreu.custom.component.instance.RightClickableBlock;
@@ -25,16 +24,13 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.loot.LootTable;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.MustBeInvokedByOverriders;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.*;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public abstract class AbstractCustomBlockType extends AbstractRegistrable implements CustomBlockType {
 
@@ -48,27 +44,40 @@ public abstract class AbstractCustomBlockType extends AbstractRegistrable implem
     public abstract @NotNull TileState getRealState();
     public abstract @Nullable ItemStack getParticleBase();
 
+    public <T extends TileState> @NotNull T getState(@NotNull Location location){
+        return getState(location.getBlock());
+    }
+    public <T extends TileState> @NotNull T getState(@NotNull Block block){
+        return (T) block.getState();
+    }
+
     @ApiStatus.Experimental
     public @Nullable SoundGroup getSoundGroup(){
         return getBreakSpeedBaseBlock().createBlockData().getSoundGroup();
     }
 
-    @OverridingMethodsMustInvokeSuper
-    @Override
-    public void place(@NotNull Location location, @NotNull CustomBlockPlaceContext context){
-        TileState blockState = (TileState) getRealState().copy(location);
-        blockState.getPersistentDataContainer().set(PDC_KEY, PersistentDataType.STRING, getId());
-        blockState.update(true, false);
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                CustomBlockManager.getInstance().loadAny(AbstractCustomBlockType.this, (TileState) location.getBlock().getState());
-            }
-        }.runTask(CoreU.getInstance());
+    public void storeData(@NotNull TileState state, @NotNull String name, @NotNull String value){
+        state.getPersistentDataContainer().set(new NamespacedKey(key().namespace(), name), PersistentDataType.STRING, value);
+        state.update();
+    }
+    public <T> @UnknownNullability T loadData(TileState state, String name, Function<@Nullable String, T> deserializer){
+        return deserializer.apply(state.getPersistentDataContainer().get(new NamespacedKey(key().namespace(), name), PersistentDataType.STRING));
+    }
+
+    protected void internalPlace(@NotNull Location location, @NotNull CustomBlockPlaceContext context){
         @Nullable SoundGroup soundGroup = getSoundGroup();
         if (soundGroup != null) {
             location.getWorld().playSound(location.toCenterLocation(), soundGroup.getPlaceSound(), SoundCategory.BLOCKS, soundGroup.getVolume(), soundGroup.getPitch());
         }
+    }
+
+    @Override
+    public final void place(@NotNull Location location, @NotNull CustomBlockPlaceContext context){
+        TileState blockState = (TileState) getRealState().copy(location);
+        blockState.getPersistentDataContainer().set(PDC_KEY, PersistentDataType.STRING, getId());
+        blockState.update(true, false);
+        internalPlace(location, context);
+        CustomBlockManager.getInstance().loadAny(AbstractCustomBlockType.this, getState(location));
     }
 
 
@@ -246,7 +255,7 @@ public abstract class AbstractCustomBlockType extends AbstractRegistrable implem
 
     @OverridingMethodsMustInvokeSuper
     public void onGenericDestroy(@NotNull Block block){
-        CustomBlockManager.getInstance().unloadAny(this, (TileState) block.getState());
+        CustomBlockManager.getInstance().unloadAny(this, getState(block));
 
         ItemStack particleBase = getParticleBase();
         if (particleBase == null) return;
