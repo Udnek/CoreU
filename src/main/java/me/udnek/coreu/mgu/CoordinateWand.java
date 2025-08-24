@@ -19,7 +19,9 @@ import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class CoordinateWand extends ConstructableCustomItem {
@@ -72,8 +74,7 @@ public class CoordinateWand extends ConstructableCustomItem {
                             ", Yaw: " + yaw +
                             ", Pitch: " + pitch +
                             ", PlayerFacing: " + player.getFacing() + "]")
-                    .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD,
-                            x + ", " + y + ", " + z + ", " + yaw + "f, " + pitch+"f"));
+                    .clickEvent(ClickEvent.copyToClipboard(x + ", " + y + ", " + z + ", " + yaw + "f, " + pitch+"f"));
 
             event.getPlayer().sendMessage(component.append(copy
                     .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT, Component.text("Click to copy")))
@@ -95,7 +96,7 @@ public class CoordinateWand extends ConstructableCustomItem {
 
             Component component = Component.text("Block Location: ").color(NamedTextColor.GOLD);
             TextComponent copy = Component.text("[X: " + x + ", Y: " + y + ", Z: " + z + "]")
-                    .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, x + ", " + y + ", " + z));
+                    .clickEvent(ClickEvent.copyToClipboard(x + ", " + y + ", " + z));
 
             event.getPlayer().sendMessage(component.append(copy
                     .hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT, Component.text("Click to copy")))
@@ -104,9 +105,9 @@ public class CoordinateWand extends ConstructableCustomItem {
     }
 
     public @NotNull String round(double number) {
-        return new DecimalFormat("#.0#").format(number);
+        return new DecimalFormat("#.0#", new DecimalFormatSymbols(Locale.US)).format(number);
     }
     public @NotNull String round(float number) {
-        return new DecimalFormat("#.#").format(number);
+        return new DecimalFormat("#.#", new DecimalFormatSymbols(Locale.US)).format(number);
     }
 }
