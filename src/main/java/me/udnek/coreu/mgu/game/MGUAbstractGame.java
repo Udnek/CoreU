@@ -9,6 +9,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,6 @@ import java.util.Objects;
 public abstract class MGUAbstractGame implements MGUGameInstance{
 
     private final MGUId id = MGUId.generateNew(this);
-    protected boolean isRunning = false;
 
     @Override
     public final @NotNull MGUId getId() {return id;}
@@ -74,14 +74,10 @@ public abstract class MGUAbstractGame implements MGUGameInstance{
     public @NotNull List<Component> getDebug(MGUCommandContext context){
         List<Component> list = new ArrayList<>();
         list.add(Component.text("Game debug data: " + getId()));
-        list.add(Component.text("isRunning: " + isRunning));
+        list.add(Component.text("isRunning: " + isRunning()));
         list.add(Component.text("players: " + getPlayers()));
         return list;
     }
-
-    @Override
-    public boolean isRunning() {return isRunning;}
-
 
     public abstract @NotNull List<MGUPlayer> getPlayers();
     public abstract @NotNull MGUCommandType.ExecutionResult start(@NotNull MGUCommandContext context);

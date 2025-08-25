@@ -14,14 +14,7 @@ import java.util.Objects;
 public enum MGUCommandType {
     START("start", 1,false),
     STOP("stop", 1,false),
-    JOIN("join", 1,true){
-        @Override
-        public @NotNull ExecutionResult execute(@NotNull CommandSender sender, @NotNull String[] args) {
-            MGUGameInstance game = Objects.requireNonNull(MGUManager.get().getGame(args[1]));
-            if (MGUManager.get().getPlayer(((Player) sender)) != null) return new ExecutionResult(ExecutionResult.Type.FAIL, "executor is mguPlayer");
-            return game.executeCommand(new MGUCommandContext(this, sender, args, game, game.getType()));
-        }
-    },
+    JOIN("join", 1,true),
     LEAVE("leave", 0,true) {
         @Override
         public boolean testArgs(@NotNull CommandSender sender, @NotNull String[] args) {
