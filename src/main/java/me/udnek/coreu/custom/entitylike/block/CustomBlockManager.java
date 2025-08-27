@@ -157,12 +157,15 @@ public class CustomBlockManager extends EntityLikeManager<TileState, CustomBlock
     }
     @EventHandler
     public void onExplode(BlockExplodeEvent event){
-        CustomBlockType.consumeIfCustom(event.getExplodedBlockState().getBlock(), block -> block.onDestroy(event));
+        System.out.println(event.getYield());
+        for (Block block : event.blockList()) {
+            CustomBlockType.consumeIfCustom(block, type -> type.onTouchedByExplosion(event, block));
+        }
     }
     @EventHandler
     public void onEntityExplode(EntityExplodeEvent event){
         for (Block block : event.blockList()) {
-            CustomBlockType.consumeIfCustom(block, type -> type.onDestroy(event, block));
+            CustomBlockType.consumeIfCustom(block, type -> type.onTouchedByExplosion(event, block));
         }
     }
     @EventHandler

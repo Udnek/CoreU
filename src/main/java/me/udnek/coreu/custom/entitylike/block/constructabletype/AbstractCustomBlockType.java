@@ -8,6 +8,7 @@ import me.udnek.coreu.custom.component.instance.RightClickableBlock;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockManager;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockPlaceContext;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockType;
+import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.custom.registry.AbstractRegistrable;
 import me.udnek.coreu.nms.Nms;
 import me.udnek.coreu.nms.loot.LootContextBuilder;
@@ -29,6 +30,7 @@ import org.jetbrains.annotations.*;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -82,7 +84,11 @@ public abstract class AbstractCustomBlockType extends AbstractRegistrable implem
 
 
     @ApiStatus.Experimental
-    public abstract @Nullable Either<LootTable, List<ItemStack>> getLoot();
+    public @Nullable Either<LootTable, List<ItemStack>> getLoot(){
+        CustomItem item = getItem();
+        if (item == null) return null;
+        return new Either<>(null, List.of(item.getItem()));
+    }
 
     @Override
     public void afterInitialization() {
@@ -105,14 +111,24 @@ public abstract class AbstractCustomBlockType extends AbstractRegistrable implem
     }
 
     @Override
-    public void onDestroy(@NotNull EntityExplodeEvent event, @NotNull Block block) {
+    public void onTouchedByExplosion(@NotNull EntityExplodeEvent event, @NotNull Block block) {
+        onTouchedByExplosion(event.getExplosionResult(), event.getYield(), block);
+    }
+    @Override
+    public void onTouchedByExplosion(@NotNull BlockExplodeEvent event, @NotNull Block block) {
+        onTouchedByExplosion(event.getExplosionResult(), event.getYield(), block);
+    }
+
+    protected void onTouchedByExplosion(@NotNull ExplosionResult explosionResult, float dropChance, @NotNull Block block){
+        if (!(explosionResult == ExplosionResult.DESTROY || explosionResult == ExplosionResult.DESTROY_WITH_DECAY)) return;
+        if (new Random().nextFloat() <= dropChance){
+            // drop
+            dropItems(block, ItemStack.empty());
+        }
         onGenericDestroy(block);
         block.setType(Material.AIR);
     }
-    @Override
-    public void onDestroy(@NotNull BlockExplodeEvent event) {
-        onGenericDestroy(event.getExplodedBlockState().getBlock());
-    }
+
     @Override
     public void onDestroy(@NotNull BlockDestroyEvent event){
         onGenericDestroy(event.getBlock());
@@ -161,13 +177,11 @@ public abstract class AbstractCustomBlockType extends AbstractRegistrable implem
         });
     }
 
-
-    public void dropItems(@NotNull BlockBreakEvent event){
-        if (event.getPlayer().getGameMode() == GameMode.CREATIVE) return;
+    public void dropItems(@NotNull Block block, @NotNull ItemStack tool){
         @Nullable Either<LootTable, List<ItemStack>> loot = getLoot();
         if (loot == null) return;
-        World world = event.getBlock().getWorld();
-        Location centerLocation = event.getBlock().getLocation().toCenterLocation();
+        World world = block.getWorld();
+        Location centerLocation = block.getLocation().toCenterLocation();
         List<ItemStack> drops = new ArrayList<>();
         loot.consumeEither(new Consumer<List<ItemStack>>() {
             @Override
@@ -177,12 +191,10 @@ public abstract class AbstractCustomBlockType extends AbstractRegistrable implem
         }, new Consumer<LootTable>() {
             @Override
             public void accept(LootTable lootTable) {
-                World world = event.getBlock().getWorld();
-
                 List<ItemStack> stacks = Nms.get().populateLootTable(lootTable,
                         new LootContextBuilder(lootTable, world)
-                                .blockState(event.getBlock().getState())
-                                .tool(event.getPlayer().getInventory().getItemInMainHand())
+                                .blockState(block.getState())
+                                .tool(tool)
                                 .origin(centerLocation)
                 );
 
@@ -197,7 +209,9 @@ public abstract class AbstractCustomBlockType extends AbstractRegistrable implem
     public void onDestroy(@NotNull BlockBreakEvent event){
         event.setExpToDrop(0);
         event.setDropItems(false);
-        dropItems(event);
+        if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
+            dropItems(event.getBlock(), event.getPlayer().getInventory().getItemInMainHand());
+        }
         onGenericDestroy(event.getBlock());
     }
     @Override

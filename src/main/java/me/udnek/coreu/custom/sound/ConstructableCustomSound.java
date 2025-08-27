@@ -2,8 +2,6 @@ package me.udnek.coreu.custom.sound;
 
 import com.google.common.base.Preconditions;
 import me.udnek.coreu.custom.registry.AbstractRegistrable;
-import net.minecraft.world.level.block.JukeboxBlock;
-import net.minecraft.world.level.block.NoteBlock;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.SoundCategory;

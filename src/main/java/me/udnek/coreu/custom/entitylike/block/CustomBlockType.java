@@ -70,10 +70,10 @@ public interface CustomBlockType extends ComponentHolder<CustomBlockType, Custom
     void destroy(@NotNull Location location);
     void onDestroy(@NotNull BlockFadeEvent event);
     void onDestroy(@NotNull BlockBurnEvent event);
-    void onDestroy(@NotNull EntityExplodeEvent event, @NotNull Block block);
+    void onTouchedByExplosion(@NotNull EntityExplodeEvent event, @NotNull Block block);
     void onDestroy(@NotNull BlockDestroyEvent event);
     void onDestroy(@NotNull BlockBreakEvent event);
-    void onDestroy(@NotNull BlockExplodeEvent event);
+    void onTouchedByExplosion(@NotNull BlockExplodeEvent event, @NotNull Block block);
 
     void customBreakTickProgress(@NotNull Block block, @NotNull Player player, float progress);
 

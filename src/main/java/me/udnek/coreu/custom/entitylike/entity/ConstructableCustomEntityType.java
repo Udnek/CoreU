@@ -1,6 +1,5 @@
 package me.udnek.coreu.custom.entitylike.entity;
 
-import me.udnek.coreu.CoreU;
 import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.component.CustomComponentMap;
 import me.udnek.coreu.custom.registry.AbstractRegistrable;
@@ -9,7 +8,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
 
