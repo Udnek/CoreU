@@ -221,7 +221,7 @@ public class CustomBlockManager extends EntityLikeManager<TileState, CustomBlock
         for (BlockState blockState : event.getChunk().getTileEntities()) {
             CustomBlockType customBlockType = CustomBlockType.get((TileState) blockState);
             if (customBlockType == null) continue;
-            if (customBlockType.getFakeState() == null) return;
+            if (customBlockType.getFakeState() == null) continue;
             blocksToSendPackets.add(blockState);
         }
         if (blocksToSendPackets.isEmpty()) return;
