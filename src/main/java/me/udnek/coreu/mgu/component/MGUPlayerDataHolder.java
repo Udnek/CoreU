@@ -21,9 +21,7 @@ public class MGUPlayerDataHolder extends AbstractComponentHolder<MGUPlayerDataHo
 
     @Override
     public void reset() {
-        for (CustomComponent<? super MGUPlayerDataHolder> component : getComponents()) {
-            if (component instanceof Resettable resettable) resettable.reset();
-        }
+        getComponents().getAllTyped(MGUPlayerData.class).forEach(Resettable::reset);
     }
 
     @Override
