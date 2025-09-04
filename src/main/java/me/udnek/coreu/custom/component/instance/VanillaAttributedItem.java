@@ -6,7 +6,7 @@ import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.equipmentslot.slot.CustomEquipmentSlot;
 import me.udnek.coreu.custom.item.CustomItem;
-import me.udnek.coreu.custom.item.CustomItemComponent;
+import me.udnek.coreu.custom.item.LoreProvidingItemComponent;
 import me.udnek.coreu.rpgu.lore.AttributeLoreGenerator;
 import me.udnek.coreu.rpgu.lore.AttributesLorePart;
 import me.udnek.coreu.util.LoreBuilder;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Map;
 
-public class VanillaAttributedItem implements CustomItemComponent {
+public class VanillaAttributedItem implements LoreProvidingItemComponent {
 
     public static final VanillaAttributedItem EMPTY = new VanillaAttributedItem(){
         @Override
@@ -64,8 +64,7 @@ public class VanillaAttributedItem implements CustomItemComponent {
     }
 
     @Override
-    public @NotNull CustomComponentType<? extends CustomItem, ? extends CustomComponent<CustomItem>> getType() {
+    public @NotNull CustomComponentType<CustomItem, ? extends CustomComponent<CustomItem>> getType() {
         return CustomComponentType.VANILLA_ATTRIBUTED_ITEM;
     }
-
 }

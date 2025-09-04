@@ -5,27 +5,33 @@ import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.component.CustomComponentMap;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.item.CustomItem;
-import me.udnek.coreu.custom.item.CustomItemComponent;
+import me.udnek.coreu.custom.item.LoreProvidingItemComponent;
 import me.udnek.coreu.rpgu.component.ability.active.RPGUItemActiveAbility;
 import me.udnek.coreu.util.LoreBuilder;
 import org.jetbrains.annotations.NotNull;
 
-public class RPGUActiveAbilityItem extends AbstractComponentHolder<RPGUActiveAbilityItem, RPGUItemActiveAbility<?>> implements CustomItemComponent {
+import java.util.List;
+
+public class RPGUActiveAbilityItem extends AbstractComponentHolder<RPGUActiveAbilityItem> implements LoreProvidingItemComponent {
 
     public static final RPGUActiveAbilityItem DEFAULT = new RPGUActiveAbilityItem(){
         @Override
-        public @NotNull CustomComponentMap<RPGUActiveAbilityItem, RPGUItemActiveAbility<?>> getComponents() {
-            return CustomComponentMap.immutableAlwaysEmpty();
+        public @NotNull CustomComponentMap<RPGUActiveAbilityItem> getComponents() {
+            return CustomComponentMap.immutableEmpty();
         }
     };
 
+    public @NotNull List<RPGUItemActiveAbility> getAbilities(){
+        return getComponents().getAllTyped(RPGUItemActiveAbility.class);
+    }
+
     @Override
-    public @NotNull CustomComponentType<? extends CustomItem, ? extends CustomComponent<CustomItem>> getType() {
+    public @NotNull CustomComponentType<? super CustomItem, ? extends CustomComponent<? super CustomItem>> getType() {
         return RPGUComponents.ACTIVE_ABILITY_ITEM;
     }
 
     @Override
     public void getLore(@NotNull CustomItem customItem, @NotNull LoreBuilder loreBuilder) {
-        for (RPGUItemActiveAbility<?> component : getComponents()) component.getLore(loreBuilder);
+        getAbilities().forEach(component -> component.getLore(loreBuilder));
     }
 }

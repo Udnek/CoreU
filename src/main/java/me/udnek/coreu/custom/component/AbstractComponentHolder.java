@@ -2,11 +2,11 @@ package me.udnek.coreu.custom.component;
 
 import org.jetbrains.annotations.NotNull;
 
-public abstract class AbstractComponentHolder<HolderType, Component extends CustomComponent<HolderType>> implements ComponentHolder<HolderType, Component> {
-    private CustomComponentMap<HolderType, Component> components = null;
+public abstract class AbstractComponentHolder<HolderType> implements ComponentHolder<HolderType> {
+    private CustomComponentMap<HolderType> components = null;
 
     @Override
-    public @NotNull CustomComponentMap<HolderType, Component> getComponents() {
+    public @NotNull CustomComponentMap<HolderType> getComponents() {
         if (components == null) components = new CustomComponentMap<>();
         return components;
     }

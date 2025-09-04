@@ -214,6 +214,7 @@ public class CustomBlockManager extends EntityLikeManager<TileState, CustomBlock
         if (customBlockType == null) return;
         customBlockType.getComponents().getOrDefault(CustomComponentType.RIGHT_CLICKABLE_BLOCK).onRightClick(customBlockType, event);
     }
+
     @EventHandler
     public void onPlayerChunkLoad(@NotNull PlayerChunkLoadEvent event){
         List<BlockState> blocksToSendPackets = new ArrayList<>();

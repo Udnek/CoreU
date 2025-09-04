@@ -10,6 +10,11 @@ import org.jetbrains.annotations.NotNull;
 
 public interface CustomComponentType<HolderType, Component extends CustomComponent<HolderType>> extends Registrable {
 
+    CustomComponentType<Object, TranslatableThing>
+            TRANSLATABLE_THING = register(new ConstructableComponentType<>("translatable_thing", TranslatableThing.DEFAULT));
+
+    // ITEM
+
     CustomComponentType<CustomItem, CustomAttributedItem>
             CUSTOM_ATTRIBUTED_ITEM = register(new ConstructableComponentType<>("custom_attributed_item", CustomAttributedItem.EMPTY, CustomAttributedItem::new));
 

@@ -4,7 +4,7 @@ import me.udnek.coreu.CoreU;
 import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.item.CustomItem;
-import me.udnek.coreu.custom.item.CustomItemComponent;
+import me.udnek.coreu.custom.item.LoreProvidingItemComponent;
 import me.udnek.coreu.nms.Nms;
 import org.bukkit.block.Block;
 import org.bukkit.block.Dispenser;
@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
-public interface DispensableItem extends CustomItemComponent {
+public interface DispensableItem extends LoreProvidingItemComponent {
     DispensableItem DEFAULT = new DispensableItem() {
         @Override
         public void onDispense(@NotNull CustomItem item, @NotNull BlockDispenseEvent event) {}
@@ -49,7 +49,8 @@ public interface DispensableItem extends CustomItemComponent {
     void onDrop(@NotNull CustomItem item, @NotNull BlockDispenseEvent event);
 
     @Override
-    default @NotNull CustomComponentType<? extends CustomItem, ? extends CustomComponent<CustomItem>> getType() {
+    @NotNull
+    default CustomComponentType<CustomItem, ? extends CustomComponent<CustomItem>> getType(){
         return CustomComponentType.DISPENSABLE_ITEM;
     }
 }

@@ -31,7 +31,8 @@ public interface HopperInteractingBlock extends CustomComponent<CustomBlockType>
 
 
     @Override
-    default @NotNull CustomComponentType<? extends CustomBlockType, ? extends CustomComponent<CustomBlockType>> getType() {
+    @NotNull
+    default CustomComponentType<CustomBlockType, ? extends CustomComponent<CustomBlockType>> getType(){
         return CustomComponentType.HOPPER_INTERACTING_BLOCK;
     }
 }

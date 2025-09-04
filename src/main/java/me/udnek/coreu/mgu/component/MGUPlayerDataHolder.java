@@ -8,28 +8,26 @@ import me.udnek.coreu.mgu.Resettable;
 import me.udnek.coreu.mgu.player.MGUPlayer;
 import org.jetbrains.annotations.NotNull;
 
-public class MGUPlayerDataHolder extends AbstractComponentHolder<MGUPlayerDataHolder, MGUPlayerData> implements CustomComponent<MGUPlayer>, Resettable {
+public class MGUPlayerDataHolder extends AbstractComponentHolder<MGUPlayerDataHolder> implements CustomComponent<MGUPlayer>, Resettable {
 
     public static final MGUPlayerDataHolder DEFAULT = new MGUPlayerDataHolder(){
         @Override
-        public @NotNull CustomComponentMap<MGUPlayerDataHolder, MGUPlayerData> getComponents() {
-            return CustomComponentMap.immutableAlwaysEmpty();
+        public @NotNull CustomComponentMap<MGUPlayerDataHolder> getComponents() {
+            return CustomComponentMap.immutableEmpty();
         }
     };
 
     public MGUPlayerDataHolder(){}
 
-    public void clear(){
-        for (MGUPlayerData component : getComponents()) getComponents().remove(component.getType());
-    }
-
     @Override
     public void reset() {
-        for (MGUPlayerData component : getComponents()) component.reset();
+        for (CustomComponent<? super MGUPlayerDataHolder> component : getComponents()) {
+            if (component instanceof Resettable resettable) resettable.reset();
+        }
     }
 
     @Override
-    public @NotNull CustomComponentType<? extends MGUPlayer, ? extends CustomComponent<MGUPlayer>> getType() {
+    public @NotNull CustomComponentType<? super MGUPlayer, ? extends CustomComponent<? super MGUPlayer>> getType() {
         return MGUComponents.PLAYER_DATA;
     }
 }

@@ -30,7 +30,7 @@ public class MissUsageCooldownMultiplierProperty implements RPGUAbilityProperty<
     public void describe(@NotNull AbilityLorePart componentable) {}
 
     @Override
-    public @NotNull CustomComponentType<? extends RPGUItemAbility<?>, ? extends CustomComponent<RPGUItemAbility<?>>> getType() {
+    public @NotNull CustomComponentType<? super RPGUItemAbility<?>, ? extends CustomComponent<? super RPGUItemAbility<?>>> getType() {
         return RPGUComponents.ABILITY_MISS_USAGE_COOLDOWN_MULTIPLIER;
     }
 }

@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 public abstract class RPGUConstructableActiveAbility<ActivationContext> extends RPGUItemAbstractAbility<ActivationContext> implements RPGUItemActiveAbility<ActivationContext> {
 
     public void addPropertyLines(@NotNull ActiveAbilityLorePart componentable){
-        getComponents().forEach(c -> c.describe(componentable));
+        getProperties().forEach(c -> c.describe(componentable));
     }
 
 

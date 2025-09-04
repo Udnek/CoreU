@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public interface CustomItem extends Registrable, ComponentHolder<CustomItem, CustomItemComponent>, Translatable {
+public interface CustomItem extends Registrable, ComponentHolder<CustomItem>, Translatable {
 
     NamespacedKey PERSISTENT_DATA_CONTAINER_NAMESPACE = new NamespacedKey(CoreU.getInstance(), "item");
 

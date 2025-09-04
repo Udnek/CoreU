@@ -2,7 +2,6 @@ package me.udnek.coreu.resourcepack.path;
 
 import com.google.common.base.Charsets;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import me.udnek.coreu.resourcepack.VirtualResourcePack;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +17,7 @@ public class VirtualRpJsonFile extends RpPath{
         super(resourcePack, path);
         this.data = data;
     }
-    public VirtualRpJsonFile(@NotNull JsonObject data, @NotNull String path){
+    public VirtualRpJsonFile(@NotNull JsonElement data, @NotNull String path){
         this(null, data, path);
     }
 

@@ -5,11 +5,11 @@ import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockPlaceContext;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockType;
 import me.udnek.coreu.custom.item.CustomItem;
-import me.udnek.coreu.custom.item.CustomItemComponent;
+import me.udnek.coreu.custom.item.LoreProvidingItemComponent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class BlockPlacingItem implements CustomItemComponent {
+public class BlockPlacingItem implements LoreProvidingItemComponent {
 
     public static final BlockPlacingItem EMPTY = new BlockPlacingItem(){
         @Override
@@ -29,7 +29,7 @@ public class BlockPlacingItem implements CustomItemComponent {
     }
 
     @Override
-    public @NotNull CustomComponentType<? extends CustomItem, ? extends CustomComponent<CustomItem>> getType() {
+    public @NotNull CustomComponentType<CustomItem, ? extends CustomComponent<CustomItem>> getType() {
         return CustomComponentType.BLOCK_PLACING_ITEM;
     }
 }

@@ -109,7 +109,7 @@ public class CustomItemListener extends SelfRegisteringListener {
         CustomItem customItem = event.getCustomItem();
         LoreBuilder builder = event.getLoreBuilder();
 
-        for (CustomItemComponent component : customItem.getComponents()) {
+        for (LoreProvidingItemComponent component : customItem.getComponents().getAllTyped(LoreProvidingItemComponent.class)) {
             component.getLore(customItem, builder);
         }
 

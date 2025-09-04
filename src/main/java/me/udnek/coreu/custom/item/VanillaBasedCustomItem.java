@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 @ApiStatus.NonExtendable
-public class VanillaBasedCustomItem extends AbstractComponentHolder<CustomItem, CustomItemComponent> implements UpdatingCustomItem {
+public class VanillaBasedCustomItem extends AbstractComponentHolder<CustomItem> implements UpdatingCustomItem {
 
     protected ItemStack itemStack;
     protected RepairData repairData = null;

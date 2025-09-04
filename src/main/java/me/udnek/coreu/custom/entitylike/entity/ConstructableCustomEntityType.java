@@ -1,6 +1,5 @@
 package me.udnek.coreu.custom.entitylike.entity;
 
-import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.component.CustomComponentMap;
 import me.udnek.coreu.custom.registry.AbstractRegistrable;
 import org.bukkit.Location;
@@ -13,10 +12,10 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class ConstructableCustomEntityType<T extends Entity> extends AbstractRegistrable implements CustomEntityType {
 
-    private CustomComponentMap<CustomEntityType, CustomComponent<CustomEntityType>> components = null;
+    private CustomComponentMap<CustomEntityType> components = null;
 
     @Override
-    public @NotNull CustomComponentMap<CustomEntityType, CustomComponent<CustomEntityType>> getComponents() {
+    public @NotNull CustomComponentMap<CustomEntityType> getComponents() {
         if (components == null) components = new CustomComponentMap<>();
         return components;
     }

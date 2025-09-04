@@ -21,7 +21,8 @@ public interface MiddleClickableBlock extends CustomComponent<CustomBlockType> {
     void onMiddleClick(@NotNull CustomBlockType block, @NotNull PlayerPickBlockEvent event);
 
     @Override
-    default @NotNull CustomComponentType<? extends CustomBlockType, ? extends CustomComponent<CustomBlockType>> getType() {
+    @NotNull
+    default CustomComponentType<CustomBlockType, ? extends CustomComponent<CustomBlockType>> getType(){
         return CustomComponentType.MIDDLE_CLICKABLE_BLOCK;
     }
 

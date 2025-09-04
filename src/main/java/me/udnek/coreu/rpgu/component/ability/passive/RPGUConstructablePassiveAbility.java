@@ -11,7 +11,7 @@ public abstract class RPGUConstructablePassiveAbility<ActivationContext> extends
 
 
     public void addPropertyLines(@NotNull PassiveAbilityLorePart componentable){
-        getComponents().forEach(c -> c.describe(componentable));
+        getProperties().forEach(c -> c.describe(componentable));
     }
 
     @Override

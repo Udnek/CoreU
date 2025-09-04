@@ -8,5 +8,5 @@ public interface CustomComponent<HolderType> {
         throw new RuntimeException("Can not change default component: " + this + ", create default or apply new firstly");
     }
 
-    @NotNull CustomComponentType<? extends HolderType, ? extends CustomComponent<HolderType>> getType();
+    @NotNull CustomComponentType<? super HolderType, ? extends CustomComponent<? super HolderType>> getType();
 }

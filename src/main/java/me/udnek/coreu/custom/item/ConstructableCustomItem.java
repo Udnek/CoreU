@@ -6,6 +6,7 @@ import io.papermc.paper.datacomponent.DataComponentType;
 import io.papermc.paper.datacomponent.item.*;
 import me.udnek.coreu.custom.attribute.AttributeUtils;
 import me.udnek.coreu.custom.component.AbstractComponentHolder;
+import me.udnek.coreu.custom.component.instance.TranslatableThing;
 import me.udnek.coreu.custom.event.CustomItemGeneratedEvent;
 import me.udnek.coreu.custom.recipe.RecipeManager;
 import me.udnek.coreu.util.LoreBuilder;
@@ -33,7 +34,7 @@ import java.util.function.Consumer;
 import static io.papermc.paper.datacomponent.DataComponentTypes.*;
 
 
-public abstract class ConstructableCustomItem extends AbstractComponentHolder<CustomItem, CustomItemComponent> implements CustomItemProperties, UpdatingCustomItem {
+public abstract class ConstructableCustomItem extends AbstractComponentHolder<CustomItem> implements CustomItemProperties, UpdatingCustomItem {
     private String id;
     private boolean afterInitialized = false;
     protected ItemStack itemStack = null;
@@ -58,8 +59,13 @@ public abstract class ConstructableCustomItem extends AbstractComponentHolder<Cu
         Preconditions.checkArgument(id == null, "Item already initialized!");
         id = new NamespacedKey(plugin, getRawId()).asString();
     }
+
+    @ForOverride
     @OverridingMethodsMustInvokeSuper
-    public void initializeComponents(){}
+    public void initializeComponents(){
+        TranslatableThing translations = getTranslations();
+        if (translations != null) getComponents().set(translations);
+    }
 
     @MustBeInvokedByOverriders
     @Override
@@ -76,7 +82,10 @@ public abstract class ConstructableCustomItem extends AbstractComponentHolder<Cu
         player.setCooldown(getItemNoClone(), ticks);
     }
     @Override
-    public int getCooldown(@NotNull Player player) {return player.getCooldown(getItemNoClone());}
+    public int getCooldown(@NotNull Player player) {
+        return player.getCooldown(getItemNoClone());
+    }
+
     @Override
     public boolean isTagged(@NotNull Tag<Material> tag) {
         return tag.isTagged(getMaterial());
@@ -86,10 +95,14 @@ public abstract class ConstructableCustomItem extends AbstractComponentHolder<Cu
     // COMPONENTS
     ///////////////////////////////////////////////////////////////////////////
 
-
     @Override
     public @NotNull String translationKey() {
-        return "item."+getKey().namespace()+"."+getRawId();
+        return "item."+getKey().namespace()+"."+getKey().value();
+    }
+
+    @ForOverride
+    public @Nullable TranslatableThing getTranslations(){
+        return null;
     }
 
     public @Nullable LoreBuilder getLoreBuilder(){
@@ -100,8 +113,10 @@ public abstract class ConstructableCustomItem extends AbstractComponentHolder<Cu
         lore.forEach(component -> builder.add(LoreBuilder.Position.VANILLA_LORE, component));
         return builder;
     }
+
     @ForOverride
     public void getLore(@NotNull Consumer<Component> consumer){}
+
     @Override
     public DataSupplier<ItemLore> getLore() {
         LoreBuilder builder = getLoreBuilder();

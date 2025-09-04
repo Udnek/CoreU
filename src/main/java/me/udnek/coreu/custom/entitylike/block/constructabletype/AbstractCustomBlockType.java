@@ -2,7 +2,6 @@ package me.udnek.coreu.custom.entitylike.block.constructabletype;
 
 import com.destroystokyo.paper.ParticleBuilder;
 import com.destroystokyo.paper.event.block.BlockDestroyEvent;
-import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.component.CustomComponentMap;
 import me.udnek.coreu.custom.component.instance.RightClickableBlock;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockManager;
@@ -36,10 +35,10 @@ import java.util.function.Function;
 
 public abstract class AbstractCustomBlockType extends AbstractRegistrable implements CustomBlockType {
 
-    private final CustomComponentMap<CustomBlockType, CustomComponent<CustomBlockType>> components = new CustomComponentMap<>();
+    private final CustomComponentMap<CustomBlockType> components = new CustomComponentMap<>();
 
     @Override
-    public @NotNull CustomComponentMap<CustomBlockType, CustomComponent<CustomBlockType>> getComponents() {
+    public @NotNull CustomComponentMap<CustomBlockType> getComponents() {
         return components;
     }
 

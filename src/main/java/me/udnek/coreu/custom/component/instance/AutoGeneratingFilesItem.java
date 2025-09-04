@@ -8,7 +8,7 @@ import me.udnek.coreu.CoreU;
 import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.item.CustomItem;
-import me.udnek.coreu.custom.item.CustomItemComponent;
+import me.udnek.coreu.custom.item.LoreProvidingItemComponent;
 import me.udnek.coreu.resourcepack.path.VirtualRpJsonFile;
 import net.kyori.adventure.key.Key;
 import org.bukkit.NamespacedKey;
@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface AutoGeneratingFilesItem extends CustomItemComponent {
+public interface AutoGeneratingFilesItem extends LoreProvidingItemComponent {
 
     Generated GENERATED = new Generated();
     HandHeld HANDHELD = new HandHeld();
@@ -30,11 +30,14 @@ public interface AutoGeneratingFilesItem extends CustomItemComponent {
 
     @NotNull List<VirtualRpJsonFile> getFiles(@NotNull CustomItem customItem);
 
-
     @Override
-    default @NotNull CustomComponentType<? extends CustomItem, ? extends CustomComponent<CustomItem>> getType() {return CustomComponentType.AUTO_GENERATING_FILES_ITEM;}
+    @NotNull
+    default CustomComponentType<CustomItem, ? extends CustomComponent<CustomItem>> getType(){
+        return CustomComponentType.AUTO_GENERATING_FILES_ITEM;
+    }
 
     interface Base extends AutoGeneratingFilesItem{
+
         @Override
         @NotNull
         default List<VirtualRpJsonFile> getFiles(@NotNull CustomItem customItem){

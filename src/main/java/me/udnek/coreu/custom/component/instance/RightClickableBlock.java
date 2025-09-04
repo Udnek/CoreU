@@ -13,7 +13,8 @@ public interface RightClickableBlock extends CustomComponent<CustomBlockType> {
     void onRightClick(@NotNull CustomBlockType block, @NotNull PlayerInteractEvent event);
 
     @Override
-    default @NotNull CustomComponentType<? extends CustomBlockType, ? extends CustomComponent<CustomBlockType>> getType(){
+    @NotNull
+    default CustomComponentType<CustomBlockType, ? extends CustomComponent<CustomBlockType>> getType(){
         return CustomComponentType.RIGHT_CLICKABLE_BLOCK;
     }
 }

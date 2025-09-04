@@ -2,7 +2,6 @@ package me.udnek.coreu.custom.entitylike.entity;
 
 import me.udnek.coreu.CoreU;
 import me.udnek.coreu.custom.component.ComponentHolder;
-import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.entitylike.EntityLikeType;
 import me.udnek.coreu.custom.entitylike.block.constructabletype.DisplayBasedConstructableBlockType;
 import me.udnek.coreu.custom.registry.CustomRegistries;
@@ -16,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public interface CustomEntityType extends EntityLikeType<Entity>, ComponentHolder<CustomEntityType, CustomComponent<CustomEntityType>> {
+public interface CustomEntityType extends EntityLikeType<Entity>, ComponentHolder<CustomEntityType> {
 
 
     CustomEntityType BLOCK_DISPLAY = CustomRegistries.ENTITY_TYPE.register(CoreU.getInstance(), new DisplayBasedConstructableBlockType.DisplayEntity());

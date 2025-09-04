@@ -9,8 +9,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class MGUComponents {
 
-    public static final CustomComponentType<MGUPlayer, MGUPlayerDataHolder> PLAYER_DATA = register(new ConstructableComponentType<>(
-            "mgu_player_data", MGUPlayerDataHolder.DEFAULT, MGUPlayerDataHolder::new));
+    public static final CustomComponentType<MGUPlayer, MGUPlayerDataHolder> PLAYER_DATA =
+            register(new ConstructableComponentType<>("mgu_player_data", MGUPlayerDataHolder.DEFAULT, MGUPlayerDataHolder::new));
 
 
     private static <T extends CustomComponentType<?, ?>> @NotNull T register(T type){

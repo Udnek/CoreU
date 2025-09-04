@@ -1,7 +1,6 @@
 package me.udnek.coreu.mgu.player;
 
 import me.udnek.coreu.custom.component.AbstractComponentHolder;
-import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.mgu.MGUManager;
 import me.udnek.coreu.mgu.game.MGUGameInstance;
@@ -12,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class MGUAbstractPlayer extends AbstractComponentHolder<MGUPlayer, CustomComponent<MGUPlayer>> implements MGUPlayer {
+public abstract class MGUAbstractPlayer extends AbstractComponentHolder<MGUPlayer> implements MGUPlayer {
 
     private final MGUGameInstance game;
     private final Player player;

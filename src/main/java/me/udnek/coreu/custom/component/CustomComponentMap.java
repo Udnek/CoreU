@@ -5,56 +5,72 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class CustomComponentMap<HolderType, Component extends CustomComponent<HolderType>> implements Iterable<Component>{
+public class CustomComponentMap<Holder> implements Iterable<CustomComponent<? super Holder>>{
 
 
-    public static <H, C extends CustomComponent<H>> CustomComponentMap<H, C> immutableAlwaysEmpty(){
+    public static <H> CustomComponentMap<H> immutableEmpty(){
         return new CustomComponentMap<>(){
             @Override
-            public void set(@NotNull C component) {
-                throw new RuntimeException("Can not set component to AlwaysEmptyHolder!");
+            public void set(@NotNull CustomComponent<? super H> component) {
+                throw new RuntimeException("Can not set component to ImmutableEmptyHolder!");
             }
         };
     }
 
-    private @Nullable Map<CustomComponentType<? extends HolderType, ? extends Component>,  Component> map = null;
+    private @Nullable Map<
+            CustomComponentType<? super Holder, ? extends CustomComponent<? super Holder>>,
+            CustomComponent<? super Holder>> map = null;
 
-    public @NotNull <SpicificComponent extends Component> SpicificComponent getOrDefault(@NotNull CustomComponentType<? extends HolderType, SpicificComponent> type) {
-        SpicificComponent component = get(type);
+    public @NotNull <SpecificComponent extends CustomComponent<? super Holder>> SpecificComponent getOrDefault(@NotNull CustomComponentType<?, SpecificComponent> type) {
+        SpecificComponent component = get(type);
         return component == null ? type.getDefault() : component;
     }
 
-    public @NotNull <SpicificComponent extends Component> SpicificComponent getOrCreateDefault(@NotNull CustomComponentType<? extends HolderType, SpicificComponent> type) {
-        SpicificComponent component = get(type);
+    public @NotNull <SpecificComponent extends CustomComponent<? super Holder>> SpecificComponent getOrCreateDefault(@NotNull CustomComponentType<?, SpecificComponent> type) {
+        SpecificComponent component = get(type);
         if (component == null) {
-            SpicificComponent newDefault = type.createNewDefault();
+            SpecificComponent newDefault = type.createNewDefault();
             set(newDefault);
             return newDefault;
         }
         return component;
     }
 
-    public @NotNull <SpicificComponent extends Component> SpicificComponent getOrException(@NotNull CustomComponentType<? extends HolderType, SpicificComponent> type){
-        return Objects.requireNonNull(map == null ? null : get(type), "Component " + type.getKey().asString() + " is not present!");
+    public @NotNull <SpecificComponent extends CustomComponent<? super Holder>> SpecificComponent getOrException(@NotNull CustomComponentType<?, SpecificComponent> type){
+        return Objects.requireNonNull(get(type), "Component " + type.getKey().asString() + " is not present!");
     }
 
-    public @Nullable <SpicificComponent extends Component> SpicificComponent get(@NotNull CustomComponentType<? extends HolderType, SpicificComponent> type) {
+    public @Nullable <SpecificComponent extends CustomComponent<? super Holder>> SpecificComponent get(@NotNull CustomComponentType<?, SpecificComponent> type) {
         if (map == null) return null;
-        return (SpicificComponent) map.get(type);
+        return (SpecificComponent) map.get(type);
     }
-    public boolean has(@NotNull CustomComponentType<? extends HolderType, ? extends CustomComponent<HolderType>> type) {
-        if (map == null) return false;
-        return map.containsKey(type);
+    public boolean has(@NotNull CustomComponentType<? super Holder, ?> type) {
+        return get(type) != null;
     }
-    public void set(@NotNull Component component) {
+    public void set(@NotNull CustomComponent<? super Holder> component) {
         if (map == null) map = new HashMap<>();
-        map.put((CustomComponentType<? extends HolderType, ? extends Component>) component.getType(), component);
+        map.put(component.getType(), component);
     }
-    public void remove(@NotNull CustomComponentType<? extends HolderType, ? extends CustomComponent<HolderType>> type) {
+    public void remove(@NotNull CustomComponentType<? super Holder, ?> type) {
         if (map != null) map.remove(type);
     }
+
+    public @NotNull <SpecificComponent extends CustomComponent<?>> List<SpecificComponent> getAllTyped(Class<SpecificComponent> clazz){
+        if (map == null) return List.of();
+        List<SpecificComponent> list = new ArrayList<>();
+        map.values().forEach(customComponent -> {
+            if (clazz.isInstance(customComponent)) list.add((SpecificComponent) customComponent);
+        });
+        return list;
+    }
+
+    public @NotNull List<CustomComponent<? super Holder>> getAll() {
+        if (map == null) return List.of();
+        return new ArrayList<>(map.values());
+    }
+
     @Override
-    public @NotNull Iterator<Component> iterator() {
+    public @NotNull Iterator<CustomComponent<? super Holder>> iterator() {
         if (map == null) return Collections.emptyIterator();
         return map.values().iterator();
     }

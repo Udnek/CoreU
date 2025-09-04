@@ -12,7 +12,9 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public interface RPGUItemAbility<ActivationContext> extends ComponentHolder<RPGUItemAbility<?>, RPGUAbilityProperty<?, ?>> {
+import java.util.List;
+
+public interface RPGUItemAbility<ActivationContext> extends ComponentHolder<RPGUItemAbility<?>> {
 
     int INFINITE_COOLDOWN = 100*60*60*20;
     int INFINITE_COOLDOWN_THRESHOLD = INFINITE_COOLDOWN/2;
@@ -46,6 +48,10 @@ public interface RPGUItemAbility<ActivationContext> extends ComponentHolder<RPGU
     }
     default boolean isOnInfiniteCooldown(@NotNull CustomItem customItem, @NotNull LivingEntity livingEntity){
         return Double.isInfinite(getCurrentCooldown(customItem, livingEntity));
+    }
+
+    default @NotNull List<RPGUAbilityProperty> getProperties(){
+        return getComponents().getAllTyped(RPGUAbilityProperty.class);
     }
 
     void getLore(@NotNull LoreBuilder loreBuilder);
