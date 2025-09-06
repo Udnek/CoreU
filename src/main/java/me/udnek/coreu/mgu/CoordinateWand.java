@@ -1,21 +1,15 @@
 package me.udnek.coreu.mgu;
 
 import me.udnek.coreu.CoreU;
-import me.udnek.coreu.custom.component.CustomComponent;
-import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.component.instance.AutoGeneratingFilesItem;
 import me.udnek.coreu.custom.component.instance.LeftClickableItem;
 import me.udnek.coreu.custom.component.instance.RightClickableItem;
-import me.udnek.coreu.custom.equipmentslot.EquippableItem;
-import me.udnek.coreu.custom.equipmentslot.universal.BaseUniversalSlot;
 import me.udnek.coreu.custom.item.ConstructableCustomItem;
-import me.udnek.coreu.custom.item.CustomItem;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
