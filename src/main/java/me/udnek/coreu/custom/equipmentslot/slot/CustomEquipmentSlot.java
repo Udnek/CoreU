@@ -18,32 +18,32 @@ import java.util.function.Consumer;
 
 public interface CustomEquipmentSlot extends Translatable, Registrable{
 
-    SingleSlot MAIN_HAND = register(new ConstructableSingleSlot("mainhand", EquipmentSlotGroup.MAINHAND, EquipmentSlot.HAND, new BaseUniversalSlot(EquipmentSlot.HAND), "item.modifiers.mainhand"));
-    SingleSlot OFF_HAND = register(new ConstructableSingleSlot("offhand", EquipmentSlotGroup.OFFHAND, EquipmentSlot.OFF_HAND, new BaseUniversalSlot(EquipmentSlot.OFF_HAND),"item.modifiers.offhand"));
-    GroupSlot HAND = register(new ConstructableGroupSlot("hand",
+    Single MAIN_HAND = register(new ConstructableSingleSlot("mainhand", EquipmentSlotGroup.MAINHAND, EquipmentSlot.HAND, new BaseUniversalSlot(EquipmentSlot.HAND), "item.modifiers.mainhand"));
+    Single OFF_HAND = register(new ConstructableSingleSlot("offhand", EquipmentSlotGroup.OFFHAND, EquipmentSlot.OFF_HAND, new BaseUniversalSlot(EquipmentSlot.OFF_HAND),"item.modifiers.offhand"));
+    Group HAND = register(new ConstructableGroupSlot("hand",
             Set.of(MAIN_HAND, OFF_HAND),
             EquipmentSlotGroup.HAND, null, "item.modifiers.hand"));
 
-    SingleSlot HEAD = register(new ConstructableSingleSlot("head", EquipmentSlotGroup.HEAD, EquipmentSlot.HEAD, new BaseUniversalSlot(EquipmentSlot.HEAD), "item.modifiers.head"));
-    SingleSlot CHEST = register(new ConstructableSingleSlot("chest", EquipmentSlotGroup.CHEST, EquipmentSlot.CHEST, new BaseUniversalSlot(EquipmentSlot.CHEST), "item.modifiers.chest"));
-    SingleSlot LEGS = register(new ConstructableSingleSlot("legs", EquipmentSlotGroup.LEGS, EquipmentSlot.LEGS, new BaseUniversalSlot(EquipmentSlot.LEGS),"item.modifiers.legs"));
-    SingleSlot FEET = register(new ConstructableSingleSlot("feet", EquipmentSlotGroup.FEET, EquipmentSlot.FEET, new BaseUniversalSlot(EquipmentSlot.FEET), "item.modifiers.feet"));
+    Single HEAD = register(new ConstructableSingleSlot("head", EquipmentSlotGroup.HEAD, EquipmentSlot.HEAD, new BaseUniversalSlot(EquipmentSlot.HEAD), "item.modifiers.head"));
+    Single CHEST = register(new ConstructableSingleSlot("chest", EquipmentSlotGroup.CHEST, EquipmentSlot.CHEST, new BaseUniversalSlot(EquipmentSlot.CHEST), "item.modifiers.chest"));
+    Single LEGS = register(new ConstructableSingleSlot("legs", EquipmentSlotGroup.LEGS, EquipmentSlot.LEGS, new BaseUniversalSlot(EquipmentSlot.LEGS),"item.modifiers.legs"));
+    Single FEET = register(new ConstructableSingleSlot("feet", EquipmentSlotGroup.FEET, EquipmentSlot.FEET, new BaseUniversalSlot(EquipmentSlot.FEET), "item.modifiers.feet"));
 
-    GroupSlot ARMOR = register(new ConstructableGroupSlot("armor",
+    Group ARMOR = register(new ConstructableGroupSlot("armor",
             Set.of(HEAD, CHEST, LEGS, FEET),
             EquipmentSlotGroup.ARMOR, null, "item.modifiers.armor"));
 
-    GroupSlot ANY_VANILLA = register(new ConstructableGroupSlot("any",
+    Group ANY_VANILLA = register(new ConstructableGroupSlot("any",
             Set.of(MAIN_HAND, OFF_HAND, HEAD, CHEST, LEGS, FEET),
             EquipmentSlotGroup.ANY, null, "item.modifiers.any"));
 
-    SingleSlot ACTIVE_HAND = register(new ConstructableSingleSlot("active_hand", null, null, new ActiveHandUniversalSlot(), "slot." + new NamespacedKey(CoreU.getInstance(),"text").getNamespace() + ".active_hand"));
+    Single ACTIVE_HAND = register(new ConstructableSingleSlot("active_hand", null, null, new ActiveHandUniversalSlot(), "slot." + new NamespacedKey(CoreU.getInstance(),"text").getNamespace() + ".active_hand"));
 
-    GroupSlot DUMB_INVENTORY = register(new DumbInventorySlot("dumb_inventory"));
+    Group DUMB_INVENTORY = register(new DumbInventorySlot("dumb_inventory"));
 
-    SingleSlot BODY = register(new ConstructableSingleSlot("body", EquipmentSlotGroup.BODY, EquipmentSlot.BODY, new BaseUniversalSlot(EquipmentSlot.BODY), "item.modifiers.body"));
+    Single BODY = register(new ConstructableSingleSlot("body", EquipmentSlotGroup.BODY, EquipmentSlot.BODY, new BaseUniversalSlot(EquipmentSlot.BODY), "item.modifiers.body"));
 
-    SingleSlot SADDLE = register(new ConstructableSingleSlot("saddle", EquipmentSlotGroup.SADDLE, EquipmentSlot.SADDLE, new BaseUniversalSlot(EquipmentSlot.SADDLE), "item.modifiers.saddle"));
+    Single SADDLE = register(new ConstructableSingleSlot("saddle", EquipmentSlotGroup.SADDLE, EquipmentSlot.SADDLE, new BaseUniversalSlot(EquipmentSlot.SADDLE), "item.modifiers.saddle"));
 
     static @NotNull CustomEquipmentSlot getFromVanilla(@NotNull EquipmentSlot slot){
         return switch (slot){
@@ -76,9 +76,40 @@ public interface CustomEquipmentSlot extends Translatable, Registrable{
     @Nullable EquipmentSlotGroup getVanillaGroup();
     @Nullable EquipmentSlot getVanillaSlot();
     void getAllUniversal(@NotNull Consumer<@NotNull UniversalInventorySlot> consumer);
-    void getAllSingle(@NotNull Consumer<@NotNull SingleSlot> consumer);
+    void getAllSingle(@NotNull Consumer<@NotNull Single> consumer);
 
     private static <Slot extends CustomEquipmentSlot> @NotNull Slot register(@NotNull Slot slot){
         return CustomRegistries.EQUIPMENT_SLOT.register(CoreU.getInstance(), slot);
+    }
+
+    interface Single extends CustomEquipmentSlot{
+        @Nullable UniversalInventorySlot getUniversal();
+
+        @Override
+        default void getAllUniversal(@NotNull Consumer<@NotNull UniversalInventorySlot> consumer){
+            @Nullable UniversalInventorySlot slot = getUniversal();
+            if (slot != null) consumer.accept(slot);
+        }
+
+        @Override
+        default void getAllSingle(@NotNull Consumer<@NotNull Single> consumer){
+            consumer.accept(this);
+        }
+
+        @Override
+        default boolean intersects(@NotNull CustomEquipmentSlot other) {
+            if (other instanceof Single) return other == this;
+            else return other.intersects(this);
+        }
+
+        @Override
+        default boolean intersects(@NotNull UniversalInventorySlot slot) {
+            if (getUniversal() == null) return false;
+            return getUniversal().equals(slot);
+        }
+    }
+
+    interface Group extends CustomEquipmentSlot{
+
     }
 }

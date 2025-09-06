@@ -2,12 +2,15 @@ package me.udnek.coreu.rpgu.component.ability.passive;
 
 import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.equipmentslot.slot.CustomEquipmentSlot;
-import me.udnek.coreu.rpgu.component.RPGUPassiveAbilityItem;
+import me.udnek.coreu.custom.equipmentslot.universal.BaseUniversalSlot;
+import me.udnek.coreu.custom.item.CustomItem;
+import me.udnek.coreu.rpgu.component.RPGUPassiveItem;
 import me.udnek.coreu.rpgu.component.ability.RPGUItemAbility;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Set;
+public interface RPGUItemPassiveAbility<ActivationContext> extends RPGUItemAbility<ActivationContext>, CustomComponent<RPGUPassiveItem> {
+    @NotNull CustomEquipmentSlot getSlot();
 
-public interface RPGUItemPassiveAbility<ActivationContext> extends RPGUItemAbility<ActivationContext>, CustomComponent<RPGUPassiveAbilityItem> {
-    @NotNull Set<CustomEquipmentSlot> getSlot();
+    void tick(@NotNull CustomItem customItem, @NotNull Player player, @NotNull BaseUniversalSlot slot, int tickDelay);
 }

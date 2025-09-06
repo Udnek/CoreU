@@ -7,6 +7,7 @@
 
   "rpgu_active_ability.coreu.title": "Active Ability:",
   "rpgu_passive_ability.coreu.title": "Passive Ability:",
+  "rpgu_toggle_ability.coreu.title": "Toggle Ability:",
 
   "rpgu_ability_property.coreu.cast_range": "Cast Range: %s blocks",
   "rpgu_ability_property.coreu.area_of_effect": "AOE: %s blocks",

@@ -6,28 +6,28 @@ import me.udnek.coreu.custom.component.CustomComponentMap;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.custom.item.LoreProvidingItemComponent;
-import me.udnek.coreu.rpgu.component.ability.passive.RPGUItemPassiveAbility;
+import me.udnek.coreu.rpgu.component.ability.active.RPGUItemActiveAbility;
 import me.udnek.coreu.util.LoreBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class RPGUPassiveAbilityItem extends AbstractComponentHolder<RPGUPassiveAbilityItem> implements LoreProvidingItemComponent {
+public class RPGUActiveItem extends AbstractComponentHolder<RPGUActiveItem> implements LoreProvidingItemComponent {
 
-    public static final RPGUPassiveAbilityItem DEFAULT = new RPGUPassiveAbilityItem(){
+    public static final RPGUActiveItem DEFAULT = new RPGUActiveItem(){
         @Override
-        public @NotNull CustomComponentMap<RPGUPassiveAbilityItem> getComponents() {
+        public @NotNull CustomComponentMap<RPGUActiveItem> getComponents() {
             return CustomComponentMap.immutableEmpty();
         }
     };
 
-    public @NotNull List<RPGUItemPassiveAbility> getAbilities(){
-        return getComponents().getAllTyped(RPGUItemPassiveAbility.class);
+    public @NotNull List<RPGUItemActiveAbility> getAbilities(){
+        return getComponents().getAllTyped(RPGUItemActiveAbility.class);
     }
 
     @Override
     public @NotNull CustomComponentType<? super CustomItem, ? extends CustomComponent<? super CustomItem>> getType() {
-        return RPGUComponents.PASSIVE_ABILITY_ITEM;
+        return RPGUComponents.ACTIVE_ABILITY_ITEM;
     }
 
     @Override

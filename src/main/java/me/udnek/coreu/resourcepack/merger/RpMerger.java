@@ -84,9 +84,10 @@ public class RpMerger {
             for (Registrable registrable : registry.getAll()) {
                 if (!(registrable instanceof ComponentHolder<?> holder)) continue;
                 if (!(holder instanceof Translatable translatable)) continue;
-                toAdd.addAll(
-                        holder.getComponents().getOrDefault(CustomComponentType.TRANSLATABLE_THING).getFiles(translatable, registrable)
-                );
+                for (VirtualRpJsonFile file : holder.getComponents().getOrDefault(CustomComponentType.TRANSLATABLE_THING).getFiles(translatable, registrable)) {
+                    LogUtils.pluginLog("TranslatableThing: " + file.getPath() + " " + file.getData());
+                    files.add(file);
+                }
             }
         }
         ResourcepackInitializationEvent event = new ResourcepackInitializationEvent();

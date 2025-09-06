@@ -9,13 +9,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class ConstructableGroupSlot extends AbstractCustomEquipmentSlot implements GroupSlot {
+public class ConstructableGroupSlot extends AbstractCustomEquipmentSlot implements CustomEquipmentSlot.Group {
     protected final String translation;
     protected final EquipmentSlotGroup vanillaGroup;
     private final EquipmentSlot vanillaSlot;
-    protected final Set<SingleSlot> subs;
+    protected final Set<Single> subs;
 
-    public ConstructableGroupSlot(@NotNull String rawId, @NotNull Set<@NotNull SingleSlot> subs, @Nullable EquipmentSlotGroup vanillaGroup, @Nullable EquipmentSlot vanillaSlot, @NotNull String translation) {
+    public ConstructableGroupSlot(@NotNull String rawId, @NotNull Set<@NotNull Single> subs, @Nullable EquipmentSlotGroup vanillaGroup, @Nullable EquipmentSlot vanillaSlot, @NotNull String translation) {
         super(rawId);
         this.translation = translation;
         this.vanillaGroup = vanillaGroup;
@@ -41,7 +41,7 @@ public class ConstructableGroupSlot extends AbstractCustomEquipmentSlot implemen
         return translation;
     }
     @Override
-    public void getAllSingle(@NotNull Consumer<@NotNull SingleSlot> consumer) {
+    public void getAllSingle(@NotNull Consumer<@NotNull Single> consumer) {
         subs.forEach(consumer);
     }
 

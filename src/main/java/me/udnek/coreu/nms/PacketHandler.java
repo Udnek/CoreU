@@ -6,7 +6,6 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.wrappers.BlockPosition;
 import me.udnek.coreu.CoreU;
 import me.udnek.coreu.custom.effect.ConstructableCustomEffect;
 import me.udnek.coreu.custom.effect.CustomEffect;
@@ -48,52 +47,6 @@ public class PacketHandler {
 
         // CHUNKS
 
-/*
-
-        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(
-                ItemsCoreU.getInstance(), ListenerPriority.NORMAL,
-                PacketType.Play.Server.MAP_CHUNK) {
-            @Override
-            public void onPacketSending(PacketEvent event) {
-
-                ClientboundLevelChunkWithLightPacket packet = (ClientboundLevelChunkWithLightPacket) event.getPacket().getHandle();
-                int chunkX = packet.getX();
-                int chunkZ = packet.getZ();
-                int posX = packet.getX() * 16;
-                int posZ = packet.getZ() * 16;
-
-                World world = event.getPlayer().getWorld();
-
-                int worldMinHeight = world.getMinHeight();
-                int worldMaxHeight = world.getMinHeight();
-                int worldTrueHeight = Math.abs(worldMinHeight) + worldMaxHeight;
-                int ySectionCount = worldTrueHeight / 16;
-
-                byte[] buffer = packet.getChunkData().getReadBuffer().array();
-
-                boolean edited = false;
-
-                LevelChunkSection.
-
-            }
-        });
-
-*/
-
-        // BLOCKS
-
-/*        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(
-                ItemsCoreU.getInstance(), ListenerPriority.NORMAL,
-                PacketType.Play.Server.BLOCK_CHANGED_ACK) {
-            @Override
-            public void onPacketSending(PacketEvent event) {
-                System.out.println(((ClientboundBlockChangedAckPacket) event.getPacket().getHandle()).sequence());
-                // TODO PACKET REASON???
-                //event.setCancelled(true);
-            }
-        });*/
-
-
         ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(
                 CoreU.getInstance(), ListenerPriority.NORMAL,
                 PacketType.Play.Server.BLOCK_CHANGE) {
@@ -109,17 +62,17 @@ public class PacketHandler {
             }
         });
 
-        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(
-                CoreU.getInstance(), ListenerPriority.NORMAL,
-                PacketType.Play.Server.BLOCK_ACTION, PacketType.Play.Server.TILE_ENTITY_DATA) {
-            @Override
-            public void onPacketSending(PacketEvent event) {
-                PacketContainer packet = event.getPacket();
-                BlockPosition position = packet.getBlockPositionModifier().read(0);
-                CustomBlockType blockType = CustomBlockType.get(position.toLocation(event.getPlayer().getWorld()).getBlock());
-                if (blockType != null && blockType.getFakeState() != null) event.setCancelled(true);
-            }
-        });
+//        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(
+//                CoreU.getInstance(), ListenerPriority.NORMAL,
+//                PacketType.Play.Server.BLOCK_ACTION, PacketType.Play.Server.TILE_ENTITY_DATA) {
+//            @Override
+//            public void onPacketSending(PacketEvent event) {
+//                PacketContainer packet = event.getPacket();
+//                BlockPosition position = packet.getBlockPositionModifier().read(0);
+//                CustomBlockType blockType = CustomBlockType.get(position.toLocation(event.getPlayer().getWorld()).getBlock());
+//                if (blockType != null && blockType.getFakeState() != null) event.setCancelled(true);
+//            }
+//        });
 
         ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(
                 CoreU.getInstance(), ListenerPriority.NORMAL,
