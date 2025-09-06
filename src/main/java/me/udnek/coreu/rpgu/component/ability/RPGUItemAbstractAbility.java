@@ -1,7 +1,7 @@
 package me.udnek.coreu.rpgu.component.ability;
 
 import me.udnek.coreu.custom.component.AbstractComponentHolder;
-import me.udnek.coreu.custom.equipmentslot.slot.SingleSlot;
+import me.udnek.coreu.custom.equipmentslot.slot.CustomEquipmentSlot;
 import me.udnek.coreu.custom.equipmentslot.universal.UniversalInventorySlot;
 import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.rpgu.component.RPGUComponents;
@@ -20,7 +20,7 @@ public abstract class RPGUItemAbstractAbility<ActivationContext> extends Abstrac
     public void activate(@NotNull CustomItem customItem,
                          @NotNull LivingEntity livingEntity,
                          boolean canselIfCooldown,
-                         @NotNull Either<UniversalInventorySlot, SingleSlot> slot,
+                         @NotNull Either<UniversalInventorySlot, CustomEquipmentSlot.Single> slot,
                          @NotNull ActivationContext activationContext)
     {
         if (!(livingEntity instanceof Player player)) {
@@ -43,12 +43,12 @@ public abstract class RPGUItemAbstractAbility<ActivationContext> extends Abstrac
     }
 
     @Override
-    public void activate(@NotNull CustomItem customItem, @NotNull LivingEntity livingEntity, @NotNull Either<UniversalInventorySlot, SingleSlot> slot, @NotNull ActivationContext activationContext){
+    public void activate(@NotNull CustomItem customItem, @NotNull LivingEntity livingEntity, @NotNull Either<UniversalInventorySlot, CustomEquipmentSlot.Single> slot, @NotNull ActivationContext activationContext){
         activate(customItem, livingEntity, false, slot, activationContext);
     }
 
     protected abstract @NotNull ActionResult action(@NotNull CustomItem customItem, @NotNull LivingEntity livingEntity,
-                                                 @NotNull Either<UniversalInventorySlot, SingleSlot> slot, @NotNull ActivationContext activationContext);
+                                                    @NotNull Either<UniversalInventorySlot, CustomEquipmentSlot.Single> slot, @NotNull ActivationContext activationContext);
 
 
     @Override

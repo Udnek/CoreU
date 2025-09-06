@@ -6,7 +6,6 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.wrappers.BlockPosition;
 import me.udnek.coreu.CoreU;
 import me.udnek.coreu.custom.effect.ConstructableCustomEffect;
 import me.udnek.coreu.custom.effect.CustomEffect;

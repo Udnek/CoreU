@@ -10,6 +10,8 @@ import me.udnek.coreu.custom.entitylike.entity.CustomEntityManager;
 import me.udnek.coreu.custom.entitylike.entity.CustomEntityType;
 import me.udnek.coreu.custom.entitylike.entity.command.LoadedCustomEntitiesCommand;
 import me.udnek.coreu.custom.entitylike.entity.command.SummonCustomEntityCommand;
+import me.udnek.coreu.custom.equipmentslot.EquipmentListener;
+import me.udnek.coreu.custom.equipmentslot.PlayerEquipmentManager;
 import me.udnek.coreu.custom.help.CustomHelpCommand;
 import me.udnek.coreu.custom.hud.CustomHudManager;
 import me.udnek.coreu.custom.inventory.CustomInventoryListener;
@@ -58,6 +60,8 @@ public final class CoreU extends JavaPlugin implements ResourcePackablePlugin {
         new CustomItemListener(this);
         new CraftListener(this);
         new CustomInventoryListener(this);
+        new EquipmentListener(this);
+        PlayerEquipmentManager.getInstance().start(this);
         VanillaItemManager.getInstance();
         Bukkit.getPluginManager().registerEvents(new LootTableUtils(), this);
         RecipeManager.getInstance();
@@ -96,7 +100,9 @@ public final class CoreU extends JavaPlugin implements ResourcePackablePlugin {
     }
 
     @Override
-    public void onDisable() {}
+    public void onDisable() {
+        PlayerEquipmentManager.getInstance().stop();
+    }
 
     @Override
     public @NotNull Priority getPriority() {

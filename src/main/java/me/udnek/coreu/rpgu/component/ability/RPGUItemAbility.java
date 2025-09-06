@@ -1,7 +1,7 @@
 package me.udnek.coreu.rpgu.component.ability;
 
 import me.udnek.coreu.custom.component.ComponentHolder;
-import me.udnek.coreu.custom.equipmentslot.slot.SingleSlot;
+import me.udnek.coreu.custom.equipmentslot.slot.CustomEquipmentSlot;
 import me.udnek.coreu.custom.equipmentslot.universal.UniversalInventorySlot;
 import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.rpgu.component.RPGUComponents;
@@ -21,7 +21,7 @@ public interface RPGUItemAbility<ActivationContext> extends ComponentHolder<RPGU
 
     void activate(@NotNull CustomItem customItem,
                   @NotNull LivingEntity livingEntity,
-                  @NotNull Either<UniversalInventorySlot, SingleSlot> slot,
+                  @NotNull Either<UniversalInventorySlot, CustomEquipmentSlot.Single> slot,
                   @NotNull ActivationContext activationContext);
 
     default int getDefaultCooldown(@NotNull LivingEntity livingEntity){

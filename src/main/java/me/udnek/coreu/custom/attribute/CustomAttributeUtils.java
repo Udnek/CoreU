@@ -4,7 +4,6 @@ import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.effect.CustomEffect;
 import me.udnek.coreu.custom.enchantment.CustomEnchantment;
 import me.udnek.coreu.custom.equipmentslot.slot.CustomEquipmentSlot;
-import me.udnek.coreu.custom.equipmentslot.slot.SingleSlot;
 import me.udnek.coreu.custom.equipmentslot.universal.UniversalInventorySlot;
 import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.custom.registry.CustomRegistries;
@@ -45,7 +44,7 @@ public class CustomAttributeUtils {
 
     protected void calculate(){
 
-        Map<@NotNull SingleSlot, @NotNull ItemStack> slots = new HashMap<>();
+        Map<CustomEquipmentSlot.Single, @NotNull ItemStack> slots = new HashMap<>();
 
         for (CustomEquipmentSlot slot : searchTroughSlots) {
             slot.getAllSingle(singleSlot ->
@@ -59,9 +58,9 @@ public class CustomAttributeUtils {
             });
         }
 
-        for (Map.Entry<@NotNull SingleSlot, @NotNull ItemStack> slotEntry : slots.entrySet()) {
+        for (Map.Entry<CustomEquipmentSlot.@NotNull Single, @NotNull ItemStack> slotEntry : slots.entrySet()) {
             ItemStack item = slotEntry.getValue();
-            SingleSlot slot = slotEntry.getKey();
+            CustomEquipmentSlot.Single slot = slotEntry.getKey();
             for (Map.Entry<Enchantment, Integer> enchantmentEntry : item.getEnchantments().entrySet()) {
                 CustomEnchantment enchantment = CustomEnchantment.get(enchantmentEntry.getKey());
                 if (enchantment == null) continue;

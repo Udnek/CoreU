@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public class DumbInventorySlot extends AbstractCustomEquipmentSlot implements GroupSlot {
+public class DumbInventorySlot extends AbstractCustomEquipmentSlot implements CustomEquipmentSlot.Group {
     public DumbInventorySlot(@NotNull String id) {
         super(id);
     }
@@ -32,7 +32,7 @@ public class DumbInventorySlot extends AbstractCustomEquipmentSlot implements Gr
     @Override
     public void getAllUniversal(@NotNull Consumer<@NotNull UniversalInventorySlot> consumer) {}
     @Override
-    public void getAllSingle(@NotNull Consumer<@NotNull SingleSlot> consumer) {}
+    public void getAllSingle(@NotNull Consumer<@NotNull Single> consumer) {}
 
     @Override
     public @NotNull String translationKey() {

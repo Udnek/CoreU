@@ -6,7 +6,7 @@ import org.bukkit.inventory.EquipmentSlotGroup;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ConstructableSingleSlot extends AbstractCustomEquipmentSlot implements SingleSlot {
+public class ConstructableSingleSlot extends AbstractCustomEquipmentSlot implements CustomEquipmentSlot.Single {
 
     protected final String translation;
     protected final EquipmentSlotGroup vanillaGroup;

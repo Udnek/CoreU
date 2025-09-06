@@ -14,8 +14,9 @@ import me.udnek.coreu.rpgu.component.ability.property.type.AttributeBasedPropert
 
 public class RPGUComponents {
 
-    public static final CustomComponentType<CustomItem, RPGUActiveAbilityItem> ACTIVE_ABILITY_ITEM;
-    public static final CustomComponentType<CustomItem, RPGUPassiveAbilityItem> PASSIVE_ABILITY_ITEM;
+    public static final CustomComponentType<CustomItem, RPGUActiveItem> ACTIVE_ABILITY_ITEM;
+    public static final CustomComponentType<CustomItem, RPGUPassiveItem> PASSIVE_ABILITY_ITEM;
+    public static final CustomComponentType<CustomItem, RPGUToggleItem> TOGGLE_ABILITY_ITEM;
 
     public static final AttributeBasedPropertyType ABILITY_COOLDOWN_TIME;
     public static final AttributeBasedPropertyType ABILITY_CAST_RANGE;
@@ -26,8 +27,9 @@ public class RPGUComponents {
     public static final CustomComponentType<RPGUItemAbility<?>, EffectsProperty> ABILITY_EFFECTS;
 
     static {
-        ACTIVE_ABILITY_ITEM = register(new ConstructableComponentType<>("rpgu_active_ability_item", RPGUActiveAbilityItem.DEFAULT, RPGUActiveAbilityItem::new));
-        PASSIVE_ABILITY_ITEM = register(new ConstructableComponentType<>("rpgu_passive_ability_item", RPGUPassiveAbilityItem.DEFAULT, RPGUPassiveAbilityItem::new));
+        ACTIVE_ABILITY_ITEM = register(new ConstructableComponentType<>("rpgu_active_ability_item", RPGUActiveItem.DEFAULT, RPGUActiveItem::new));
+        PASSIVE_ABILITY_ITEM = register(new ConstructableComponentType<>("rpgu_passive_ability_item", RPGUPassiveItem.DEFAULT, RPGUPassiveItem::new));
+        TOGGLE_ABILITY_ITEM = register(new ConstructableComponentType<>("rpgu_toggle_ability_item", RPGUToggleItem.DEFAULT, RPGUToggleItem::new));
 
         ABILITY_COOLDOWN_TIME = register(new AttributeBasedPropertyType("rpgu_ability_cooldown_time", RPGUAttributes.COOLDOWN_TIME, -1, "rpgu_ability_property.coreu.cooldown_time", true));
         ABILITY_CAST_RANGE = register(new AttributeBasedPropertyType("rpgu_ability_cast_range", RPGUAttributes.CAST_RANGE, -1, "rpgu_ability_property.coreu.cast_range"));
