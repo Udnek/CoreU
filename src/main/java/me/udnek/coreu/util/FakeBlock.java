@@ -13,11 +13,38 @@ import java.util.HashMap;
 import java.util.List;
 
 public class FakeBlock {
+
     private static final HashMap<Block, FakeBlock> fakes = new HashMap<>();
 
     private @Nullable BukkitRunnable task;
+    private final @NotNull Location location;
+    private final @NotNull BlockData blockData;
+    private final long duration;
+    private final @NotNull List<Player> players;
 
-    public void show(@NotNull List<@NotNull Player> players, @NotNull Location location, @NotNull BlockData blockData, long duration) {
+
+    public static void show(@NotNull Location location, @NotNull BlockData blockData, @NotNull List<@NotNull Player> players, long duration) {
+        new FakeBlock(location, blockData, players, duration).run();
+    }
+    public static void cancel(@NotNull Location location){
+        FakeBlock fakeBlock = fakes.get(location.getBlock());
+        if (fakeBlock == null) return;
+        fakeBlock.cancel();
+        fakes.remove(location.getBlock());
+    }
+
+    private FakeBlock(@NotNull Location location, @NotNull BlockData blockData, @NotNull List<@NotNull Player> players, long duration){
+        this.players = players;
+        this.location = location.clone();
+        this.blockData = blockData;
+        this.duration = duration;
+    }
+
+    private void cancel(){
+        if (task != null) task.cancel();
+    }
+
+    private void run(){
         Block block = location.getBlock();
         for (Player player : players) {
             player.sendBlockChange(block.getLocation(), blockData);
@@ -33,9 +60,7 @@ public class FakeBlock {
         task.runTaskLater(CoreU.getInstance(), duration);
 
         FakeBlock oldFake = fakes.get(block);
-        if (oldFake != null && oldFake.task != null) {
-            oldFake.task.cancel();
-        }
+        if (oldFake != null) oldFake.cancel();
         fakes.put(block, this);
     }
 }

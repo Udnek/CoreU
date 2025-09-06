@@ -22,13 +22,26 @@ public class FakeGlow {
     private @Nullable BukkitRunnable task;
     private final @NotNull List<Player> observers;
     private final @NotNull net.minecraft.world.entity.Entity nmsEntity;
+    private final long duration;
 
-    public FakeGlow(@NotNull List<Player> observers, @NotNull org.bukkit.entity.Entity entity) {
-        this.observers = observers;
-        this.nmsEntity = NmsUtils.toNmsEntity(entity);
+    public static void glow(@NotNull org.bukkit.entity.Entity entity, @NotNull List<Player> observers, long duration) {
+        new FakeGlow(entity, observers, duration).run();
     }
 
-    public void glow(int duration) {
+    public static void cancel(@NotNull org.bukkit.entity.Entity entity){
+        FakeGlow fakeGlow = fakes.get(NmsUtils.toNmsEntity(entity));
+        if (fakeGlow == null) return;
+        fakeGlow.cancel();
+        fakes.remove(NmsUtils.toNmsEntity(entity));
+    }
+
+    private FakeGlow(@NotNull org.bukkit.entity.Entity entity, @NotNull List<Player> observers, long duration) {
+        this.observers = observers;
+        this.nmsEntity = NmsUtils.toNmsEntity(entity);
+        this.duration = duration;
+    }
+
+    private void run(){
         EntityDataAccessor<Byte> key = Reflex.getFieldValue(Entity.class, "DATA_SHARED_FLAGS_ID");
         task = new BukkitRunnable() {
             int step = 0;
@@ -47,10 +60,12 @@ public class FakeGlow {
         task.runTaskTimer(CoreU.getInstance(), 0, 1);
 
         FakeGlow oldFake = fakes.get(nmsEntity);
-        if (oldFake != null && oldFake.task != null) {
-            oldFake.task.cancel();
-        }
+        if (oldFake != null) oldFake.cancel();
         fakes.put(nmsEntity, this);
+    }
+
+    private void cancel(){
+        if (task != null) task.cancel();
     }
 
     private void sendPacketToObservers(byte data){
