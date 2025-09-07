@@ -42,7 +42,11 @@ public abstract class RPGUConstructableToggleAbility extends RPGUItemAbstractAbi
         addDescriptionLines(lorePart);
     }
 
-    protected boolean toggle(@NotNull CustomItem customItem, @NotNull Player player, @NotNull BaseUniversalSlot slot){
+    public boolean toggle(@NotNull CustomItem customItem, @NotNull Player player, @NotNull BaseUniversalSlot slot){
+        return setToggled(customItem, player, slot, isToggled(customItem, player, slot));
+    }
+
+    public boolean setToggled(@NotNull CustomItem customItem, @NotNull Player player, @NotNull BaseUniversalSlot slot, boolean toggle){
         AtomicBoolean newState = new AtomicBoolean();
         slot.changeItem(new Consumer<>() {
             @Override
@@ -50,8 +54,7 @@ public abstract class RPGUConstructableToggleAbility extends RPGUItemAbstractAbi
                 stack.editPersistentDataContainer(new Consumer<>() {
                     @Override
                     public void accept(PersistentDataContainer container) {
-                        newState.set(!isToggled(container));
-                        container.set(TOGGLE_KEY, PersistentDataType.BOOLEAN, newState.get());
+                        container.set(TOGGLE_KEY, PersistentDataType.BOOLEAN, toggle);
                     }
                 });
             }
