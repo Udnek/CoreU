@@ -104,8 +104,9 @@ public interface CustomEquipmentSlot extends Translatable, Registrable{
 
         @Override
         default boolean intersects(@NotNull UniversalInventorySlot slot) {
-            if (getUniversal() == null) return false;
-            return getUniversal().equals(slot);
+            UniversalInventorySlot universal = getUniversal();
+            if (universal == null) return false;
+            return universal.equals(slot);
         }
     }
 

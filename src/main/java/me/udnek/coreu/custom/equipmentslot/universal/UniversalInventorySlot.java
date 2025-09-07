@@ -37,8 +37,12 @@ public interface UniversalInventorySlot {
             consumer.accept(new BaseUniversalSlot(EquipmentSlot.FEET), equipment.getBoots());
         }
     }
+    @Nullable Integer integerSlotToCompare();
 
-    boolean equals(@NotNull UniversalInventorySlot other);
+    default boolean equals(@NotNull UniversalInventorySlot other){
+        Integer s = integerSlotToCompare();
+        return (s != null && s.equals(other.integerSlotToCompare()));
+    }
 
     @Nullable ItemStack getItem(@NotNull LivingEntity entity);
 

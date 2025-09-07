@@ -27,9 +27,18 @@ public class BaseUniversalSlot implements UniversalInventorySlot {
     }
 
     @Override
-    public boolean equals(@NotNull UniversalInventorySlot other) {
-        if (!(other instanceof BaseUniversalSlot otherBase)) return false;
-        return Objects.equals(this.slot, otherBase.slot) && this.equipmentSlot == otherBase.equipmentSlot;
+    public @Nullable Integer integerSlotToCompare() {
+        if (slot != null) return slot;
+        return switch (Objects.requireNonNull(equipmentSlot)) {
+            case HAND -> 98;
+            case OFF_HAND -> 99;
+            case FEET -> 100;
+            case LEGS -> 101;
+            case CHEST -> 102;
+            case HEAD -> 103;
+            case BODY -> 105;
+            case SADDLE -> 400;
+        };
     }
 
     @Override

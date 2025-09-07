@@ -9,8 +9,8 @@ public class ActiveHandUniversalSlot implements UniversalInventorySlot{
 
 
     @Override
-    public boolean equals(@NotNull UniversalInventorySlot other) {
-        return other instanceof ActiveHandUniversalSlot;
+    public @Nullable Integer integerSlotToCompare() {
+        return 98;
     }
 
     @Override
