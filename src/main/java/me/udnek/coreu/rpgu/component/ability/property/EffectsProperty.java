@@ -129,16 +129,28 @@ public class EffectsProperty implements RPGUAbilityProperty<LivingEntity, List<P
             boolean particles,
             boolean icon
     ){
-        public PotionData(@NotNull PotionEffect effect){
-            this(effect.getType(), PropertyFunctions.CONSTANT(effect.getDuration()), PropertyFunctions.CONSTANT(effect.getAmplifier()), effect.isAmbient()
-                    , effect.hasParticles(), effect.hasIcon());
+
+        public static @NotNull RPGUPropertyFunction<LivingEntity, Integer> functionFromDuration(int duration){
+            return PropertyFunctions.CEIL(new AttributeFunction(RPGUAttributes.ABILITY_DURATION, duration));
         }
+
         public PotionData(@NotNull PotionEffectType type, @NotNull RPGUPropertyFunction<LivingEntity, Integer> duration, @NotNull RPGUPropertyFunction<LivingEntity, Integer> amplifier){
             this(type, duration, amplifier, false, true, true);
         }
 
+        public PotionData(@NotNull PotionEffect effect){
+            this(
+                    effect.getType(),
+                    functionFromDuration(effect.getDuration()),
+                    PropertyFunctions.CONSTANT(effect.getAmplifier()),
+                    effect.isAmbient(),
+                    effect.hasParticles(),
+                    effect.hasIcon()
+            );
+        }
+
         public PotionData(@NotNull PotionEffectType type, int duration, int amplifier){
-            this(type, PropertyFunctions.CEIL(new AttributeFunction(RPGUAttributes.ABILITY_DURATION, duration)), PropertyFunctions.CONSTANT(amplifier));
+            this(type, functionFromDuration(duration), PropertyFunctions.CONSTANT(amplifier));
         }
     }
 }

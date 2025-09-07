@@ -1,5 +1,25 @@
 {
   "slot.coreu.active_hand": "Когда активно:",
   "slot.coreu.dumb_inventory": "Когда в инвентаре:",
-  "item.coreu.coordinate_wand": "Координатная палочка"
+  "item.coreu.coordinate_wand": "Координатная палочка",
+
+  "rpgu_active_ability.coreu.title": "Активная способность:",
+  "rpgu_passive_ability.coreu.title": "Пассивная способность:",
+  "rpgu_toggle_ability.coreu.title": "Переключаемая способность:",
+
+  "rpgu_ability_property.coreu.cast_range": "Дальность применения: %s блоков",
+  "rpgu_ability_property.coreu.area_of_effect": "Область действия: %s блоков",
+  "rpgu_ability_property.coreu.cooldown_time": "Откат: %s секунд",
+  "rpgu_ability_property.coreu.cast_time": "Время применения: %s секунд",
+  "rpgu_ability_property.coreu.duration": "Длительность: %s секунд",
+  "rpgu_ability_property.coreu.damage": "Урон: %s",
+  "rpgu_ability_property.coreu.effects": "Эффекты: %s",
+  "rpgu_ability_property.coreu.effects.with_amplifier_with_duration": "%s %s (%s секунд)",
+  "rpgu_ability_property.coreu.effects.with_amplifier_no_duration": "%s %s",
+  "rpgu_ability_property.coreu.effects.no_amplifier_with_duration": "%s (%s секунд)",
+  "rpgu_ability_property.coreu.effects.no_amplifier_no_duration": "%s",
+
+  "attribute.coreu.name.rpgu_cast_range": "Дальность применения",
+  "attribute.coreu.name.rpgu_cooldown_time": "Время отката",
+  "attribute.coreu.name.rpgu_area_of_effect": "Область действия"
 }

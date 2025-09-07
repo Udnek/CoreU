@@ -20,13 +20,9 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
-public abstract class RPGUConstructableToggleAbility<ActivationContext> extends RPGUItemAbstractAbility<ActivationContext> implements RPGUItemToggleAbility<ActivationContext> {
+public abstract class RPGUConstructableToggleAbility extends RPGUItemAbstractAbility<Integer> implements RPGUItemToggleAbility {
 
     public static final NamespacedKey TOGGLE_KEY = new NamespacedKey(CoreU.getInstance(), "rpgu_toggle_ability_is_toggled");
-
-    public void addPropertyLines(@NotNull PassiveAbilityLorePart componentable){
-        getProperties().forEach(c -> c.describe(componentable));
-    }
 
     @Override
     public void getLore(@NotNull LoreBuilder loreBuilder){
@@ -43,6 +39,7 @@ public abstract class RPGUConstructableToggleAbility<ActivationContext> extends 
         lorePart.setEquipmentSlot(getSlot());
         lorePart.setHeader(Component.translatable("rpgu_toggle_ability.coreu.title"));
         addPropertyLines(lorePart);
+        addDescriptionLines(lorePart);
     }
 
     protected boolean toggle(@NotNull CustomItem customItem, @NotNull Player player, @NotNull BaseUniversalSlot slot){

@@ -82,3 +82,9 @@ commands:
       aliases: [ ]
       permission: coreu.admin
       permission-message: "You do not have permission to use this command"
+  reset_cooldown:
+    description: "reset_cooldown"
+    usage: "/reset_cooldown"
+    aliases: [ cooldown_reset ]
+    permission: coreu.admin
+    permission-message: "You do not have permission to use this command"

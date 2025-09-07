@@ -9,6 +9,7 @@ import me.udnek.coreu.custom.component.AbstractComponentHolder;
 import me.udnek.coreu.custom.component.instance.TranslatableThing;
 import me.udnek.coreu.custom.event.CustomItemGeneratedEvent;
 import me.udnek.coreu.custom.recipe.RecipeManager;
+import me.udnek.coreu.custom.registry.AbstractRegistrableComponentable;
 import me.udnek.coreu.util.LoreBuilder;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
@@ -34,8 +35,7 @@ import java.util.function.Consumer;
 import static io.papermc.paper.datacomponent.DataComponentTypes.*;
 
 
-public abstract class ConstructableCustomItem extends AbstractComponentHolder<CustomItem> implements CustomItemProperties, UpdatingCustomItem {
-    private String id;
+public abstract class ConstructableCustomItem extends AbstractRegistrableComponentable<CustomItem> implements CustomItemProperties, UpdatingCustomItem {
     private boolean afterInitialized = false;
     protected ItemStack itemStack = null;
     protected List<Recipe> recipes = null;
@@ -50,15 +50,6 @@ public abstract class ConstructableCustomItem extends AbstractComponentHolder<Cu
 
     @Override
     public @NotNull Material getMaterial() {return DEFAULT_MATERIAL;}
-
-    @Override
-    public final @NotNull String getId(){return this.id;}
-
-    @Override
-    public void initialize(@NotNull Plugin plugin){
-        Preconditions.checkArgument(id == null, "Item already initialized!");
-        id = new NamespacedKey(plugin, getRawId()).asString();
-    }
 
     @ForOverride
     @OverridingMethodsMustInvokeSuper
@@ -164,7 +155,7 @@ public abstract class ConstructableCustomItem extends AbstractComponentHolder<Cu
     // CREATING
     ///////////////////////////////////////////////////////////////////////////
     protected void setPersistentData(@NotNull ItemStack itemStack){
-        itemStack.editMeta(itemMeta -> itemMeta.getPersistentDataContainer().set(PERSISTENT_DATA_CONTAINER_NAMESPACE, PersistentDataType.STRING, id));
+        itemStack.editMeta(itemMeta -> itemMeta.getPersistentDataContainer().set(PERSISTENT_DATA_CONTAINER_NAMESPACE, PersistentDataType.STRING, getId()));
     }
     protected <T> void setData(@NotNull DataComponentType.Valued<@NotNull T> type, @Nullable DataSupplier<T> supplier){
         if (supplier == null) return;
@@ -253,7 +244,6 @@ public abstract class ConstructableCustomItem extends AbstractComponentHolder<Cu
 
     protected @NotNull ItemStack getItemNoClone(){
         if (itemStack == null){
-            Preconditions.checkArgument(id != null, "item has not been afterInitialized yet: " + getId());
             initializeItemStack();
             CustomItemGeneratedEvent event = new CustomItemGeneratedEvent(this, itemStack, getLoreBuilder(), getRepairData());
             event.callEvent();

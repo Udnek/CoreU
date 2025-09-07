@@ -14,10 +14,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InventoryInspectionComand extends SelfRegisteringListener implements CommandExecutor {
+public class InventoryInspectionCommand extends SelfRegisteringListener implements CommandExecutor {
     private final List<Player> inspectingPlayers = new ArrayList<>();
 
-    public InventoryInspectionComand(@NotNull Plugin plugin) {
+    public InventoryInspectionCommand(@NotNull Plugin plugin) {
         super(plugin);
     }
 

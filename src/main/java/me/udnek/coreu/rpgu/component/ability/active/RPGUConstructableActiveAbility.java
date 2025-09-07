@@ -8,10 +8,6 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class RPGUConstructableActiveAbility<ActivationContext> extends RPGUItemAbstractAbility<ActivationContext> implements RPGUItemActiveAbility<ActivationContext> {
 
-    public void addPropertyLines(@NotNull ActiveAbilityLorePart componentable){
-        getProperties().forEach(c -> c.describe(componentable));
-    }
-
 
     @Override
     public void getLore(@NotNull LoreBuilder loreBuilder){
@@ -19,5 +15,6 @@ public abstract class RPGUConstructableActiveAbility<ActivationContext> extends 
         loreBuilder.set(55, lorePart);
         lorePart.setHeader(Component.translatable("rpgu_active_ability.coreu.title"));
         addPropertyLines(lorePart);
+        addDescriptionLines(lorePart);
     }
 }

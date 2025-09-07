@@ -15,7 +15,7 @@ import me.udnek.coreu.custom.equipmentslot.PlayerEquipmentManager;
 import me.udnek.coreu.custom.help.CustomHelpCommand;
 import me.udnek.coreu.custom.hud.CustomHudManager;
 import me.udnek.coreu.custom.inventory.CustomInventoryListener;
-import me.udnek.coreu.custom.inventory.InventoryInspectionComand;
+import me.udnek.coreu.custom.inventory.InventoryInspectionCommand;
 import me.udnek.coreu.custom.item.*;
 import me.udnek.coreu.custom.loot.LootTableUtils;
 import me.udnek.coreu.custom.recipe.RecipeManager;
@@ -30,6 +30,7 @@ import me.udnek.coreu.resourcepack.ResourcePackCommand;
 import me.udnek.coreu.resourcepack.ResourcePackablePlugin;
 import me.udnek.coreu.resourcepack.host.RpHost;
 import me.udnek.coreu.serializabledata.SerializableDataManager;
+import me.udnek.coreu.util.ResetCooldownCommand;
 import net.kyori.adventure.key.Key;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -80,7 +81,8 @@ public final class CoreU extends JavaPlugin implements ResourcePackablePlugin {
         getCommand("play_soundu").setExecutor(new CustomSoundCommand());
         getCommand("effectu").setExecutor(new CustomEffectCommand());
         getCommand("mgu").setExecutor(new MGUCommand());
-        getCommand("inventory_inspection").setExecutor(new InventoryInspectionComand(this));
+        getCommand("inventory_inspection").setExecutor(new InventoryInspectionCommand(this));
+        getCommand("reset_cooldown").setExecutor(new ResetCooldownCommand());
 
         // TICKERS
         CustomEntityManager.getInstance().start(this);

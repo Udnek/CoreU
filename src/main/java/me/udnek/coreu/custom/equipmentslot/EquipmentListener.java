@@ -72,7 +72,6 @@ public class EquipmentListener extends SelfRegisteringListener {
 
     @EventHandler
     public void onPlayerEquipsItem(PlayerInventorySlotChangeEvent event){
-        //if (CustomItem.isSameIds(event.getOldItemStack(), event.getNewItemStack())) return;
         proceed(event.getPlayer(), event.getSlot(), event.getSlot(), event.getOldItemStack(), event.getNewItemStack());
     }
 }

@@ -1,6 +1,7 @@
 package me.udnek.coreu.custom.effect;
 
 import me.udnek.coreu.custom.attribute.CustomAttributeConsumer;
+import me.udnek.coreu.custom.component.ComponentHolder;
 import me.udnek.coreu.custom.registry.CustomRegistries;
 import me.udnek.coreu.custom.registry.Registrable;
 import net.kyori.adventure.translation.Translatable;
@@ -10,7 +11,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface CustomEffect extends Registrable, Translatable {
+public interface CustomEffect extends Registrable, ComponentHolder<CustomEffect>, Translatable {
 
     static boolean isCustom(@NotNull PotionEffectType bukkit){
         return CustomRegistries.EFFECT.contains(bukkit.key().asString());

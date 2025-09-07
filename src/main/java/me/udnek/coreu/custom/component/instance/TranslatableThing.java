@@ -31,7 +31,7 @@ public class TranslatableThing implements CustomComponent<Object> {
     public static final String EN_US = "en_us";
     public static final String RU_RU = "ru_ru";
 
-    protected @NotNull Map<String, Translations> additionalTranslations = Map.of();
+    protected @NotNull Map<String, Translations> additionalSuffixesTranslations = Map.of();
     public final @NotNull Translations main;
 
     public static @NotNull TranslatableThing ofEngAndRu(@NotNull String eng, @NotNull String ru){
@@ -48,8 +48,8 @@ public class TranslatableThing implements CustomComponent<Object> {
     }
 
     public @NotNull List<VirtualRpJsonFile> getFiles(@NotNull Translatable translatable, @NotNull Registrable registrable){
-        Set<String> langs = main.langToTranslation.keySet();
-        additionalTranslations.forEach((string, translations) -> langs.addAll(translations.langToTranslation.keySet()));
+        Set<String> langs = new HashSet<>(main.langToTranslation.keySet());
+        additionalSuffixesTranslations.forEach((string, translations) -> langs.addAll(translations.langToTranslation.keySet()));
         List<VirtualRpJsonFile> files = new ArrayList<>();
         for (String lang : langs) {
             JsonObject json = new JsonObject();
@@ -57,10 +57,10 @@ public class TranslatableThing implements CustomComponent<Object> {
             if (mainTrans != null){
                 json.add(translatable.translationKey(), new JsonPrimitive(mainTrans));
             }
-            for (Map.Entry<String, Translations> entry : additionalTranslations.entrySet()) {
+            for (Map.Entry<String, Translations> entry : additionalSuffixesTranslations.entrySet()) {
                 String trans = entry.getValue().getByLang(lang);
                 if (trans == null) continue;
-                json.add(entry.getKey(), new JsonPrimitive(trans));
+                json.add(translatable.translationKey() + "." + entry.getKey(), new JsonPrimitive(trans));
             }
             files.add(new VirtualRpJsonFile(json, "assets/"+registrable.key().namespace()+"/lang/"+lang+".json"));
         }
@@ -68,8 +68,8 @@ public class TranslatableThing implements CustomComponent<Object> {
     }
 
     public @NotNull TranslatableThing addAdditional(@NotNull String key, Translations translations){
-        if (additionalTranslations.isEmpty()) additionalTranslations = new HashMap<>();
-        additionalTranslations.put(key, translations);
+        if (additionalSuffixesTranslations.isEmpty()) additionalSuffixesTranslations = new HashMap<>();
+        additionalSuffixesTranslations.put(key, translations);
         return this;
     }
 

@@ -9,6 +9,7 @@ import me.udnek.coreu.custom.entitylike.block.CustomBlockPlaceContext;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockType;
 import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.custom.registry.AbstractRegistrable;
+import me.udnek.coreu.custom.registry.AbstractRegistrableComponentable;
 import me.udnek.coreu.nms.Nms;
 import me.udnek.coreu.nms.loot.LootContextBuilder;
 import me.udnek.coreu.util.Either;
@@ -33,14 +34,7 @@ import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public abstract class AbstractCustomBlockType extends AbstractRegistrable implements CustomBlockType {
-
-    private final CustomComponentMap<CustomBlockType> components = new CustomComponentMap<>();
-
-    @Override
-    public @NotNull CustomComponentMap<CustomBlockType> getComponents() {
-        return components;
-    }
+public abstract class AbstractCustomBlockType extends AbstractRegistrableComponentable<CustomBlockType> implements CustomBlockType {
 
     public abstract @NotNull TileState getRealState();
     public abstract @Nullable ItemStack getParticleBase();

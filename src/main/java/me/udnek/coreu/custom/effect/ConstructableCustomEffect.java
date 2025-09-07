@@ -2,6 +2,7 @@ package me.udnek.coreu.custom.effect;
 
 import me.udnek.coreu.custom.attribute.CustomAttributeConsumer;
 import me.udnek.coreu.custom.registry.AbstractRegistrable;
+import me.udnek.coreu.custom.registry.AbstractRegistrableComponentable;
 import me.udnek.coreu.nms.NmsUtils;
 import me.udnek.coreu.util.Reflex;
 import net.kyori.adventure.key.Key;
@@ -30,11 +31,10 @@ import org.jetbrains.annotations.Nullable;
 import java.awt.*;
 import java.lang.reflect.Constructor;
 
-public abstract class ConstructableCustomEffect extends AbstractRegistrable implements CustomEffect{
+public abstract class ConstructableCustomEffect extends AbstractRegistrableComponentable<CustomEffect> implements CustomEffect{
     protected Holder<MobEffect> nmsEffect;
     protected PotionEffectType bukkitEffect;
-
-
+    
     public abstract @NotNull PotionEffectTypeCategory getCategory();
     public int getColorIfDefaultParticle(){return Color.WHITE.getRGB();}
     public @Nullable Particle getParticle(){return null;}

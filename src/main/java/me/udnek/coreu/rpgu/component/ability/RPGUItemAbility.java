@@ -1,20 +1,23 @@
 package me.udnek.coreu.rpgu.component.ability;
 
 import me.udnek.coreu.custom.component.ComponentHolder;
+import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.equipmentslot.slot.CustomEquipmentSlot;
 import me.udnek.coreu.custom.equipmentslot.universal.UniversalInventorySlot;
 import me.udnek.coreu.custom.item.CustomItem;
+import me.udnek.coreu.custom.registry.Registrable;
 import me.udnek.coreu.rpgu.component.RPGUComponents;
 import me.udnek.coreu.rpgu.component.ability.property.RPGUAbilityProperty;
 import me.udnek.coreu.util.Either;
 import me.udnek.coreu.util.LoreBuilder;
+import net.kyori.adventure.translation.Translatable;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public interface RPGUItemAbility<ActivationContext> extends ComponentHolder<RPGUItemAbility<?>> {
+public interface RPGUItemAbility<ActivationContext> extends ComponentHolder<RPGUItemAbility<?>>, Translatable {
 
     int INFINITE_COOLDOWN = 100*60*60*20;
     int INFINITE_COOLDOWN_THRESHOLD = INFINITE_COOLDOWN/2;

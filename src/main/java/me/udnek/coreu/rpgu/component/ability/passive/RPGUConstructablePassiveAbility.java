@@ -7,11 +7,7 @@ import me.udnek.coreu.util.LoreBuilder;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class RPGUConstructablePassiveAbility<ActivationContext> extends RPGUItemAbstractAbility<ActivationContext> implements RPGUItemPassiveAbility<ActivationContext> {
-
-    public void addPropertyLines(@NotNull PassiveAbilityLorePart componentable){
-        getProperties().forEach(c -> c.describe(componentable));
-    }
+public abstract class RPGUConstructablePassiveAbility extends RPGUItemAbstractAbility<Integer> implements RPGUItemPassiveAbility {
 
     @Override
     public void getLore(@NotNull LoreBuilder loreBuilder){
@@ -28,5 +24,6 @@ public abstract class RPGUConstructablePassiveAbility<ActivationContext> extends
         lorePart.setEquipmentSlot(getSlot());
         lorePart.setHeader(Component.translatable("rpgu_passive_ability.coreu.title"));
         addPropertyLines(lorePart);
+        addDescriptionLines(lorePart);
     }
 }
