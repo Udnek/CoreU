@@ -19,6 +19,8 @@ import java.util.List;
 public class FakeGlow {
     private static final HashMap<Entity, FakeGlow> fakes = new HashMap<>();
 
+    private static final EntityDataAccessor<Byte> DATA_KEY = Reflex.getFieldValue(Entity.class, "DATA_SHARED_FLAGS_ID");
+
     private @Nullable BukkitRunnable task;
     private final @NotNull List<Player> observers;
     private final @NotNull net.minecraft.world.entity.Entity nmsEntity;
@@ -28,11 +30,10 @@ public class FakeGlow {
         new FakeGlow(entity, observers, duration).run();
     }
 
-    public static void cancel(@NotNull org.bukkit.entity.Entity entity){
+    public static void stop(@NotNull org.bukkit.entity.Entity entity){
         FakeGlow fakeGlow = fakes.get(NmsUtils.toNmsEntity(entity));
         if (fakeGlow == null) return;
-        fakeGlow.cancel();
-        fakes.remove(NmsUtils.toNmsEntity(entity));
+        fakeGlow.stop(true);
     }
 
     private FakeGlow(@NotNull org.bukkit.entity.Entity entity, @NotNull List<Player> observers, long duration) {
@@ -42,30 +43,35 @@ public class FakeGlow {
     }
 
     private void run(){
-        EntityDataAccessor<Byte> key = Reflex.getFieldValue(Entity.class, "DATA_SHARED_FLAGS_ID");
+
         task = new BukkitRunnable() {
             int step = 0;
             @Override
             public void run() {
-                byte metadata = nmsEntity.getEntityData().get(key);
                 if (step == duration){
-                    sendPacketToObservers((byte) (metadata & ~0x40));
-                    cancel();
+                    stop(true);
                     return;
                 }
-                sendPacketToObservers(((byte) (metadata | 0x40)));
+                sendPacketToObservers(((byte) (getMetadata() | 0x40)));
                 step++;
             }
         };
         task.runTaskTimer(CoreU.getInstance(), 0, 1);
 
         FakeGlow oldFake = fakes.get(nmsEntity);
-        if (oldFake != null) oldFake.cancel();
+        if (oldFake != null) oldFake.stop(false);
         fakes.put(nmsEntity, this);
     }
 
-    private void cancel(){
+    private void stop(boolean sendReal){
         if (task != null) task.cancel();
+        fakes.remove(nmsEntity);
+        if (!sendReal) return;
+        sendPacketToObservers((byte) (getMetadata() & ~0x40));
+    }
+
+    private byte getMetadata(){
+        return nmsEntity.getEntityData().get(DATA_KEY);
     }
 
     private void sendPacketToObservers(byte data){

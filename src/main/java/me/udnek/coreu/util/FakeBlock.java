@@ -26,11 +26,10 @@ public class FakeBlock {
     public static void show(@NotNull Location location, @NotNull BlockData blockData, @NotNull List<@NotNull Player> players, long duration) {
         new FakeBlock(location, blockData, players, duration).run();
     }
-    public static void cancel(@NotNull Location location){
+    public static void stop(@NotNull Location location){
         FakeBlock fakeBlock = fakes.get(location.getBlock());
         if (fakeBlock == null) return;
-        fakeBlock.cancel();
-        fakes.remove(location.getBlock());
+        fakeBlock.stop(true);
     }
 
     private FakeBlock(@NotNull Location location, @NotNull BlockData blockData, @NotNull List<@NotNull Player> players, long duration){
@@ -40,8 +39,14 @@ public class FakeBlock {
         this.duration = duration;
     }
 
-    private void cancel(){
+    private void stop(boolean sendReal){
         if (task != null) task.cancel();
+        fakes.remove(location.getBlock());
+        if (!sendReal) return;
+        BlockData blockData = location.getBlock().getBlockData();
+        for (Player player : players) {
+            player.sendBlockChange(location, blockData);
+        }
     }
 
     private void run(){
@@ -52,15 +57,13 @@ public class FakeBlock {
         task = new BukkitRunnable() {
             @Override
             public void run() {
-                for (Player player : players) {
-                    player.sendBlockChange(block.getLocation(), block.getBlockData());
-                }
+                stop(true);
             }
         };
         task.runTaskLater(CoreU.getInstance(), duration);
 
         FakeBlock oldFake = fakes.get(block);
-        if (oldFake != null) oldFake.cancel();
+        if (oldFake != null) oldFake.stop(false);
         fakes.put(block, this);
     }
 }
