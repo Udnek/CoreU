@@ -1,7 +1,9 @@
 package me.udnek.coreu.custom.sound;
 
 import com.google.common.base.Preconditions;
+import me.udnek.coreu.custom.component.instance.TranslatableThing;
 import me.udnek.coreu.custom.registry.AbstractRegistrable;
+import me.udnek.coreu.custom.registry.AbstractRegistrableComponentable;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.SoundCategory;
@@ -9,15 +11,28 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ConstructableCustomSound extends AbstractRegistrable implements CustomSound {
+import java.util.List;
 
-    public final NamespacedKey path;
-    public final SoundCategory category;
+public class ConstructableCustomSound extends AbstractRegistrableComponentable<CustomSound> implements CustomSound {
+
+    //public final NamespacedKey path;
+    private final String rawId;
+    public final @NotNull List<String> filePaths;
+    public final @NotNull SoundCategory category;
     public final float volume;
     public final float pitch;
 
-    public ConstructableCustomSound(@NotNull NamespacedKey path, @NotNull SoundCategory category, float volume, float pitch){
-        this.path = path;
+    public ConstructableCustomSound(
+            @NotNull String rawId,
+            @NotNull SoundCategory category,
+            @NotNull TranslatableThing translations,
+            @NotNull List<String> filePaths,
+            float volume,
+            float pitch
+    ){
+        getComponents().set(translations);
+        this.rawId = rawId;
+        this.filePaths = filePaths;
         this.category = category;
         this.volume = volume;
         this.pitch = pitch;
@@ -32,13 +47,9 @@ public class ConstructableCustomSound extends AbstractRegistrable implements Cus
     }
 
     @Override
-    public @NotNull String getRawId() {
-        return path.getKey();
-    }
+    public @NotNull String getRawId() {return rawId;}
 
-    public @NotNull String getSoundName(){
-        return path.asString();
-    }
+    public @NotNull String getSoundName(){return getId();}
 
     @Override
     public void play(@Nullable Location location, @Nullable Player player) {
