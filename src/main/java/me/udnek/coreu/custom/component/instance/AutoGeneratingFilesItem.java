@@ -105,7 +105,7 @@ public interface AutoGeneratingFilesItem extends LoreProvidingItemComponent {
                                 "type": "minecraft:model",
                                 "model": "%model_path%"
                             },
-                            "oversized_in_gui": "%oversized_in_gui%",
+                            "oversized_in_gui": %oversized_in_gui%,
                             "hand_animation_on_swap%": %hand_animation_on_swap%
                         }
                         """, itemModel));
