@@ -18,8 +18,6 @@ public interface RPGUItemToggleAbility extends RPGUItemAbility<Integer>, CustomC
         activate(customItem, player, new Either<>(slot, null), tickDelay);
     }
 
-
-
     boolean isToggled(@NotNull CustomItem customItem, @NotNull Player player, @NotNull BaseUniversalSlot slot);
     @Override
     @NotNull

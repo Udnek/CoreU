@@ -38,6 +38,9 @@ public interface AutoGeneratingFilesItem extends LoreProvidingItemComponent {
 
     interface Base extends AutoGeneratingFilesItem{
 
+        default boolean isOversizedInGui(){return true;}
+        default boolean isHandAnimationOnSwap(){return true;}
+
         @Override
         @NotNull
         default List<VirtualRpJsonFile> getFiles(@NotNull CustomItem customItem){
@@ -74,7 +77,9 @@ public interface AutoGeneratingFilesItem extends LoreProvidingItemComponent {
                     .replace("%namespace%", itemModel.namespace())
                     .replace("%key%", itemModel.value())
                     .replace("%texture_path%", itemModel.namespace()+":item/"+itemModel.value())
-                    .replace("%model_path%", itemModel.namespace()+":item/"+itemModel.value());
+                    .replace("%model_path%", itemModel.namespace()+":item/"+itemModel.value())
+                    .replace("%hand_animation_on_swap%", String.valueOf(isHandAnimationOnSwap()))
+                    .replace("%oversized_in_gui%", String.valueOf(isOversizedInGui()));
         }
 
         @NotNull List<JsonObject> getModels(@NotNull Key modelKey);
@@ -100,7 +105,8 @@ public interface AutoGeneratingFilesItem extends LoreProvidingItemComponent {
                                 "type": "minecraft:model",
                                 "model": "%model_path%"
                             },
-                            "oversized_in_gui": true
+                            "oversized_in_gui": "%oversized_in_gui%",
+                            "hand_animation_on_swap%": %hand_animation_on_swap%
                         }
                         """, itemModel));
         }

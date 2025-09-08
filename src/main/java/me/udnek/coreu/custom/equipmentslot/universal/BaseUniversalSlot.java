@@ -27,7 +27,7 @@ public class BaseUniversalSlot implements UniversalInventorySlot {
     }
 
     @Override
-    public @Nullable Integer integerSlotToCompare() {
+    public @Nullable Integer integerSlotToCompare(@NotNull LivingEntity entity) {
         if (slot != null) return slot;
         return switch (Objects.requireNonNull(equipmentSlot)) {
             case HAND -> 98;

@@ -37,24 +37,25 @@ public interface UniversalInventorySlot {
             consumer.accept(new BaseUniversalSlot(EquipmentSlot.FEET), equipment.getBoots());
         }
     }
-    @Nullable Integer integerSlotToCompare();
+    @Nullable Integer integerSlotToCompare(@NotNull LivingEntity entity);
 
-    default boolean equals(@NotNull UniversalInventorySlot other){
-        Integer s = integerSlotToCompare();
-        return (s != null && s.equals(other.integerSlotToCompare()));
+    default boolean equals(@NotNull LivingEntity entity, @NotNull UniversalInventorySlot other){
+        Integer s = integerSlotToCompare(entity);
+        return (s != null && s.equals(other.integerSlotToCompare(entity)));
     }
 
     @Nullable ItemStack getItem(@NotNull LivingEntity entity);
 
     void setItem(@Nullable ItemStack itemStack, @NotNull LivingEntity entity);
 
-    default void changeItem(@NotNull Consumer<ItemStack> consumer, @NotNull LivingEntity entity) {
+    default void modifyItem(@NotNull Consumer<ItemStack> consumer, @NotNull LivingEntity entity) {
         ItemStack itemStack = getItem(entity);
         consumer.accept(itemStack);
         setItem(itemStack, entity);
     }
 
-    default void addItem(int count, @NotNull LivingEntity entity) {changeItem(itemStack -> itemStack.add(count), entity);}
+    default void addItem(int count, @NotNull LivingEntity entity) {
+        modifyItem(itemStack -> itemStack.add(count), entity);}
 
     default void addItem(@NotNull LivingEntity entity) {addItem(1, entity);}
 

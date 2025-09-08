@@ -43,12 +43,12 @@ public abstract class RPGUConstructableToggleAbility extends RPGUItemAbstractAbi
     }
 
     public boolean toggle(@NotNull CustomItem customItem, @NotNull Player player, @NotNull BaseUniversalSlot slot){
-        return setToggled(customItem, player, slot, isToggled(customItem, player, slot));
+        return setToggled(customItem, player, slot, !isToggled(customItem, player, slot));
     }
 
     public boolean setToggled(@NotNull CustomItem customItem, @NotNull Player player, @NotNull BaseUniversalSlot slot, boolean toggle){
         AtomicBoolean newState = new AtomicBoolean();
-        slot.changeItem(new Consumer<>() {
+        slot.modifyItem(new Consumer<>() {
             @Override
             public void accept(ItemStack stack) {
                 stack.editPersistentDataContainer(new Consumer<>() {

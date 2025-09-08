@@ -1,6 +1,7 @@
 package me.udnek.coreu.custom.equipmentslot.universal;
 
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -9,7 +10,11 @@ public class ActiveHandUniversalSlot implements UniversalInventorySlot{
 
 
     @Override
-    public @Nullable Integer integerSlotToCompare() {
+    public @Nullable Integer integerSlotToCompare(@NotNull LivingEntity entity) {
+        if (!entity.isHandRaised()) return null;
+        if (entity instanceof Player player){
+            return player.getInventory().getHeldItemSlot();
+        }
         return 98;
     }
 
