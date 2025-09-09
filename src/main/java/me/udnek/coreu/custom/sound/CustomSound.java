@@ -1,13 +1,16 @@
 package me.udnek.coreu.custom.sound;
 
+import me.udnek.coreu.custom.component.ComponentHolder;
 import me.udnek.coreu.custom.registry.Registrable;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.translation.Translatable;
 import org.bukkit.Location;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface CustomSound extends Registrable {
+public interface CustomSound extends Registrable, ComponentHolder<CustomSound>, Translatable {
     void play(@Nullable Location location, @Nullable Player player, @NotNull SoundCategory category, float volume, float pitch);
     void play(@Nullable Location location, @Nullable Player player, float volume, float pitch);
     void play(@Nullable Location location, @Nullable Player player, float volume);

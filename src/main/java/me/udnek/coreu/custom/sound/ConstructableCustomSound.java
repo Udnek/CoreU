@@ -1,44 +1,71 @@
 package me.udnek.coreu.custom.sound;
 
 import com.google.common.base.Preconditions;
+import me.udnek.coreu.custom.component.instance.TranslatableThing;
 import me.udnek.coreu.custom.registry.AbstractRegistrable;
+import me.udnek.coreu.custom.registry.AbstractRegistrableComponentable;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ConstructableCustomSound extends AbstractRegistrable implements CustomSound {
+import java.util.List;
 
-    public final NamespacedKey path;
-    public final SoundCategory category;
+public class ConstructableCustomSound extends AbstractRegistrableComponentable<CustomSound> implements CustomSound {
+
+    private final String rawId;
+    public final @NotNull SoundCategory category;
+    protected @NotNull List<String> filePaths;
     public final float volume;
     public final float pitch;
 
-    public ConstructableCustomSound(@NotNull NamespacedKey path, @NotNull SoundCategory category, float volume, float pitch){
-        this.path = path;
+    public ConstructableCustomSound(
+            @NotNull String rawId,
+            @NotNull SoundCategory category,
+            @NotNull TranslatableThing translations,
+            @NotNull List<String> rawPaths,
+            float volume,
+            float pitch
+    ){
+        this.rawId = rawId;
         this.category = category;
+        getComponents().set(translations);
+        this.filePaths = rawPaths;
         this.volume = volume;
         this.pitch = pitch;
     }
 
-    public ConstructableCustomSound(@NotNull NamespacedKey path, @NotNull SoundCategory category, float volume){
-        this(path, category, volume, 1F);
+    public ConstructableCustomSound(@NotNull String rawPath, @NotNull SoundCategory category, @NotNull TranslatableThing translations, float volume, float pitch){
+        this(rawPath, category, translations, List.of(rawPath), volume, pitch);
     }
 
-    public ConstructableCustomSound(@NotNull NamespacedKey path, @NotNull SoundCategory category){
-        this(path, category, 1F);
+    public ConstructableCustomSound(@NotNull String rawPath, @NotNull SoundCategory category, @NotNull TranslatableThing translations, float volume){
+        this(rawPath, category, translations, volume, 1f);
+    }
+
+    public ConstructableCustomSound(@NotNull String rawPath, @NotNull SoundCategory category, @NotNull TranslatableThing translations){
+        this(rawPath, category, translations,1F);
+    }
+
+
+    public @NotNull List<String> getFilePaths() {return filePaths;}
+
+    @Override
+    public void initialize(@NotNull Plugin plugin) {
+        super.initialize(plugin);
+        filePaths = filePaths.stream().map(path -> key().namespace() + ":" + path).toList();
     }
 
     @Override
-    public @NotNull String getRawId() {
-        return path.getKey();
-    }
+    public @NotNull String translationKey() {return "subtitles."+key().namespace()+"."+key().value();}
 
-    public @NotNull String getSoundName(){
-        return path.asString();
-    }
+    @Override
+    public @NotNull String getRawId() {return rawId;}
+
+    public @NotNull String getSoundName(){return getId();}
 
     @Override
     public void play(@Nullable Location location, @Nullable Player player) {
