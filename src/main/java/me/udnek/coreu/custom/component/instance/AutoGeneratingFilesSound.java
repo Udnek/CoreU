@@ -12,39 +12,37 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public interface AutoGeneratingFilesSound extends LoreProvidingItemComponent {
+public interface AutoGeneratingFilesSound extends CustomComponent<CustomSound> {
+
+    AutoGeneratingFilesSound DEFAULT = new Instance();
 
     @NotNull List<VirtualRpJsonFile> getFiles(@NotNull CustomSound sound);
 
+
     @Override
     @NotNull
-    default CustomComponentType<CustomItem, ? extends CustomComponent<CustomItem>> getType() {
-        return CustomComponentType.AUTO_GENERATING_FILES_ITEM;
+    default CustomComponentType<? super CustomSound, ? extends CustomComponent<? super CustomSound>> getType(){
+        return CustomComponentType.AUTO_GENERATING_FILES_SOUND;
     }
-
     class Instance implements AutoGeneratingFilesSound{
 
         @Override
-        public @NotNull List<VirtualRpJsonFile> getFiles(@NotNull CustomSound sound) {
-            if (!(sound instanceof ConstructableCustomSound customSound)) return List.of();
+        public @NotNull List<VirtualRpJsonFile> getFiles(@NotNull CustomSound unknowSound) {
+            if (!(unknowSound instanceof ConstructableCustomSound sound)) return List.of();
             VirtualRpJsonFile file = new VirtualRpJsonFile(JsonParser.parseString("""
                     {
                         "%id%": {
-                            "subtitle": "%sub%",
+                            "subtitle": "%subtitle%",
                             "sounds": [%sounds%],
                             "type": "event"
                         }
                     }
                     """
                     .replace("%id%", sound.key().value())
-                    .replace("%sub%", sound.getSubtitle())
-                    .replace("%sounds%", )
-            ), "assets/" + sound.key().namespace() + "/sound.json");
+                    .replace("%subtitle%", sound.translationKey())
+                    .replace("%sounds%", String.join(", ", sound.getFilePaths().stream().map(s -> "\""+s+"\"").toList()))
+            ), "assets/" + sound.key().namespace() + "/sounds.json");
             return List.of(file);
         }
-        public @NotNull VirtualRpJsonFile getSoundsFile(@NotNull CustomSound sound){
-
-        }
-
     }
 }

@@ -8,6 +8,7 @@ import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.custom.registry.CustomRegistries;
 import me.udnek.coreu.custom.registry.CustomRegistry;
 import me.udnek.coreu.custom.registry.Registrable;
+import me.udnek.coreu.custom.sound.CustomSound;
 import me.udnek.coreu.resourcepack.FileType;
 import me.udnek.coreu.resourcepack.ResourcePackablePlugin;
 import me.udnek.coreu.resourcepack.VirtualResourcePack;
@@ -36,8 +37,9 @@ import java.util.List;
 public class RpMerger {
 
     public static final RpPath LANG_DIRECTORY = new RpPath(null, "assets/*/lang");
+    public static final RpPath SOUNDS_FILE = new RpPath(null, "assets/*/sounds.json");
 
-    private static final RpPath[] MERGE_DIRECTORIES = new RpPath[]{LANG_DIRECTORY};
+    private static final RpPath[] MERGE_DIRECTORIES = new RpPath[]{LANG_DIRECTORY, SOUNDS_FILE};
 
     private final SortedPathsContainer container = new SortedPathsContainer();
 
@@ -79,6 +81,9 @@ public class RpMerger {
         List<VirtualRpJsonFile> toAdd = new ArrayList<>();
         for (CustomItem item : CustomRegistries.ITEM.getAll()) {
             toAdd.addAll(item.getComponents().getOrDefault(CustomComponentType.AUTO_GENERATING_FILES_ITEM).getFiles(item));
+        }
+        for (CustomSound sound : CustomRegistries.SOUND.getAll()) {
+            files.addAll(sound.getComponents().getOrDefault(CustomComponentType.AUTO_GENERATING_FILES_SOUND).getFiles(sound));
         }
         for (CustomRegistry<?> registry : CustomRegistries.REGISTRY.getAll()) {
             for (Registrable registrable : registry.getAll()) {
@@ -124,8 +129,8 @@ public class RpMerger {
 
     public void autoMergeCopy(@NotNull SamePathsContainer container){
         RpFileMerger merger;
-        if (container.getExample().isBelow(LANG_DIRECTORY)){
-            merger = new LanguageMerger();
+        if (container.getExample().isBelow(LANG_DIRECTORY) || container.getExample().isBelow(SOUNDS_FILE)){
+            merger = new MapLikeMerger();
         } else {
             throw new RuntimeException("Directory can not be merged automatically");
         }

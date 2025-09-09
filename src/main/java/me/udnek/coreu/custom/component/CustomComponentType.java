@@ -6,6 +6,7 @@ import me.udnek.coreu.custom.entitylike.block.CustomBlockType;
 import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.custom.registry.CustomRegistries;
 import me.udnek.coreu.custom.registry.Registrable;
+import me.udnek.coreu.custom.sound.CustomSound;
 import org.jetbrains.annotations.NotNull;
 
 public interface CustomComponentType<HolderType, Component extends CustomComponent<HolderType>> extends Registrable {
@@ -49,6 +50,11 @@ public interface CustomComponentType<HolderType, Component extends CustomCompone
 
     CustomComponentType<CustomBlockType, HopperInteractingBlock>
             HOPPER_INTERACTING_BLOCK = register(new ConstructableComponentType<>("hopper_interacting_block", HopperInteractingBlock.DENY));
+
+    // SOUND
+
+    CustomComponentType<CustomSound, AutoGeneratingFilesSound>
+            AUTO_GENERATING_FILES_SOUND = register(new ConstructableComponentType<>("auto_generating_files_sound", AutoGeneratingFilesSound.DEFAULT));
 
 
     @NotNull Component getDefault();

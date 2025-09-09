@@ -72,7 +72,7 @@ public class RpPath {
     }
 
     public boolean isBelow(@NotNull RpPath other){
-        return path.matches(other.path.replace("*", ".*")+".*");
+        return path.matches(other.path.replace("*", ".*") + ".*");
     }
 
     public @NotNull String getPath() {

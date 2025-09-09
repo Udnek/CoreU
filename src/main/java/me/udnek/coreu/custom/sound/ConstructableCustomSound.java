@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,10 +16,9 @@ import java.util.List;
 
 public class ConstructableCustomSound extends AbstractRegistrableComponentable<CustomSound> implements CustomSound {
 
-    //public final NamespacedKey path;
     private final String rawId;
-    public final @NotNull List<String> filePaths;
     public final @NotNull SoundCategory category;
+    protected @NotNull List<String> filePaths;
     public final float volume;
     public final float pitch;
 
@@ -26,25 +26,41 @@ public class ConstructableCustomSound extends AbstractRegistrableComponentable<C
             @NotNull String rawId,
             @NotNull SoundCategory category,
             @NotNull TranslatableThing translations,
-            @NotNull List<String> filePaths,
+            @NotNull List<String> rawPaths,
             float volume,
             float pitch
     ){
-        getComponents().set(translations);
         this.rawId = rawId;
-        this.filePaths = filePaths;
         this.category = category;
+        getComponents().set(translations);
+        this.filePaths = rawPaths;
         this.volume = volume;
         this.pitch = pitch;
     }
 
-    public ConstructableCustomSound(@NotNull NamespacedKey path, @NotNull SoundCategory category, float volume){
-        this(path, category, volume, 1F);
+    public ConstructableCustomSound(@NotNull String rawPath, @NotNull SoundCategory category, @NotNull TranslatableThing translations, float volume, float pitch){
+        this(rawPath, category, translations, List.of(rawPath), volume, pitch);
     }
 
-    public ConstructableCustomSound(@NotNull NamespacedKey path, @NotNull SoundCategory category){
-        this(path, category, 1F);
+    public ConstructableCustomSound(@NotNull String rawPath, @NotNull SoundCategory category, @NotNull TranslatableThing translations, float volume){
+        this(rawPath, category, translations, volume, 1f);
     }
+
+    public ConstructableCustomSound(@NotNull String rawPath, @NotNull SoundCategory category, @NotNull TranslatableThing translations){
+        this(rawPath, category, translations,1F);
+    }
+
+
+    public @NotNull List<String> getFilePaths() {return filePaths;}
+
+    @Override
+    public void initialize(@NotNull Plugin plugin) {
+        super.initialize(plugin);
+        filePaths = filePaths.stream().map(path -> key().namespace() + ":" + path).toList();
+    }
+
+    @Override
+    public @NotNull String translationKey() {return "subtitles."+key().namespace()+"."+key().value();}
 
     @Override
     public @NotNull String getRawId() {return rawId;}

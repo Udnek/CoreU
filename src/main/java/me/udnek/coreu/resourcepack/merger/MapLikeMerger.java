@@ -6,17 +6,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import me.udnek.coreu.util.LogUtils;
+import org.jetbrains.annotations.Debug;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class LanguageMerger implements RpFileMerger {
+public class MapLikeMerger implements RpFileMerger {
     private final List<JsonObject> jsons = new ArrayList<>();
     private JsonObject merged = null;
 
-    public LanguageMerger(){}
+    public MapLikeMerger(){}
     @Override
     public void add(@NotNull JsonObject jsonObject){
         jsons.add(jsonObject);
@@ -27,7 +29,7 @@ public class LanguageMerger implements RpFileMerger {
         merged = new JsonObject();
         for (JsonObject json : jsons) {
             for (Map.Entry<String, JsonElement> entry : json.asMap().entrySet()) {
-                merged.addProperty(entry.getKey(), entry.getValue().getAsString());
+                merged.add(entry.getKey(), entry.getValue());
             }
         }
     }

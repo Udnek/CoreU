@@ -48,13 +48,14 @@ public interface UniversalInventorySlot {
 
     void setItem(@Nullable ItemStack itemStack, @NotNull LivingEntity entity);
 
-    default void changeItem(@NotNull Consumer<ItemStack> consumer, @NotNull LivingEntity entity) {
+    default void modifyItem(@NotNull Consumer<ItemStack> consumer, @NotNull LivingEntity entity) {
         ItemStack itemStack = getItem(entity);
         consumer.accept(itemStack);
         setItem(itemStack, entity);
     }
 
-    default void addItem(int count, @NotNull LivingEntity entity) {changeItem(itemStack -> itemStack.add(count), entity);}
+    default void addItem(int count, @NotNull LivingEntity entity) {
+        modifyItem(itemStack -> itemStack.add(count), entity);}
 
     default void addItem(@NotNull LivingEntity entity) {addItem(1, entity);}
 
