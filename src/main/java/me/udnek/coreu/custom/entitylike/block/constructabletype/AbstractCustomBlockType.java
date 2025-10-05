@@ -124,6 +124,8 @@ public abstract class AbstractCustomBlockType extends AbstractRegistrableCompone
 
     @Override
     public void onDestroy(@NotNull BlockDestroyEvent event){
+        event.setWillDrop(false);
+        dropItems(event.getBlock(), new ItemStack(Material.AIR));
         onGenericDestroy(event.getBlock());
     }
 
