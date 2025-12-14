@@ -1,6 +1,7 @@
 package me.udnek.coreu.custom.equipmentslot.slot;
 
 import me.udnek.coreu.custom.equipmentslot.universal.UniversalInventorySlot;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.EquipmentSlotGroup;
 import org.jetbrains.annotations.NotNull;
@@ -46,13 +47,13 @@ public class ConstructableGroupSlot extends AbstractCustomEquipmentSlot implemen
     }
 
     @Override
-    public boolean intersects(@NotNull CustomEquipmentSlot other) {
+    public boolean intersects(@NotNull LivingEntity entity, @NotNull CustomEquipmentSlot other) {
         return other == this || subs.stream().anyMatch(s -> other == s);
     }
 
     @Override
-    public boolean intersects(@NotNull UniversalInventorySlot slot) {
-        return subs.stream().anyMatch(singleSlot -> singleSlot.intersects(slot));
+    public boolean intersects(@NotNull LivingEntity entity, @NotNull UniversalInventorySlot slot) {
+        return subs.stream().anyMatch(singleSlot -> singleSlot.intersects(entity, slot));
     }
 }
 

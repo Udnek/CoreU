@@ -7,7 +7,7 @@ import me.udnek.coreu.custom.item.LoreProvidingItemComponent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
 
-public interface LeftClickableItem extends LoreProvidingItemComponent {
+public interface LeftClickableItem extends CustomComponent<CustomItem> {
 
     LeftClickableItem EMPTY = (item, event) -> {};
 

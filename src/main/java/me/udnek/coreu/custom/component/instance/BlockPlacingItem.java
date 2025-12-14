@@ -9,7 +9,7 @@ import me.udnek.coreu.custom.item.LoreProvidingItemComponent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class BlockPlacingItem implements LoreProvidingItemComponent {
+public class BlockPlacingItem implements CustomComponent<CustomItem> {
 
     public static final BlockPlacingItem EMPTY = new BlockPlacingItem(){
         @Override

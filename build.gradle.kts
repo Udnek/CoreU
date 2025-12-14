@@ -11,7 +11,7 @@ description = "CoreU"
 
 repositories {
     mavenCentral()
-    maven (url ="https://repo.dmulloy2.net/repository/public/")
+    maven ("https://repo.papermc.io/repository/maven-public/")
 }
 
 java {
@@ -21,7 +21,7 @@ java {
 
 dependencies {
     paperweight.paperDevBundle("1.21.8-R0.1-SNAPSHOT")
-    compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
+    compileOnly("net.dmulloy2:ProtocolLib:5.4.0")
 }
 
 

@@ -77,10 +77,10 @@ public class AttributeUtils {
             AttributeModifier thisModifier = entry.getValue();
 
             if (
-                    !wasAdded &&
-                    thisAttribute == attribute &&
-                    thisModifier.getSlotGroup() == slot &&
-                    thisModifier.getOperation() == operation
+                !wasAdded &&
+                thisAttribute == attribute &&
+                thisModifier.getSlotGroup() == slot &&
+                thisModifier.getOperation() == operation
             )
             {
                 AttributeModifier newAttributeModifier = new AttributeModifier(

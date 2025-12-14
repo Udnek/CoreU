@@ -40,8 +40,10 @@ public interface UniversalInventorySlot {
     @Nullable Integer integerSlotToCompare(@NotNull LivingEntity entity);
 
     default boolean equals(@NotNull LivingEntity entity, @NotNull UniversalInventorySlot other){
-        Integer s = integerSlotToCompare(entity);
-        return (s != null && s.equals(other.integerSlotToCompare(entity)));
+        Integer slotId = integerSlotToCompare(entity);
+        if (slotId == null) return false;
+        Integer otherId = other.integerSlotToCompare(entity);
+        return slotId.equals(otherId);
     }
 
     @Nullable ItemStack getItem(@NotNull LivingEntity entity);

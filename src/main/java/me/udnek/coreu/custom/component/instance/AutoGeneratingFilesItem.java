@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface AutoGeneratingFilesItem extends LoreProvidingItemComponent {
+public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
 
     Generated GENERATED = new Generated();
     HandHeld HANDHELD = new HandHeld();

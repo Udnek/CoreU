@@ -43,8 +43,8 @@ public class PlayerEquipmentManager extends TickingTask {
             equipment.getEquipment((
                     slot, customItem) ->
                     customItem.getComponents().getAllTyped(EquippableItem.class).forEach(
-                            rpguEquipableTickingItem ->
-                                    rpguEquipableTickingItem.tick(customItem, player, slot, DELAY)
+                            equippableItem ->
+                                    equippableItem.tick(customItem, player, slot, DELAY)
                     ));
         }
         if (toRemovePlayer != null) playersData.remove(toRemovePlayer);

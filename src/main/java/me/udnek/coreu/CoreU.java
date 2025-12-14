@@ -10,6 +10,7 @@ import me.udnek.coreu.custom.entitylike.entity.CustomEntityManager;
 import me.udnek.coreu.custom.entitylike.entity.CustomEntityType;
 import me.udnek.coreu.custom.entitylike.entity.command.LoadedCustomEntitiesCommand;
 import me.udnek.coreu.custom.entitylike.entity.command.SummonCustomEntityCommand;
+import me.udnek.coreu.custom.equipmentslot.EquipmentCommand;
 import me.udnek.coreu.custom.equipmentslot.EquipmentListener;
 import me.udnek.coreu.custom.equipmentslot.PlayerEquipmentManager;
 import me.udnek.coreu.custom.help.CustomHelpCommand;
@@ -82,6 +83,7 @@ public final class CoreU extends JavaPlugin implements ResourcePackablePlugin {
         getCommand("effectu").setExecutor(new CustomEffectCommand());
         getCommand("mgu").setExecutor(new MGUCommand());
         getCommand("inventory_inspection").setExecutor(new InventoryInspectionCommand(this));
+        getCommand("current_equipment").setExecutor(new EquipmentCommand());
         getCommand("reset_cooldown").setExecutor(new ResetCooldownCommand());
 
         // TICKERS

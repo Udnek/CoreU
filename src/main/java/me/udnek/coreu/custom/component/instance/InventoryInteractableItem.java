@@ -7,7 +7,7 @@ import me.udnek.coreu.custom.item.LoreProvidingItemComponent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
 
-public interface InventoryInteractableItem extends LoreProvidingItemComponent {
+public interface InventoryInteractableItem extends CustomComponent<CustomItem> {
     InventoryInteractableItem EMPTY = new InventoryInteractableItem() {
         @Override
         public void onBeingClicked(@NotNull CustomItem item, @NotNull InventoryClickEvent event) {}

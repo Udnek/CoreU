@@ -3,6 +3,7 @@ package me.udnek.coreu.custom.equipmentslot;
 
 import me.udnek.coreu.custom.equipmentslot.universal.BaseUniversalSlot;
 import me.udnek.coreu.custom.item.CustomItem;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,9 +19,12 @@ public class PlayerEquipment {
     }
 
 
-    public @Nullable Map.Entry<BaseUniversalSlot, CustomItem> getFirst(@NotNull BaseUniversalSlot slot){
-        return equipment.entrySet().stream().filter(entry -> entry.getKey().equals(slot)).findFirst().orElse(null);
+    public @Nullable Map.Entry<BaseUniversalSlot, CustomItem> getEntryBySlot(@NotNull Player player, @NotNull BaseUniversalSlot slot){
+        return equipment.entrySet().stream()
+                .filter(entry -> entry.getKey().equals(player, slot))
+                .findFirst().orElse(null);
     }
+
 
     public void set(@NotNull BaseUniversalSlot slot, @Nullable CustomItem customItem) {
         if (customItem == null) {

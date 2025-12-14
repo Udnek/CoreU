@@ -15,7 +15,7 @@ public class ActiveHandUniversalSlot implements UniversalInventorySlot{
         if (entity instanceof Player player){
             return player.getInventory().getHeldItemSlot();
         }
-        return 98;
+        return 98; // MAIN HAND
     }
 
     @Override
@@ -28,5 +28,10 @@ public class ActiveHandUniversalSlot implements UniversalInventorySlot{
     public void setItem(@Nullable ItemStack itemStack, @NotNull LivingEntity entity) {
         if (!entity.isHandRaised()) return;
         new BaseUniversalSlot(entity.getActiveItemHand()).setItem(itemStack, entity);
+    }
+
+    @Override
+    public boolean equals(Object obj) throws RuntimeException {
+        throw new RuntimeException("don't use equals method with UniversalSlot");
     }
 }

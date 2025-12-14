@@ -8,6 +8,7 @@ import me.udnek.coreu.custom.registry.CustomRegistries;
 import me.udnek.coreu.custom.registry.Registrable;
 import net.kyori.adventure.translation.Translatable;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.EquipmentSlotGroup;
 import org.jetbrains.annotations.NotNull;
@@ -71,8 +72,8 @@ public interface CustomEquipmentSlot extends Translatable, Registrable{
         return ANY_VANILLA;
     }
 
-    boolean intersects(@NotNull CustomEquipmentSlot slot);
-    boolean intersects(@NotNull UniversalInventorySlot slot);
+    boolean intersects(@NotNull LivingEntity entity, @NotNull CustomEquipmentSlot slot);
+    boolean intersects(@NotNull LivingEntity entity, @NotNull UniversalInventorySlot slot);
     @Nullable EquipmentSlotGroup getVanillaGroup();
     @Nullable EquipmentSlot getVanillaSlot();
     void getAllUniversal(@NotNull Consumer<@NotNull UniversalInventorySlot> consumer);
@@ -97,16 +98,16 @@ public interface CustomEquipmentSlot extends Translatable, Registrable{
         }
 
         @Override
-        default boolean intersects(@NotNull CustomEquipmentSlot other) {
+        default boolean intersects(@NotNull LivingEntity entity, @NotNull CustomEquipmentSlot other) {
             if (other instanceof Single) return other == this;
-            else return other.intersects(this);
+            else return other.intersects(entity, this);
         }
 
         @Override
-        default boolean intersects(@NotNull UniversalInventorySlot slot) {
+        default boolean intersects(@NotNull LivingEntity entity, @NotNull UniversalInventorySlot slot) {
             UniversalInventorySlot universal = getUniversal();
             if (universal == null) return false;
-            return universal.equals(slot);
+            return universal.equals(entity, slot);
         }
     }
 

@@ -40,7 +40,7 @@ public class RPGUToggleItem extends AbstractComponentHolder<RPGUToggleItem> impl
 
     @Override
     public boolean isAppropriate(@NotNull CustomItem item, @NotNull Player player, @NotNull BaseUniversalSlot slot) {
-        return getAbilities().stream().anyMatch(input -> input.getSlot().intersects(slot));
+        return getAbilities().stream().anyMatch(input -> input.getSlot().intersects(player, slot));
     }
 
     @Override
@@ -52,7 +52,7 @@ public class RPGUToggleItem extends AbstractComponentHolder<RPGUToggleItem> impl
     @Override
     public void tick(@NotNull CustomItem customItem, @NotNull Player player, @NotNull BaseUniversalSlot slot, int tickDelay) {
         getAbilities().stream().filter(
-                ability -> ability.getSlot().intersects(slot) && ability.isToggled(customItem, player, slot))
+                ability -> ability.getSlot().intersects(player, slot) && ability.isToggled(customItem, player, slot))
                 .forEach(ability -> ability.tick(customItem, player, slot, tickDelay));
     }
 }

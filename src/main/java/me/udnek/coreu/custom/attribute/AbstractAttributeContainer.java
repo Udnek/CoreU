@@ -16,9 +16,10 @@ public abstract class AbstractAttributeContainer<Attribute, Modifier, ExactType 
     public @NotNull List<@NotNull Modifier> get(@NotNull Attribute attribute){return new ArrayList<>(attributes.get(attribute));}
     public @NotNull Map<@NotNull Attribute, @NotNull List<@NotNull Modifier>> getAll(){return new HashMap<>(attributes);}
     public abstract @NotNull ExactType get(@NotNull Predicate<@NotNull CustomEquipmentSlot> predicate);
-    public @NotNull ExactType get(@NotNull CustomEquipmentSlot targetSlot){
-        return get(slot -> slot.intersects(targetSlot));
-    }
+//    public @NotNull ExactType get(@NotNull CustomEquipmentSlot targetSlot){
+//        return get(slot -> slot.intersects( , targetSlot));
+//    }
+    // USED TO NOT DOUBLE CALCULATE
     public @NotNull ExactType getExact(@NotNull CustomEquipmentSlot targetSlot){
         return get(slot -> targetSlot == slot);
     }

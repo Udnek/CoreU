@@ -4,15 +4,15 @@ import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.custom.item.LoreProvidingItemComponent;
+import me.udnek.coreu.util.LoreBuilder;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
 
-public interface RightClickableItem extends LoreProvidingItemComponent {
+public interface RightClickableItem extends CustomComponent<CustomItem> {
 
     RightClickableItem EMPTY = (item, event) -> {};
 
     void onRightClick(@NotNull CustomItem item, @NotNull PlayerInteractEvent event);
-
 
     @Override
     @NotNull

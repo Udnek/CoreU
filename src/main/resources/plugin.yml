@@ -23,11 +23,11 @@ commands:
     permission: coreu.admin
     permission-message: "You do not have permission to use this command"
   custom_entities:
-      description: "custom_entities"
-      usage: "/custom_entities"
-      aliases: []
-      permission: coreu.admin
-      permission-message: "You do not have permission to use this command"
+    description: "custom_entities"
+    usage: "/custom_entities"
+    aliases: []
+    permission: coreu.admin
+    permission-message: "You do not have permission to use this command"
   resourcepacku:
     description: "resourcepacku"
     usage: "/resourcepacku <directory>"
@@ -35,50 +35,56 @@ commands:
     permission: coreu.admin
     permission-message: "You do not have permission to use this command"
   attributeu:
-      description: "attributeu"
-      usage: "/attributeu <attribute>"
-      aliases: [ coreu_attribute ]
-      permission: coreu.admin
-      permission-message: "You do not have permission to use this command"
+    description: "attributeu"
+    usage: "/attributeu <attribute>"
+    aliases: [ coreu_attribute ]
+    permission: coreu.admin
+    permission-message: "You do not have permission to use this command"
   clear_attribute_modifiers:
-      description: "cleat_attribute_modifiers"
-      usage: "/cleat_attribute_modifiers"
-      aliases: []
-      permission: coreu.admin
-      permission-message: "You do not have permission to use this command"
+    description: "cleat_attribute_modifiers"
+    usage: "/cleat_attribute_modifiers"
+    aliases: []
+    permission: coreu.admin
+    permission-message: "You do not have permission to use this command"
   set_blocku:
-      description: "set_blocku"
-      usage: "/set_blocku <block>"
-      aliases: [coreu_set_block]
-      permission: coreu.admin
-      permission-message: "You do not have permission to use this command"
+    description: "set_blocku"
+    usage: "/set_blocku <block>"
+    aliases: [coreu_set_block]
+    permission: coreu.admin
+    permission-message: "You do not have permission to use this command"
   custom_block_entities:
-      description: "custom_block_entities"
-      usage: "/custom_block_entities"
-      aliases: []
-      permission: coreu.admin
-      permission-message: "You do not have permission to use this command"
+    description: "custom_block_entities"
+    usage: "/custom_block_entities"
+    aliases: []
+    permission: coreu.admin
+    permission-message: "You do not have permission to use this command"
   play_soundu:
-      description: "play_soundu"
-      usage: "/play_soundu <sound>"
-      aliases: [coreu_play_sound]
-      permission: coreu.admin
-      permission-message: "You do not have permission to use this command"
+    description: "play_soundu"
+    usage: "/play_soundu <sound>"
+    aliases: [coreu_play_sound]
+    permission: coreu.admin
+    permission-message: "You do not have permission to use this command"
   effectu:
-      description: "effectu"
-      usage: "/effectu <effect> [duration] [lvl]"
-      aliases: [coreu_effect]
-      permission: coreu.admin
-      permission-message: "You do not have permission to use this command"
+    description: "effectu"
+    usage: "/effectu <effect> [duration] [lvl]"
+    aliases: [coreu_effect]
+    permission: coreu.admin
+    permission-message: "You do not have permission to use this command"
   mgu:
-      description: "mgu"
-      usage: "/mgu <start/stop/join/leave/debug/coordinate_want/execute> [gameId]"
-      aliases: [coreu_minigame]
-      permission: coreu.admin
-      permission-message: "You do not have permission to use this command"
+    description: "mgu"
+    usage: "/mgu <start/stop/join/leave/debug/coordinate_want/execute> [gameId]"
+    aliases: [coreu_minigame]
+    permission: coreu.admin
+    permission-message: "You do not have permission to use this command"
   inventory_inspection:
-      description: "inventory_inspection"
-      usage: "/inventory_inspection"
+    description: "inventory_inspection"
+    usage: "/inventory_inspection"
+    aliases: [ ]
+    permission: coreu.admin
+    permission-message: "You do not have permission to use this command"
+  current_equipment:
+      description: "current_equipment"
+      usage: "/current_equipment"
       aliases: [ ]
       permission: coreu.admin
       permission-message: "You do not have permission to use this command"

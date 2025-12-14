@@ -3,6 +3,7 @@ package me.udnek.coreu.custom.equipmentslot.slot;
 import me.udnek.coreu.CoreU;
 import me.udnek.coreu.custom.equipmentslot.universal.UniversalInventorySlot;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.EquipmentSlotGroup;
 import org.jetbrains.annotations.NotNull;
@@ -16,12 +17,12 @@ public class DumbInventorySlot extends AbstractCustomEquipmentSlot implements Cu
     }
 
     @Override
-    public boolean intersects(@NotNull CustomEquipmentSlot slot) {
+    public boolean intersects(@NotNull LivingEntity entity, @NotNull CustomEquipmentSlot slot) {
         return true;
     }
 
     @Override
-    public boolean intersects(@NotNull UniversalInventorySlot slot) {
+    public boolean intersects(@NotNull LivingEntity entity, @NotNull UniversalInventorySlot slot) {
         return true;
     }
 

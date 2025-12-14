@@ -66,7 +66,7 @@ public class CustomAttributeUtils {
                 if (enchantment == null) continue;
                 enchantment.getCustomAttributes(enchantmentEntry.getValue(), (localAttribute, modifier) -> {
                     if (localAttribute != attribute) return;
-                    if (!modifier.getEquipmentSlot().intersects(slot)) return;
+                    if (!modifier.getEquipmentSlot().intersects(entity, slot)) return;
                     add(modifier.getOperation(), modifier.getAmount());
                 });
             }
@@ -78,7 +78,7 @@ public class CustomAttributeUtils {
             for (Map.Entry<CustomAttribute, List<CustomAttributeModifier>> entry : container.getAll().entrySet()) {
                 if (entry.getKey() != attribute) continue;
                 for (CustomAttributeModifier modifier : entry.getValue()) {
-                    if (!modifier.getEquipmentSlot().intersects(slot)) continue;
+                    if (!modifier.getEquipmentSlot().intersects(entity, slot)) continue;
                     add(modifier.getOperation(), modifier.getAmount());
                 }
             }

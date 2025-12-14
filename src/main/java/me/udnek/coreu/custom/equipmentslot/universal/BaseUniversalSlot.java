@@ -29,6 +29,18 @@ public class BaseUniversalSlot implements UniversalInventorySlot {
     @Override
     public @Nullable Integer integerSlotToCompare(@NotNull LivingEntity entity) {
         if (slot != null) return slot;
+        if (entity instanceof  Player){
+            return switch (Objects.requireNonNull(equipmentSlot)) {
+                case HAND -> 98;
+                case OFF_HAND -> 40;
+                case FEET -> 36;
+                case LEGS -> 37;
+                case CHEST -> 38;
+                case HEAD -> 39;
+                case BODY -> 105;
+                case SADDLE -> 400;
+            };
+        }
         return switch (Objects.requireNonNull(equipmentSlot)) {
             case HAND -> 98;
             case OFF_HAND -> 99;
@@ -87,5 +99,10 @@ public class BaseUniversalSlot implements UniversalInventorySlot {
                 "slot=" + slot +
                 ", equipmentSlot=" + equipmentSlot +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) throws RuntimeException {
+        throw new RuntimeException("don't use equals method with UniversalSlot");
     }
 }

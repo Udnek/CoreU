@@ -109,7 +109,14 @@ public class CustomItemListener extends SelfRegisteringListener {
         CustomItem customItem = event.getCustomItem();
         LoreBuilder builder = event.getLoreBuilder();
 
-        for (LoreProvidingItemComponent component : customItem.getComponents().getAllTyped(LoreProvidingItemComponent.class)) {
+        if (customItem.getId() == "fnafu:flashlight"){
+            for (var component : customItem.getComponents().getAll()) {
+                System.out.println(component.getClass().getSimpleName());
+            }
+        }
+
+        for (var component : customItem.getComponents().getAllTyped(LoreProvidingItemComponent.class)) {
+            System.out.println("ASKING FOR LORE: " + component.getClass().getSimpleName());
             component.getLore(customItem, builder);
         }
 

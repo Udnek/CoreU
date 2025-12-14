@@ -22,22 +22,22 @@ public class EquipmentListener extends SelfRegisteringListener {
         super(plugin);
     }
 
-    private void proceed(@NotNull Player player, int oldSlot, int newSlot, @Nullable ItemStack oldStack, @Nullable ItemStack newStack){
+    private void proceed(@NotNull Player player, int oldSlotId, int newSlotId, @Nullable ItemStack oldStack, @Nullable ItemStack newStack){
         PlayerEquipment data = PlayerEquipmentManager.getInstance().getData(player);
-        BaseUniversalSlot oldUniversal = new BaseUniversalSlot(oldSlot);
-        BaseUniversalSlot newUniversal = new BaseUniversalSlot(newSlot);
+        BaseUniversalSlot oldSlot = new BaseUniversalSlot(oldSlotId);
+        BaseUniversalSlot newSlot = new BaseUniversalSlot(newSlotId);
 
         CustomItem customItem;
 
         customItem = CustomItem.get(oldStack);
         if (customItem != null){
-            Map.Entry<BaseUniversalSlot, CustomItem> foundEntry = data.getFirst(oldUniversal);
+            Map.Entry<BaseUniversalSlot, CustomItem> foundEntry = data.getEntryBySlot(player, oldSlot);
             if (foundEntry != null){
 
                 if (foundEntry.getValue() != customItem) System.out.println("Data item: " + foundEntry.getValue().getId() +"; Real item: " + customItem.getId());
                 data.set(foundEntry.getKey(), null);
                 for (EquippableItem equippableItem : customItem.getComponents().getAllTyped(EquippableItem.class)) {
-                    if (equippableItem.isAppropriate(customItem, player, oldUniversal)) equippableItem.onUnequipped(foundEntry.getValue(), player, oldUniversal);
+                    if (equippableItem.isAppropriate(customItem, player, oldSlot)) equippableItem.onUnequipped(foundEntry.getValue(), player, oldSlot);
                 }
 
             }
@@ -45,14 +45,14 @@ public class EquipmentListener extends SelfRegisteringListener {
 
         customItem = CustomItem.get(newStack);
         if (customItem != null){
-            boolean atLeastOne = false;
+            boolean atLeastOneComponentFit = false;
             for (EquippableItem equippableItem : customItem.getComponents().getAllTyped(EquippableItem.class)) {
-                if (equippableItem.isAppropriate(customItem, player, newUniversal)){
-                    atLeastOne = true;
-                    equippableItem.onEquipped(customItem, player, newUniversal);
+                if (equippableItem.isAppropriate(customItem, player, newSlot)){
+                    atLeastOneComponentFit = true;
+                    equippableItem.onEquipped(customItem, player, newSlot);
                 }
             }
-            if (atLeastOne) data.set(newUniversal, customItem);
+            if (atLeastOneComponentFit) data.set(newSlot, customItem);
         }
     }
 

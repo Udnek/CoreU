@@ -3,25 +3,40 @@ package me.udnek.coreu.custom.registry;
 import me.udnek.coreu.custom.event.InitializationEvent;
 import me.udnek.coreu.custom.item.VanillaItemManager;
 import me.udnek.coreu.util.LogUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class InitializationProcess {
 
+    private static InitializationProcess.Step step = null;
+
+    public static @Nullable InitializationProcess.Step getStep(){
+        return step;
+    }
+
     public static void start(){
-        new InitializationEvent(Step.BEFORE_REGISTRIES_INITIALIZATION).callEvent();
+        step = Step.BEFORE_REGISTRIES_INITIALIZATION;
+        new InitializationEvent(step).callEvent();
+
         LogUtils.pluginLog("Registries After Initialization started");
         for (CustomRegistry<?> registry : CustomRegistries.REGISTRY.getAll()) {
             for (Registrable registrable : registry.getAll()) {
                 registrable.afterInitialization();
             }
         }
-        new InitializationEvent(Step.AFTER_REGISTRIES_INITIALIZATION).callEvent();
+        step = Step.AFTER_REGISTRIES_INITIALIZATION;
+        new InitializationEvent(step).callEvent();
 
-        new InitializationEvent(Step.BEFORE_VANILLA_MANAGER).callEvent();
+        step = Step.BEFORE_VANILLA_MANAGER;
+        new InitializationEvent(step).callEvent();
         LogUtils.pluginLog("VanillaManager started");
         VanillaItemManager.getInstance().start();
 
-        new InitializationEvent(Step.AFTER_VANILLA_MANGER).callEvent();
-        new InitializationEvent(Step.END).callEvent();
+        step = Step.AFTER_VANILLA_MANGER;
+        new InitializationEvent(step).callEvent();
+
+        step = Step.END;
+        new InitializationEvent(step).callEvent();
     }
 
 

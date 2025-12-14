@@ -33,7 +33,7 @@ public abstract class RPGUItemAbstractAbility<ActivationContext> extends Abstrac
 
     public void activate(@NotNull CustomItem customItem,
                          @NotNull LivingEntity livingEntity,
-                         boolean canselIfCooldown,
+                         boolean canselActivationContextIfCooldown,
                          @NotNull Either<UniversalInventorySlot, CustomEquipmentSlot.Single> slot,
                          @NotNull ActivationContext activationContext)
     {
@@ -42,7 +42,7 @@ public abstract class RPGUItemAbstractAbility<ActivationContext> extends Abstrac
             return;
         }
         if (customItem.hasCooldown(player)) {
-            if (canselIfCooldown && activationContext instanceof Cancellable cancellable){
+            if (canselActivationContextIfCooldown && activationContext instanceof Cancellable cancellable){
                 cancellable.setCancelled(true);
             }
             return;

@@ -15,14 +15,11 @@ public class VanillaAttributesContainer extends AbstractAttributeContainer<Attri
     public static @NotNull VanillaAttributesContainer empty(){return new VanillaAttributesContainer();}
 
     @Override
-    public @NotNull
-
-
-    VanillaAttributesContainer get(@NotNull Predicate<@NotNull CustomEquipmentSlot> predicate) {
+    public @NotNull VanillaAttributesContainer get(@NotNull Predicate<@NotNull CustomEquipmentSlot> predicate) {
         VanillaAttributesContainer newContainer = new VanillaAttributesContainer();
-        for (Map.Entry<Attribute, List<CustomKeyedAttributeModifier>> entry : attributes.entrySet()) {
+        for (var entry : attributes.entrySet()) {
             Attribute attribute = entry.getKey();
-            for (CustomKeyedAttributeModifier modifier : entry.getValue()) {
+            for (var modifier : entry.getValue()) {
                 if (predicate.test(modifier.getEquipmentSlot())) newContainer.add(attribute, modifier);
             }
 
@@ -34,6 +31,7 @@ public class VanillaAttributesContainer extends AbstractAttributeContainer<Attri
     public static class Builder{
 
         private final VanillaAttributesContainer container;
+        
         public Builder(){
             container = new VanillaAttributesContainer();
         }

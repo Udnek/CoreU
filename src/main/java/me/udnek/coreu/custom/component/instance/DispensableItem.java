@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
-public interface DispensableItem extends LoreProvidingItemComponent {
+public interface DispensableItem extends CustomComponent<CustomItem> {
     DispensableItem DEFAULT = new DispensableItem() {
         @Override
         public void onDispense(@NotNull CustomItem item, @NotNull BlockDispenseEvent event) {}

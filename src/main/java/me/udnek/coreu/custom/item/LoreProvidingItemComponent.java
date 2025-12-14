@@ -5,5 +5,5 @@ import me.udnek.coreu.util.LoreBuilder;
 import org.jetbrains.annotations.NotNull;
 
 public interface LoreProvidingItemComponent extends CustomComponent<CustomItem> {
-    default void getLore(@NotNull CustomItem customItem, @NotNull LoreBuilder loreBuilder){}
+    void getLore(@NotNull CustomItem customItem, @NotNull LoreBuilder loreBuilder);
 }
