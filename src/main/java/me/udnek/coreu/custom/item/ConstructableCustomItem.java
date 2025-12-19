@@ -243,9 +243,8 @@ public abstract class ConstructableCustomItem extends AbstractRegistrableCompone
     protected void modifyFinalItemStack(@NotNull ItemStack itemStack){}
 
     protected @NotNull ItemStack getItemNoClone(){
+        if (!afterInitialized) throw new RuntimeException(String.format("item %s hasn't afterInitialized yet", getId()));
         if (itemStack == null){
-            // TODO REMOVE INIT COMPS
-            initializeComponents();
             initializeItemStack();
             CustomItemGeneratedEvent event = new CustomItemGeneratedEvent(this, itemStack, getLoreBuilder(), getRepairData());
             event.callEvent();
