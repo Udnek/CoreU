@@ -28,7 +28,7 @@ public enum MGUCommandType {
         @Override
         public @NotNull ExecutionResult execute(@NotNull CommandSender sender, @NotNull String[] args) {
             MGUPlayer mguPlayer = MGUManager.get().getPlayer(((Player) sender));
-            if (mguPlayer == null) return new ExecutionResult(ExecutionResult.Type.FAIL, "executor is not mguPlayer");
+            if (mguPlayer == null) return new ExecutionResult(ExecutionResult.Type.FAILURE, "executor is not mguPlayer");
             MGUGameInstance game = mguPlayer.getGame();
             return game.executeCommand(new MGUCommandContext(this, sender, args, game, game.getType()));
         }
@@ -100,9 +100,13 @@ public enum MGUCommandType {
 
         public static final ExecutionResult SUCCESS = new ExecutionResult(Type.SUCCESS, "success");
 
+        public static @NotNull ExecutionResult Failure(@NotNull String message){
+            return new ExecutionResult(Type.FAILURE, message);
+        }
+
         public enum Type {
             SUCCESS,
-            FAIL
+            FAILURE
         }
     }
 }

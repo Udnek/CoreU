@@ -4,7 +4,6 @@ import me.udnek.coreu.CoreU;
 import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.item.CustomItem;
-import me.udnek.coreu.custom.item.LoreProvidingItemComponent;
 import me.udnek.coreu.nms.Nms;
 import org.bukkit.block.Block;
 import org.bukkit.block.Dispenser;

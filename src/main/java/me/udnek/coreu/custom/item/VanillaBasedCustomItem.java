@@ -1,17 +1,15 @@
 package me.udnek.coreu.custom.item;
 
-import com.google.common.base.Preconditions;
 import io.papermc.paper.datacomponent.DataComponentTypes;
-import me.udnek.coreu.custom.component.AbstractComponentHolder;
 import me.udnek.coreu.custom.event.CustomItemGeneratedEvent;
 import me.udnek.coreu.custom.recipe.RecipeManager;
+import me.udnek.coreu.custom.registry.AbstractRegistrableComponentable;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,12 +18,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 @ApiStatus.NonExtendable
-public class VanillaBasedCustomItem extends AbstractComponentHolder<CustomItem> implements UpdatingCustomItem {
+public class VanillaBasedCustomItem extends AbstractRegistrableComponentable<CustomItem> implements UpdatingCustomItem {
 
     protected ItemStack itemStack;
     protected RepairData repairData = null;
     protected final Material material;
-    private String id;
 
     public VanillaBasedCustomItem(@NotNull Material material){
         this.material = material;
@@ -33,8 +30,7 @@ public class VanillaBasedCustomItem extends AbstractComponentHolder<CustomItem> 
 
     @Override
     public @NotNull String getRawId() {return material.name().toLowerCase();}
-    @Override
-    public @NotNull String getId() {return id;}
+
     @Override
     public @NotNull ItemStack getItem() {
         if (itemStack == null){
@@ -79,12 +75,6 @@ public class VanillaBasedCustomItem extends AbstractComponentHolder<CustomItem> 
     @Override
     public void registerRecipe(@NotNull Recipe recipe) {
         RecipeManager.getInstance().register(recipe);
-    }
-
-    @Override
-    public void initialize(@NotNull Plugin plugin) {
-        Preconditions.checkArgument(id == null, "Item already initialized!");
-        id = new NamespacedKey(plugin, getRawId()).asString();
     }
 
     @Override

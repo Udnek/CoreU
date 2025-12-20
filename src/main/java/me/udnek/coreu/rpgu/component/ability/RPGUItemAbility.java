@@ -1,14 +1,10 @@
 package me.udnek.coreu.rpgu.component.ability;
 
 import me.udnek.coreu.custom.component.ComponentHolder;
-import me.udnek.coreu.custom.component.CustomComponent;
-import me.udnek.coreu.custom.equipmentslot.slot.CustomEquipmentSlot;
 import me.udnek.coreu.custom.equipmentslot.universal.UniversalInventorySlot;
 import me.udnek.coreu.custom.item.CustomItem;
-import me.udnek.coreu.custom.registry.Registrable;
 import me.udnek.coreu.rpgu.component.RPGUComponents;
 import me.udnek.coreu.rpgu.component.ability.property.RPGUAbilityProperty;
-import me.udnek.coreu.util.Either;
 import me.udnek.coreu.util.LoreBuilder;
 import net.kyori.adventure.translation.Translatable;
 import org.bukkit.entity.LivingEntity;
@@ -24,7 +20,7 @@ public interface RPGUItemAbility<ActivationContext> extends ComponentHolder<RPGU
 
     void activate(@NotNull CustomItem customItem,
                   @NotNull LivingEntity livingEntity,
-                  @NotNull Either<UniversalInventorySlot, CustomEquipmentSlot.Single> slot,
+                  @NotNull UniversalInventorySlot slot,
                   @NotNull ActivationContext activationContext);
 
     default int getDefaultCooldown(@NotNull LivingEntity livingEntity){

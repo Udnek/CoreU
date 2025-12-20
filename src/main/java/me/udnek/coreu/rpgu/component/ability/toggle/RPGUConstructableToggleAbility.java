@@ -1,8 +1,10 @@
 package me.udnek.coreu.rpgu.component.ability.toggle;
 
+import com.google.common.base.Function;
 import io.papermc.paper.persistence.PersistentDataContainerView;
 import me.udnek.coreu.CoreU;
 import me.udnek.coreu.custom.equipmentslot.universal.BaseUniversalSlot;
+import me.udnek.coreu.custom.equipmentslot.universal.UniversalInventorySlot;
 import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.rpgu.component.ability.RPGUItemAbstractAbility;
 import me.udnek.coreu.rpgu.lore.AttributesLorePart;
@@ -16,8 +18,6 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 public abstract class RPGUConstructableToggleAbility extends RPGUItemAbstractAbility<Integer> implements RPGUItemToggleAbility {
@@ -43,21 +43,22 @@ public abstract class RPGUConstructableToggleAbility extends RPGUItemAbstractAbi
     }
 
     // RETURNS IS TOGGLED
-    public boolean toggle(@NotNull CustomItem customItem, @NotNull Player player, @NotNull BaseUniversalSlot slot){
+    public boolean toggle(@NotNull CustomItem customItem, @NotNull Player player, @NotNull UniversalInventorySlot slot){
         return setToggled(customItem, player, slot, !isToggled(customItem, player, slot));
     }
 
     // RETURNS IS TOGGLED
-    public boolean setToggled(@NotNull CustomItem customItem, @NotNull Player player, @NotNull BaseUniversalSlot slot, boolean toggle){
-        slot.modifyItem(new Consumer<>() {
+    public boolean setToggled(@NotNull CustomItem customItem, @NotNull Player player, @NotNull UniversalInventorySlot slot, boolean toggle){
+        slot.modifyItem(new Function<>() {
             @Override
-            public void accept(ItemStack stack) {
+            public ItemStack apply(ItemStack stack) {
                 stack.editPersistentDataContainer(new Consumer<>() {
                     @Override
                     public void accept(PersistentDataContainer container) {
                         container.set(TOGGLE_KEY, PersistentDataType.BOOLEAN, toggle);
                     }
                 });
+                return stack;
             }
         }, player);
         return toggle;
@@ -68,7 +69,7 @@ public abstract class RPGUConstructableToggleAbility extends RPGUItemAbstractAbi
     }
 
     @Override
-    public boolean isToggled(@NotNull CustomItem customItem, @NotNull Player player, @NotNull BaseUniversalSlot slot) {
+    public boolean isToggled(@NotNull CustomItem customItem, @NotNull Player player, @NotNull UniversalInventorySlot slot) {
         ItemStack item = slot.getItem(player);
         if (item == null) return false;
         return isToggled(item.getPersistentDataContainer());

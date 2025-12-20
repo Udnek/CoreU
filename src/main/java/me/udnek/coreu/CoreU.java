@@ -13,6 +13,7 @@ import me.udnek.coreu.custom.entitylike.entity.command.SummonCustomEntityCommand
 import me.udnek.coreu.custom.equipmentslot.EquipmentCommand;
 import me.udnek.coreu.custom.equipmentslot.EquipmentListener;
 import me.udnek.coreu.custom.equipmentslot.PlayerEquipmentManager;
+import me.udnek.coreu.custom.equipmentslot.slot.CustomEquipmentSlot;
 import me.udnek.coreu.custom.help.CustomHelpCommand;
 import me.udnek.coreu.custom.hud.CustomHudManager;
 import me.udnek.coreu.custom.inventory.CustomInventoryListener;
@@ -57,6 +58,7 @@ public final class CoreU extends JavaPlugin implements ResourcePackablePlugin {
         CustomRegistry<CustomRegistry<?>> registry = CustomRegistries.REGISTRY;
         CustomItem item = MGUItems.COORDINATE_WAND;
         CustomEntityType entityType = CustomEntityType.BLOCK_DISPLAY;
+        CustomEquipmentSlot.Single slot = CustomEquipmentSlot.SADDLE;
 
         // EVENTS
         new CustomItemListener(this);

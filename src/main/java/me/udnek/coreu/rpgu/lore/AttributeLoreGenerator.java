@@ -1,7 +1,10 @@
 package me.udnek.coreu.rpgu.lore;
 
 import com.google.common.collect.Multimap;
-import me.udnek.coreu.custom.attribute.*;
+import me.udnek.coreu.custom.attribute.AttributeUtils;
+import me.udnek.coreu.custom.attribute.CustomAttribute;
+import me.udnek.coreu.custom.attribute.CustomAttributesContainer;
+import me.udnek.coreu.custom.attribute.VanillaAttributesContainer;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.equipmentslot.slot.CustomEquipmentSlot;
 import me.udnek.coreu.custom.item.CustomItem;
@@ -20,8 +23,6 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
 public class AttributeLoreGenerator {
 

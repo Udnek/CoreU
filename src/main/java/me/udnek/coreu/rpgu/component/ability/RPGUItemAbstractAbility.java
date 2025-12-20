@@ -3,12 +3,10 @@ package me.udnek.coreu.rpgu.component.ability;
 import com.google.common.collect.Iterables;
 import me.udnek.coreu.custom.component.AbstractComponentHolder;
 import me.udnek.coreu.custom.component.instance.TranslatableThing;
-import me.udnek.coreu.custom.equipmentslot.slot.CustomEquipmentSlot;
 import me.udnek.coreu.custom.equipmentslot.universal.UniversalInventorySlot;
 import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.rpgu.component.RPGUComponents;
 import me.udnek.coreu.rpgu.lore.ability.AbilityLorePart;
-import me.udnek.coreu.util.Either;
 import me.udnek.coreu.util.LoreBuilder;
 import net.kyori.adventure.text.Component;
 import org.apache.commons.lang3.tuple.Pair;
@@ -22,9 +20,6 @@ import java.util.List;
 
 public abstract class RPGUItemAbstractAbility<ActivationContext> extends AbstractComponentHolder<RPGUItemAbility<?>> implements RPGUItemAbility<ActivationContext> {
 
-    private static final int INFINITE_COOLDOWN = 100*60*60*20;
-    private static final int INFINITE_COOLDOWN_THRESHOLD = INFINITE_COOLDOWN/2;
-
     public RPGUItemAbstractAbility(){
         TranslatableThing translations = getTranslations();
         if (translations == null) return;
@@ -34,7 +29,7 @@ public abstract class RPGUItemAbstractAbility<ActivationContext> extends Abstrac
     public void activate(@NotNull CustomItem customItem,
                          @NotNull LivingEntity livingEntity,
                          boolean canselActivationContextIfCooldown,
-                         @NotNull Either<UniversalInventorySlot, CustomEquipmentSlot.Single> slot,
+                         @NotNull UniversalInventorySlot slot,
                          @NotNull ActivationContext activationContext)
     {
         if (!(livingEntity instanceof Player player)) {
@@ -57,12 +52,12 @@ public abstract class RPGUItemAbstractAbility<ActivationContext> extends Abstrac
     }
 
     @Override
-    public void activate(@NotNull CustomItem customItem, @NotNull LivingEntity livingEntity, @NotNull Either<UniversalInventorySlot, CustomEquipmentSlot.Single> slot, @NotNull ActivationContext activationContext){
+    public void activate(@NotNull CustomItem customItem, @NotNull LivingEntity livingEntity, @NotNull UniversalInventorySlot slot, @NotNull ActivationContext activationContext){
         activate(customItem, livingEntity, false, slot, activationContext);
     }
 
     protected abstract @NotNull ActionResult action(@NotNull CustomItem customItem, @NotNull LivingEntity livingEntity,
-                                                    @NotNull Either<UniversalInventorySlot, CustomEquipmentSlot.Single> slot, @NotNull ActivationContext activationContext);
+                                                    @NotNull UniversalInventorySlot slot, @NotNull ActivationContext activationContext);
 
 
     public abstract @Nullable Pair<List<String>, List<String>> getEngAndRuDescription();

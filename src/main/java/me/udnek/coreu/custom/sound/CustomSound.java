@@ -2,7 +2,6 @@ package me.udnek.coreu.custom.sound;
 
 import me.udnek.coreu.custom.component.ComponentHolder;
 import me.udnek.coreu.custom.registry.Registrable;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.translation.Translatable;
 import org.bukkit.Location;
 import org.bukkit.SoundCategory;

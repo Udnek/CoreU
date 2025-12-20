@@ -13,10 +13,6 @@ public abstract class AbstractRegistrable implements Registrable{
     public void initialize(@NotNull Plugin plugin) {
         Preconditions.checkArgument(id == null, "Registrable already initialized!");
         id = new NamespacedKey(plugin, getRawId()).asString();
-        // TODO CHANGE SOMEHOW
-        if (InitializationProcess.getStep() == InitializationProcess.Step.END){
-            afterInitialization();
-        }
     }
 
     public abstract @NotNull String getRawId();

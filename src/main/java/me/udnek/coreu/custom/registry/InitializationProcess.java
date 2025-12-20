@@ -3,7 +3,6 @@ package me.udnek.coreu.custom.registry;
 import me.udnek.coreu.custom.event.InitializationEvent;
 import me.udnek.coreu.custom.item.VanillaItemManager;
 import me.udnek.coreu.util.LogUtils;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class InitializationProcess {

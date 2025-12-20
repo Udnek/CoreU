@@ -3,8 +3,6 @@ package me.udnek.coreu.custom.component.instance;
 import com.google.gson.JsonParser;
 import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.component.CustomComponentType;
-import me.udnek.coreu.custom.item.CustomItem;
-import me.udnek.coreu.custom.item.LoreProvidingItemComponent;
 import me.udnek.coreu.custom.sound.ConstructableCustomSound;
 import me.udnek.coreu.custom.sound.CustomSound;
 import me.udnek.coreu.resourcepack.path.VirtualRpJsonFile;

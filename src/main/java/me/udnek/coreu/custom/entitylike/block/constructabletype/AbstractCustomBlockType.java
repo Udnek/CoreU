@@ -2,13 +2,11 @@ package me.udnek.coreu.custom.entitylike.block.constructabletype;
 
 import com.destroystokyo.paper.ParticleBuilder;
 import com.destroystokyo.paper.event.block.BlockDestroyEvent;
-import me.udnek.coreu.custom.component.CustomComponentMap;
 import me.udnek.coreu.custom.component.instance.RightClickableBlock;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockManager;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockPlaceContext;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockType;
 import me.udnek.coreu.custom.item.CustomItem;
-import me.udnek.coreu.custom.registry.AbstractRegistrable;
 import me.udnek.coreu.custom.registry.AbstractRegistrableComponentable;
 import me.udnek.coreu.nms.Nms;
 import me.udnek.coreu.nms.loot.LootContextBuilder;

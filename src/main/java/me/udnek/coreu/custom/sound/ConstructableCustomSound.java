@@ -2,10 +2,8 @@ package me.udnek.coreu.custom.sound;
 
 import com.google.common.base.Preconditions;
 import me.udnek.coreu.custom.component.instance.TranslatableThing;
-import me.udnek.coreu.custom.registry.AbstractRegistrable;
 import me.udnek.coreu.custom.registry.AbstractRegistrableComponentable;
 import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;

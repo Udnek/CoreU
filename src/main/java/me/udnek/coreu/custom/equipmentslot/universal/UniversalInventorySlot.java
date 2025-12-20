@@ -1,5 +1,6 @@
 package me.udnek.coreu.custom.equipmentslot.universal;
 
+import com.google.common.base.Function;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
@@ -50,14 +51,14 @@ public interface UniversalInventorySlot {
 
     void setItem(@Nullable ItemStack itemStack, @NotNull LivingEntity entity);
 
-    default void modifyItem(@NotNull Consumer<ItemStack> consumer, @NotNull LivingEntity entity) {
+    default void modifyItem(@NotNull Function<ItemStack, ItemStack> modifier, @NotNull LivingEntity entity) {
         ItemStack itemStack = getItem(entity);
-        consumer.accept(itemStack);
-        setItem(itemStack, entity);
+        setItem(modifier.apply(itemStack), entity);
     }
 
     default void addItem(int count, @NotNull LivingEntity entity) {
-        modifyItem(itemStack -> itemStack.add(count), entity);}
+        modifyItem(itemStack -> itemStack.add(count), entity);
+    }
 
     default void addItem(@NotNull LivingEntity entity) {addItem(1, entity);}
 

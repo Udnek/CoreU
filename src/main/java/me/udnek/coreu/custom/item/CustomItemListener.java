@@ -107,9 +107,13 @@ public class CustomItemListener extends SelfRegisteringListener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void itemGenerates(CustomItemGeneratedEvent event){
         CustomItem customItem = event.getCustomItem();
-        LoreBuilder builder = event.getLoreBuilder();
+        LoreBuilder loreBuilder = event.getLoreBuilder();
 
-        AttributeLoreGenerator.generateVanillaAttributes(event.getItemStack(), builder);
+        for (var component : customItem.getComponents().getAllTyped(LoreProvidingItemComponent.class)) {
+            component.getLore(customItem, loreBuilder);
+        }
+
+        AttributeLoreGenerator.generateVanillaAttributes(event.getItemStack(), loreBuilder);
 
         if (VanillaItemManager.isReplaced(customItem)){
             TooltipDisplay oldDisplay = event.getItemStack().getDataOrDefault(TOOLTIP_DISPLAY, TooltipDisplay.tooltipDisplay().build());
@@ -121,7 +125,7 @@ public class CustomItemListener extends SelfRegisteringListener {
         }
 
 
-        builder.add(
+        loreBuilder.add(
                 LoreBuilder.Position.ID,
                 Component.text(customItem.getId()).color(NamedTextColor.DARK_GRAY).decoration(TextDecoration.ITALIC, false)
             );

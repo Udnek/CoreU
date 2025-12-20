@@ -25,15 +25,15 @@ public abstract class MGUAbstractGame implements MGUGameInstance{
     public @NotNull MGUCommandType.ExecutionResult executeCommand(@NotNull MGUCommandContext context) {
         return switch (context.commandType()) {
             case START -> {
-                if (isRunning()) yield new MGUCommandType.ExecutionResult(MGUCommandType.ExecutionResult.Type.FAIL, "game is running");
+                if (isRunning()) yield MGUCommandType.ExecutionResult.Failure("game is running");
                 yield start(context);
             }
             case STOP -> {
-                if (!isRunning()) yield new MGUCommandType.ExecutionResult(MGUCommandType.ExecutionResult.Type.FAIL, "game is not running");
+                if (!isRunning()) yield MGUCommandType.ExecutionResult.Failure("game is not running");
                 yield stop(context);
             }
             case JOIN -> {
-                if (isRunning()) yield new MGUCommandType.ExecutionResult(MGUCommandType.ExecutionResult.Type.FAIL, "game is running");
+                if (isRunning()) yield MGUCommandType.ExecutionResult.Failure("game is running");
                 yield join(Objects.requireNonNull(context.player()), context);
             }
             case LEAVE -> leave(Objects.requireNonNull(context.mguPlayer()), context);
@@ -70,7 +70,7 @@ public abstract class MGUAbstractGame implements MGUGameInstance{
     }
 
 
-    public @NotNull List<Component> getDebug(MGUCommandContext context){
+    public @NotNull List<Component> getDebug(@NotNull MGUCommandContext context){
         List<Component> list = new ArrayList<>();
         list.add(Component.text("Game debug data: " + getId()));
         list.add(Component.text("isRunning: " + isRunning()));

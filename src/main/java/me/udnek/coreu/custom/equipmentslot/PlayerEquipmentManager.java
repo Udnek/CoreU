@@ -1,6 +1,7 @@
 package me.udnek.coreu.custom.equipmentslot;
 
 import me.udnek.coreu.util.TickingTask;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,10 +43,10 @@ public class PlayerEquipmentManager extends TickingTask {
             }
             equipment.getEquipment((
                     slot, customItem) ->
-                    customItem.getComponents().getAllTyped(EquippableItem.class).forEach(
-                            equippableItem ->
-                                    equippableItem.tick(customItem, player, slot, DELAY)
-                    ));
+                    customItem.getComponents().getAllTyped(EquippableItem.class).forEach(equippableItem -> {
+                        //System.out.println(Bukkit.getCurrentTick() + " " + customItem.getId() + " " + equippableItem);
+                        equippableItem.tick(customItem, player, slot, DELAY);
+                    }));
         }
         if (toRemovePlayer != null) playersData.remove(toRemovePlayer);
     }

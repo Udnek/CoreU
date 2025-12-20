@@ -80,17 +80,18 @@ public class BaseUniversalSlot implements UniversalInventorySlot {
                 }
             }else {
                 throw new RuntimeException("The integer slot is only available to the inventoryHolder");
-
             }
         } else if (equipmentSlot != null) {
             if (entity instanceof Player player){
                 player.getInventory().setItem(equipmentSlot, itemStack);
-            }else {
+            } else {
                 EntityEquipment equipment = entity.getEquipment();
                 Preconditions.checkNotNull(equipment, "Equipment for ", entity, " - null");
                 equipment.setItem(equipmentSlot, itemStack);
             }
-        }else throw new RuntimeException("No slot added");
+        } else {
+            throw new RuntimeException("No slot added");
+        }
     }
 
     @Override

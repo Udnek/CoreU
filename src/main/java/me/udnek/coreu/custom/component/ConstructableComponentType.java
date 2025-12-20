@@ -1,7 +1,6 @@
 package me.udnek.coreu.custom.component;
 
 import me.udnek.coreu.custom.component.instance.TranslatableThing;
-import me.udnek.coreu.custom.registry.AbstractRegistrable;
 import me.udnek.coreu.custom.registry.AbstractRegistrableComponentable;
 import me.udnek.coreu.custom.registry.Registrable;
 import me.udnek.coreu.resourcepack.path.VirtualRpJsonFile;

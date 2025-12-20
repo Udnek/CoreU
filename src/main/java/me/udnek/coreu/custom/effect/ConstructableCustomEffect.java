@@ -1,7 +1,6 @@
 package me.udnek.coreu.custom.effect;
 
 import me.udnek.coreu.custom.attribute.CustomAttributeConsumer;
-import me.udnek.coreu.custom.registry.AbstractRegistrable;
 import me.udnek.coreu.custom.registry.AbstractRegistrableComponentable;
 import me.udnek.coreu.nms.NmsUtils;
 import me.udnek.coreu.util.Reflex;

@@ -1,6 +1,5 @@
 package me.udnek.coreu.util;
 
-import net.minecraft.world.item.BowItem;
 import org.bukkit.Bukkit;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlotGroup;

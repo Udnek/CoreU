@@ -1,11 +1,9 @@
 package me.udnek.coreu.custom.item;
 
-import com.google.common.base.Preconditions;
 import com.google.errorprone.annotations.ForOverride;
 import io.papermc.paper.datacomponent.DataComponentType;
 import io.papermc.paper.datacomponent.item.*;
 import me.udnek.coreu.custom.attribute.AttributeUtils;
-import me.udnek.coreu.custom.component.AbstractComponentHolder;
 import me.udnek.coreu.custom.component.instance.TranslatableThing;
 import me.udnek.coreu.custom.event.CustomItemGeneratedEvent;
 import me.udnek.coreu.custom.recipe.RecipeManager;
@@ -22,7 +20,6 @@ import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -62,10 +59,10 @@ public abstract class ConstructableCustomItem extends AbstractRegistrableCompone
     @Override
     public void afterInitialization() {
         UpdatingCustomItem.super.afterInitialization();
-        afterInitialized = true;
         initializeComponents();
         repairData = initializeRepairData();
         generateRecipes(this::registerRecipe);
+        afterInitialized = true;
     }
 
     @Override
@@ -240,6 +237,7 @@ public abstract class ConstructableCustomItem extends AbstractRegistrableCompone
 
         modifyFinalItemStack(itemStack);
     }
+
     protected void modifyFinalItemStack(@NotNull ItemStack itemStack){}
 
     protected @NotNull ItemStack getItemNoClone(){
