@@ -45,10 +45,12 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.RespawnAnchorBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -77,6 +79,7 @@ import org.bukkit.block.data.Directional;
 import org.bukkit.craftbukkit.CraftChunk;
 import org.bukkit.craftbukkit.CraftEquipmentSlot;
 import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.block.CraftBlock;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftEntityType;
 import org.bukkit.craftbukkit.entity.CraftMob;
@@ -177,6 +180,14 @@ public class Nms {
     ///////////////////////////////////////////////////////////////////////////
     // BLOCKS
     ///////////////////////////////////////////////////////////////////////////
+
+    private static final Method GET_LIGHT_BLOCK = Objects.requireNonNull(Reflex.getMethod(BlockBehaviour.class, "getLightBlock"));
+
+    public int getHowMuchLightBlockBlocks(@NotNull Block bukkitBlock){
+        BlockBehaviour block = ((CraftBlock) bukkitBlock).getHandle().getBlockIfLoaded(NmsUtils.toNmsBlockPos(bukkitBlock));
+        BlockState blockState = NmsUtils.toNmsBlockState(bukkitBlock.getState());
+        return Reflex.invokeMethod(block, GET_LIGHT_BLOCK, blockState);
+    }
 
     public @NotNull Item simulateDropperDrop(@NotNull ItemStack itemStack, @NotNull Block block){
         return simulateDropperDrop(itemStack, block, ((Directional) block.getBlockData()).getFacing());
