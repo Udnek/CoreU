@@ -1,5 +1,6 @@
 package me.udnek.coreu.custom.registry;
 
+import me.udnek.coreu.custom.component.ComponentHolder;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.Plugin;

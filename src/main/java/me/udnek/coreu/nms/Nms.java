@@ -45,7 +45,6 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.trading.MerchantOffer;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.RespawnAnchorBlock;
@@ -55,9 +54,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
+import net.minecraft.world.level.levelgen.feature.DesertWellFeature;
+import net.minecraft.world.level.levelgen.feature.GeodeFeature;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
+import net.minecraft.world.level.levelgen.structure.structures.IglooStructure;
+import net.minecraft.world.level.levelgen.structure.structures.NetherFossilPieces;
+import net.minecraft.world.level.levelgen.structure.structures.StrongholdStructure;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.level.saveddata.maps.MapDecorationType;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
@@ -107,6 +111,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -180,6 +185,7 @@ public class Nms {
     ///////////////////////////////////////////////////////////////////////////
     // BLOCKS
     ///////////////////////////////////////////////////////////////////////////
+
 
     private static final Method GET_LIGHT_BLOCK = Objects.requireNonNull(Reflex.getMethod(BlockBehaviour.class, "getLightBlock"));
 
@@ -444,6 +450,20 @@ public class Nms {
     ///////////////////////////////////////////////////////////////////////////
     // STRUCTURE
     ///////////////////////////////////////////////////////////////////////////
+
+    public void getAllPossibleLootTablesInStructure(@NotNull org.bukkit.generator.structure.Structure bukkitStructure, @NotNull Consumer<org.bukkit.loot.LootTable> bukkitLootTables){
+        NmsStructureProceeder proceeder = new NmsStructureProceeder();
+        proceeder.proceed(bukkitStructure);
+        for (ResourceKey<LootTable> lootTableKey : proceeder.lootTables) {
+            LootTable lootTable = NmsUtils.getLootTable(lootTableKey);
+            if (lootTable.craftLootTable == null){
+                LogUtils.pluginWarning("null lootTable: " + lootTableKey);
+                continue;
+            }
+            bukkitLootTables.accept(lootTable.craftLootTable);
+        }
+    }
+
     public @Nullable ItemStack generateExplorerMap(Location location, org.bukkit.generator.structure.Structure bukkitStructure, int radius, boolean skipKnownStructures){
         return generateExplorerMap(location, bukkitStructure, radius, skipKnownStructures, MapCursor.Type.RED_X);
     }

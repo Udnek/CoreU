@@ -285,7 +285,7 @@ public class NmsUtils {
     }
     public static void getPossibleLoot(@NotNull LootPoolSingletonContainer container, @NotNull Consumer<net.minecraft.world.item.ItemStack> consumer){
         if (container instanceof LootItem){
-            Item item = ((Holder<Item>) Reflex.getFieldValue(container, "item")).value();
+            Item item = Reflex.<Holder<Item>>getFieldValue(container, "item").value();
             if (item == Items.MAP){
                 List<LootItemFunction> functions = Reflex.getFieldValue(container, "functions");
                 for (LootItemFunction function : functions) {
@@ -337,7 +337,7 @@ public class NmsUtils {
         ResourceLocation resourceLocation = ResourceLocation.parse(id);
         return ResourceKey.create(Registries.LOOT_TABLE, resourceLocation);
     }
-    public static @NotNull LootTable getLootTable(@NotNull ResourceKey<LootTable> resourceKey){
+    public static @Nullable LootTable getLootTable(@NotNull ResourceKey<LootTable> resourceKey){
         ReloadableServerRegistries.Holder registries = ((CraftServer) Bukkit.getServer()).getServer().reloadableRegistries();
         return registries.getLootTable(resourceKey);
     }

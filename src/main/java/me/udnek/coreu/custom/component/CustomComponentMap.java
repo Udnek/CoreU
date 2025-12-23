@@ -19,7 +19,8 @@ public class CustomComponentMap<Holder> implements Iterable<CustomComponent<? su
 
     private @Nullable Map<
             CustomComponentType<? super Holder, ? extends CustomComponent<? super Holder>>,
-            CustomComponent<? super Holder>> map = null;
+            CustomComponent<? super Holder>
+            > map = null;
 
     public @NotNull <SpecificComponent extends CustomComponent<? super Holder>> SpecificComponent getOrDefault(@NotNull CustomComponentType<?, SpecificComponent> type) {
         SpecificComponent component = get(type);
