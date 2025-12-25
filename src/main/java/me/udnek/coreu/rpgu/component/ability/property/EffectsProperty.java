@@ -38,7 +38,6 @@ public class EffectsProperty implements RPGUAbilityProperty<LivingEntity, List<P
 
     public void add(@NotNull PotionData data){effects.add(data);}
 
-
     @Override
     public @NotNull List<PotionEffect> getBase() {
         List<PotionEffect> potionEffects = new ArrayList<>();

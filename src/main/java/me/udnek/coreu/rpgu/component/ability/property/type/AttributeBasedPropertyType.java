@@ -18,8 +18,6 @@ public class AttributeBasedPropertyType extends AbstractRegistrable implements C
 
     protected AttributeBasedProperty defaultComponent;
     protected String rawId;
-
-
     protected CustomAttribute attribute;
     protected String translation;
     protected boolean divideValueBy20;
@@ -32,7 +30,6 @@ public class AttributeBasedPropertyType extends AbstractRegistrable implements C
         defaultComponent = new AttributeBasedProperty(defaultValue, this);
     }
 
-
     public AttributeBasedPropertyType(@NotNull String rawId, @NotNull CustomAttribute attribute, double defaultValue, @NotNull String translation) {
         this(rawId, attribute, defaultValue, translation, false);
     }
@@ -42,9 +39,9 @@ public class AttributeBasedPropertyType extends AbstractRegistrable implements C
     public void describe(@NotNull AttributeBasedProperty attributeBasedProperty, @NotNull AbilityLorePart componentable) {
         Function<Double, Double> modifier = divideValueBy20 ? Modifiers.TICKS_TO_SECONDS() : Function.identity();
         MultiLineDescription description = attributeBasedProperty.getFunction().describeWithModifier(modifier);
-        if (description.getComponents().isEmpty()) return;
-        componentable.addAbilityStat(Component.translatable(translation, description.getComponents().getFirst()));
-        @NotNull List<Component> components = description.getComponents();
+        if (description.getLines().isEmpty()) return;
+        componentable.addAbilityStat(Component.translatable(translation, description.getLines().getFirst()));
+        @NotNull List<Component> components = description.getLines();
         for (int i = 1; i < components.size(); i++) {
             Component component = components.get(i);
             componentable.addAbilityStat(component);

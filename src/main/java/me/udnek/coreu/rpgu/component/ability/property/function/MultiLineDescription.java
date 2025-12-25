@@ -9,37 +9,52 @@ import java.util.List;
 
 public class MultiLineDescription {
 
-    protected List<Component> components = new ArrayList<>();
+    public static @NotNull MultiLineDescription of(@NotNull Component component){
+        return new MultiLineDescription().add(component);
+    }
 
-    public MultiLineDescription(){
+    public static @NotNull MultiLineDescription of(){
+        return new MultiLineDescription();
+    }
 
+    protected List<Component> lines = new ArrayList<>();
+
+    protected MultiLineDescription(){}
+
+    public @NotNull MultiLineDescription add(@NotNull MultiLineDescription other){
+        if (other.lines.isEmpty()) return this;
+        add(other.lines.getFirst());
+        for (Component component : other.lines.subList(1, other.lines.size())) {
+            addLine(component);
+        }
+        return this;
     }
 
     public @NotNull MultiLineDescription addToBeginning(@NotNull Component component){
-        if (components.isEmpty()) components.add(Component.empty());
-        components.set(0, component.append(components.getFirst()));
+        if (lines.isEmpty()) lines.add(Component.empty());
+        lines.set(0, component.append(lines.getFirst()));
         return this;
     }
     public @NotNull MultiLineDescription add(@NotNull Component component){
-        if (components.isEmpty()) components.add(Component.empty());
-        components.set(components.size()-1, components.getLast().append(component));
+        if (lines.isEmpty()) lines.add(Component.empty());
+        lines.set(lines.size()-1, lines.getLast().append(component));
         return this;
     }
 
     public @NotNull MultiLineDescription addLineToBeginning(@NotNull Component component){
-        components.addFirst(component);
+        lines.addFirst(component);
         return this;
     }
     public @NotNull MultiLineDescription addLine(@NotNull Component component){
-        components.add(component);
+        lines.add(component);
         return this;
     }
 
     public @NotNull Component join(){
         TextComponent join = Component.empty();
-        for (Component component : components) join = join.append(component);
+        for (Component component : lines) join = join.append(component);
         return join;
     }
     
-    public @NotNull List<Component> getComponents() {return components;}
+    public @NotNull List<Component> getLines() {return lines;}
 }
