@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
-public abstract class RPGUConstructableToggleAbility extends RPGUItemAbstractAbility<Integer> implements RPGUItemToggleAbility {
+public abstract class RPGUConstructableToggleAbility<ActivationContext> extends RPGUItemAbstractAbility<ActivationContext> implements RPGUItemToggleAbility<ActivationContext> {
 
     public static final NamespacedKey TOGGLE_KEY = new NamespacedKey(CoreU.getInstance(), "rpgu_toggle_ability_is_toggled");
 

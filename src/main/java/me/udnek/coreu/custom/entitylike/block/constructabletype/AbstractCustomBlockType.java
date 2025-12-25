@@ -82,8 +82,8 @@ public abstract class AbstractCustomBlockType extends AbstractRegistrableCompone
     }
 
     @Override
-    public void afterInitialization() {
-        CustomBlockType.super.afterInitialization();
+    public void globalInitialization() {
+        CustomBlockType.super.globalInitialization();
         initializeComponents();
     }
 

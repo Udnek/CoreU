@@ -47,7 +47,7 @@ public abstract class ConstructableCustomInventory implements CustomInventory{
 
     @NotNull
     @Override
-    public Inventory getInventory() {
+    public final Inventory getInventory() {
         if (inventory == null) inventory = generateInventory(getInventorySize(), getTitle());
         return inventory;
     }

@@ -10,13 +10,11 @@ import me.udnek.coreu.rpgu.component.ability.RPGUItemAbility;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public interface RPGUItemToggleAbility extends RPGUItemAbility<Integer>, CustomComponent<RPGUToggleItem> {
+public interface RPGUItemToggleAbility<ActivationContext> extends RPGUItemAbility<ActivationContext>, CustomComponent<RPGUToggleItem> {
 
     @NotNull CustomEquipmentSlot getSlot();
 
-    default void tick(@NotNull CustomItem customItem, @NotNull Player player, @NotNull UniversalInventorySlot slot, int tickDelay){
-        activate(customItem, player, slot, tickDelay);
-    }
+    void tick(@NotNull CustomItem customItem, @NotNull Player player, @NotNull UniversalInventorySlot slot, int tickDelay);
 
     boolean isToggled(@NotNull CustomItem customItem, @NotNull Player player, @NotNull UniversalInventorySlot slot);
     @Override

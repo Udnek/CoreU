@@ -7,8 +7,8 @@ import me.udnek.coreu.custom.attribute.AttributeUtils;
 import me.udnek.coreu.custom.component.instance.TranslatableThing;
 import me.udnek.coreu.custom.event.CustomItemGeneratedEvent;
 import me.udnek.coreu.custom.recipe.RecipeManager;
-import me.udnek.coreu.custom.registry.AbstractRegistrable;
 import me.udnek.coreu.custom.registry.AbstractRegistrableComponentable;
+import me.udnek.coreu.custom.registry.InitializationProcess;
 import me.udnek.coreu.util.LoreBuilder;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
@@ -34,7 +34,6 @@ import static io.papermc.paper.datacomponent.DataComponentTypes.*;
 
 
 public abstract class ConstructableCustomItem extends AbstractRegistrableComponentable<CustomItem> implements CustomItemProperties, UpdatingCustomItem {
-    private boolean afterInitialized = false;
     protected ItemStack itemStack = null;
     protected List<Recipe> recipes = null;
     protected RepairData repairData = null;
@@ -58,12 +57,11 @@ public abstract class ConstructableCustomItem extends AbstractRegistrableCompone
 
     @MustBeInvokedByOverriders
     @Override
-    public void afterInitialization() {
-        UpdatingCustomItem.super.afterInitialization();
+    public void globalInitialization() {
+        UpdatingCustomItem.super.globalInitialization();
         initializeComponents();
         repairData = initializeRepairData();
         generateRecipes(this::registerRecipe);
-        afterInitialized = true;
     }
 
     @Override
@@ -232,7 +230,7 @@ public abstract class ConstructableCustomItem extends AbstractRegistrableCompone
                     case HIDE_DYE -> hideSpecificComponent(DYED_COLOR);
                     case HIDE_ARMOR_TRIM -> hideSpecificComponent(TRIM);
                     case HIDE_STORED_ENCHANTS -> hideSpecificComponent(STORED_ENCHANTMENTS);
-                };
+                }
             }
         }
 
@@ -242,7 +240,9 @@ public abstract class ConstructableCustomItem extends AbstractRegistrableCompone
     protected void modifyFinalItemStack(@NotNull ItemStack itemStack){}
 
     protected @NotNull ItemStack getItemNoClone(){
-        if (!afterInitialized) throw new RuntimeException(String.format("item %s hasn't afterInitialized yet", getId()));
+        if (InitializationProcess.getStep() == InitializationProcess.Step.BEFORE_REGISTRIES_LOADED) {
+            throw new RuntimeException(String.format("item %s hasn't afterInitialized yet", getId()));
+        }
         if (itemStack == null){
             initializeItemStack();
             CustomItemGeneratedEvent event = new CustomItemGeneratedEvent(this, itemStack, getLoreBuilder(), getRepairData());

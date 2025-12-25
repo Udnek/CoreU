@@ -9,12 +9,10 @@ import me.udnek.coreu.rpgu.component.ability.RPGUItemAbility;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public interface RPGUItemPassiveAbility extends RPGUItemAbility<Integer>, CustomComponent<RPGUPassiveItem> {
+public interface RPGUItemPassiveAbility<ActivationContext> extends RPGUItemAbility<ActivationContext>, CustomComponent<RPGUPassiveItem> {
     @NotNull CustomEquipmentSlot getSlot();
 
-    default void tick(@NotNull CustomItem customItem, @NotNull Player player, @NotNull BaseUniversalSlot slot, int tickDelay){
-        activate(customItem, player, slot, tickDelay);
-    }
+    void tick(@NotNull CustomItem customItem, @NotNull Player player, @NotNull BaseUniversalSlot slot, int tickDelay);
 
     @Override
     @NotNull

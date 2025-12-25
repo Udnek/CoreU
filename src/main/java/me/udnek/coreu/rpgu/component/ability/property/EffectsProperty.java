@@ -130,7 +130,7 @@ public class EffectsProperty implements RPGUAbilityProperty<LivingEntity, List<P
     ){
 
         public static @NotNull RPGUPropertyFunction<LivingEntity, Integer> functionFromDuration(int duration){
-            return PropertyFunctions.CEIL(new AttributeFunction(RPGUAttributes.ABILITY_DURATION, duration));
+            return PropertyFunctions.CEIL(PropertyFunctions.ATTRIBUTE_WITH_BASE(RPGUAttributes.ABILITY_DURATION, duration));
         }
 
         public PotionData(@NotNull PotionEffectType type, @NotNull RPGUPropertyFunction<LivingEntity, Integer> duration, @NotNull RPGUPropertyFunction<LivingEntity, Integer> amplifier){

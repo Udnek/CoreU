@@ -7,7 +7,7 @@ import me.udnek.coreu.util.LoreBuilder;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class RPGUConstructablePassiveAbility extends RPGUItemAbstractAbility<Integer> implements RPGUItemPassiveAbility {
+public abstract class RPGUConstructablePassiveAbility<ActivationContext> extends RPGUItemAbstractAbility<ActivationContext> implements RPGUItemPassiveAbility<ActivationContext> {
 
     @Override
     public void getLore(@NotNull LoreBuilder loreBuilder){

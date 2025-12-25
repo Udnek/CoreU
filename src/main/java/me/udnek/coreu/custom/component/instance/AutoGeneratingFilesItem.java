@@ -190,7 +190,7 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
                           ],
                           "fallback": {
                             "type": "minecraft:model",
-                            "model": %model_path%_pulling_0"
+                            "model": "%model_path%_pulling_0"
                           },
                           "property": "minecraft:use_duration",
                           "scale": 0.05
@@ -202,7 +202,7 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
 
         @Override
         public @NotNull List<JsonObject> getModels(@NotNull Key itemModel) {
-            @NotNull List<JsonObject> models = super.getModels(itemModel);
+            @NotNull List<JsonObject> models = new ArrayList<>(super.getModels(itemModel));
             for (int i = 0; i < 3; i++) {
                 models.addAll(super.getModels(new NamespacedKey(itemModel.namespace(), itemModel.value() + "_pulling_" + i)));
             }

@@ -12,10 +12,10 @@ public class PropertyFunctions {
 
     public static final boolean IS_DEBUG = false;
 
-    public static @NotNull AttributeFunction ATTRIBUTE(@NotNull CustomAttribute attribute, @NotNull RPGUPropertyFunction<LivingEntity, Double> base){
+    public static @NotNull AttributeFunction ATTRIBUTE_WITH_BASE(@NotNull CustomAttribute attribute, @NotNull RPGUPropertyFunction<LivingEntity, Double> base){
         return new AttributeFunction(attribute, base);
     }
-    public static @NotNull AttributeFunction ATTRIBUTE(@NotNull CustomAttribute attribute, double base){
+    public static @NotNull AttributeFunction ATTRIBUTE_WITH_BASE(@NotNull CustomAttribute attribute, double base){
         return new AttributeFunction(attribute, base);
     }
 
@@ -94,5 +94,45 @@ public class PropertyFunctions {
                 return function.describeWithModifier(modifier);
             }
         };
+    }
+
+    // base + x*perX
+    public static <In> @NotNull RPGUPropertyFunction<In, Double> LINEAR(@NotNull RPGUPropertyFunction<In, Double> x, @NotNull RPGUPropertyFunction<In, Double> base, @NotNull RPGUPropertyFunction<In, Double> perX){
+        return new RPGUPropertyFunction<In, Double>() {
+            @Override
+            public @NotNull Double getBase() {
+                return base.getBase() + x.getBase() * perX.getBase();
+            }
+
+            @Override
+            public @NotNull Double apply(@NotNull In v) {
+                return base.apply(v) + x.apply(v) * perX.apply(v);
+            }
+
+            @Override
+            public boolean isConstant() {
+                return base.isConstant() && x.isConstant() && perX.isConstant();
+            }
+
+            @Override
+            public boolean isZeroConstant() {
+                return base.isZeroConstant() && x.isConstant() && perX.isConstant();
+            }
+
+            @Override
+            public @NotNull MultiLineDescription describeWithModifier(@NotNull Function<Double, Double> modifier) {
+                return MultiLineDescription.of()
+                        .add(base.describeWithModifier(modifier))
+                        .add(Component.text(" + "))
+                        .add(perX.describeWithModifier(modifier))
+                        .add(Component.text("*("))
+                        .add(x.describeWithModifier(modifier))
+                        .add(Component.text(")"));
+            }
+        };
+    }
+
+    public static <In> @NotNull RPGUPropertyFunction<In, Double> LINEAR(@NotNull RPGUPropertyFunction<In, Double> x, double base, double perX){
+        return LINEAR(x, CONSTANT(base), CONSTANT(perX));
     }
 }

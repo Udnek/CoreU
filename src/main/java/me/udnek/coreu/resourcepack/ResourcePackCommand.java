@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -51,6 +52,7 @@ public class ResourcePackCommand implements TabExecutor, CommandExecutor {
         try {
             RpMerger mergerHost = new RpMerger();
             Path path = RpHost.getFolderPath();
+            Files.createDirectories(path);
             FileUtils.cleanDirectory(path.toFile());
             mergerHost.startMergeInto(path.toString());
 

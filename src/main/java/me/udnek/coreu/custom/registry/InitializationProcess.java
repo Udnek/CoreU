@@ -14,37 +14,28 @@ public class InitializationProcess {
     }
 
     public static void start(){
-        step = Step.BEFORE_REGISTRIES_INITIALIZATION;
+        step = Step.GLOBAL_INITIALIZATION;
         new InitializationEvent(step).callEvent();
 
-        LogUtils.pluginLog("Registries After Initialization started");
+        LogUtils.pluginLog("Registries after initialization started");
         for (CustomRegistry<?> registry : CustomRegistries.REGISTRY.getAll()) {
             for (Registrable registrable : registry.getAll()) {
-                registrable.afterInitialization();
+                registrable.globalInitialization();
             }
         }
-        step = Step.AFTER_REGISTRIES_INITIALIZATION;
-        new InitializationEvent(step).callEvent();
 
-        step = Step.BEFORE_VANILLA_MANAGER;
-        new InitializationEvent(step).callEvent();
         LogUtils.pluginLog("VanillaManager started");
         VanillaItemManager.getInstance().start();
 
-        step = Step.AFTER_VANILLA_MANGER;
-        new InitializationEvent(step).callEvent();
-
-        step = Step.END;
+        step = Step.AFTER_GLOBAL_INITIALIZATION;
         new InitializationEvent(step).callEvent();
     }
 
 
 
-    public enum Step{
-        BEFORE_REGISTRIES_INITIALIZATION,
-        AFTER_REGISTRIES_INITIALIZATION,
-        BEFORE_VANILLA_MANAGER,
-        AFTER_VANILLA_MANGER,
-        END
+    public enum Step {
+        BEFORE_REGISTRIES_LOADED,
+        GLOBAL_INITIALIZATION,
+        AFTER_GLOBAL_INITIALIZATION,
     }
 }
