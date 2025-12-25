@@ -14,6 +14,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ReloadableServerRegistries;
 import net.minecraft.server.dedicated.DedicatedPlayerList;
 import net.minecraft.server.dedicated.DedicatedServer;
@@ -74,8 +75,7 @@ public class NmsUtils {
 
     // REGISTRY
     public static @NotNull <T> Registry<T> getRegistry(@NotNull ResourceKey<Registry<T>> registry){
-        DedicatedServer server = ((CraftServer) Bukkit.getServer()).getServer();
-        return server.registryAccess().lookup(registry).orElse(null);
+        return MinecraftServer.getServer().registryAccess().lookup(registry).orElseThrow();
     }
     public static @NotNull ResourceLocation toNmsResourceLocation(@NotNull Key key){
         return ResourceLocation.parse(key.asString());

@@ -1,6 +1,8 @@
 package me.udnek.coreu.nms;
 
+import com.google.common.base.Function;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.IntImmutableList;
 import me.udnek.coreu.custom.enchantment.NmsEnchantmentContainer;
@@ -46,22 +48,21 @@ import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.RespawnAnchorBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.trialspawner.TrialSpawnerState;
+import net.minecraft.world.level.block.entity.vault.VaultConfig;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
-import net.minecraft.world.level.levelgen.feature.DesertWellFeature;
-import net.minecraft.world.level.levelgen.feature.GeodeFeature;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
-import net.minecraft.world.level.levelgen.structure.structures.IglooStructure;
-import net.minecraft.world.level.levelgen.structure.structures.NetherFossilPieces;
-import net.minecraft.world.level.levelgen.structure.structures.StrongholdStructure;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.level.saveddata.maps.MapDecorationType;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
@@ -80,6 +81,8 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
+import org.bukkit.block.data.type.TrialSpawner;
+import org.bukkit.block.data.type.Vault;
 import org.bukkit.craftbukkit.CraftChunk;
 import org.bukkit.craftbukkit.CraftEquipmentSlot;
 import org.bukkit.craftbukkit.CraftServer;
@@ -92,11 +95,14 @@ import org.bukkit.craftbukkit.generator.structure.CraftStructure;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.map.CraftMapCursor;
 import org.bukkit.craftbukkit.util.CraftLocation;
+import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.craftbukkit.util.CraftVector;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.OminousItemSpawner;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.VaultDisplayItemEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
@@ -451,10 +457,12 @@ public class Nms {
     // STRUCTURE
     ///////////////////////////////////////////////////////////////////////////
 
-    public void getAllPossibleLootTablesInStructure(@NotNull org.bukkit.generator.structure.Structure bukkitStructure, @NotNull Consumer<org.bukkit.loot.LootTable> bukkitLootTables){
-        NmsStructureProceeder proceeder = new NmsStructureProceeder();
-        proceeder.proceed(bukkitStructure);
-        for (ResourceKey<LootTable> lootTableKey : proceeder.lootTables) {
+    public void getAllPossibleLootTablesInStructure(@NotNull NamespacedKey structureId, @NotNull Consumer<org.bukkit.loot.LootTable> bukkitLootTables){
+        Structure structure = NmsUtils.getRegistry(Registries.STRUCTURE).getOptional(CraftNamespacedKey.toMinecraft(structureId)).orElse(null);
+        if (structure == null) return;
+        NmsStructureProceeder proceeder = new NmsStructureProceeder(structureId, structure);
+        proceeder.extractAllTemplates();
+        for (ResourceKey<LootTable> lootTableKey : proceeder.extractLootTables()) {
             LootTable lootTable = NmsUtils.getLootTable(lootTableKey);
             if (lootTable.craftLootTable == null){
                 LogUtils.pluginWarning("null lootTable: " + lootTableKey);
@@ -462,6 +470,47 @@ public class Nms {
             }
             bukkitLootTables.accept(lootTable.craftLootTable);
         }
+    }
+
+    public void modifyVaultsInStructure(@NotNull NamespacedKey structureId, Function<ItemStack, ItemStack> oldKeyToNew){
+        Codec<VaultConfig> vaultCodec = Reflex.getFieldValue(VaultConfig.class, "CODEC");
+        modifyStructure(structureId, new Function<>() {
+            @Override
+            public @NotNull Boolean apply(StructureTemplate.StructureBlockInfo info) {
+                if (info.state().getBlock() == Blocks.TUFF_BRICKS){
+                    BlockState newState = Blocks.DEEPSLATE.defaultBlockState();
+                    Reflex.setRecordFieldValue(info, "state", newState);
+                    return true;
+                }
+                if (info.nbt() == null) return true;
+                if (info.state().getBlock() != Blocks.VAULT) return true;
+                VaultConfig config = info.nbt().read("config", vaultCodec).orElse(null);
+                if (config == null) return true;
+                net.minecraft.world.item.ItemStack keyItem = config.keyItem();
+                ItemStack bukkitKey = NmsUtils.toBukkitItemStack(keyItem);
+                ItemStack newBukkitKey = oldKeyToNew.apply(bukkitKey);
+                if (bukkitKey == newBukkitKey) return true;
+
+                info.nbt().store("config", vaultCodec, new VaultConfig(
+                        config.lootTable(),
+                        config.activationRange(),
+                        config.deactivationRange(),
+                        NmsUtils.toNmsItemStack(newBukkitKey),
+                        config.overrideLootTableToDisplay(),
+                        config.playerDetector(),
+                        config.entitySelector()
+                ));
+                return true;
+            }
+        });
+    }
+
+    private void modifyStructure(@NotNull NamespacedKey structureId, Function<StructureTemplate.StructureBlockInfo, Boolean> takeAndContinue){
+        Structure structure = NmsUtils.getRegistry(Registries.STRUCTURE).getOptional(CraftNamespacedKey.toMinecraft(structureId)).orElse(null);
+        if (structure == null) return;
+        NmsStructureProceeder proceeder = new NmsStructureProceeder(structureId, structure);
+        proceeder.extractAllTemplates();
+        proceeder.iterateThroughBlocks(takeAndContinue);
     }
 
     public @Nullable ItemStack generateExplorerMap(Location location, org.bukkit.generator.structure.Structure bukkitStructure, int radius, boolean skipKnownStructures){
