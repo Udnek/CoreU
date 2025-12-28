@@ -10,6 +10,7 @@ import me.udnek.coreu.rpgu.lore.ability.AbilityLorePart;
 import me.udnek.coreu.util.LoreBuilder;
 import net.kyori.adventure.text.Component;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.logging.log4j.util.TriConsumer;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -17,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class RPGUItemAbstractAbility<ActivationContext> extends AbstractComponentHolder<RPGUItemAbility<?>> implements RPGUItemAbility<ActivationContext> {
 
@@ -28,7 +30,7 @@ public abstract class RPGUItemAbstractAbility<ActivationContext> extends Abstrac
 
     public void activate(@NotNull CustomItem customItem,
                          @NotNull LivingEntity livingEntity,
-                         boolean canselActivationContextIfCooldown,
+                         boolean cancelActivationContextIfCooldown,
                          @NotNull UniversalInventorySlot slot,
                          @NotNull ActivationContext activationContext)
     {
@@ -37,7 +39,7 @@ public abstract class RPGUItemAbstractAbility<ActivationContext> extends Abstrac
             return;
         }
         if (customItem.hasCooldown(player)) {
-            if (canselActivationContextIfCooldown && activationContext instanceof Cancellable cancellable){
+            if (cancelActivationContextIfCooldown && activationContext instanceof Cancellable cancellable){
                 cancellable.setCancelled(true);
             }
             return;
@@ -61,18 +63,34 @@ public abstract class RPGUItemAbstractAbility<ActivationContext> extends Abstrac
 
 
     public abstract @Nullable Pair<List<String>, List<String>> getEngAndRuDescription();
+    public void getEngAndRuProperties(TriConsumer<@NotNull String, @NotNull String, @NotNull List<Component>> Eng_Ru_Args){}
 
     public @Nullable TranslatableThing getTranslations(){
-        Pair<List<String>, List<String>> desc = getEngAndRuDescription();
-        if (desc == null) return null;
-        int maxLen = Math.max(desc.getLeft().size(), desc.getRight().size());
         TranslatableThing translations = new TranslatableThing(null);
-        for (int i = 0; i < maxLen; i++) {
-            translations.addAdditional("description."+i, TranslatableThing.Translations.ofEngAndRu(
-                    Iterables.get(desc.getLeft(), i, ""),
-                    Iterables.get(desc.getRight(), i, "")
-            ));
+
+        // DESCRIPTION
+        Pair<List<String>, List<String>> desc = getEngAndRuDescription();
+        if (desc != null){
+            int maxLen = Math.max(desc.getLeft().size(), desc.getRight().size());
+
+            for (int i = 0; i < maxLen; i++) {
+                translations.addAdditional("description."+i, TranslatableThing.Translations.ofEngAndRu(
+                        Iterables.get(desc.getLeft(), i, ""),
+                        Iterables.get(desc.getRight(), i, "")
+                ));
+            }
         }
+
+        // ADDITIONAL PROPERTIES
+        AtomicInteger i = new AtomicInteger(0);
+        getEngAndRuProperties((eng, ru, components) -> {
+            translations.addAdditional(
+                    "property." + i,
+                    TranslatableThing.Translations.ofEngAndRu(eng, ru)
+            );
+            i.addAndGet(1);
+        });
+
         return translations;
     }
 
@@ -81,15 +99,26 @@ public abstract class RPGUItemAbstractAbility<ActivationContext> extends Abstrac
 
     protected void addDescriptionLines(@NotNull AbilityLorePart lorePart){
         Pair<List<String>, List<String>> desc = getEngAndRuDescription();
-        if (desc == null) return;
-        int maxLen = Math.max(desc.getLeft().size(), desc.getRight().size());
-        for (int i = 0; i < maxLen; i++) {
-            lorePart.addAbilityDescription(Component.translatable(translationKey() + ".description."+i));
+        if (desc != null){
+            int maxLen = Math.max(desc.getLeft().size(), desc.getRight().size());
+            for (int i = 0; i < maxLen; i++) {
+                lorePart.addAbilityDescription(Component.translatable(translationKey() + ".description."+i));
+            }
         }
     }
 
     protected void addPropertyLines(@NotNull AbilityLorePart lorePart){
         getProperties().forEach(c -> c.describe(lorePart));
+        {
+            AtomicInteger i = new AtomicInteger(0);
+            getEngAndRuProperties((eng, ru, components) -> {
+                lorePart.addAbilityProperty(Component.translatable(
+                        translationKey() + ".property."+i,
+                        components
+                ));
+                i.addAndGet(1);
+            });
+        }
     }
 
     public enum ActionResult {

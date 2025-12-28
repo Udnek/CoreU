@@ -12,15 +12,17 @@ import java.util.function.Consumer;
 
 public class ActiveAbilityLorePart implements AbilityLorePart {
 
-    @Nullable Component header;
-    List<@NotNull Component> data = new ArrayList<>();
+    protected @Nullable Component header;
+    protected List<@NotNull Component> description = new ArrayList<>();
+    protected List<@NotNull Component> properties = new ArrayList<>();
 
     @Override
     public void toComponents(@NotNull Consumer<Component> consumer) {
         if (isEmpty()) return;
         consumer.accept(Component.empty());
         if (header != null) consumer.accept(header);
-        data.forEach(consumer);
+        description.forEach(consumer);
+        properties.forEach(consumer);
     }
 
     @Override
@@ -29,28 +31,22 @@ public class ActiveAbilityLorePart implements AbilityLorePart {
     }
 
     @Override
-    public void addAbilityStat(@NotNull Component component) {
-        addWithAbilityFormat(component.color(ACTIVE_STATS_COLOR));
+    public void addAbilityProperty(@NotNull Component component) {
+        addWithAbilityFormat(component.color(ACTIVE_STATS_COLOR), properties);
     }
 
     @Override
-    public void addAbilityStatDoubleTab(@NotNull Component component) {
-        addAbilityStat(AttributeLoreGenerator.addTab(component));
+    public void addAbilityPropertyDoubleTab(@NotNull Component component) {
+        addAbilityProperty(AttributeLoreGenerator.addTab(component));
     }
 
     @Override
     public void addAbilityDescription(@NotNull Component component) {
-        addWithAbilityFormat(component.color(ACTIVE_DESCRIPTION_COLOR));
+        addWithAbilityFormat(component.color(ACTIVE_DESCRIPTION_COLOR), description);
     }
 
-    @Override
-    public void addAbilityDescription(@NotNull String rawItemName, int line){
-        addAbilityDescription(Component.translatable(rawItemName + ".rpgu_active_ability." + line));
-    }
-
-    @Override
-    public void addWithAbilityFormat(@NotNull Component component){
-        data.add(AttributeLoreGenerator.addTab(component).decoration(TextDecoration.ITALIC, false));
+    public void addWithAbilityFormat(@NotNull Component component, @NotNull List<Component> to){
+        to.add(AttributeLoreGenerator.addTab(component).decoration(TextDecoration.ITALIC, false));
     }
 
     @Deprecated
@@ -65,6 +61,8 @@ public class ActiveAbilityLorePart implements AbilityLorePart {
     }
 
     @Override
-    public boolean isEmpty() {return data.isEmpty() && header == null;}
+    public boolean isEmpty() {
+        return properties.isEmpty() && description.isEmpty() && header == null;
+    }
 
 }

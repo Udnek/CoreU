@@ -82,9 +82,9 @@ public class EffectsProperty implements RPGUAbilityProperty<LivingEntity, List<P
     @Override
     public void describe(@NotNull AbilityLorePart componentable) {
         if (effects.size() > 1){
-            componentable.addAbilityStat(Component.translatable("rpgu_ability_property.coreu.effects", Component.empty()));
+            componentable.addAbilityProperty(Component.translatable("rpgu_ability_property.coreu.effects", Component.empty()));
             for (int i = 0; i < effects.size(); i++) {
-                componentable.addAbilityStatDoubleTab(describeSingle(i));
+                componentable.addAbilityPropertyDoubleTab(describeSingle(i));
             }
         } else {
             Component text = Component.empty();
@@ -92,7 +92,7 @@ public class EffectsProperty implements RPGUAbilityProperty<LivingEntity, List<P
                 text = text.append(describeSingle(i));
                 if (i != effects.size()-1) text = text.append(Component.text(", "));
             }
-            componentable.addAbilityStat(Component.translatable("rpgu_ability_property.coreu.effects", List.of(text)));
+            componentable.addAbilityProperty(Component.translatable("rpgu_ability_property.coreu.effects", List.of(text)));
         }
     }
 

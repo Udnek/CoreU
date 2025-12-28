@@ -79,14 +79,12 @@ public class AttributesLorePart implements LoreBuilder.Componentable, PassiveAbi
     }
 
 
-    public void remove(@NotNull CustomEquipmentSlot slot){
-        attributeData.remove(slot);
-    }
     public @Nullable LoreBuilder.Componentable get(@NotNull CustomEquipmentSlot slot){
         return attributeData.get(slot);
     }
     @Override
     public boolean isEmpty() {return attributeData.isEmpty() && passiveData.isEmpty();}
+
     @Override
     @Deprecated
     public void add(@NotNull Component component) {
@@ -104,13 +102,13 @@ public class AttributesLorePart implements LoreBuilder.Componentable, PassiveAbi
     }
 
     @Override
-    public void addAbilityStat(@NotNull Component component) {
+    public void addAbilityProperty(@NotNull Component component) {
         addWithAbilityFormat(component.color(PASSIVE_STATS_COLOR));
     }
 
     @Override
-    public void addAbilityStatDoubleTab(@NotNull Component component) {
-        addAbilityStat(AttributeLoreGenerator.addTab(component));
+    public void addAbilityPropertyDoubleTab(@NotNull Component component) {
+        addAbilityProperty(AttributeLoreGenerator.addTab(component));
     }
 
     @Override
@@ -118,12 +116,6 @@ public class AttributesLorePart implements LoreBuilder.Componentable, PassiveAbi
         addWithAbilityFormat(component.color(PASSIVE_DESCRIPTION_COLOR));
     }
 
-    @Override
-    public void addAbilityDescription(@NotNull String rawItemName, int line) {
-        addAbilityDescription(Component.translatable(rawItemName + ".passive_ability." + line));
-    }
-
-    @Override
     public void addWithAbilityFormat(@NotNull Component component) {
         addLine(abilitySlot, AttributeLoreGenerator.addTab(AttributeLoreGenerator.addTab(component)), false, Position.PASSIVE);
     }

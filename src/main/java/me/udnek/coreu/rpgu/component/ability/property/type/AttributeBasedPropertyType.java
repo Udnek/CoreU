@@ -40,11 +40,11 @@ public class AttributeBasedPropertyType extends AbstractRegistrable implements C
         Function<Double, Double> modifier = divideValueBy20 ? Modifiers.TICKS_TO_SECONDS() : Function.identity();
         MultiLineDescription description = attributeBasedProperty.getFunction().describeWithModifier(modifier);
         if (description.getLines().isEmpty()) return;
-        componentable.addAbilityStat(Component.translatable(translation, description.getLines().getFirst()));
+        componentable.addAbilityProperty(Component.translatable(translation, description.getLines().getFirst()));
         @NotNull List<Component> components = description.getLines();
         for (int i = 1; i < components.size(); i++) {
             Component component = components.get(i);
-            componentable.addAbilityStat(component);
+            componentable.addAbilityProperty(component);
         }
     }
 
