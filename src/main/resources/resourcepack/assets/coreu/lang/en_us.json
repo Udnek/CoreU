@@ -21,7 +21,8 @@
   "rpgu_ability_property.coreu.effects.no_amplifier_with_duration": "%s (%s seconds)",
   "rpgu_ability_property.coreu.effects.no_amplifier_no_duration": "%s",
 
-  "attribute.coreu.name.rpgu_cast_range": "Cast Range",
-  "attribute.coreu.name.rpgu_cooldown_time": "Cooldown Time",
-  "attribute.coreu.name.rpgu_area_of_effect": "Area of Effect"
+  "attribute.coreu.name.rpgu_ability_cast_range": "Cast Range",
+  "attribute.coreu.name.rpgu_ability_cooldown_time": "Cooldown Time",
+  "attribute.coreu.name.rpgu_ability_area_of_effect": "Area of Effect",
+  "attribute.coreu.name.rpgu_ability_duration": "Ability Duration"
 }

@@ -5,6 +5,7 @@ import io.papermc.paper.datacomponent.item.ItemEnchantments;
 import me.udnek.coreu.custom.attribute.CustomAttributeConsumer;
 import me.udnek.coreu.custom.registry.AbstractRegistrable;
 import me.udnek.coreu.nms.NmsUtils;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -27,7 +28,7 @@ import org.jetbrains.annotations.Range;
 
 public abstract class ConstructableCustomEnchantment extends AbstractRegistrable implements CustomEnchantment {
 
-    protected Enchantment nms;
+    protected Holder<Enchantment> nms;
     protected org.bukkit.enchantments.Enchantment bukkit;
 
     @Override
@@ -66,9 +67,8 @@ public abstract class ConstructableCustomEnchantment extends AbstractRegistrable
 
         Enchantment enchantment = new Enchantment(description, definition, exclusiveSet, effects);
 
-        NmsUtils.registerInRegistry(NmsUtils.getRegistry(Registries.ENCHANTMENT), enchantment, getKey());
-        nms = enchantment;
-        bukkit = CraftEnchantment.minecraftToBukkit(enchantment);
+        nms = NmsUtils.registerInRegistry(NmsUtils.getRegistry(Registries.ENCHANTMENT), enchantment, getKey());
+        bukkit = CraftEnchantment.minecraftHolderToBukkit(nms);
     }
 
     @Override

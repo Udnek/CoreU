@@ -1,6 +1,7 @@
 {
   "pack": {
-    "pack_format": 64,
-    "description": "ItemsCoreU"
+    "description": "CoreU"
+    "min_format": 75,
+    "max_format": 2000
   }
 }

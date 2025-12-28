@@ -15,8 +15,7 @@ public interface CustomAttribute extends Translatable, Registrable {
     TextColor TAKE_COLOR = NamedTextColor.RED;
     TextColor PLUS_COLOR = NamedTextColor.BLUE;
 
-    @NotNull Component getLoreLine(double amount, @NotNull AttributeModifier.Operation operation);
-    @NotNull Component getLoreLineWithBase(double base);
+    @NotNull Component getLoreLine(double amount, @NotNull AttributeModifier.Operation operation, @NotNull DisplayMethod method);
     default double calculate(@NotNull LivingEntity entity){
         return calculateWithBase(entity, getDefault());
     }
@@ -24,4 +23,9 @@ public interface CustomAttribute extends Translatable, Registrable {
     double getDefault();
     double getMin();
     double getMax();
+
+    enum DisplayMethod{
+        ABSOLUTE,
+        RELATIVE
+    }
 }

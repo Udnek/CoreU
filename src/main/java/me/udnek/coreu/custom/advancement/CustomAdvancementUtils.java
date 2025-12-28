@@ -5,7 +5,7 @@ import me.udnek.coreu.custom.item.ItemUtils;
 import me.udnek.coreu.util.Reflex;
 import net.kyori.adventure.key.Key;
 import net.minecraft.advancements.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.ServerAdvancementManager;
 import net.minecraft.server.dedicated.DedicatedServer;
 import org.bukkit.Bukkit;
@@ -41,15 +41,15 @@ public class CustomAdvancementUtils {
                 Reflex.getMethod(
                         ServerAdvancementManager.class,
                         "validate",
-                        ResourceLocation.class, Advancement.class
+                        Identifier.class, Advancement.class
                 ),
                 advancementHolder.id(),
                 advancementHolder.value()
         );
 
-        ImmutableMap.Builder<ResourceLocation, AdvancementHolder> mapBuilder = ImmutableMap.builder();
-        Map<ResourceLocation, AdvancementHolder> advancements = new HashMap<>(mapBuilder.buildOrThrow());
-        advancements.putAll((Map<ResourceLocation, AdvancementHolder>) Reflex.getFieldValue(manager, "advancements"));
+        ImmutableMap.Builder<Identifier, AdvancementHolder> mapBuilder = ImmutableMap.builder();
+        Map<Identifier, AdvancementHolder> advancements = new HashMap<>(mapBuilder.buildOrThrow());
+        advancements.putAll((Map<Identifier, AdvancementHolder>) Reflex.getFieldValue(manager, "advancements"));
         advancements.put(advancementHolder.id(), advancementHolder);
 
         AdvancementTree tree = new AdvancementTree();

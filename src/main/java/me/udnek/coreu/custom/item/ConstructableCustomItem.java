@@ -3,7 +3,6 @@ package me.udnek.coreu.custom.item;
 import com.google.errorprone.annotations.ForOverride;
 import io.papermc.paper.datacomponent.DataComponentType;
 import io.papermc.paper.datacomponent.item.*;
-import me.udnek.coreu.custom.attribute.AttributeUtils;
 import me.udnek.coreu.custom.component.instance.TranslatableThing;
 import me.udnek.coreu.custom.event.CustomItemGeneratedEvent;
 import me.udnek.coreu.custom.recipe.RecipeManager;
@@ -35,7 +34,7 @@ import static io.papermc.paper.datacomponent.DataComponentTypes.*;
 
 public abstract class ConstructableCustomItem extends AbstractRegistrableComponentable<CustomItem> implements CustomItemProperties, UpdatingCustomItem {
     protected ItemStack itemStack = null;
-    protected List<Recipe> recipes = null;
+    protected @Nullable List<Recipe> recipes = null;
     protected RepairData repairData = null;
 
     public static final Material DEFAULT_MATERIAL = Material.GUNPOWDER;
@@ -138,7 +137,6 @@ public abstract class ConstructableCustomItem extends AbstractRegistrableCompone
 
     @ForOverride
     public void initializeAdditionalAttributes(@NotNull ItemStack itemStack){}
-    public boolean addDefaultAttributes(){return false;}
 
     @Override
     public @Nullable List<ItemFlag> getTooltipHides() {
@@ -212,9 +210,15 @@ public abstract class ConstructableCustomItem extends AbstractRegistrableCompone
         setData(POTION_CONTENTS, getPotionContents());
         setData(DYED_COLOR, getDyedColor());
         setData(FIREWORK_EXPLOSION, getFireworkExplosion());
+        setData(WEAPON, getWeapon());
+        setData(ATTACK_RANGE, getAttackRange());
+        setData(BLOCKS_ATTACKS, getBlocksAttacks());
+        setData(USE_EFFECTS, getUseEffects());
+        setData(KINETIC_WEAPON, getKineticWeapon());
+        setData(PIERCING_WEAPON, getPiercingWeapon());
+        setData(SWING_ANIMATION, getSwingAnimation());
         
         if (getUseRemainderCustom() != null) itemStack.setData(USE_REMAINDER, UseRemainder.useRemainder(getUseRemainderCustom().getItem()));
-        if (addDefaultAttributes()) AttributeUtils.addDefaultAttributes(itemStack);
 
         initializeAdditionalAttributes(itemStack);
 
@@ -250,7 +254,6 @@ public abstract class ConstructableCustomItem extends AbstractRegistrableCompone
             event.getLoreBuilder().buildAndApply(event.getItemStack());
             repairData = event.getRepairData();
             setData(REPAIRABLE, getRepairable());
-            itemStack = event.getItemStack();
         }
         return itemStack;
     }

@@ -1,4 +1,4 @@
-package me.udnek.coreu.custom.equipmentslot.universal;
+package me.udnek.coreu.custom.equipment.universal;
 
 import com.google.common.base.Preconditions;
 import org.bukkit.entity.LivingEntity;

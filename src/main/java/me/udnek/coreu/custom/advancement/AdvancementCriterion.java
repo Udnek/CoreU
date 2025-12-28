@@ -5,7 +5,7 @@ import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.nms.NmsUtils;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.*;
+import net.minecraft.advancements.criterion.*;
 import net.minecraft.core.component.DataComponentExactPredicate;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;

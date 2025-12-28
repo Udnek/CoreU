@@ -6,7 +6,7 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -83,7 +83,7 @@ public class ConstructableCustomAdvancement implements CustomAdvancementContaine
             if (criteria.isEmpty()) addCriterion("auto_added_by_builder", AdvancementCriterion.IMPOSSIBLE);
             criteria.forEach(builder::addCriterion);
 
-            itself = builder.build(ResourceLocation.parse(key.asString()));
+            itself = builder.build(Identifier.parse(key.asString()));
         }
 
         return itself;

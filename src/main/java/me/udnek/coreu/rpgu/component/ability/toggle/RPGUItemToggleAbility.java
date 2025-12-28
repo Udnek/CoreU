@@ -1,9 +1,8 @@
 package me.udnek.coreu.rpgu.component.ability.toggle;
 
 import me.udnek.coreu.custom.component.CustomComponent;
-import me.udnek.coreu.custom.equipmentslot.slot.CustomEquipmentSlot;
-import me.udnek.coreu.custom.equipmentslot.universal.BaseUniversalSlot;
-import me.udnek.coreu.custom.equipmentslot.universal.UniversalInventorySlot;
+import me.udnek.coreu.custom.equipment.slot.CustomEquipmentSlot;
+import me.udnek.coreu.custom.equipment.universal.UniversalInventorySlot;
 import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.rpgu.component.RPGUToggleItem;
 import me.udnek.coreu.rpgu.component.ability.RPGUItemAbility;

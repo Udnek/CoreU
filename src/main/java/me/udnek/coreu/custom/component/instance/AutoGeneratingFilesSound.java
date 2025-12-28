@@ -10,24 +10,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public interface AutoGeneratingFilesSound extends CustomComponent<CustomSound> {
+public class AutoGeneratingFilesSound implements CustomComponent<CustomSound> {
 
-    AutoGeneratingFilesSound DEFAULT = new Instance();
+    public static final AutoGeneratingFilesSound DEFAULT = new AutoGeneratingFilesSound();
 
-    @NotNull List<VirtualRpJsonFile> getFiles(@NotNull CustomSound sound);
-
-
-    @Override
-    @NotNull
-    default CustomComponentType<? super CustomSound, ? extends CustomComponent<? super CustomSound>> getType(){
-        return CustomComponentType.AUTO_GENERATING_FILES_SOUND;
-    }
-    class Instance implements AutoGeneratingFilesSound{
-
-        @Override
-        public @NotNull List<VirtualRpJsonFile> getFiles(@NotNull CustomSound unknowSound) {
-            if (!(unknowSound instanceof ConstructableCustomSound sound)) return List.of();
-            VirtualRpJsonFile file = new VirtualRpJsonFile(JsonParser.parseString("""
+    public @NotNull List<VirtualRpJsonFile> getFiles(@NotNull CustomSound unknowSound){
+        if (!(unknowSound instanceof ConstructableCustomSound sound)) return List.of();
+        VirtualRpJsonFile file = new VirtualRpJsonFile(JsonParser.parseString("""
                     {
                         "%id%": {
                             "subtitle": "%subtitle%",
@@ -36,11 +25,16 @@ public interface AutoGeneratingFilesSound extends CustomComponent<CustomSound> {
                         }
                     }
                     """
-                    .replace("%id%", sound.key().value())
-                    .replace("%subtitle%", sound.translationKey())
-                    .replace("%sounds%", String.join(", ", sound.getFilePaths().stream().map(s -> "\""+s+"\"").toList()))
-            ), "assets/" + sound.key().namespace() + "/sounds.json");
-            return List.of(file);
-        }
+                .replace("%id%", sound.key().value())
+                .replace("%subtitle%", sound.translationKey())
+                .replace("%sounds%", String.join(", ", sound.getFilePaths().stream().map(s -> "\""+s+"\"").toList()))
+        ), "assets/" + sound.key().namespace() + "/sounds.json");
+        return List.of(file);
+    }
+
+
+    @Override
+    public @NotNull CustomComponentType<? super CustomSound, ? extends CustomComponent<? super CustomSound>> getType(){
+        return CustomComponentType.AUTO_GENERATING_FILES_SOUND;
     }
 }

@@ -63,7 +63,7 @@ public interface CustomItemProperties {
     // 2.36 intangible_projectile
     @Nullable default DataSupplier<Key> getItemModel(){return null;} // 2.37 item_model
     @Nullable default DataSupplier<Component> getItemName(){return null;}// 2.38 item_name
-    // todo 2.39 jukebox_playable
+    // 2.39 jukebox_playable
     // 2.40 lock
     // 2.41 lodestone_tracker
     @Nullable default DataSupplier<ItemLore> getLore(){return null;} // 2.42 lore
@@ -84,7 +84,7 @@ public interface CustomItemProperties {
     // 2.57 stored_enchantments
     // 2.58 suspicious_stew_effects
     @Nullable default DataSupplier<Tool> getTool(){return null;} // 2.59 tool
-    // todo 2.60 tooltip_style
+    // 2.60 tooltip_style
     @Nullable default DataSupplier<ItemArmorTrim> getTrim(){return null;} // 2.61 trim
     @Nullable default Boolean getUnbreakable(){return null;} // 2.62 unbreakable
     @Nullable default DataSupplier<UseCooldown> getUseCooldown(){return null;} // 2.63 use_cooldown
@@ -92,7 +92,16 @@ public interface CustomItemProperties {
     // 2.65 writable_book_content
     // 2.66 written_book_content
 
-    static <Value, Type extends DataComponentType.Valued<Value>> @NotNull Value getInDataOrInStack(@NotNull ItemStack itemStack, @NotNull Type type, @Nullable DataSupplier<Value> dataSupplier, @NotNull Value fallback){
+    @Nullable default DataSupplier<Weapon> getWeapon(){return null;}
+    @Nullable default DataSupplier<AttackRange> getAttackRange(){return null;}
+    @Nullable default DataSupplier<BlocksAttacks> getBlocksAttacks(){return null;}
+    @Nullable default DataSupplier<UseEffects> getUseEffects(){return null;}
+    @Nullable default DataSupplier<KineticWeapon> getKineticWeapon(){return null;}
+    @Nullable default DataSupplier<PiercingWeapon> getPiercingWeapon(){return null;}
+    @Nullable default DataSupplier<SwingAnimation> getSwingAnimation(){return null;}
+
+
+    static <Value, Type extends DataComponentType.Valued<@NotNull Value>> @NotNull Value getInDataOrInStack(@NotNull ItemStack itemStack, @NotNull Type type, @Nullable DataSupplier<Value> dataSupplier, @NotNull Value fallback){
         if (dataSupplier == null) return itemStack.getDataOrDefault(type, fallback);
         Value value = dataSupplier.get();
         return value == null ? fallback : value;

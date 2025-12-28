@@ -1,6 +1,7 @@
 package me.udnek.coreu;
 
 import me.udnek.coreu.custom.attribute.ClearAttributeCommand;
+import me.udnek.coreu.custom.attribute.CustomAttribute;
 import me.udnek.coreu.custom.attribute.CustomAttributeCommand;
 import me.udnek.coreu.custom.effect.CustomEffectCommand;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockManager;
@@ -10,10 +11,10 @@ import me.udnek.coreu.custom.entitylike.entity.CustomEntityManager;
 import me.udnek.coreu.custom.entitylike.entity.CustomEntityType;
 import me.udnek.coreu.custom.entitylike.entity.command.LoadedCustomEntitiesCommand;
 import me.udnek.coreu.custom.entitylike.entity.command.SummonCustomEntityCommand;
-import me.udnek.coreu.custom.equipmentslot.EquipmentCommand;
-import me.udnek.coreu.custom.equipmentslot.EquipmentListener;
-import me.udnek.coreu.custom.equipmentslot.PlayerEquipmentManager;
-import me.udnek.coreu.custom.equipmentslot.slot.CustomEquipmentSlot;
+import me.udnek.coreu.custom.equipment.EquipmentCommand;
+import me.udnek.coreu.custom.equipment.EquipmentListener;
+import me.udnek.coreu.custom.equipment.PlayerEquipmentManager;
+import me.udnek.coreu.custom.equipment.slot.CustomEquipmentSlot;
 import me.udnek.coreu.custom.help.CustomHelpCommand;
 import me.udnek.coreu.custom.hud.CustomHudManager;
 import me.udnek.coreu.custom.inventory.CustomInventoryListener;
@@ -31,6 +32,9 @@ import me.udnek.coreu.nms.PacketHandler;
 import me.udnek.coreu.resourcepack.ResourcePackCommand;
 import me.udnek.coreu.resourcepack.ResourcePackablePlugin;
 import me.udnek.coreu.resourcepack.host.RpHost;
+import me.udnek.coreu.rpgu.attribute.RPGUAttributes;
+import me.udnek.coreu.rpgu.component.RPGUComponents;
+import me.udnek.coreu.rpgu.component.ability.property.type.AttributeBasedPropertyType;
 import me.udnek.coreu.serializabledata.SerializableDataManager;
 import me.udnek.coreu.util.ResetCooldownCommand;
 import net.kyori.adventure.key.Key;
@@ -59,6 +63,8 @@ public final class CoreU extends JavaPlugin implements ResourcePackablePlugin {
         CustomItem item = MGUItems.COORDINATE_WAND;
         CustomEntityType entityType = CustomEntityType.BLOCK_DISPLAY;
         CustomEquipmentSlot.Single slot = CustomEquipmentSlot.SADDLE;
+        CustomAttribute abilityDuration = RPGUAttributes.ABILITY_DURATION;
+        AttributeBasedPropertyType abilityCooldownTime = RPGUComponents.ABILITY_COOLDOWN_TIME;
 
         // EVENTS
         new CustomItemListener(this);

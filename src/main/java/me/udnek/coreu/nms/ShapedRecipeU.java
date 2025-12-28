@@ -5,7 +5,6 @@ import me.udnek.coreu.util.Reflex;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,7 +12,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
 
 public class ShapedRecipeU extends ShapedRecipe {
 

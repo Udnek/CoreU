@@ -92,7 +92,7 @@ public abstract class ConstructableCustomEffect extends AbstractRegistrableCompo
         addAttributes((attribute, key, amount, operation) ->
                         mobEffect.addAttributeModifier(
                                 NmsUtils.toNms(Registries.ATTRIBUTE, attribute),
-                                NmsUtils.toNmsResourceLocation(key),
+                                NmsUtils.toNmsIdentifier(key),
                                 amount,
                                 NmsUtils.toNmsOperation(operation)
                         )

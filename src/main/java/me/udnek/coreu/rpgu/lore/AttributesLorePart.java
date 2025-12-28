@@ -1,7 +1,7 @@
 package me.udnek.coreu.rpgu.lore;
 
 import me.udnek.coreu.custom.attribute.CustomAttribute;
-import me.udnek.coreu.custom.equipmentslot.slot.CustomEquipmentSlot;
+import me.udnek.coreu.custom.equipment.slot.CustomEquipmentSlot;
 import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.rpgu.lore.ability.PassiveAbilityLorePart;
 import me.udnek.coreu.util.LoreBuilder;

@@ -115,15 +115,14 @@ public class CustomItemListener extends SelfRegisteringListener {
 
         AttributeLoreGenerator.generateVanillaAttributes(event.getItemStack(), loreBuilder);
 
-        if (VanillaItemManager.isReplaced(customItem)){
-            TooltipDisplay oldDisplay = event.getItemStack().getDataOrDefault(TOOLTIP_DISPLAY, TooltipDisplay.tooltipDisplay().build());
-            TooltipDisplay.Builder displayBuilder = TooltipDisplay.tooltipDisplay().hideTooltip(oldDisplay.hideTooltip());
-            for (DataComponentType oldComponent : oldDisplay.hiddenComponents()) {
-                displayBuilder.addHiddenComponents(oldComponent);
-            }
-            displayBuilder.addHiddenComponents(DataComponentTypes.ATTRIBUTE_MODIFIERS);
+        TooltipDisplay oldDisplay = event.getItemStack().getDataOrDefault(TOOLTIP_DISPLAY, TooltipDisplay.tooltipDisplay().build());
+        TooltipDisplay.Builder newDisplay = TooltipDisplay.tooltipDisplay().hideTooltip(oldDisplay.hideTooltip());
+        for (DataComponentType oldComponent : oldDisplay.hiddenComponents()) {
+            newDisplay.addHiddenComponents(oldComponent);
         }
+        newDisplay.addHiddenComponents(DataComponentTypes.ATTRIBUTE_MODIFIERS);
 
+        event.getItemStack().setData(TOOLTIP_DISPLAY, newDisplay);
 
         loreBuilder.add(
                 LoreBuilder.Position.ID,

@@ -1,6 +1,5 @@
 package me.udnek.coreu.resourcepack.merger;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -40,13 +39,13 @@ public class MapLikeMerger implements RpFileMerger {
         JsonNode jsonNode;
         try {
             jsonNode = objectMapper.readTree(merged.toString());
-        } catch (JsonProcessingException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         String prettyJson;
         try {
             prettyJson = objectMapper.writeValueAsString(jsonNode);
-        } catch (JsonProcessingException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return prettyJson;

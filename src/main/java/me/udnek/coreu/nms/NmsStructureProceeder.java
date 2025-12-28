@@ -1,31 +1,21 @@
 package me.udnek.coreu.nms;
 
 import com.google.common.base.Function;
-import com.google.common.collect.Iterators;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.DynamicOps;
-import com.mojang.serialization.MapCodec;
 import me.udnek.coreu.util.LogUtils;
 import me.udnek.coreu.util.Reflex;
-import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.util.ProblemReporter;
 import net.minecraft.util.random.Weighted;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.TrialSpawnerBlock;
 import net.minecraft.world.level.block.entity.JigsawBlockEntity;
-import net.minecraft.world.level.block.entity.TrialSpawnerBlockEntity;
-import net.minecraft.world.level.block.entity.trialspawner.TrialSpawner;
 import net.minecraft.world.level.block.entity.trialspawner.TrialSpawnerConfig;
-import net.minecraft.world.level.block.entity.trialspawner.TrialSpawnerState;
-import net.minecraft.world.level.block.entity.trialspawner.TrialSpawnerStateData;
 import net.minecraft.world.level.block.entity.vault.VaultConfig;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.Structure;
@@ -36,21 +26,15 @@ import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.structure.structures.JigsawStructure;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
-import net.minecraft.world.level.storage.TagValueInput;
-import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.loot.LootTable;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
-import org.bukkit.craftbukkit.CraftServer;
-import org.bukkit.craftbukkit.generator.structure.CraftStructure;
-import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
-import java.util.function.Consumer;
 
 public class NmsStructureProceeder {
 
@@ -190,7 +174,7 @@ public class NmsStructureProceeder {
             ResourceKey<StructureTemplatePool> foundPoolKey = nbt.read(JigsawBlockEntity.POOL, JigsawBlockEntity.POOL_CODEC).orElse(null);
             if (foundPoolKey == null) continue;
 
-            String id = foundPoolKey.location().toString();
+            String id = foundPoolKey.identifier().toString();
             if (alreadyCheckedPoolIds.contains(id)) continue;
             alreadyCheckedPoolIds.add(id);
 

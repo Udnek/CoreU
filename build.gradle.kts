@@ -1,12 +1,11 @@
 plugins {
     `java-library`
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.17"
-    id("xyz.jpenilla.run-paper") version "2.3.1" // Adds runServer and runMojangMappedServer tasks for testing
-    //id("xyz.jpenilla.resource-factory-bukkit-convention") version "1.3.0" // Generates plugin.yml based on the Gradle config
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.18"
+    id("com.gradleup.shadow") version "9.3.0"
 }
 
 group = "me.udnek"
-version = "1.0-SNAPSHOT"
+project.version = "1.0-SNAPSHOT"
 description = "CoreU"
 
 repositories {
@@ -20,13 +19,18 @@ java {
 }
 
 dependencies {
-    paperweight.paperDevBundle("1.21.8-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.21.11-R0.1-SNAPSHOT")
     compileOnly("net.dmulloy2:ProtocolLib:5.4.0")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.18.3")
 }
 
 
-
 tasks {
+    shadowJar{
+        archiveBaseName.set("CoreU")
+        archiveClassifier.set("")
+        archiveVersion.set(version.toString())
+    }
     compileJava {
         // Set the release flag. This configures what version bytecode the compiler will emit, as well as what JDK APIs are usable.
         // See https://openjdk.java.net/jeps/247 for more information.

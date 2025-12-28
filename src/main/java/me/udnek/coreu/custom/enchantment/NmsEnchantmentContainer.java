@@ -52,7 +52,7 @@ public class NmsEnchantmentContainer extends NmsContainer<Enchantment> {
         };
         net.minecraft.world.entity.ai.attributes.Attribute attribute = NmsUtils.toNms(Registries.ATTRIBUTE, bukkitAttribute).value();
         EnchantmentAttributeEffect effect = new EnchantmentAttributeEffect(
-                NmsUtils.toNmsResourceLocation(id),
+                NmsUtils.toNmsIdentifier(id),
                 NmsUtils.getRegistry(Registries.ATTRIBUTE).wrapAsHolder(attribute),
                 LevelBasedValue.perLevel(baseValue, valueAboveFirst),
                 operation

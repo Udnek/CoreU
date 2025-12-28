@@ -6,7 +6,7 @@ import me.udnek.coreu.nms.loot.util.NmsFunctioned;
 import me.udnek.coreu.nms.loot.util.NmsLootConditionsContainer;
 import me.udnek.coreu.nms.loot.util.NmsLootFunctionsContainer;
 import me.udnek.coreu.util.Reflex;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntry;
 import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
@@ -44,7 +44,7 @@ public class NmsSingletonEntryContainer implements NmsLootEntryContainer, NmsFun
 
     @Override
     public @NotNull NmsLootConditionsContainer getConditions() {
-        return new NmsLootConditionsContainer((List<LootItemCondition>) Reflex.getFieldValue(supply, NmsFields.CONDITIONS));
+        return new NmsLootConditionsContainer(Reflex.getFieldValue(supply, NmsFields.CONDITIONS));
     }
 
     @Override
@@ -56,7 +56,7 @@ public class NmsSingletonEntryContainer implements NmsLootEntryContainer, NmsFun
 
     @Override
     public @NotNull NmsLootFunctionsContainer getFunctions() {
-        return new NmsLootFunctionsContainer((List<LootItemFunction>) Reflex.getFieldValue(supply, NmsFields.FUNCTIONS));
+        return new NmsLootFunctionsContainer(Reflex.getFieldValue(supply, NmsFields.FUNCTIONS));
     }
 
     @Override

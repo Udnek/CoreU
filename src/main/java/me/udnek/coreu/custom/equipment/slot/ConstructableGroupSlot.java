@@ -1,6 +1,6 @@
-package me.udnek.coreu.custom.equipmentslot.slot;
+package me.udnek.coreu.custom.equipment.slot;
 
-import me.udnek.coreu.custom.equipmentslot.universal.UniversalInventorySlot;
+import me.udnek.coreu.custom.equipment.universal.UniversalInventorySlot;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.EquipmentSlotGroup;

@@ -1,12 +1,11 @@
 package me.udnek.coreu.custom.attribute;
 
-import me.udnek.coreu.custom.equipmentslot.slot.CustomEquipmentSlot;
+import me.udnek.coreu.custom.equipment.slot.CustomEquipmentSlot;
 import org.bukkit.attribute.AttributeModifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 
 public class CustomAttributesContainer extends AbstractAttributeContainer<CustomAttribute, CustomAttributeModifier, CustomAttributesContainer>{
 
@@ -14,17 +13,17 @@ public class CustomAttributesContainer extends AbstractAttributeContainer<Custom
 
     public static @NotNull CustomAttributesContainer empty(){return new CustomAttributesContainer();}
 
-    @Override
-    public @NotNull CustomAttributesContainer get(@NotNull Predicate<@NotNull CustomEquipmentSlot> predicate) {
-        CustomAttributesContainer newContainer = new CustomAttributesContainer();
-        for (Map.Entry<CustomAttribute, List<CustomAttributeModifier>> entry : attributes.entrySet()) {
-            CustomAttribute attribute = entry.getKey();
-            for (CustomAttributeModifier modifier : entry.getValue()) {
-                if (predicate.test(modifier.getEquipmentSlot())) newContainer.add(attribute, modifier);
-            }
-        }
-        return newContainer;
-    }
+//    @Override
+//    public @NotNull CustomAttributesContainer get(@NotNull Predicate<@NotNull CustomEquipmentSlot> predicate) {
+//        CustomAttributesContainer newContainer = new CustomAttributesContainer();
+//        for (Map.Entry<CustomAttribute, List<CustomAttributeModifier>> entry : attributes.entrySet()) {
+//            CustomAttribute attribute = entry.getKey();
+//            for (CustomAttributeModifier modifier : entry.getValue()) {
+//                if (predicate.test(modifier.getEquipmentSlot())) newContainer.add(attribute, modifier);
+//            }
+//        }
+//        return newContainer;
+//    }
 
     public static class Builder{
 

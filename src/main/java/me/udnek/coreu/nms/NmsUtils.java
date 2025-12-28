@@ -12,12 +12,11 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ReloadableServerRegistries;
 import net.minecraft.server.dedicated.DedicatedPlayerList;
-import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
@@ -77,18 +76,18 @@ public class NmsUtils {
     public static @NotNull <T> Registry<T> getRegistry(@NotNull ResourceKey<Registry<T>> registry){
         return MinecraftServer.getServer().registryAccess().lookup(registry).orElseThrow();
     }
-    public static @NotNull ResourceLocation toNmsResourceLocation(@NotNull Key key){
-        return ResourceLocation.parse(key.asString());
+    public static @NotNull Identifier toNmsIdentifier(@NotNull Key key){
+        return Identifier.parse(key.asString());
     }
     public static @NotNull <T> ResourceKey<T> toNmsResourceKey(@NotNull ResourceKey<Registry<T>> registry, @NotNull Key key){
-        return ResourceKey.create(registry, toNmsResourceLocation(key));
+        return ResourceKey.create(registry, toNmsIdentifier(key));
     }
 
     public static @NotNull <T> Holder<T> toNms(@NotNull ResourceKey<Registry<T>> registry, @NotNull Keyed keyed){
         return toNms(getRegistry(registry), keyed);
     }
     public static @NotNull <T> Holder<T> toNms(@NotNull Registry<T> registry, @NotNull Keyed keyed){
-        return registry.get(toNmsResourceLocation(keyed.key())).get();
+        return registry.get(toNmsIdentifier(keyed.key())).get();
     }
 
     public static <T> void editRegistry(@NotNull Registry<T> registry, @NotNull Consumer<Registry<T>> consumer){
@@ -118,7 +117,7 @@ public class NmsUtils {
             @Override
             public void accept(Registry<T> registry) {
                 Reflex.setFieldValue(registry, "unregisteredIntrusiveHolders", new IdentityHashMap<T, Holder.Reference<T>>());
-                holder[0] = Registry.registerForHolder(registry, toNmsResourceLocation(key), supplier.get());
+                holder[0] = Registry.registerForHolder(registry, toNmsIdentifier(key), supplier.get());
             }
         });
         return holder[0];
@@ -129,7 +128,7 @@ public class NmsUtils {
         editRegistry(registry, new Consumer<>() {
             @Override
             public void accept(Registry<T> registry) {
-                holder[0] = Registry.registerForHolder(registry, toNmsResourceLocation(key), object);
+                holder[0] = Registry.registerForHolder(registry, toNmsIdentifier(key), object);
             }
         });
         return holder[0];
@@ -285,7 +284,7 @@ public class NmsUtils {
     }
     public static void getPossibleLoot(@NotNull LootPoolSingletonContainer container, @NotNull Consumer<net.minecraft.world.item.ItemStack> consumer){
         if (container instanceof LootItem){
-            Item item = Reflex.<Holder<Item>>getFieldValue(container, "item").value();
+            Item item = Reflex.<Holder<@NotNull Item>>getFieldValue(container, "item").value();
             if (item == Items.MAP){
                 List<LootItemFunction> functions = Reflex.getFieldValue(container, "functions");
                 for (LootItemFunction function : functions) {
@@ -333,11 +332,11 @@ public class NmsUtils {
         }
         return null;
     }
-    public static @NotNull ResourceKey<LootTable> getResourceKeyLootTable(String id){
-        ResourceLocation resourceLocation = ResourceLocation.parse(id);
+    public static @NotNull ResourceKey<@NotNull LootTable> getResourceKeyLootTable(String id){
+        Identifier resourceLocation = Identifier.parse(id);
         return ResourceKey.create(Registries.LOOT_TABLE, resourceLocation);
     }
-    public static @Nullable LootTable getLootTable(@NotNull ResourceKey<LootTable> resourceKey){
+    public static @NotNull LootTable getLootTable(@NotNull ResourceKey<@NotNull LootTable> resourceKey){
         ReloadableServerRegistries.Holder registries = ((CraftServer) Bukkit.getServer()).getServer().reloadableRegistries();
         return registries.getLootTable(resourceKey);
     }

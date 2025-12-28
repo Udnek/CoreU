@@ -11,8 +11,8 @@ public class RPInfo implements SerializableData {
     public @Nullable String extractDirectory;
     public @Nullable String checksum_zip;
     public @Nullable String checksum_folder;
-    public @NotNull String ip = "127.0.0.1";
-    public int port = 25566;
+    public @NotNull String ip = "null";
+    public int port;
 
     public RPInfo(){}
 
@@ -32,7 +32,7 @@ public class RPInfo implements SerializableData {
         checksum_zip = map.getOrDefault("checksum_zip", "");
         checksum_folder = map.getOrDefault("checksum_folder", "");
         ip = map.getOrDefault("ip", "127.0.0.1");
-        port = Integer.parseInt(map.getOrDefault("port", "25565"));
+        port = Integer.parseInt(map.getOrDefault("port", "25566"));
     }
     @Override
     public @NotNull String getDataName() {

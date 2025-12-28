@@ -63,11 +63,13 @@ public class ItemUtils {
         if (customA == null && customB == null) return itemA.getType() == itemB.getType();
         return customA == customB;
     }
-    public static String getId(@NotNull ItemStack itemStack){
+
+    public static @NotNull String getId(@NotNull ItemStack itemStack){
         CustomItem customItem = CustomItem.get(itemStack);
         if (customItem != null) return customItem.getId();
         return itemStack.getType().toString().toLowerCase();
     }
+
     public static @NotNull Component getDisplayName(@NotNull ItemStack itemStack){
         if (itemStack.hasItemMeta()){
             ItemMeta itemMeta = itemStack.getItemMeta();

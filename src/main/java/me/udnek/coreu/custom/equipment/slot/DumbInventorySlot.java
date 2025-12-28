@@ -1,8 +1,6 @@
-package me.udnek.coreu.custom.equipmentslot.slot;
+package me.udnek.coreu.custom.equipment.slot;
 
-import me.udnek.coreu.CoreU;
-import me.udnek.coreu.custom.equipmentslot.universal.UniversalInventorySlot;
-import org.bukkit.NamespacedKey;
+import me.udnek.coreu.custom.equipment.universal.UniversalInventorySlot;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.EquipmentSlotGroup;
@@ -37,6 +35,6 @@ public class DumbInventorySlot extends AbstractCustomEquipmentSlot implements Cu
 
     @Override
     public @NotNull String translationKey() {
-        return "slot." + new NamespacedKey(CoreU.getInstance(),"text").getNamespace() + ".dumb_inventory";
+        return "slot.coreu.dumb_inventory";
     }
 }

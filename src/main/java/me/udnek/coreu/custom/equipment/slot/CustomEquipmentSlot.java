@@ -1,13 +1,12 @@
-package me.udnek.coreu.custom.equipmentslot.slot;
+package me.udnek.coreu.custom.equipment.slot;
 
 import me.udnek.coreu.CoreU;
-import me.udnek.coreu.custom.equipmentslot.universal.ActiveHandUniversalSlot;
-import me.udnek.coreu.custom.equipmentslot.universal.BaseUniversalSlot;
-import me.udnek.coreu.custom.equipmentslot.universal.UniversalInventorySlot;
+import me.udnek.coreu.custom.equipment.universal.ActiveHandUniversalSlot;
+import me.udnek.coreu.custom.equipment.universal.BaseUniversalSlot;
+import me.udnek.coreu.custom.equipment.universal.UniversalInventorySlot;
 import me.udnek.coreu.custom.registry.CustomRegistries;
 import me.udnek.coreu.custom.registry.Registrable;
 import net.kyori.adventure.translation.Translatable;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.EquipmentSlotGroup;
@@ -38,7 +37,7 @@ public interface CustomEquipmentSlot extends Translatable, Registrable{
             Set.of(MAIN_HAND, OFF_HAND, HEAD, CHEST, LEGS, FEET),
             EquipmentSlotGroup.ANY, null, "item.modifiers.any"));
 
-    Single ACTIVE_HAND = register(new ConstructableSingleSlot("active_hand", null, null, new ActiveHandUniversalSlot(), "slot." + new NamespacedKey(CoreU.getInstance(),"text").getNamespace() + ".active_hand"));
+    Single ACTIVE_HAND = register(new ConstructableSingleSlot("active_hand", null, null, new ActiveHandUniversalSlot(), "slot.coreu.active_hand"));
 
     Group DUMB_INVENTORY = register(new DumbInventorySlot("dumb_inventory"));
 
@@ -59,13 +58,14 @@ public interface CustomEquipmentSlot extends Translatable, Registrable{
         };
     }
     static @NotNull CustomEquipmentSlot getFromVanilla(@NotNull EquipmentSlotGroup slot){
+        if (slot == EquipmentSlotGroup.MAINHAND) return MAIN_HAND;
+        if (slot == EquipmentSlotGroup.OFFHAND) return OFF_HAND;
         if (slot == EquipmentSlotGroup.HEAD) return HEAD;
         if (slot == EquipmentSlotGroup.CHEST) return CHEST;
         if (slot == EquipmentSlotGroup.LEGS) return LEGS;
         if (slot == EquipmentSlotGroup.FEET) return FEET;
 
         if (slot == EquipmentSlotGroup.HAND) return HAND;
-        if (slot == EquipmentSlotGroup.OFFHAND) return OFF_HAND;
         if (slot == EquipmentSlotGroup.ARMOR) return ARMOR;
         if (slot == EquipmentSlotGroup.BODY) return BODY;
         if (slot == EquipmentSlotGroup.SADDLE) return SADDLE;

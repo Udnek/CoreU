@@ -98,7 +98,7 @@ public class PropertyFunctions {
 
     // base + x*perX
     public static <In> @NotNull RPGUPropertyFunction<In, Double> LINEAR(@NotNull RPGUPropertyFunction<In, Double> x, @NotNull RPGUPropertyFunction<In, Double> base, @NotNull RPGUPropertyFunction<In, Double> perX){
-        return new RPGUPropertyFunction<In, Double>() {
+        return new RPGUPropertyFunction<>() {
             @Override
             public @NotNull Double getBase() {
                 return base.getBase() + x.getBase() * perX.getBase();

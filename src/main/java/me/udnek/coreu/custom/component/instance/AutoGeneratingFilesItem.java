@@ -10,6 +10,7 @@ import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.resourcepack.path.VirtualRpJsonFile;
 import net.kyori.adventure.key.Key;
+import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,66 +36,68 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
         return CustomComponentType.AUTO_GENERATING_FILES_ITEM;
     }
 
-    interface Base extends AutoGeneratingFilesItem{
+    abstract class Base implements AutoGeneratingFilesItem{
 
-        default boolean isOversizedInGui(){return true;}
-        default boolean isHandAnimationOnSwap(){return true;}
+        public boolean isOversizedInGui(){return true;}
+        public boolean isHandAnimationOnSwap(){return true;}
+        public float swapAnimationScale(){return 1.0f;}
 
         @Override
-        @NotNull
-        default List<VirtualRpJsonFile> getFiles(@NotNull CustomItem customItem){
+        public @NotNull List<VirtualRpJsonFile> getFiles(@NotNull CustomItem customItem){
             Key itemModel = customItem.getItem().getData(DataComponentTypes.ITEM_MODEL);
             if (itemModel == null || itemModel.namespace().equals(Key.MINECRAFT_NAMESPACE)) return List.of();
             return getFiles(itemModel);
         }
 
-        default @NotNull ArrayList<VirtualRpJsonFile> getFiles(@NotNull Key itemModel){
+        public @NotNull ArrayList<VirtualRpJsonFile> getFiles(@NotNull Key itemModel){
             ArrayList<VirtualRpJsonFile> files = new ArrayList<>();
             files.add(getDefinitionFile(itemModel));
             files.addAll(getModelsFiles(itemModel));
             return files;
         }
 
-        default @NotNull String getModelPath(@NotNull Key itemModel){
+        public @NotNull String getModelPath(@NotNull Key itemModel){
             return "assets/" + itemModel.namespace() + "/models/item/" + itemModel.value() + ".json";
         }
-        default @NotNull String getDefinitionPath(@NotNull Key itemModel){
+        public @NotNull String getDefinitionPath(@NotNull Key itemModel){
             return "assets/" + itemModel.namespace() + "/items/" + itemModel.value() + ".json";
         }
-        default @NotNull List<VirtualRpJsonFile> getModelsFiles(@NotNull Key itemModel){
+        public @NotNull List<VirtualRpJsonFile> getModelsFiles(@NotNull Key itemModel){
             List<VirtualRpJsonFile> files = new ArrayList<>();
-            String modelPath = getModelPath(itemModel);
-            getModels(itemModel).forEach(model -> files.add(new VirtualRpJsonFile(model, modelPath)));
+            for (Pair<Key, JsonObject> keyAndModel : getModels(itemModel)) {
+                files.add(new VirtualRpJsonFile(keyAndModel.getRight(), getModelPath(keyAndModel.getLeft())));
+            }
             return files;
         }
-        default @NotNull VirtualRpJsonFile getDefinitionFile(@NotNull Key itemModel){
+        public @NotNull VirtualRpJsonFile getDefinitionFile(@NotNull Key itemModel){
             return new VirtualRpJsonFile(getDefinition(itemModel), getDefinitionPath(itemModel));
         }
         @NotNull
-        default String replacePlaceHolders(@NotNull String data, @NotNull Key itemModel){
+        public String replacePlaceHolders(@NotNull String data, @NotNull Key itemModel){
             return data
                     .replace("%namespace%", itemModel.namespace())
                     .replace("%key%", itemModel.value())
                     .replace("%texture_path%", itemModel.namespace()+":item/"+itemModel.value())
                     .replace("%model_path%", itemModel.namespace()+":item/"+itemModel.value())
                     .replace("%hand_animation_on_swap%", String.valueOf(isHandAnimationOnSwap()))
-                    .replace("%oversized_in_gui%", String.valueOf(isOversizedInGui()));
+                    .replace("%oversized_in_gui%", String.valueOf(isOversizedInGui()))
+                    .replace("%swap_animation_scale%", String.valueOf(swapAnimationScale()));
         }
 
-        @NotNull List<JsonObject> getModels(@NotNull Key modelKey);
-        @NotNull JsonObject getDefinition(@NotNull Key modelKey);
+        abstract @NotNull List<Pair<Key, JsonObject>> getModels(@NotNull Key modelKey);
+        abstract @NotNull JsonObject getDefinition(@NotNull Key modelKey);
     }
-    class Generated implements Base{
+    class Generated extends Base {
         @Override
-        public @NotNull List<JsonObject> getModels(@NotNull Key itemModel) {
-            return List.of((JsonObject) JsonParser.parseString(replacePlaceHolders("""
+        public @NotNull List<Pair<Key, JsonObject>> getModels(@NotNull Key itemModel) {
+            return List.of(Pair.of(itemModel, (JsonObject) JsonParser.parseString(replacePlaceHolders("""
                         {
                             "parent": "minecraft:item/generated",
                             "textures": {
                                 "layer0": "%texture_path%"
                             }
                         }
-                        """, itemModel)));
+                        """, itemModel))));
         }
         @Override
         public @NotNull JsonObject getDefinition(@NotNull Key itemModel) {
@@ -105,7 +108,8 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
                                 "model": "%model_path%"
                             },
                             "oversized_in_gui": %oversized_in_gui%,
-                            "hand_animation_on_swap%": %hand_animation_on_swap%
+                            "hand_animation_on_swap": %hand_animation_on_swap%,
+                            "swap_animation_scale": %swap_animation_scale%
                         }
                         """, itemModel));
         }
@@ -113,9 +117,9 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
     class HandHeld extends Generated{
 
         @Override
-        public @NotNull List<JsonObject> getModels(@NotNull Key itemModel) {
-            @NotNull List<JsonObject> models = super.getModels(itemModel);
-            models.getFirst().addProperty("parent", "minecraft:item/handheld");
+        public @NotNull List<Pair<Key, JsonObject>> getModels(@NotNull Key itemModel) {
+            @NotNull List<Pair<Key, JsonObject>> models = super.getModels(itemModel);
+            models.getFirst().getRight().addProperty("parent", "minecraft:item/handheld");
             return models;
         }
     }
@@ -196,18 +200,21 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
                           "scale": 0.05
                         },
                         "property": "minecraft:using_item"
-                      }
+                      },
+                        "oversized_in_gui": %oversized_in_gui%,
+                        "hand_animation_on_swap": %hand_animation_on_swap%,
+                        "swap_animation_scale": %swap_animation_scale%
                     }""", itemModel));
         }
 
         @Override
-        public @NotNull List<JsonObject> getModels(@NotNull Key itemModel) {
-            @NotNull List<JsonObject> models = new ArrayList<>(super.getModels(itemModel));
+        public @NotNull List<Pair<Key, JsonObject>> getModels(@NotNull Key itemModel) {
+            ArrayList<Pair<Key, JsonObject>> models = new ArrayList<>(super.getModels(itemModel));
             for (int i = 0; i < 3; i++) {
                 models.addAll(super.getModels(new NamespacedKey(itemModel.namespace(), itemModel.value() + "_pulling_" + i)));
             }
-            for (JsonObject model : models) {
-                model.addProperty("parent", "minecraft:item/bow");
+            for (Pair<Key, JsonObject> model : models) {
+                model.getRight().addProperty("parent", "minecraft:item/bow");
             }
             return models;
         }
@@ -215,26 +222,32 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
     }
     class Generated20x20 extends Generated{
         @Override
-        public @NotNull List<JsonObject> getModels(@NotNull Key itemModel) {
-            @NotNull List<JsonObject> models = super.getModels(itemModel);
-            models.getFirst().addProperty("parent", CoreU.getKey("item/generated_20x20").toString());
+        public @NotNull List<Pair<Key, JsonObject>> getModels(@NotNull Key itemModel) {
+            @NotNull List<Pair<Key, JsonObject>> models = super.getModels(itemModel);
+            for (Pair<Key, JsonObject> pair : models) {
+                pair.getRight().addProperty("parent", CoreU.getKey("item/generated_20x20").toString());
+            }
             return models;
         }
     }
     class Bow20x20 extends Bow{
         @Override
-        public @NotNull List<JsonObject> getModels(@NotNull Key itemModel) {
-            @NotNull List<JsonObject> models = super.getModels(itemModel);
-            models.getFirst().addProperty("parent", CoreU.getKey("item/bow_20x20").toString());
+        public @NotNull List<Pair<Key, JsonObject>> getModels(@NotNull Key itemModel) {
+            @NotNull List<Pair<Key, JsonObject>> models = super.getModels(itemModel);
+            for (Pair<Key, JsonObject> pair : models) {
+                pair.getRight().addProperty("parent", CoreU.getKey("item/bow_20x20").toString());
+            }
             return models;
         }
     }
     class Handheld20x20 extends Generated20x20{
         @Override
-        public @NotNull List<JsonObject> getModels(@NotNull Key itemModel) {
-            @NotNull List<JsonObject> model = super.getModels(itemModel);
-            model.getFirst().addProperty("parent", CoreU.getKey("item/handheld_20x20").toString());
-            return model;
+        public @NotNull List<Pair<Key, JsonObject>> getModels(@NotNull Key itemModel) {
+            @NotNull List<Pair<Key, JsonObject>> models = super.getModels(itemModel);
+            for (Pair<Key, JsonObject> pair : models) {
+                pair.getRight().addProperty("parent", CoreU.getKey("item/handheld_20x20").toString());
+            }
+            return models;
         }
     }
 }

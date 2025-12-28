@@ -16,13 +16,12 @@ public class LoreBuilder {
 
     public LoreBuilder(){}
 
-    public void add(int priority, @Nullable Component line){
+    public void add(int priority, @NotNull Component line){
         Componentable components = lore.getOrDefault(priority, new Componentable.Simple());
-        if (line == null) components.add(Component.empty());
-        else components.add(line);
+        components.add(line);
         lore.put(priority, components);
     }
-    public void add(@NotNull Position position, @Nullable Component line){
+    public void add(@NotNull Position position, @NotNull Component line){
         add(position.priority, line);
     }
     public void set(int priority, @Nullable Componentable componentable){
@@ -64,7 +63,6 @@ public class LoreBuilder {
         BACKSTORY(300),
         ID(400);
 
-
         public final int priority;
         Position(int priority){
             this.priority = priority;
@@ -76,7 +74,6 @@ public class LoreBuilder {
         void add(@NotNull Component component);
         void addFirst(@NotNull Component component);
         boolean isEmpty();
-
 
         class Simple implements Componentable{
 

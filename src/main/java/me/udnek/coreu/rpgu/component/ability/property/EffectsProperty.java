@@ -6,7 +6,6 @@ import me.udnek.coreu.custom.effect.CustomEffect;
 import me.udnek.coreu.rpgu.attribute.RPGUAttributes;
 import me.udnek.coreu.rpgu.component.RPGUComponents;
 import me.udnek.coreu.rpgu.component.ability.RPGUItemAbility;
-import me.udnek.coreu.rpgu.component.ability.property.function.AttributeFunction;
 import me.udnek.coreu.rpgu.component.ability.property.function.Modifiers;
 import me.udnek.coreu.rpgu.component.ability.property.function.PropertyFunctions;
 import me.udnek.coreu.rpgu.component.ability.property.function.RPGUPropertyFunction;

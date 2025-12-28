@@ -64,6 +64,7 @@ public class MappedCustomRegistry<T extends Registrable> extends AbstractRegistr
     public @NotNull Collection<String> getIds() {
         return new ArrayList<>(map.keySet());
     }
+
     protected void logRegistered(@NotNull T custom){
         LogUtils.pluginLog("("+ getId() +") " + custom.getId());
     }

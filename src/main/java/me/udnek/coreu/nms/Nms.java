@@ -3,7 +3,6 @@ package me.udnek.coreu.nms;
 import com.google.common.base.Function;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.IntImmutableList;
 import me.udnek.coreu.custom.enchantment.NmsEnchantmentContainer;
 import me.udnek.coreu.nms.loot.LootContextBuilder;
@@ -20,39 +19,32 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
-import net.minecraft.network.protocol.common.custom.GameTestAddMarkerDebugPayload;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundCooldownPacket;
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.ReloadableServerRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.context.ContextKeySet;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.npc.VillagerProfession;
-import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.RespawnAnchorBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.trialspawner.TrialSpawnerState;
 import net.minecraft.world.level.block.entity.vault.VaultConfig;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -81,8 +73,6 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
-import org.bukkit.block.data.type.TrialSpawner;
-import org.bukkit.block.data.type.Vault;
 import org.bukkit.craftbukkit.CraftChunk;
 import org.bukkit.craftbukkit.CraftEquipmentSlot;
 import org.bukkit.craftbukkit.CraftServer;
@@ -90,7 +80,6 @@ import org.bukkit.craftbukkit.block.CraftBlock;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftEntityType;
 import org.bukkit.craftbukkit.entity.CraftMob;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.craftbukkit.generator.structure.CraftStructure;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.map.CraftMapCursor;
@@ -100,12 +89,9 @@ import org.bukkit.craftbukkit.util.CraftVector;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
-import org.bukkit.entity.OminousItemSpawner;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.VaultDisplayItemEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.map.MapCursor;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.StructureSearchResult;
@@ -306,7 +292,7 @@ public class Nms {
 
     public @NotNull NmsEnchantmentContainer getEnchantment(@NotNull Enchantment bukkitEnchantment){
         Registry<net.minecraft.world.item.enchantment.Enchantment> registry = NmsUtils.getRegistry(Registries.ENCHANTMENT);
-        net.minecraft.world.item.enchantment.Enchantment enchantment = registry.getValue(NmsUtils.toNmsResourceLocation(bukkitEnchantment.getKey()));
+        net.minecraft.world.item.enchantment.Enchantment enchantment = registry.getValue(NmsUtils.toNmsIdentifier(bukkitEnchantment.getKey()));
         return new NmsEnchantmentContainer(enchantment);
     }
 
@@ -314,32 +300,6 @@ public class Nms {
     ///////////////////////////////////////////////////////////////////////////
     // LOOT
     ///////////////////////////////////////////////////////////////////////////
-    public List<MerchantRecipe> getAllPossibleTrades(){
-        List<MerchantRecipe> recipes = new ArrayList<>();
-
-        Entity entity = ((CraftEntity) Bukkit.getOnlinePlayers().toArray()[0]).getHandle();
-        for (Map.Entry<ResourceKey<VillagerProfession>, Int2ObjectMap<VillagerTrades.ItemListing[]>> proffesionEntry : VillagerTrades.TRADES.entrySet()) {
-            Int2ObjectMap<VillagerTrades.ItemListing[]> tradesMap = proffesionEntry.getValue();
-            for (VillagerTrades.ItemListing[] itemListings : tradesMap.values()) {
-                for (VillagerTrades.ItemListing itemListing : itemListings) {
-                    MerchantOffer merchantOffer = itemListing.getOffer(entity, null);
-                    if (merchantOffer == null) continue;
-                    MerchantRecipe merchantRecipe = new MerchantRecipe(
-                            NmsUtils.toBukkitItemStack(merchantOffer.getResult()),
-                            merchantOffer.getMaxUses()
-                    );
-                    List<ItemStack> ingredients = new ArrayList<>();
-                    ingredients.add(NmsUtils.toBukkitItemStack(merchantOffer.getCostA()));
-                    ingredients.add(NmsUtils.toBukkitItemStack(merchantOffer.getCostB()));
-                    merchantRecipe.setIngredients(ingredients);
-
-                    recipes.add(merchantRecipe);
-                }
-            }
-        }
-        return recipes;
-    }
-
 
     public @NotNull NmsLootTableContainer getLootTableContainer(@NotNull org.bukkit.loot.LootTable lootTable){
         return new NmsDefaultLootTableContainer(NmsUtils.toNmsLootTable(lootTable));
@@ -405,20 +365,20 @@ public class Nms {
     public @NotNull List<String> getRegisteredLootTableIds(){
         List<String> ids = new ArrayList<>();
         ReloadableServerRegistries.Holder registries = ((CraftServer) Bukkit.getServer()).getServer().reloadableRegistries();
-        Stream<ResourceLocation> keys = registries.lookup().lookup(Registries.LOOT_TABLE).get().listElementIds().map(ResourceKey::location);
+        Stream<Identifier> keys = registries.lookup().lookup(Registries.LOOT_TABLE).get().listElementIds().map(ResourceKey::identifier);
         keys.forEach(key -> ids.add(key.toString()));
         return ids;
     }
     public @NotNull List<org.bukkit.loot.LootTable> getRegisteredLootTables(){
         List<org.bukkit.loot.LootTable> lootTables = new ArrayList<>();
         ReloadableServerRegistries.Holder registries = ((CraftServer) Bukkit.getServer()).getServer().reloadableRegistries();
-        Stream<ResourceLocation> keys = registries.lookup().lookup(Registries.LOOT_TABLE).get().listElementIds().map(ResourceKey::location);
+        Stream<Identifier> keys = registries.lookup().lookup(Registries.LOOT_TABLE).get().listElementIds().map(ResourceKey::identifier);
         keys.forEach(key ->
-            lootTables.add(registries.getLootTable(ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.parse(key.toString()))).craftLootTable));
+            lootTables.add(registries.getLootTable(ResourceKey.create(Registries.LOOT_TABLE, Identifier.parse(key.toString()))).craftLootTable));
         return lootTables;
     }
     public @NotNull org.bukkit.loot.LootTable getLootTable(@NotNull String id){
-        ResourceLocation resourceLocation = ResourceLocation.parse(id);
+        Identifier resourceLocation = Identifier.parse(id);
         ResourceKey<LootTable> key = ResourceKey.create(Registries.LOOT_TABLE, resourceLocation);
         return NmsUtils.getLootTable(key).craftLootTable;
     }
@@ -608,20 +568,25 @@ public class Nms {
     ///////////////////////////////////////////////////////////////////////////
     // MISC
     ///////////////////////////////////////////////////////////////////////////
-    public void showDebugBlock(@NotNull Location location, int color, int time, @NotNull String name){
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            showDebugBlock(player, location, color, time, name);
-        }
-    }
-    public void showDebugBlock(@NotNull Player player, @NotNull Location location, int color, int time, @NotNull String name){
-        Color rgb = Color.fromRGB(color);
-        color = rgb.getBlue() | (rgb.getGreen() << 8) | (rgb.getRed() << 16) | (rgb.getAlpha() << 24);
-        GameTestAddMarkerDebugPayload payload = new GameTestAddMarkerDebugPayload(CraftLocation.toBlockPosition(location), color, name, time * 1000/20);
-        ((CraftPlayer) player).getHandle().connection.send(new ClientboundCustomPayloadPacket(payload));
-    }
-    public void showDebugBlock(@NotNull Player player, @NotNull Location location, int color, int time){
-        showDebugBlock(player, location, color, time, "");
-    }
+
+    // TODO IMPLEMENT SHOW BLOCK
+//    public void showDebugBlock(@NotNull Location location, int color, int time, @NotNull String name){
+//        for (Player player : Bukkit.getOnlinePlayers()) {
+//            showDebugBlock(player, location, color, time, name);
+//        }
+//    }
+//    public void showDebugBlock(@NotNull Player player, @NotNull Location location, int color, int time, @NotNull String name){
+//        Color rgb = Color.fromRGB(color);
+//        color = rgb.getBlue() | (rgb.getGreen() << 8) | (rgb.getRed() << 16) | (rgb.getAlpha() << 24);
+//
+//        ClientboundGameTestHighlightPosPacket
+//        //GameTestAddMarkerDebugPayload payload = new GameTestAddMarkerDebugPayload(CraftLocation.toBlockPosition(location), color, name, time * 1000/20);
+//        NmsUtils.sendPacket(player, new ClientboundCustomPayloadPacket());
+//        ((CraftPlayer) player).getHandle().connection.send(new ClientboundCustomPayloadPacket(payload));
+//    }
+//    public void showDebugBlock(@NotNull Player player, @NotNull Location location, int color, int time){
+//        showDebugBlock(player, location, color, time, "");
+//    }
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -642,14 +607,14 @@ public class Nms {
     }
 
     public void iterateTroughCooldowns(@NotNull Player player, @NotNull TriConsumer<Key, Integer, Integer> consumer){
-        for (Map.Entry<ResourceLocation, ItemCooldowns.CooldownInstance> entry : NmsUtils.toNmsPlayer(player).getCooldowns().cooldowns.entrySet()) {
-            ResourceLocation location = entry.getKey();
+        for (Map.Entry<Identifier, ItemCooldowns.CooldownInstance> entry : NmsUtils.toNmsPlayer(player).getCooldowns().cooldowns.entrySet()) {
+            Identifier location = entry.getKey();
             consumer.accept(new NamespacedKey(location.getNamespace(), location.getPath()), entry.getValue().startTime(), entry.getValue().endTime());
         }
     }
 
     public void sendCooldown(@NotNull Player player, @NotNull Key key, int duration){
-        NmsUtils.sendPacket(player, new ClientboundCooldownPacket(NmsUtils.toNmsResourceLocation(key), duration));
+        NmsUtils.sendPacket(player, new ClientboundCooldownPacket(NmsUtils.toNmsIdentifier(key), duration));
     }
 
     public boolean mayBuild(@NotNull Player player){

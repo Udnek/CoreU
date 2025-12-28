@@ -1,4 +1,4 @@
-package me.udnek.coreu.custom.equipmentslot.universal;
+package me.udnek.coreu.custom.equipment.universal;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;

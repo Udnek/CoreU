@@ -1,8 +1,8 @@
-package me.udnek.coreu.custom.equipmentslot;
+package me.udnek.coreu.custom.equipment;
 
 import io.papermc.paper.event.player.PlayerInventorySlotChangeEvent;
 import me.udnek.coreu.CoreU;
-import me.udnek.coreu.custom.equipmentslot.universal.BaseUniversalSlot;
+import me.udnek.coreu.custom.equipment.universal.BaseUniversalSlot;
 import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.util.SelfRegisteringListener;
 import org.bukkit.entity.Player;

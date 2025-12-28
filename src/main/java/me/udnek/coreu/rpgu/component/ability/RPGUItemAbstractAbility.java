@@ -3,7 +3,7 @@ package me.udnek.coreu.rpgu.component.ability;
 import com.google.common.collect.Iterables;
 import me.udnek.coreu.custom.component.AbstractComponentHolder;
 import me.udnek.coreu.custom.component.instance.TranslatableThing;
-import me.udnek.coreu.custom.equipmentslot.universal.UniversalInventorySlot;
+import me.udnek.coreu.custom.equipment.universal.UniversalInventorySlot;
 import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.rpgu.component.RPGUComponents;
 import me.udnek.coreu.rpgu.lore.ability.AbilityLorePart;

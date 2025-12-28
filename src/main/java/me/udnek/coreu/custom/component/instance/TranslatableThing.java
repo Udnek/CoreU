@@ -73,11 +73,6 @@ public class TranslatableThing implements CustomComponent<Object> {
         return this;
     }
 
-//    public @NotNull Map<String, Translations> getAdditionalTranslations() {
-//        return additionalTranslations == null ? Map.of() : additionalTranslations;
-//    }
-
-
     @Override
     public @NotNull CustomComponentType<Object, ? extends CustomComponent<Object>> getType() {
         return CustomComponentType.TRANSLATABLE_THING;

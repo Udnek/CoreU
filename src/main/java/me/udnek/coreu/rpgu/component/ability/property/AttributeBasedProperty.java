@@ -1,17 +1,19 @@
 package me.udnek.coreu.rpgu.component.ability.property;
 
 import me.udnek.coreu.rpgu.component.ability.property.function.AttributeFunction;
+import me.udnek.coreu.rpgu.component.ability.property.function.RPGUPropertyFunction;
 import me.udnek.coreu.rpgu.component.ability.property.type.AttributeBasedPropertyType;
 import me.udnek.coreu.rpgu.lore.ability.AbilityLorePart;
 import org.bukkit.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
-public class AttributeBasedProperty extends AbstractAbilityProperty<LivingEntity, Double> {
+public class AttributeBasedProperty implements RPGUAbilityProperty<LivingEntity, Double> {
 
     protected @NotNull AttributeBasedPropertyType type;
+    protected @NotNull RPGUPropertyFunction<LivingEntity, Double> function;
 
     public AttributeBasedProperty(@NotNull AttributeFunction function, @NotNull AttributeBasedPropertyType type) {
-        super(function);
+        this.function = function;
         this.type = type;
     }
 
@@ -22,12 +24,18 @@ public class AttributeBasedProperty extends AbstractAbilityProperty<LivingEntity
     @Override
     public @NotNull AttributeBasedPropertyType getType() {return type;}
 
+    public @NotNull RPGUPropertyFunction<LivingEntity, Double> getFunction() {
+        return function;
+    }
+
+    @Override
+    public @NotNull Double getBase() {
+        return function.getBase();
+    }
+
     @Override
     public @NotNull Double get(@NotNull LivingEntity livingEntity) {
-        if (getFunction().getBase() < getType().getAttribute().getMin()) {
-            return getType().getAttribute().getMin();
-        }
-        return getFunction().apply(livingEntity);
+        return function.apply(livingEntity);
     }
 
     @Override

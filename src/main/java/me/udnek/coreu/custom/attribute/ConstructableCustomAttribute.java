@@ -50,7 +50,11 @@ public class ConstructableCustomAttribute extends AbstractRegistrable implements
         return Math.clamp(value, getMin(), getMax());
     }
 
-    public @NotNull Component getLoreLine(double amount, @NotNull AttributeModifier.Operation operation) {
+    public @NotNull Component getLoreLine(double amount, @NotNull AttributeModifier.Operation operation, @NotNull DisplayMethod method) {
+        if (method == DisplayMethod.ABSOLUTE){
+            return getLoreLineWithBase(amount);
+        }
+
         TextColor color;
         String key;
         if (amount >= 0) {
@@ -63,7 +67,7 @@ public class ConstructableCustomAttribute extends AbstractRegistrable implements
             else color = PLUS_COLOR;
         }
 
-        String operationKey = switch (operation){
+        key += switch (operation){
             case ADD_NUMBER -> "0";
             case ADD_SCALAR -> "1";
             case MULTIPLY_SCALAR_1 -> "2";
@@ -78,13 +82,15 @@ public class ConstructableCustomAttribute extends AbstractRegistrable implements
             amountText = Component.text(Utils.roundToTwoDigits(Math.abs(amount)));
         }
 
-        return Component.translatable(key+operationKey, amountText, Component.translatable(translationKey())).color(color);
+        return Component.translatable(key, amountText, Component.translatable(translationKey())).color(color);
     }
 
-    @Override
-    public @NotNull Component getLoreLineWithBase(double base) {
+    protected @NotNull Component getLoreLineWithBase(double base) {
         Component amountText;
-        if (numberAsPercentageLore) amountText = Component.text(Utils.roundToTwoDigits(Math.abs(base)) + " (" + (base >= 0 ? "+" : "-") + Utils.roundToTwoDigits(Math.abs(base*100d)) + "%)");
+        if (numberAsPercentageLore) amountText = Component.text(
+                Utils.roundToTwoDigits(Math.abs(base)) +
+                        " (" + (base >= 0 ? "+" : "-") +
+                        Utils.roundToTwoDigits(Math.abs(base*100d)) + "%)");
         else amountText = Component.text(Utils.roundToTwoDigits(base));
         return Component.translatable("attribute.modifier.equals.0", amountText, Component.translatable(translationKey())).color(EQUALS_COLOR);
     }

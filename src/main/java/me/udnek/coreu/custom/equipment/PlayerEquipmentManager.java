@@ -1,7 +1,6 @@
-package me.udnek.coreu.custom.equipmentslot;
+package me.udnek.coreu.custom.equipment;
 
 import me.udnek.coreu.util.TickingTask;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 

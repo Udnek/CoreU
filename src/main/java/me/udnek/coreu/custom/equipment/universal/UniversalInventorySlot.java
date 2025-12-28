@@ -1,4 +1,4 @@
-package me.udnek.coreu.custom.equipmentslot.universal;
+package me.udnek.coreu.custom.equipment.universal;
 
 import com.google.common.base.Function;
 import org.bukkit.entity.LivingEntity;
@@ -11,7 +11,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public interface UniversalInventorySlot {
     static void iterateThroughNotEmpty(@NotNull BiConsumer<BaseUniversalSlot, ItemStack> consumer, @NotNull LivingEntity entity) {

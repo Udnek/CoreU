@@ -17,7 +17,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffect;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
@@ -34,8 +34,8 @@ public class PacketHandler {
             public void onPacketSending(PacketEvent event) {
                 PacketContainer packet = event.getPacket();
                 Holder.Reference<MobEffect> holder = (Holder.Reference<MobEffect>) packet.getModifier().read(1);
-                ResourceLocation id = holder.key().location();
-                if (id.getNamespace().equals(ResourceLocation.DEFAULT_NAMESPACE)) return;
+                Identifier id = holder.key().identifier();
+                if (id.getNamespace().equals(Identifier.DEFAULT_NAMESPACE)) return;
                 CustomEffect customEffect = CustomRegistries.EFFECT.get(id.toString());
                 if (customEffect instanceof ConstructableCustomEffect disguiseable) {
                     PotionEffectType vanillaDisguise = disguiseable.getVanillaDisguise();
