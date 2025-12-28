@@ -83,6 +83,10 @@ public class VanillaAttributedItem implements LoreProvidingItemComponent, Equipp
         return false;
     }
 
+    private @NotNull AttributeModifier toVanilla(@NotNull CustomKeyedAttributeModifier modifier, @NotNull BaseUniversalSlot slot, @NotNull Player player){
+        return modifier.toVanillaWitAdjustedKey("_base_slot_" + slot.integerSlotToCompare(player));
+    }
+
     @Override
     public void onEquipped(@NotNull CustomItem item, @NotNull Player player, @NotNull BaseUniversalSlot slot) {
         container.getAll().forEach((attribute, modifiers) -> {
@@ -94,10 +98,7 @@ public class VanillaAttributedItem implements LoreProvidingItemComponent, Equipp
                     continue;
                 }
 
-                AttributeModifier vanillaModifier = customModifier.toVanillaWitAdjustedKey(
-                        "_" + customModifier.getKey().toString().replace(':', '_')
-                );
-                System.out.println(vanillaModifier.getKey());
+                AttributeModifier vanillaModifier = toVanilla(customModifier, slot, player);
 
                 if (attributeInstance.getModifier(vanillaModifier.getKey()) == null) {
                     attributeInstance.addModifier(vanillaModifier);
@@ -117,10 +118,7 @@ public class VanillaAttributedItem implements LoreProvidingItemComponent, Equipp
                     continue;
                 }
 
-                AttributeModifier vanillaModifier = customModifier.toVanillaWitAdjustedKey(
-                        "_" + customModifier.getKey().toString().replace(':', '_')
-                );
-                System.out.println(vanillaModifier.getKey());
+                AttributeModifier vanillaModifier = toVanilla(customModifier, slot, player);
 
                 if (attributeInstance.getModifier(vanillaModifier.getKey()) != null) {
                     attributeInstance.removeModifier(vanillaModifier);

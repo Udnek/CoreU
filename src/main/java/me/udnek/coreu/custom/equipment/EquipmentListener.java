@@ -4,7 +4,9 @@ import io.papermc.paper.event.player.PlayerInventorySlotChangeEvent;
 import me.udnek.coreu.CoreU;
 import me.udnek.coreu.custom.equipment.universal.BaseUniversalSlot;
 import me.udnek.coreu.custom.item.CustomItem;
+import me.udnek.coreu.custom.item.ItemUtils;
 import me.udnek.coreu.util.SelfRegisteringListener;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerItemHeldEvent;
@@ -22,37 +24,43 @@ public class EquipmentListener extends SelfRegisteringListener {
         super(plugin);
     }
 
+//    private @NotNull String idOrNull(@Nullable ItemStack stack){
+//        if (stack == null) return "null";
+//        return ItemUtils.getId(stack);
+//    }
+
     private void proceed(@NotNull Player player, int oldSlotId, int newSlotId, @Nullable ItemStack oldStack, @Nullable ItemStack newStack){
+        //System.out.println("PROCEEDING: " + player.getName() + " " +oldSlotId + " " + newSlotId + " "+ idOrnull(oldStack) + " " + idOrnull(newStack));
         PlayerEquipment data = PlayerEquipmentManager.getInstance().getData(player);
         BaseUniversalSlot oldSlot = new BaseUniversalSlot(oldSlotId);
         BaseUniversalSlot newSlot = new BaseUniversalSlot(newSlotId);
 
-        CustomItem customItem;
-
-        customItem = CustomItem.get(oldStack);
-        if (customItem != null){
+        {
+            // OLD
             Map.Entry<BaseUniversalSlot, CustomItem> foundEntry = data.getEntryBySlot(player, oldSlot);
             if (foundEntry != null){
-
-                if (foundEntry.getValue() != customItem) System.out.println("Data item: " + foundEntry.getValue().getId() +"; Real item: " + customItem.getId());
-                data.set(foundEntry.getKey(), null);
+                CustomItem customItem = foundEntry.getValue();
+                data.setByExactSlot(foundEntry.getKey(), null);
                 for (EquippableItem equippableItem : customItem.getComponents().getAllTyped(EquippableItem.class)) {
-                    if (equippableItem.isAppropriate(customItem, player, oldSlot)) equippableItem.onUnequipped(foundEntry.getValue(), player, oldSlot);
+                    if (!equippableItem.isAppropriate(customItem, player, oldSlot)) continue;
+                    equippableItem.onUnequipped(customItem, player, oldSlot);
                 }
-
             }
         }
 
-        customItem = CustomItem.get(newStack);
-        if (customItem != null){
-            boolean atLeastOneComponentFit = false;
-            for (EquippableItem equippableItem : customItem.getComponents().getAllTyped(EquippableItem.class)) {
-                if (equippableItem.isAppropriate(customItem, player, newSlot)){
-                    atLeastOneComponentFit = true;
-                    equippableItem.onEquipped(customItem, player, newSlot);
+        {
+            // NEW
+            CustomItem customItem = CustomItem.get(newStack);
+            if (customItem != null){
+                boolean atLeastOneComponentFit = false;
+                for (EquippableItem equippableItem : customItem.getComponents().getAllTyped(EquippableItem.class)) {
+                    if (equippableItem.isAppropriate(customItem, player, newSlot)){
+                        atLeastOneComponentFit = true;
+                        equippableItem.onEquipped(customItem, player, newSlot);
+                    }
                 }
+                if (atLeastOneComponentFit) data.setByExactSlot(newSlot, customItem);
             }
-            if (atLeastOneComponentFit) data.set(newSlot, customItem);
         }
     }
 

@@ -53,7 +53,7 @@ public class CustomAttributeUtils {
                 UniversalInventorySlot universal = singleSlot.getUniversal();
                 if (universal == null) return;
                 ItemStack item = universal.getItem(entity);
-                if (item == null) return;
+                if (item == null) item = ItemStack.empty();
                 slots.put(singleSlot, item);
             });
         }

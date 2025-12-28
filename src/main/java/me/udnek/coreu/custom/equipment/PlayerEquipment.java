@@ -26,7 +26,7 @@ public class PlayerEquipment {
     }
 
 
-    public void set(@NotNull BaseUniversalSlot slot, @Nullable CustomItem customItem) {
+    public void setByExactSlot(@NotNull BaseUniversalSlot slot, @Nullable CustomItem customItem) {
         if (customItem == null) {
             equipment.remove(slot);
             return;
@@ -34,9 +34,6 @@ public class PlayerEquipment {
         equipment.put(slot, customItem);
     }
 
-    public @Nullable CustomItem get(@NotNull BaseUniversalSlot slot){
-        return equipment.getOrDefault(slot, null);
-    }
 
     public interface EquipmentConsumer{
         void accept(@NotNull BaseUniversalSlot slot, @NotNull CustomItem customItem);
