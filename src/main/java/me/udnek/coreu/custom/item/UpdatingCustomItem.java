@@ -10,7 +10,7 @@ public interface UpdatingCustomItem extends CustomItem{
 
     default boolean isUpdateMaterial(){return true;}
 
-    default void getComponentsToUpdate(@NotNull ConstructableCustomItem.ComponentConsumer consumer){
+    default void getComponentsToUpdate(@NotNull ComponentConsumer consumer){
         consumer.accept(MAX_DAMAGE);
         consumer.accept(CONSUMABLE);
         consumer.accept(RARITY);
@@ -30,9 +30,9 @@ public interface UpdatingCustomItem extends CustomItem{
         ItemStack relevantItem = getItem();
         if (isUpdateMaterial()) itemStack = itemStack.withType(relevantItem.getType());
         @NotNull ItemStack finalItemStack = itemStack;
-        getComponentsToUpdate(new ConstructableCustomItem.ComponentConsumer() {
+        getComponentsToUpdate(new ComponentConsumer() {
             @Override
-            public <T> void accept(DataComponentType.@NotNull Valued<T> type) {
+            public <T> void accept(DataComponentType.@NotNull Valued<@NotNull T> type) {
                 T data = relevantItem.getData(type);
                 if (data == null) finalItemStack.unsetData(type);
                 else finalItemStack.setData(type, data);

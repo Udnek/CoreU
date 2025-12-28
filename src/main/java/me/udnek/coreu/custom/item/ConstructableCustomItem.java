@@ -20,6 +20,7 @@ import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -136,6 +137,7 @@ public abstract class ConstructableCustomItem extends AbstractRegistrableCompone
     public @Nullable CustomItem getUseRemainderCustom(){return null;}
 
     @ForOverride
+    @ApiStatus.ScheduledForRemoval
     public void initializeAdditionalAttributes(@NotNull ItemStack itemStack){}
 
     @Override
