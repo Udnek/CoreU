@@ -1,0 +1,14 @@
+name: CoreU
+version: '${project.version}'
+main: me.udnek.coreu.CoreU
+description: CoreU
+api-version: '1.21.11'
+bootstrapper: me.udnek.coreu.bootstrap.Bootstrap
+#loader: io.papermc.testplugin.TestPluginLoader
+
+dependencies:
+  server:
+    ProtocolLib:
+      load: BEFORE
+      required: true
+      join-classpath: true

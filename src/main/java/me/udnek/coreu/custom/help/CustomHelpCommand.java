@@ -1,5 +1,7 @@
 package me.udnek.coreu.custom.help;
 
+import io.papermc.paper.command.brigadier.BasicCommand;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import me.udnek.coreu.CoreU;
 import me.udnek.coreu.util.SelfRegisteringListener;
 import net.kyori.adventure.text.Component;
@@ -13,13 +15,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomHelpCommand extends SelfRegisteringListener implements CommandExecutor {
+public class CustomHelpCommand implements BasicCommand {
+
+    private static CustomHelpCommand instance;
 
     private final List<Component> lines = new ArrayList<>();
 
-    private static CustomHelpCommand instance;
     private CustomHelpCommand(){
-        super(CoreU.getInstance());
         String l = "-------------";
         lines.add(
                 Component.text(l).color(NamedTextColor.YELLOW)
@@ -38,14 +40,13 @@ public class CustomHelpCommand extends SelfRegisteringListener implements Comman
         lines.add(component);
     }
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        trigger(commandSender);
-        return true;
-    }
-
     public void trigger(CommandSender commandSender){
         lines.forEach(commandSender::sendMessage);
+    }
+
+    @Override
+    public void execute(@NotNull CommandSourceStack commandSourceStack, String @NotNull [] args) {
+        trigger(commandSourceStack.getSender());
     }
 }
 

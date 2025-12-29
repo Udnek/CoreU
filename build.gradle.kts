@@ -5,8 +5,7 @@ plugins {
 }
 
 group = "me.udnek"
-project.version = "1.0-SNAPSHOT"
-description = "CoreU"
+version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()

@@ -1,15 +1,14 @@
-package me.udnek.coreu.custom.entitylike.block.command;
+package me.udnek.coreu.custom.item;
 
 import io.papermc.paper.command.brigadier.BasicCommand;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
-import me.udnek.coreu.custom.entitylike.block.CustomBlockPlaceContext;
-import me.udnek.coreu.custom.entitylike.block.CustomBlockType;
 import me.udnek.coreu.custom.registry.CustomRegistries;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,29 +16,29 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class SetCustomBlockCommand implements BasicCommand {
+public class CustomItemGiveCommand implements BasicCommand {
 
     @Override
     public void execute(@NotNull CommandSourceStack commandSourceStack, String @NotNull [] args) {
-        CommandSender commandSender = commandSourceStack.getSender();
-        if (!(commandSender instanceof Player player)) return;
+        if (!(commandSourceStack.getSender() instanceof Player player)) return;
 
         if (args.length != 1) return;
 
-        String id = args[0];
+        CustomItem customItem = CustomItem.get(args[0]);
+        if (customItem == null) return;
 
-        CustomBlockType blockType = CustomRegistries.BLOCK_TYPE.get(id);
-        if (blockType == null) return;
+        ItemStack itemStack = customItem.getItem();
 
-        blockType.place(player.getLocation(), new CustomBlockPlaceContext(player, null, null));
+        player.getInventory().addItem(itemStack);
     }
 
     @Override
     public @NotNull Collection<String> suggest(@NotNull CommandSourceStack commandSourceStack, String @NotNull [] args) {
         if (args.length > 1) return List.of();
 
-        List<String> ids = new ArrayList<>(CustomRegistries.BLOCK_TYPE.getIds());
-        ids.removeIf(id -> !id.contains(args[0]));
+        String arg = args.length == 0 ? "" : args[0];
+        List<String> ids = new ArrayList<>(CustomRegistries.ITEM.getIds());
+        ids.removeIf(id -> !id.contains(arg));
 
         return ids;
     }

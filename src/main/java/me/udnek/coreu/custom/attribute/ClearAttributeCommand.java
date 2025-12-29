@@ -1,5 +1,7 @@
 package me.udnek.coreu.custom.attribute;
 
+import io.papermc.paper.command.brigadier.BasicCommand;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.Registry;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -9,11 +11,17 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.Nullable;
 
-public class ClearAttributeCommand implements CommandExecutor {
+import java.util.Collection;
+import java.util.List;
+
+public class ClearAttributeCommand implements BasicCommand {
+
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        if (!(commandSender instanceof Player player)) return false;
+    public void execute(@NotNull CommandSourceStack commandSourceStack, String @NotNull [] args) {
+        CommandSender commandSender = commandSourceStack.getSender();
+        if (!(commandSender instanceof Player player)) return;
         for (@NotNull Attribute attribute : Registry.ATTRIBUTE.stream().toList()) {
             AttributeInstance attributeInstance = player.getAttribute(attribute);
             if (attributeInstance == null) continue;
@@ -21,6 +29,10 @@ public class ClearAttributeCommand implements CommandExecutor {
                 attributeInstance.removeModifier(modifier);
             }
         }
-        return true;
+    }
+
+    @Override
+    public @Nullable String permission() {
+        return "coreu.admin";
     }
 }

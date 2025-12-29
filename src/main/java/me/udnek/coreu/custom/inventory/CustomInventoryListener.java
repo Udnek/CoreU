@@ -2,6 +2,8 @@ package me.udnek.coreu.custom.inventory;
 
 import me.udnek.coreu.CoreU;
 import me.udnek.coreu.util.SelfRegisteringListener;
+import net.kyori.adventure.text.Component;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -49,5 +51,12 @@ public class CustomInventoryListener extends SelfRegisteringListener {
         if (event.getInventory().getHolder() instanceof CustomInventory customInventory){
             customInventory.onPlayerDragsItem(event);
         }
+    }
+
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        if (!InventoryInspectionCommand.inspectingPlayers.contains(player)) return;
+        player.sendMessage(Component.text(event.getSlot()));
     }
 }

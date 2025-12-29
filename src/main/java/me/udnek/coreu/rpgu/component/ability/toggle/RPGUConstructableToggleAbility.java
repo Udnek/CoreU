@@ -37,8 +37,8 @@ public abstract class RPGUConstructableToggleAbility<ActivationContext> extends 
 
         lorePart.setEquipmentSlot(getSlot());
         lorePart.setHeader(Component.translatable("rpgu_toggle_ability.coreu.title"));
-        addPropertyLines(lorePart);
         addDescriptionLines(lorePart);
+        addPropertyLines(lorePart);
     }
 
     // RETURNS IS TOGGLED

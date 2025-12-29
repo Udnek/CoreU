@@ -20,10 +20,9 @@ public abstract class RPGUConstructablePassiveAbility<ActivationContext> extends
         } else {
             lorePart = attributesLorePart;
         }
-
         lorePart.setEquipmentSlot(getSlot());
         lorePart.setHeader(Component.translatable("rpgu_passive_ability.coreu.title"));
-        addPropertyLines(lorePart);
         addDescriptionLines(lorePart);
+        addPropertyLines(lorePart);
     }
 }

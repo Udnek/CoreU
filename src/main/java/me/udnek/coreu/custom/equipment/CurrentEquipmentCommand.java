@@ -1,26 +1,31 @@
-package me.udnek.coreu.util;
+package me.udnek.coreu.custom.equipment;
 
 import io.papermc.paper.command.brigadier.BasicCommand;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
+import me.udnek.coreu.custom.equipment.universal.BaseUniversalSlot;
+import me.udnek.coreu.custom.item.CustomItem;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.List;
 
-public class ResetCooldownCommand implements BasicCommand {
+public class CurrentEquipmentCommand implements BasicCommand {
 
     @Override
     public void execute(@NotNull CommandSourceStack commandSourceStack, String @NotNull [] args) {
-        CommandSender commandSender = commandSourceStack.getSender();
-        if (!(commandSender instanceof Player player)) return;
-        ItemStack item = player.getEquipment().getItem(EquipmentSlot.HAND);
-        player.setCooldown(item, 0);
+        CommandSender sender = commandSourceStack.getSender();
+        if (!(sender instanceof Player player)){
+            return;
+        }
+        PlayerEquipment data = PlayerEquipmentManager.getInstance().getData(player);
+        data.getEquipment((slot, customItem) -> {
+            sender.sendMessage(slot + ": " + customItem.getId());
+        });
     }
 
     @Override

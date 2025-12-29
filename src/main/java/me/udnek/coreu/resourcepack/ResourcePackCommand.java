@@ -1,5 +1,7 @@
 package me.udnek.coreu.resourcepack;
 
+import io.papermc.paper.command.brigadier.BasicCommand;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import me.udnek.coreu.CoreU;
 import me.udnek.coreu.resourcepack.host.RpHost;
 import me.udnek.coreu.resourcepack.host.RpUtils;
@@ -14,17 +16,19 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.List;
 
-public class ResourcePackCommand implements TabExecutor, CommandExecutor {
+public class ResourcePackCommand implements BasicCommand {
+
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] args) {
-        if (!(commandSender instanceof ConsoleCommandSender)){
-            commandSender.sendMessage("Command can be executed in console only!");
-            return true;
+    public void execute(@NotNull CommandSourceStack commandSourceStack, String @NotNull [] args) {
+        if (!(commandSourceStack.getSender() instanceof ConsoleCommandSender)){
+            commandSourceStack.getSender().sendMessage("Command can be executed in console only!");
+            return;
         }
 
-        if (args.length > 1) return false;
+        if (args.length > 1) return;
 
 
         RPInfo info = SerializableDataManager.read(new RPInfo(), CoreU.getInstance());
@@ -35,7 +39,7 @@ public class ResourcePackCommand implements TabExecutor, CommandExecutor {
         else {
             if (info.extractDirectory == null){
                 LogUtils.pluginLog("Saved directory is null, specify it using argument!");
-                return true;
+                return;
             }
             LogUtils.pluginLog("Loaded saved directory: " + info.extractDirectory);
         }
@@ -44,9 +48,10 @@ public class ResourcePackCommand implements TabExecutor, CommandExecutor {
         String error = merger.checkExtractDirectoryAndError(info.extractDirectory);
         if (error != null){
             LogUtils.pluginLog(error);
-            return true;
+            return;
         }
 
+        assert info.extractDirectory != null;
         merger.startMergeInto(info.extractDirectory);
 
         try {
@@ -71,11 +76,16 @@ public class ResourcePackCommand implements TabExecutor, CommandExecutor {
         RpUtils.updateServerProperties();
 
         LogUtils.pluginWarning("If your sound does not play, remove '<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>' in plugin's pom!");
-        return true;
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] args) {
-        return null;
+    public @NotNull Collection<String> suggest(@NotNull CommandSourceStack commandSourceStack, String @NotNull [] args) {
+        return List.of();
+    }
+
+
+    @Override
+    public @org.jspecify.annotations.Nullable String permission() {
+        return "coreu.admin";
     }
 }
