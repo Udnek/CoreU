@@ -22,9 +22,12 @@ import java.util.zip.ZipOutputStream;
 public class RpUtils {
 
     public static void zipFolder(@NotNull Path sourcePath, @NotNull Path zipFilePath) {
-        try (ZipOutputStream zipOut = new ZipOutputStream(Files.newOutputStream(zipFilePath))) {
-            Files.walk(sourcePath)
-                    .forEach(path -> {
+        try (
+                ZipOutputStream zipOut = new ZipOutputStream(Files.newOutputStream(zipFilePath));
+                Stream<Path> walk = Files.walk(sourcePath)
+        ) {
+
+                    walk.forEach(path -> {
                         try {
                             String entryName = sourcePath.relativize(path).toString()
                                     .replace("\\", "/");
@@ -51,11 +54,11 @@ public class RpUtils {
                                 zipOut.closeEntry();
                             }
                         } catch (IOException e) {
-                            throw new RuntimeException("Ошибка при упаковке: " + path, e);
+                            throw new RuntimeException("Can not zip: " + path, e);
                         }
                     });
         } catch (IOException e) {
-            throw new RuntimeException("Ошибка создания ZIP-файла", e);
+            throw new RuntimeException("Can not create zip: ", e);
         }
     }
 

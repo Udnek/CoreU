@@ -1,5 +1,6 @@
 package me.udnek.coreu;
 
+import com.sun.net.httpserver.HttpServer;
 import me.udnek.coreu.custom.attribute.CustomAttribute;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockManager;
 import me.udnek.coreu.custom.entitylike.entity.CustomEntityManager;
@@ -23,15 +24,20 @@ import me.udnek.coreu.rpgu.attribute.RPGUAttributes;
 import me.udnek.coreu.rpgu.component.RPGUComponents;
 import me.udnek.coreu.rpgu.component.ability.property.type.AttributeBasedPropertyType;
 import me.udnek.coreu.serializabledata.SerializableDataManager;
+import me.udnek.coreu.util.LogUtils;
 import net.kyori.adventure.key.Key;
+import net.minecraft.world.entity.animal.nautilus.Nautilus;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.meta.CompassMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 public final class CoreU extends JavaPlugin implements ResourcePackablePlugin {
+
     private static Plugin instance;
+    private static HttpServer rpHost;
 
     public static @NotNull Plugin getInstance(){
         return instance;
@@ -62,24 +68,6 @@ public final class CoreU extends JavaPlugin implements ResourcePackablePlugin {
         Bukkit.getPluginManager().registerEvents(new LootTableUtils(), this);
         RecipeManager.getInstance();
 
-
-        // COMMANDS
-//        getCommand("giveu").setExecutor(new CustomItemCommand());
-//        getCommand("summonu").setExecutor(new SummonCustomEntityCommand());
-//        getCommand("resourcepacku").setExecutor(new ResourcePackCommand());
-//        getCommand("helpu").setExecutor(CustomHelpCommand.getInstance());
-//        getCommand("attributeu").setExecutor(new CustomAttributeCommand());
-//        getCommand("clear_attribute_modifiers").setExecutor(new ClearAttributeCommand());
-//        getCommand("custom_entities").setExecutor(new LoadedCustomEntitiesCommand());
-//        getCommand("set_blocku").setExecutor(new SetCustomBlockCommand());
-//        getCommand("custom_block_entities").setExecutor(new LoadedCustomBlocksCommand());
-//        getCommand("play_soundu").setExecutor(new CustomSoundCommand());
-//        getCommand("effectu").setExecutor(new CustomEffectCommand());
-//        getCommand("mgu").setExecutor(new MGUCommand());
-//        getCommand("inventory_inspection").setExecutor(new InventoryInspectionCommand(this));
-//        getCommand("current_equipment").setExecutor(new EquipmentCommand());
-//        getCommand("reset_cooldown").setExecutor(new ResetCooldownCommand());
-
         // TICKERS
         CustomEntityManager.getInstance().start(this);
         CustomBlockManager.getInstance().start(this);
@@ -94,12 +82,14 @@ public final class CoreU extends JavaPlugin implements ResourcePackablePlugin {
             }
         });
 
-        new RpHost().start();
+        rpHost = new RpHost().start();
     }
 
     @Override
     public void onDisable() {
         PlayerEquipmentManager.getInstance().stop();
+        rpHost.stop(0);
+        LogUtils.pluginLog("Resourcepack host stopped");
     }
 
     @Override

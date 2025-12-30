@@ -23,10 +23,6 @@ public class VirtualResourcePack {
         LogUtils.pluginLog("ResourcePack "+ plugin.getName() +" initialization started");
         RpPath rootPath = new RpPath(this, "");
         files = rootPath.findFiles();
-//        LogUtils.pluginLog("ResourcePack files:");
-//        for (RpPath file : files) {
-//            LogUtils.pluginLog(file);
-//        }
         LogUtils.pluginLog("ResourcePack "+ plugin.getName() +" initialization ended");
     }
 

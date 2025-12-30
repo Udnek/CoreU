@@ -23,6 +23,10 @@ public interface UpdatingCustomItem extends CustomItem{
         consumer.accept(EQUIPPABLE);
         consumer.accept(MAX_STACK_SIZE);
         consumer.accept(RECIPES);
+        consumer.accept(ENCHANTMENT_GLINT_OVERRIDE);
+        consumer.accept(USE_REMAINDER);
+        consumer.accept(TOOLTIP_DISPLAY);
+        consumer.accept(DAMAGE_RESISTANT);
     }
 
     @Override

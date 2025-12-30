@@ -182,8 +182,11 @@ public class RpMerger {
         String filePath = rpPath.getExtractPath(extractDirectory);
         String folderPath = rpPath.withLayerUp().getExtractPath(extractDirectory);
         new File(folderPath).mkdirs();
-        try { new File(filePath).createNewFile();
-        } catch (IOException e) {throw new RuntimeException(e);}
+        try {
+            new File(filePath).createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
     public void copyFile(@NotNull RpPath from, @NotNull RpPath to){
         createNewFile(to);
@@ -217,7 +220,9 @@ public class RpMerger {
     public void copyImage(@NotNull RpPath from, @NotNull RpPath to){
         Preconditions.checkArgument(from.getFileType() == FileType.PNG, "File " + to + " is not an image!");
         try {
-            BufferedImage image = ImageIO.read(from.getInputStream());
+            InputStream inputStream = from.getInputStream();
+            BufferedImage image = ImageIO.read(inputStream);
+            inputStream.close();
             ImageIO.write(image, "png", new File(to.getExtractPath(extractDirectory)));
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -237,7 +242,9 @@ public class RpMerger {
     }
     public void copyText(@NotNull RpPath from, @NotNull RpPath to){
         try {
-            Files.copy(from.getInputStream(), Paths.get(to.getExtractPath(extractDirectory)), StandardCopyOption.REPLACE_EXISTING);
+            InputStream inputStream = from.getInputStream();
+            Files.copy(inputStream, Paths.get(to.getExtractPath(extractDirectory)), StandardCopyOption.REPLACE_EXISTING);
+            inputStream.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

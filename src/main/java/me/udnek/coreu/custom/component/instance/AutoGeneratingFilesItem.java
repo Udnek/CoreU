@@ -27,6 +27,9 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
     Generated20x20 GENERATED_20X20 = new Generated20x20();
     Bow20x20 BOW_20X20 = new Bow20x20();
     Handheld20x20 HANDHELD_20X20 = new Handheld20x20();
+    TwoLayered TWO_LAYERED = new TwoLayered();
+    Compass COMPASS_SINGLE_LAYER = new Compass(false);
+    Compass COMPASS_TWO_LAYERS = new Compass(true);
 
     @NotNull List<VirtualRpJsonFile> getFiles(@NotNull CustomItem customItem);
 
@@ -84,23 +87,8 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
                     .replace("%swap_animation_scale%", String.valueOf(swapAnimationScale()));
         }
 
-        abstract @NotNull List<Pair<Key, JsonObject>> getModels(@NotNull Key modelKey);
-        abstract @NotNull JsonObject getDefinition(@NotNull Key modelKey);
-    }
-    class Generated extends Base {
-        @Override
-        public @NotNull List<Pair<Key, JsonObject>> getModels(@NotNull Key itemModel) {
-            return List.of(Pair.of(itemModel, (JsonObject) JsonParser.parseString(replacePlaceHolders("""
-                        {
-                            "parent": "minecraft:item/generated",
-                            "textures": {
-                                "layer0": "%texture_path%"
-                            }
-                        }
-                        """, itemModel))));
-        }
-        @Override
-        public @NotNull JsonObject getDefinition(@NotNull Key itemModel) {
+        public abstract @NotNull List<Pair<Key, JsonObject>> getModels(@NotNull Key modelKey);
+        public @NotNull JsonObject getDefinition(@NotNull Key modelKey){
             return (JsonObject) JsonParser.parseString(replacePlaceHolders("""
                         {
                             "model": {
@@ -111,16 +99,45 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
                             "hand_animation_on_swap": %hand_animation_on_swap%,
                             "swap_animation_scale": %swap_animation_scale%
                         }
-                        """, itemModel));
+                        """, modelKey));
+        }
+    }
+    class Generated extends Base {
+        @Override
+        public @NotNull List<Pair<Key, JsonObject>> getModels(@NotNull Key modelKey) {
+            return List.of(Pair.of(modelKey, generateModel(modelKey)));
+        }
+
+        public @NotNull JsonObject generateModel(@NotNull Key modelKey){
+            return (JsonObject) JsonParser.parseString(replacePlaceHolders("""
+                        {
+                            "parent": "minecraft:item/generated",
+                            "textures": {
+                                "layer0": "%texture_path%"
+                            }
+                        }
+                        """, modelKey));
+        }
+    }
+    class TwoLayered extends Generated{
+        public @NotNull JsonObject generateModel(@NotNull Key modelKey){
+            return (JsonObject) JsonParser.parseString(replacePlaceHolders("""
+                        {
+                            "parent": "minecraft:item/generated",
+                            "textures": {
+                                "layer0": "%texture_path%_base",
+                                "layer1": "%texture_path%_overlay"
+                            }
+                        }
+                        """, modelKey));
         }
     }
     class HandHeld extends Generated{
-
         @Override
-        public @NotNull List<Pair<Key, JsonObject>> getModels(@NotNull Key itemModel) {
-            @NotNull List<Pair<Key, JsonObject>> models = super.getModels(itemModel);
-            models.getFirst().getRight().addProperty("parent", "minecraft:item/handheld");
-            return models;
+        public @NotNull JsonObject generateModel(@NotNull Key modelKey) {
+            JsonObject model = super.generateModel(modelKey);
+            model.addProperty("parent", "minecraft:item/handheld");
+            return model;
         }
     }
     class CustomModelDataColorable extends Generated{
@@ -161,7 +178,6 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
             return definition;
         }
     }
-
     class Bow extends Generated{
 
         @Override
@@ -208,13 +224,19 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
         }
 
         @Override
-        public @NotNull List<Pair<Key, JsonObject>> getModels(@NotNull Key itemModel) {
-            ArrayList<Pair<Key, JsonObject>> models = new ArrayList<>(super.getModels(itemModel));
+        public @NotNull JsonObject generateModel(@NotNull Key modelKey) {
+            JsonObject model = super.generateModel(modelKey);
+            model.addProperty("parent", "minecraft:item/bow");
+            return model;
+        }
+
+        @Override
+        public @NotNull List<Pair<Key, JsonObject>> getModels(@NotNull Key modelKey) {
+            ArrayList<Pair<Key, JsonObject>> models = new ArrayList<>();
+            models.add(Pair.of(modelKey, generateModel(modelKey)));
             for (int i = 0; i < 3; i++) {
-                models.addAll(super.getModels(new NamespacedKey(itemModel.namespace(), itemModel.value() + "_pulling_" + i)));
-            }
-            for (Pair<Key, JsonObject> model : models) {
-                model.getRight().addProperty("parent", "minecraft:item/bow");
+                NamespacedKey key = new NamespacedKey(modelKey.namespace(), modelKey.value() + "_pulling_" + i);
+                models.add(Pair.of(key, generateModel(key)));
             }
             return models;
         }
@@ -222,32 +244,568 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
     }
     class Generated20x20 extends Generated{
         @Override
-        public @NotNull List<Pair<Key, JsonObject>> getModels(@NotNull Key itemModel) {
-            @NotNull List<Pair<Key, JsonObject>> models = super.getModels(itemModel);
-            for (Pair<Key, JsonObject> pair : models) {
-                pair.getRight().addProperty("parent", CoreU.getKey("item/generated_20x20").toString());
-            }
-            return models;
+        public @NotNull JsonObject generateModel(@NotNull Key modelKey) {
+            JsonObject model = super.generateModel(modelKey);
+            model.addProperty("parent", CoreU.getKey("item/generated_20x20").toString());
+            return model;
         }
     }
     class Bow20x20 extends Bow{
         @Override
-        public @NotNull List<Pair<Key, JsonObject>> getModels(@NotNull Key itemModel) {
-            @NotNull List<Pair<Key, JsonObject>> models = super.getModels(itemModel);
-            for (Pair<Key, JsonObject> pair : models) {
-                pair.getRight().addProperty("parent", CoreU.getKey("item/bow_20x20").toString());
-            }
-            return models;
+        public @NotNull JsonObject generateModel(@NotNull Key modelKey) {
+            JsonObject model = super.generateModel(modelKey);
+            model.addProperty("parent", CoreU.getKey("item/bow_20x20").toString());
+            return model;
         }
     }
     class Handheld20x20 extends Generated20x20{
         @Override
-        public @NotNull List<Pair<Key, JsonObject>> getModels(@NotNull Key itemModel) {
-            @NotNull List<Pair<Key, JsonObject>> models = super.getModels(itemModel);
-            for (Pair<Key, JsonObject> pair : models) {
-                pair.getRight().addProperty("parent", CoreU.getKey("item/handheld_20x20").toString());
+        public @NotNull JsonObject generateModel(@NotNull Key modelKey) {
+            JsonObject model = super.generateModel(modelKey);
+            model.addProperty("parent", CoreU.getKey("item/handheld_20x20").toString());
+            return model;
+        }
+    }
+    class Compass extends Generated{
+
+        private final boolean twoLayered;
+
+        public Compass(boolean twoLayered){
+            this.twoLayered = twoLayered;
+        }
+
+        public @NotNull String rawCompassDefinition(){
+            return """
+  {
+  "model": {
+    "type": "minecraft:condition",
+    "component": "minecraft:lodestone_tracker",
+    "on_false": {
+      "type": "minecraft:range_dispatch",
+      "entries": [
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_16"
+          },
+          "threshold": 0.0
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_17"
+          },
+          "threshold": 0.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_18"
+          },
+          "threshold": 1.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_19"
+          },
+          "threshold": 2.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_20"
+          },
+          "threshold": 3.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_21"
+          },
+          "threshold": 4.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_22"
+          },
+          "threshold": 5.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_23"
+          },
+          "threshold": 6.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_24"
+          },
+          "threshold": 7.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_25"
+          },
+          "threshold": 8.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_26"
+          },
+          "threshold": 9.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_27"
+          },
+          "threshold": 10.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_28"
+          },
+          "threshold": 11.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_29"
+          },
+          "threshold": 12.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_30"
+          },
+          "threshold": 13.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_31"
+          },
+          "threshold": 14.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_00"
+          },
+          "threshold": 15.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_01"
+          },
+          "threshold": 16.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_02"
+          },
+          "threshold": 17.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_03"
+          },
+          "threshold": 18.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_04"
+          },
+          "threshold": 19.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_05"
+          },
+          "threshold": 20.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_06"
+          },
+          "threshold": 21.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_07"
+          },
+          "threshold": 22.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_08"
+          },
+          "threshold": 23.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_09"
+          },
+          "threshold": 24.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_10"
+          },
+          "threshold": 25.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_11"
+          },
+          "threshold": 26.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_12"
+          },
+          "threshold": 27.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_13"
+          },
+          "threshold": 28.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_14"
+          },
+          "threshold": 29.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_15"
+          },
+          "threshold": 30.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_16"
+          },
+          "threshold": 31.5
+        }
+      ],
+      "property": "minecraft:compass",
+      "scale": 32.0,
+      "target": "spawn"
+    },
+    "on_true": {
+      "type": "minecraft:range_dispatch",
+      "entries": [
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_16"
+          },
+          "threshold": 0.0
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_17"
+          },
+          "threshold": 0.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_18"
+          },
+          "threshold": 1.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_19"
+          },
+          "threshold": 2.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_20"
+          },
+          "threshold": 3.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_21"
+          },
+          "threshold": 4.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_22"
+          },
+          "threshold": 5.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_23"
+          },
+          "threshold": 6.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_24"
+          },
+          "threshold": 7.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_25"
+          },
+          "threshold": 8.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_26"
+          },
+          "threshold": 9.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_27"
+          },
+          "threshold": 10.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_28"
+          },
+          "threshold": 11.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_29"
+          },
+          "threshold": 12.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_30"
+          },
+          "threshold": 13.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_31"
+          },
+          "threshold": 14.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_00"
+          },
+          "threshold": 15.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_01"
+          },
+          "threshold": 16.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_02"
+          },
+          "threshold": 17.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_03"
+          },
+          "threshold": 18.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_04"
+          },
+          "threshold": 19.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_05"
+          },
+          "threshold": 20.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_06"
+          },
+          "threshold": 21.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_07"
+          },
+          "threshold": 22.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_08"
+          },
+          "threshold": 23.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_09"
+          },
+          "threshold": 24.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_10"
+          },
+          "threshold": 25.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_11"
+          },
+          "threshold": 26.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_12"
+          },
+          "threshold": 27.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_13"
+          },
+          "threshold": 28.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_14"
+          },
+          "threshold": 29.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_15"
+          },
+          "threshold": 30.5
+        },
+        {
+          "model": {
+            "type": "minecraft:model",
+            "model": "minecraft:item/compass_16"
+          },
+          "threshold": 31.5
+        }
+      ],
+      "property": "minecraft:compass",
+      "scale": 32.0,
+      "target": "lodestone"
+    },
+    "property": "minecraft:has_component"
+  },
+    "oversized_in_gui": %oversized_in_gui%,
+    "hand_animation_on_swap": %hand_animation_on_swap%,
+    "swap_animation_scale": %swap_animation_scale%
+}
+                    """;
+        }
+
+        @Override
+        public @NotNull JsonObject getDefinition(@NotNull Key itemModel) {
+            String rawDefinition = rawCompassDefinition()
+                    .replace(   "\"model\": \"minecraft:item/compass_",
+                            "\"model\": \"%namespace%:item/%key%/"
+                    );
+            return (JsonObject) JsonParser.parseString(replacePlaceHolders(rawDefinition, itemModel));
+        }
+
+        public @NotNull Pair<Key, JsonObject> generateTwoLayeredModel(@NotNull Key baseModel, String n){
+            NamespacedKey localModel = new NamespacedKey(baseModel.namespace(), baseModel.value() + "/" + n);
+            return Pair.of(localModel, (JsonObject) JsonParser.parseString(replacePlaceHolders("""
+                        {
+                            "parent": "minecraft:item/generated",
+                            "textures": {
+                                "layer0": "%texture_path%/base",
+                                "layer1": "%texture_path%/%n%"
+                            }
+                        }
+                        """.replace("%n%", n), baseModel)));
+        }
+
+        public @NotNull Pair<Key, JsonObject> generateSingleLayeredModel(@NotNull Key modelKey, String n){
+            NamespacedKey newKey = new NamespacedKey(modelKey.namespace(), modelKey.value() + "/" + n);
+            return Pair.of(newKey, generateModel(newKey));
+        }
+
+        @Override
+        public @NotNull List<Pair<Key, JsonObject>> getModels(@NotNull Key modelKey) {
+            List<Pair<Key, JsonObject>> all = new ArrayList<>();
+            for (int i = 0; i < 32; i++) {
+                String n = String.format("%02d", i);
+                if (twoLayered){
+                    all.add(generateTwoLayeredModel(modelKey, n));
+                } else {
+                    all.add(generateSingleLayeredModel(modelKey, n));
+                }
             }
-            return models;
+            return all;
         }
     }
 }

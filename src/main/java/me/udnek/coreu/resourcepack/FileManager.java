@@ -82,27 +82,28 @@ public class FileManager{
         if (dirURL.getProtocol().equals("jar")) {
             /* A JAR path */
             String jarPath = dirURL.getPath().substring(5, dirURL.getPath().indexOf("!")); //strip out only the JAR file
-            JarFile jar;
-            try {
-                jar = new JarFile(URLDecoder.decode(jarPath, StandardCharsets.UTF_8));
+            try (
+                JarFile jar = new JarFile(URLDecoder.decode(jarPath, StandardCharsets.UTF_8))
+            ){
+                Enumeration<JarEntry> entries = jar.entries(); //gives ALL entries in jar
+                Set<String> result = new HashSet<>(); //avoid duplicates in case it is a subdirectory
+                while(entries.hasMoreElements()) {
+                    String name = entries.nextElement().getName();
+                    if (name.startsWith(path)) { //filter according to the path
+                        String entry = name.substring(path.length());
+                        int checkSubdir = entry.indexOf("/");
+                        if (checkSubdir >= 0) {
+                            // if it is a subdirectory, we just return the directory name
+                            entry = entry.substring(0, checkSubdir);
+                        }
+                        result.add(entry);
+                    }
+                }
+                return result.toArray(new String[result.size()]);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            Enumeration<JarEntry> entries = jar.entries(); //gives ALL entries in jar
-            Set<String> result = new HashSet<>(); //avoid duplicates in case it is a subdirectory
-            while(entries.hasMoreElements()) {
-                String name = entries.nextElement().getName();
-                if (name.startsWith(path)) { //filter according to the path
-                    String entry = name.substring(path.length());
-                    int checkSubdir = entry.indexOf("/");
-                    if (checkSubdir >= 0) {
-                        // if it is a subdirectory, we just return the directory name
-                        entry = entry.substring(0, checkSubdir);
-                    }
-                    result.add(entry);
-                }
-            }
-            return result.toArray(new String[result.size()]);
+
         }
 
         throw new UnsupportedOperationException("Cannot list files for URL "+dirURL);

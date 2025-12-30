@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 public class VirtualRpJsonFile extends RpPath{
 
@@ -27,6 +28,6 @@ public class VirtualRpJsonFile extends RpPath{
 
     @Override
     public @NotNull InputStream getInputStream() {
-        return IOUtils.toInputStream(data.toString(), Charsets.UTF_8);
+        return IOUtils.toInputStream(data.toString(), StandardCharsets.UTF_8);
     }
 }

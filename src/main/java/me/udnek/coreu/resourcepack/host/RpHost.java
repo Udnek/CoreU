@@ -31,7 +31,7 @@ public class RpHost implements HttpHandler {
         return CoreU.getInstance().getDataPath().resolve(NAME + ".zip");
     }
 
-    public void start(){
+    public @NotNull HttpServer start(){
         if (!Files.exists(getZipFilePath())) LogUtils.pluginWarning("Resourcepack was not generated! Use /resourcepack");
         RpUtils.updateServerProperties();
 
@@ -40,6 +40,7 @@ public class RpHost implements HttpHandler {
             HttpServer server = HttpServer.create(new InetSocketAddress("0.0.0.0",rpInfo.port), 0);
             server.createContext("/", this);
             server.start();
+            return server;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -54,5 +55,6 @@ public class RpHost implements HttpHandler {
         exchange.sendResponseHeaders(200, fileBytes.length);
         OutputStream stream = exchange.getResponseBody();
         stream.write(fileBytes);
+        stream.close();
     }
 }
