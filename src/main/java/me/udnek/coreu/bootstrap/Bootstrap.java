@@ -34,6 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.stream.Stream;
 
 public class Bootstrap implements PluginBootstrap {
 
@@ -41,8 +42,8 @@ public class Bootstrap implements PluginBootstrap {
     public void bootstrap(BootstrapContext context) {
         final LifecycleEventManager<@NotNull BootstrapContext> lifecycleManager = context.getLifecycleManager();
 
+        // COMMANDS
         lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS, event -> {
-
             Commands registrar = event.registrar();
             registrar.register("helpu", List.of("coreu_help", "?", "h"), CustomHelpCommand.getInstance());
             registrar.register("giveu", List.of("coreu_give"), new CustomItemGiveCommand());
@@ -61,7 +62,7 @@ public class Bootstrap implements PluginBootstrap {
             registrar.register("reset_cooldown", List.of(), new ResetCooldownCommand());
         });
 
-
+        // DATAPACKS
         lifecycleManager.registerEventHandler(LifecycleEvents.DATAPACK_DISCOVERY, (event) -> {
             Path pluginsPath = PluginInitializerManager.instance().pluginDirectoryPath().toAbsolutePath();
             Path extractPath = pluginsPath.resolve("CoreU/extracted_datapacks");
@@ -73,26 +74,27 @@ public class Bootstrap implements PluginBootstrap {
                 FileUtils.cleanDirectory(extractPath.toFile());
 
                 List<Path> datapackPaths = new ArrayList<>();
-                Iterator<Path> iterator = Files.list(pluginsPath).iterator();
-                while (iterator.hasNext()){
-                    Path path = iterator.next().toAbsolutePath();
-                    // System.out.println("FILE PATH: " + path);
-                    File file = path.toFile();
-                    if (!file.isFile()) continue;
-                    if (!file.getName().endsWith(".jar")) continue;
-                    JarFile jarFile = new JarFile(file);
-                    if (jarFile.getEntry("datapack") == null) continue;
-                    System.out.println("found jar with datapack: "+ path);
-                    Path localExtractPath = extractPath.resolve(file.getName().replace(".jar", "/"));
-                    // System.out.println("localExtr: " + localExtractPath);
-                    try {
-                        extractDatapack(localExtractPath, jarFile);
-                    } finally {
-                        jarFile.close();
+                try (Stream<Path> stream = Files.list(pluginsPath)){
+                    Iterator<Path> iterator = stream.iterator();
+                    while (iterator.hasNext()){
+                        Path path = iterator.next().toAbsolutePath();
+                        // System.out.println("FILE PATH: " + path);
+                        File file = path.toFile();
+                        if (!file.isFile()) continue;
+                        if (!file.getName().endsWith(".jar")) continue;
+                        JarFile jarFile = new JarFile(file);
+                        if (jarFile.getEntry("datapack") == null) continue;
+                        System.out.println("found jar with datapack: "+ path);
+                        Path localExtractPath = extractPath.resolve(file.getName().replace(".jar", "/"));
+                        // System.out.println("localExtr: " + localExtractPath);
+                        try {
+                            extractDatapack(localExtractPath, jarFile);
+                        } finally {
+                            jarFile.close();
+                        }
+                        datapackPaths.add(localExtractPath);
                     }
-                    datapackPaths.add(localExtractPath);
                 }
-
 
                 // REGISTERING
                 for (Path datapackPath : datapackPaths) {

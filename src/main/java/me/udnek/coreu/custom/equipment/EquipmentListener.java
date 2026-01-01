@@ -30,7 +30,7 @@ public class EquipmentListener extends SelfRegisteringListener {
 //    }
 
     private void proceed(@NotNull Player player, int oldSlotId, int newSlotId, @Nullable ItemStack oldStack, @Nullable ItemStack newStack){
-        //System.out.println("PROCEEDING: " + player.getName() + " " +oldSlotId + " " + newSlotId + " "+ idOrnull(oldStack) + " " + idOrnull(newStack));
+        //System.out.println("PROCEEDING: " + player.getName() + " " +oldSlotId + " " + newSlotId + " "+ idOrNull(oldStack) + " " + idOrNull(newStack));
         PlayerEquipment data = PlayerEquipmentManager.getInstance().getData(player);
         BaseUniversalSlot oldSlot = new BaseUniversalSlot(oldSlotId);
         BaseUniversalSlot newSlot = new BaseUniversalSlot(newSlotId);
