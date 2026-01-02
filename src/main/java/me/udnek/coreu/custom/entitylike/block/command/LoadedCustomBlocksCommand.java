@@ -6,15 +6,8 @@ import me.udnek.coreu.custom.entitylike.block.CustomBlockEntity;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockManager;
 import me.udnek.coreu.util.Utils;
 import org.bukkit.Location;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabExecutor;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Collection;
-import java.util.List;
 
 public class LoadedCustomBlocksCommand implements BasicCommand {
 

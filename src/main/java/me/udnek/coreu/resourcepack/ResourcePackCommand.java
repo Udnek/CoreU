@@ -9,9 +9,8 @@ import me.udnek.coreu.resourcepack.merger.RpMerger;
 import me.udnek.coreu.serializabledata.SerializableDataManager;
 import me.udnek.coreu.util.LogUtils;
 import org.apache.commons.io.FileUtils;
-import org.bukkit.command.*;
+import org.bukkit.command.ConsoleCommandSender;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.file.Files;

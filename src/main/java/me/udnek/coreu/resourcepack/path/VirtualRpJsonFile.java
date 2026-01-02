@@ -1,6 +1,5 @@
 package me.udnek.coreu.resourcepack.path;
 
-import com.google.common.base.Charsets;
 import com.google.gson.JsonElement;
 import me.udnek.coreu.resourcepack.VirtualResourcePack;
 import org.apache.commons.io.IOUtils;
