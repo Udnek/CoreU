@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class RPGUItemAbstractAbility<ActivationContext> extends AbstractComponentHolder<RPGUItemAbility<?>> implements RPGUItemAbility<ActivationContext> {
@@ -63,6 +64,7 @@ public abstract class RPGUItemAbstractAbility<ActivationContext> extends Abstrac
 
 
     public abstract @Nullable Pair<List<String>, List<String>> getEngAndRuDescription();
+
     public void getEngAndRuProperties(TriConsumer<@NotNull String, @NotNull String, @NotNull List<Component>> Eng_Ru_Args){}
 
     public @Nullable TranslatableThing getTranslations(){
@@ -75,8 +77,8 @@ public abstract class RPGUItemAbstractAbility<ActivationContext> extends Abstrac
 
             for (int i = 0; i < maxLen; i++) {
                 translations.addAdditional("description."+i, TranslatableThing.Translations.ofEngAndRu(
-                        Iterables.get(desc.getLeft(), i, ""),
-                        Iterables.get(desc.getRight(), i, "")
+                        Objects.requireNonNull(Iterables.get(desc.getLeft(), i, "")),
+                        Objects.requireNonNull(Iterables.get(desc.getRight(), i, ""))
                 ));
             }
         }
