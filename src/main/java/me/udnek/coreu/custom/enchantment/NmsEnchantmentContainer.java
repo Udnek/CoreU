@@ -1,7 +1,7 @@
 package me.udnek.coreu.custom.enchantment;
 
-import me.udnek.coreu.nms.NmsContainer;
 import me.udnek.coreu.nms.NmsUtils;
+import me.udnek.coreu.nms.NmsWrapper;
 import me.udnek.coreu.util.Reflex;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentType;
@@ -19,9 +19,12 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NmsEnchantmentContainer extends NmsContainer<Enchantment> {
-    public NmsEnchantmentContainer(@NotNull Enchantment supply) {
-        super(supply);
+public class NmsEnchantmentContainer implements NmsWrapper<@NotNull Enchantment> {
+
+    protected Enchantment enchantment;
+
+    public NmsEnchantmentContainer(@NotNull Enchantment enchantment) {
+        this.enchantment = enchantment;
     }
 
     public void clearEffects(){
@@ -30,11 +33,11 @@ public class NmsEnchantmentContainer extends NmsContainer<Enchantment> {
 
     public void setEffects(@Nullable DataComponentMap effects){
         if (effects == null) effects = DataComponentMap.EMPTY;
-        Reflex.setRecordFieldValue(supply, "effects", effects);
+        Reflex.setRecordFieldValue(enchantment, "effects", effects);
     }
 
     public DataComponentMap getEffects(){
-        return (DataComponentMap) Reflex.getFieldValue(supply, "effects");
+        return Reflex.getFieldValue(enchantment, "effects");
     }
 
     public <T> void setEffect(@NotNull DataComponentType<T> type, @Nullable T effect){
@@ -62,5 +65,10 @@ public class NmsEnchantmentContainer extends NmsContainer<Enchantment> {
         else attributes = new ArrayList<>(attributes);
         attributes.add(effect);
         setEffect(EnchantmentEffectComponents.ATTRIBUTES, attributes);
+    }
+
+    @Override
+    public @NotNull Enchantment getNms() {
+        return enchantment;
     }
 }

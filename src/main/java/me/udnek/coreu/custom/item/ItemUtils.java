@@ -2,24 +2,64 @@ package me.udnek.coreu.custom.item;
 
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.Repairable;
+import me.udnek.coreu.custom.equipment.universal.UniversalInventorySlot;
+import me.udnek.coreu.nms.Nms;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.loot.LootTable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 
 public class ItemUtils {
+
+    public static @NotNull List<LootTable> getWhereItemOccurs(@NotNull Predicate<ItemStack> predicate) {
+        Nms nms = Nms.get();
+        List<LootTable> lootTables = new ArrayList<>();
+        for (LootTable lootTable : nms.getRegisteredLootTables()) {
+            List<ItemStack> itemStacks = nms.getPossibleLoot(lootTable);
+
+            for (ItemStack loot : itemStacks) {
+                if (predicate.test(loot)){
+                    lootTables.add(lootTable);
+                    break;
+                }
+            }
+        }
+        return lootTables;
+    }
+
+    public static @NotNull List<LootTable> getWhereItemOccurs(@NotNull ItemStack target) {
+        return getWhereItemOccurs(stack -> isSameIds(stack, target));
+    }
+
+    public static void givePriorityToSlot(UniversalInventorySlot slot, @NotNull Player player, @NotNull ItemStack stack){
+        ItemStack inSlot = slot.getItem(player);
+        int leftOver;
+        if (inSlot == null || inSlot.isEmpty()){
+            slot.setItem(stack, player);
+            leftOver = 0;
+        }
+        else if (inSlot.isSimilar(stack)){
+            int canFit = inSlot.getMaxStackSize() - inSlot.getAmount();
+            leftOver = Math.max(stack.getAmount() - canFit, 0);
+            slot.addItem(stack.getAmount()-leftOver, player);
+        } else {
+            leftOver = stack.getAmount();
+        }
+        if (leftOver > 0){
+            stack.setAmount(leftOver);
+            giveAndDropLeftover(player, stack);
+        }
+    }
 
     public static void giveAndDropLeftover(@NotNull Player player, ItemStack @NotNull ...itemStack){
         HashMap<Integer, ItemStack> dropItem = player.getInventory().addItem(itemStack);

@@ -8,7 +8,6 @@ import me.udnek.coreu.nms.NmsUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -37,11 +36,11 @@ public abstract class ConstructableCustomEnchantment extends AbstractRegistrable
 
         DataComponentMap effects = DataComponentMap.builder().build();
 
-        HolderSet<Enchantment> exclusiveSet = NmsUtils.createHolderSet(NmsUtils.getRegistry(Registries.ENCHANTMENT), getExclusives());
-        HolderSet<Item> supportedItems = NmsUtils.createHolderSet(BuiltInRegistries.ITEM, getSupportedItems());
+        HolderSet<Enchantment> exclusiveSet = NmsUtils.createHolderSet(Registries.ENCHANTMENT, getExclusives());
+        HolderSet<Item> supportedItems = NmsUtils.createHolderSet(Registries.ITEM, getSupportedItems());
         HolderSet<Item> primaryItems;
         if (getPrimaryItems() != null){
-            primaryItems = NmsUtils.createHolderSet(BuiltInRegistries.ITEM, getPrimaryItems());
+            primaryItems = NmsUtils.createHolderSet(Registries.ITEM, getPrimaryItems());
         } else {
             primaryItems = null;
         }
@@ -67,7 +66,7 @@ public abstract class ConstructableCustomEnchantment extends AbstractRegistrable
 
         Enchantment enchantment = new Enchantment(description, definition, exclusiveSet, effects);
 
-        nms = NmsUtils.registerInRegistry(NmsUtils.getRegistry(Registries.ENCHANTMENT), enchantment, getKey());
+        nms = NmsUtils.registerInRegistry(Registries.ENCHANTMENT, enchantment, getKey());
         bukkit = CraftEnchantment.minecraftHolderToBukkit(nms);
     }
 

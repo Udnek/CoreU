@@ -18,6 +18,7 @@ public interface ItemStackCreator {
             return new ItemStack(material);
         }
     }
+
     class Custom implements ItemStackCreator{
         protected CustomItem customItem;
         public Custom(@NotNull CustomItem customItem){

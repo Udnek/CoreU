@@ -9,7 +9,6 @@ import me.udnek.coreu.custom.entitylike.block.CustomBlockType;
 import me.udnek.coreu.custom.entitylike.entity.CustomEntityType;
 import me.udnek.coreu.custom.equipment.slot.CustomEquipmentSlot;
 import me.udnek.coreu.custom.item.CustomItem;
-import me.udnek.coreu.custom.loot.LootTableRegistry;
 import me.udnek.coreu.custom.sound.CustomSound;
 import me.udnek.coreu.mgu.game.MGUGameType;
 import org.bukkit.plugin.Plugin;
@@ -23,7 +22,6 @@ public class CustomRegistries {
     public static final CustomRegistry<CustomEquipmentSlot> EQUIPMENT_SLOT;
     public static final CustomRegistry<CustomComponentType<?, ?>> COMPONENT_TYPE;
     public static final CustomRegistry<CustomEntityType> ENTITY_TYPE;
-    public static final LootTableRegistry LOOT_TABLE;
     public static final CustomRegistry<CustomEffect> EFFECT;
     public static final CustomRegistry<CustomEnchantment> ENCHANTMENT;
     public static final CustomRegistry<CustomSound> SOUND;
@@ -40,7 +38,6 @@ public class CustomRegistries {
         ATTRIBUTE = addRegistry(new MappedCustomRegistry<>("attribute"));
         EQUIPMENT_SLOT = addRegistry(new MappedCustomRegistry<>("equipment_slot"));
         ENTITY_TYPE = addRegistry(new MappedCustomRegistry<>("entity_type"));
-        LOOT_TABLE = (LootTableRegistry) addRegistry(new LootTableRegistry("loot_table"));
         EFFECT = addRegistry(new MappedCustomRegistry<>("effect"));
         SOUND = addRegistry(new MappedCustomRegistry<>("sound"));
         MGU_GAME_TYPE = addRegistry(new MappedCustomRegistry<>("mgu_game_type"));

@@ -2,19 +2,16 @@ package me.udnek.coreu.custom.item;
 
 import com.google.common.base.Preconditions;
 import me.udnek.coreu.CoreU;
-import me.udnek.coreu.custom.loot.LootTableUtils;
-import me.udnek.coreu.custom.loot.table.CustomLootTable;
 import me.udnek.coreu.custom.recipe.CustomRecipe;
 import me.udnek.coreu.custom.recipe.RecipeManager;
 import me.udnek.coreu.custom.registry.CustomRegistries;
 import me.udnek.coreu.nms.Nms;
-import me.udnek.coreu.nms.loot.entry.NmsCustomLootEntryBuilder;
+import me.udnek.coreu.nms.loot.entry.NmsCustomEntry;
 import me.udnek.coreu.nms.loot.util.ItemStackCreator;
 import me.udnek.coreu.util.LogUtils;
 import me.udnek.coreu.util.SelfRegisteringListener;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
@@ -83,12 +80,8 @@ public class VanillaItemManager extends SelfRegisteringListener {
             }
 
             // loot table removal
-            for (LootTable lootTable : LootTableUtils.getWhereItemOccurs(toRemoveItem)) {
-                if (lootTable instanceof CustomLootTable customLootTable) {
-                    customLootTable.removeItem(toRemoveItem);
-                } else {
-                    Nms.get().removeAllEntriesContains(lootTable, VanillaItemManager::isDisabled);
-                }
+            for (LootTable lootTable : ItemUtils.getWhereItemOccurs(toRemoveItem)) {
+                Nms.get().removeAllEntriesContains(lootTable, VanillaItemManager::isDisabled);
             }
 
             LogUtils.pluginLog("Disabled: " + material);
@@ -119,15 +112,13 @@ public class VanillaItemManager extends SelfRegisteringListener {
             }
 
             // loot table replace
-            for (LootTable lootTable : LootTableUtils.getWhereItemOccurs(oldItem)) {
-                if (lootTable instanceof CustomLootTable customLootTable) {
-                    customLootTable.replaceItem(oldItem, newItem.getItem());
-                } else {
-                    Predicate<ItemStack> predicate = itemStack -> CustomItem.get(itemStack) == newItem;
-                    Pair<Integer, Integer> weightAndQuality = Nms.get().getWeightAndQuality(lootTable, predicate);
-                    if (weightAndQuality == null) continue;
-                    Nms.get().replaceAllEntriesContains(lootTable, predicate, NmsCustomLootEntryBuilder.fromVanilla(lootTable, predicate, new ItemStackCreator.Custom(newItem)));
-                }
+            for (LootTable lootTable : ItemUtils.getWhereItemOccurs(oldItem)) {
+                Predicate<ItemStack> predicate = itemStack -> CustomItem.get(itemStack) == newItem;
+                Nms.get().replaceAllEntriesContains(
+                        lootTable,
+                        predicate,
+                        new NmsCustomEntry.Builder(new ItemStackCreator.Custom(newItem)).fromVanilla(lootTable, predicate)
+                );
             }
 
             LogUtils.pluginLog("Replaced: " + oldMaterial);

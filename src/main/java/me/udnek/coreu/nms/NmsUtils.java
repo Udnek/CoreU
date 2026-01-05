@@ -7,7 +7,7 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.key.Keyed;
 import net.kyori.adventure.text.serializer.json.JSONComponentSerializer;
 import net.minecraft.core.*;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
@@ -33,10 +33,11 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.*;
 import net.minecraft.world.level.storage.loot.functions.ExplorationMapFunction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import net.minecraft.world.level.storage.loot.providers.number.BinomialDistributionGenerator;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import org.bukkit.*;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.CraftLootTable;
@@ -83,14 +84,18 @@ public class NmsUtils {
         return ResourceKey.create(registry, toNmsIdentifier(key));
     }
 
-    public static @NotNull <T> Holder<T> toNms(@NotNull ResourceKey<Registry<T>> registry, @NotNull Keyed keyed){
-        return toNms(getRegistry(registry), keyed);
-    }
-    public static @NotNull <T> Holder<T> toNms(@NotNull Registry<T> registry, @NotNull Keyed keyed){
-        return registry.get(toNmsIdentifier(keyed.key())).get();
+    public static @NotNull <T> Holder<@NotNull T> toNms(@NotNull ResourceKey<Registry<T>> registry, @NotNull Keyed keyed){
+        return toNms(registry, keyed.key());
     }
 
-    public static <T> void editRegistry(@NotNull Registry<T> registry, @NotNull Consumer<Registry<T>> consumer){
+    public static @NotNull <T> Holder<@NotNull T> toNms(@NotNull ResourceKey<Registry<T>> registry, @NotNull Key key){
+        return getRegistry(registry).get(toNmsIdentifier(key)).get();
+    }
+
+
+    public static <T> void editRegistry(@NotNull ResourceKey<Registry<T>> registryKey, @NotNull Consumer<Registry<T>> consumer){
+        Registry<T> registry = getRegistry(registryKey);
+
         Reflex.setFieldValue(registry, "frozen", false);
 
         Object frozenTags = Reflex.getFieldValue(registry, "frozenTags");
@@ -111,7 +116,7 @@ public class NmsUtils {
         Reflex.invokeMethod(registry, Reflex.getMethod(MappedRegistry.class, "refreshTagsInHolders"));
     }
 
-    public static <T> Holder<T> registerInIntrusiveRegistry(@NotNull Registry<T> registry, @NotNull Supplier<T> supplier, @NotNull Key key){
+    public static <T> Holder<T> registerInIntrusiveRegistry(@NotNull ResourceKey<Registry<T>> registry, @NotNull Supplier<T> supplier, @NotNull Key key){
         final Holder<T>[] holder = new Holder[1];
         editRegistry(registry, new Consumer<>() {
             @Override
@@ -123,7 +128,7 @@ public class NmsUtils {
         return holder[0];
     }
 
-    public static <T> Holder<T> registerInRegistry(@NotNull Registry<T> registry, @NotNull T object, @NotNull Key key){
+    public static <T> Holder<T> registerInRegistry(@NotNull ResourceKey<Registry<T>> registry, @NotNull T object, @NotNull Key key){
         final Holder<T>[] holder = new Holder[1];
         editRegistry(registry, new Consumer<>() {
             @Override
@@ -134,7 +139,7 @@ public class NmsUtils {
         return holder[0];
     }
 
-    public static <T> @NotNull HolderSet<T> createHolderSet(@NotNull Registry<T> registry, @Nullable Iterable<? extends Keyed> keys){
+    public static <T> @NotNull HolderSet<T> createHolderSet(@NotNull ResourceKey<Registry<T>> registry, @Nullable Iterable<? extends Keyed> keys){
         if (keys == null) return HolderSet.direct();
         List<Holder<T>> list = new ArrayList<>();
         for (Keyed key : keys) {
@@ -211,12 +216,24 @@ public class NmsUtils {
         };
     }
 
+    public static float averageFromNumberProvider(@NotNull NumberProvider provider, float fallback){
+        return switch (provider) {
+            case ConstantValue(float value) -> value;
+            case UniformGenerator generator ->
+                    (averageFromNumberProvider(Reflex.getFieldValue(generator, "max"), 1)
+                            + averageFromNumberProvider(Reflex.getFieldValue(generator, "min"), 1)) / 2f;
+            case BinomialDistributionGenerator(NumberProvider n, NumberProvider p) ->
+                    averageFromNumberProvider(n, 1) * averageFromNumberProvider(p, 1);
+            default -> fallback;
+        };
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // ENCHANTMENT
     ///////////////////////////////////////////////////////////////////////////
 
     public static @NotNull Holder<Enchantment> registerEnchantment(@NotNull Enchantment enchantment, @NotNull Key key){
-        return registerInRegistry(getRegistry(Registries.ENCHANTMENT), enchantment, key);
+        return registerInRegistry(Registries.ENCHANTMENT, enchantment, key);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -224,7 +241,7 @@ public class NmsUtils {
     ///////////////////////////////////////////////////////////////////////////
 
     public static @NotNull Holder<MobEffect> registerEffect(@NotNull MobEffect effect, @NotNull Key key){
-        return registerInRegistry(BuiltInRegistries.MOB_EFFECT, effect, key);
+        return registerInRegistry(Registries.MOB_EFFECT, effect, key);
     }
 
     public static @NotNull MobEffectInstance toNmsEffect(@NotNull PotionEffect effect){
@@ -282,14 +299,20 @@ public class NmsUtils {
     public static void getPossibleLoot(@NotNull LootTable lootTable, @NotNull Consumer<net.minecraft.world.item.ItemStack> consumer){
         getAllSingletonContainers(lootTable, container -> getPossibleLoot(container, consumer));
     }
+
     public static void getPossibleLoot(@NotNull LootPoolSingletonContainer container, @NotNull Consumer<net.minecraft.world.item.ItemStack> consumer){
         if (container instanceof LootItem){
             Item item = Reflex.<Holder<@NotNull Item>>getFieldValue(container, "item").value();
             if (item == Items.MAP){
                 List<LootItemFunction> functions = Reflex.getFieldValue(container, "functions");
-                for (LootItemFunction function : functions) {
-                    if (!(function instanceof ExplorationMapFunction)) continue;
-                    consumer.accept(new net.minecraft.world.item.ItemStack(Items.FILLED_MAP));
+                boolean containsMapFunction = functions.stream().anyMatch(function -> function instanceof ExplorationMapFunction);
+                if (containsMapFunction){
+                    net.minecraft.world.item.ItemStack map = new net.minecraft.world.item.ItemStack(Items.FILLED_MAP);
+                    functions.forEach(f -> {
+                        if (f instanceof ExplorationMapFunction) return;
+                        f.apply(map, Nms.get().getGenericLootContext());
+                    });
+                    consumer.accept(map);
                     return;
                 }
             }
@@ -297,12 +320,9 @@ public class NmsUtils {
         getPossibleLoot(getEntry(container), consumer);
     }
     public static void getPossibleLoot(@NotNull LootPoolEntry entry, @NotNull Consumer<net.minecraft.world.item.ItemStack> consumer){
-        entry.createItemStack(new Consumer<>() {
-            @Override
-            public void accept(net.minecraft.world.item.ItemStack itemStack) {
-                if (itemStack.getCount() <= 0) itemStack.setCount(1);
-                consumer.accept(itemStack);
-            }
+        entry.createItemStack(itemStack -> {
+            if (itemStack.getCount() <= 0) itemStack.setCount(1);
+            consumer.accept(itemStack);
         }, Nms.get().getGenericLootContext());
     }
     // misc

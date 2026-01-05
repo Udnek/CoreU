@@ -66,7 +66,7 @@ public class LootContextBuilder {
         return tryPut(LootContextParams.ENCHANTMENT_ACTIVE, active);
     }
 
-    protected <T> @NotNull LootContextBuilder tryPut(@NotNull ContextKey<T> key, T value){
+    protected <T> @NotNull LootContextBuilder tryPut(@NotNull ContextKey<@NotNull T> key, T value){
         paramsBuilder.withParameter(key, value);
         return this;
     }

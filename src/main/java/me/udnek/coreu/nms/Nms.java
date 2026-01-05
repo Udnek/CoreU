@@ -6,9 +6,9 @@ import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.ints.IntImmutableList;
 import me.udnek.coreu.custom.enchantment.NmsEnchantmentContainer;
 import me.udnek.coreu.nms.loot.LootContextBuilder;
-import me.udnek.coreu.nms.loot.entry.NmsCustomLootEntryBuilder;
-import me.udnek.coreu.nms.loot.table.NmsDefaultLootTableContainer;
-import me.udnek.coreu.nms.loot.table.NmsLootTableContainer;
+import me.udnek.coreu.nms.loot.entry.NmsCustomEntry;
+import me.udnek.coreu.nms.loot.table.DefaultLootTableWrapper;
+import me.udnek.coreu.nms.loot.table.LootTableWrapper;
 import me.udnek.coreu.nms.loot.util.NmsFields;
 import me.udnek.coreu.util.LogUtils;
 import me.udnek.coreu.util.Reflex;
@@ -27,6 +27,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.ReloadableServerRegistries;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.context.ContextKeySet;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -39,6 +40,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.BundleContents;
+import net.minecraft.world.item.component.MapDecorations;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
@@ -56,7 +58,9 @@ import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.pathfinder.Path;
+import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapDecorationType;
+import net.minecraft.world.level.saveddata.maps.MapDecorationTypes;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -65,7 +69,9 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntry;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
+import net.minecraft.world.level.storage.loot.functions.ExplorationMapFunction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.util.TriConsumer;
@@ -109,13 +115,14 @@ import java.util.stream.Stream;
 
 public class Nms {
 
-    private LootContext genericLootContext;
-
     private static Nms instance;
+
     public static Nms get(){
         if (instance == null) instance = new Nms();
         return instance;
     }
+
+    private LootContext genericLootContext;
 
     public @NotNull LootContext getGenericLootContext(){
         if (genericLootContext == null){
@@ -305,14 +312,14 @@ public class Nms {
     // LOOT
     ///////////////////////////////////////////////////////////////////////////
 
-    public @NotNull NmsLootTableContainer getLootTableContainer(@NotNull org.bukkit.loot.LootTable lootTable){
-        return new NmsDefaultLootTableContainer(NmsUtils.toNmsLootTable(lootTable));
+    public @NotNull LootTableWrapper getLootTableWrapper(@NotNull org.bukkit.loot.LootTable lootTable){
+        return new DefaultLootTableWrapper(NmsUtils.toNmsLootTable(lootTable));
     }
 
     public void removeAllEntriesContains(@NotNull org.bukkit.loot.LootTable bukkitLootTable, @NotNull Predicate<ItemStack> predicate){
         replaceAllEntriesContains(bukkitLootTable, predicate, null);
     }
-    public void replaceAllEntriesContains(@NotNull org.bukkit.loot.LootTable bukkitLootTable, @NotNull Predicate<ItemStack> predicate, @Nullable NmsCustomLootEntryBuilder newEntry){
+    public void replaceAllEntriesContains(@NotNull org.bukkit.loot.LootTable bukkitLootTable, @NotNull Predicate<ItemStack> predicate, @Nullable NmsCustomEntry.Builder newEntry){
         LootTable lootTable = NmsUtils.toNmsLootTable(bukkitLootTable);
 
         List<LootPoolEntryContainer> toReplace = new ArrayList<>();
@@ -333,37 +340,15 @@ public class Nms {
                 if (toReplace.contains(container)){
                     changed = true;
                     if (newEntry != null) newContainers.add(newEntry.build());
-                } else { newContainers.add(container); }
-
+                } else {
+                    newContainers.add(container);
+                }
             }
             if (changed){
                 LogUtils.pluginLog("Changed loot entry container from: " + lootTable.craftLootTable.getKey());
                 Reflex.setFieldValue(pool, NmsFields.ENTRIES, newContainers);
             }
         }
-    }
-
-    public @Nullable org.apache.commons.lang3.tuple.Pair<Integer, Integer> getWeightAndQuality(@NotNull org.bukkit.loot.LootTable bukkitLootTable, @NotNull Predicate<ItemStack> predicate){
-        LootTable lootTable = NmsUtils.toNmsLootTable(bukkitLootTable);
-
-        final Integer[] result = {null, null};
-        AtomicBoolean found = new AtomicBoolean(false);
-        for (LootPoolSingletonContainer container : NmsUtils.getAllSingletonContainers(lootTable)) {
-            LootPoolEntry entry = NmsUtils.getEntry(container);
-            NmsUtils.getPossibleLoot(entry, itemStack -> {
-                if (found.get()) return;
-                if (predicate.test(NmsUtils.toBukkitItemStack(itemStack))) {
-                    int weight = Reflex.getFieldValue(container, "weight");
-                    int quality = Reflex.getFieldValue(container, "quality");
-                    result[0] = weight;
-                    result[1] = quality;
-                    found.set(true);
-                }
-            });
-
-            if (found.get()) return org.apache.commons.lang3.tuple.Pair.of(result[0], result[1]);
-        }
-        return null;
     }
 
     public @NotNull List<String> getRegisteredLootTableIds(){
@@ -436,7 +421,7 @@ public class Nms {
         }
     }
 
-    public void modifyVaultsInStructure(@NotNull NamespacedKey structureId, Function<ItemStack, ItemStack> oldKeyToNew){
+    public void modifyVaultsInStructure(@NotNull NamespacedKey structureId, Function<@NotNull ItemStack, @NotNull ItemStack> oldKeyToNew){
         Codec<VaultConfig> vaultCodec = Reflex.getFieldValue(VaultConfig.class, "CODEC");
         modifyStructure(structureId, new Function<>() {
             @Override
@@ -469,7 +454,7 @@ public class Nms {
         });
     }
 
-    private void modifyStructure(@NotNull NamespacedKey structureId, Function<StructureTemplate.StructureBlockInfo, Boolean> takeAndContinue){
+    private void modifyStructure(@NotNull NamespacedKey structureId, Function<StructureTemplate.@NotNull StructureBlockInfo, @NotNull Boolean> takeAndContinue){
         Structure structure = NmsUtils.getRegistry(Registries.STRUCTURE).getOptional(CraftNamespacedKey.toMinecraft(structureId)).orElse(null);
         if (structure == null) return;
         NmsStructureProceeder proceeder = new NmsStructureProceeder(structureId, structure);
@@ -477,41 +462,57 @@ public class Nms {
         proceeder.iterateThroughBlocks(takeAndContinue);
     }
 
-    public @Nullable ItemStack generateExplorerMap(Location location, org.bukkit.generator.structure.Structure bukkitStructure, int radius, boolean skipKnownStructures){
-        return generateExplorerMap(location, bukkitStructure, radius, skipKnownStructures, MapCursor.Type.RED_X);
+    public @Nullable ItemStack generateExplorerMap(@NotNull Location location,
+                                                   @NotNull Set<Key> structures,
+                                                   int chunkRadius,
+                                                   boolean skipKnownStructures,
+                                                   MapCursor.Type icon,
+                                                   byte zoom)
+    {
+        return generateExplorerMap(location, structures, chunkRadius, skipKnownStructures, icon, zoom, true, true);
     }
-    public @Nullable ItemStack generateExplorerMap(Location location, org.bukkit.generator.structure.Structure bukkitStructure, int radius, boolean skipKnownStructures, MapCursor.Type type){
-        ServerLevel serverLevel = NmsUtils.toNmsWorld(location.getWorld());
 
-        CraftStructure craftStructure = (CraftStructure) bukkitStructure;
-        if (craftStructure == null){
-            LogUtils.pluginLog("structure not found in registry!");
-            return null;
-        }
-        Structure structure = craftStructure.getHandle();
-        HolderSet.Direct<Structure> holders = HolderSet.direct(Holder.direct(structure));
+    public @Nullable ItemStack generateExplorerMap(@NotNull Location location,
+                                                   @NotNull Set<Key> structures,
+                                                   int chunkRadius,
+                                                   boolean skipKnownStructures,
+                                                   @NotNull MapCursor.Type icon,
+                                                   byte zoom,
+                                                   boolean trackingPosition,
+                                                   boolean unlimitedTracking)
+    {
+        ServerLevel level = NmsUtils.toNmsWorld(location.getWorld());
 
-        Pair<BlockPos, Holder<Structure>> pair =
-                serverLevel.getChunkSource().getGenerator().findNearestMapStructure(
-                        serverLevel, holders, CraftLocation.toBlockPosition(location), radius, skipKnownStructures);
-        if (pair == null){
-            LogUtils.pluginLog("structure not found in world!");
-            return null;
-        }
+        Registry<@NotNull Structure> registry = NmsUtils.getRegistry(Registries.STRUCTURE);
 
-        Holder<MapDecorationType> mapDecorationTypeHolder = CraftMapCursor.CraftType.bukkitToMinecraftHolder(type);
+        List<Holder.Reference<@NotNull Structure>> holders = structures.stream()
+                .map(id -> Holder.Reference.createStandAlone(
+                        registry, ResourceKey.create(Registries.STRUCTURE, NmsUtils.toNmsIdentifier(id)))).toList();
 
-        BlockPos structureLocation = pair.getFirst();
-        net.minecraft.world.item.ItemStack mapItem = MapItem.create(serverLevel, structureLocation.getX(), structureLocation.getZ(), (byte) 2, true, true);
-        MapItem.renderBiomePreviewMap(serverLevel, mapItem);
-        MapItemSavedData.addTargetDecoration(mapItem, structureLocation, "+", mapDecorationTypeHolder);
+        HolderSet.Direct<@NotNull Structure> structureSet = HolderSet.direct(holders);
+        @Nullable Pair<BlockPos, Holder<@NotNull Structure>> result = level.getChunkSource().getGenerator().findNearestMapStructure(
+                level,
+                structureSet,
+                NmsUtils.toNmsBlockPos(location.getBlock()),
+                chunkRadius,
+                skipKnownStructures
+        );
+        if (result == null) return null;
 
-        return NmsUtils.toBukkitItemStack(mapItem);
+        BlockPos pos = result.getFirst();
+
+        net.minecraft.world.item.ItemStack map = MapItem.create(level, pos.getX(), pos.getZ(), zoom, trackingPosition, unlimitedTracking);
+        MapItem.renderBiomePreviewMap(level, map);
+        MapItemSavedData.addTargetDecoration(map, pos, "+", CraftMapCursor.CraftType.bukkitToMinecraftHolder(icon));
+
+        return NmsUtils.toBukkitItemStack(map);
     }
-    public void generateBiomePreviewMap(World world, ItemStack itemStack){
+
+    public void generateBiomePreviewMap(@NotNull World world, @NotNull ItemStack map){
         ServerLevel serverLevel = NmsUtils.toNmsWorld(world);
-        MapItem.renderBiomePreviewMap(serverLevel, NmsUtils.toNmsItemStack(itemStack));
+        MapItem.renderBiomePreviewMap(serverLevel, NmsUtils.toNmsItemStack(map));
     }
+
     public boolean containStructure(Chunk bukitChunk, org.bukkit.generator.structure.Structure bukkitStructure){
         Structure targerStructure = ((CraftStructure) bukkitStructure).getHandle();
         ChunkAccess chunk = ((CraftChunk) bukitChunk).getHandle(ChunkStatus.FEATURES);
@@ -558,6 +559,7 @@ public class Nms {
         LogUtils.log("not in bounds");
         return false;
     }
+
     private StructureStart findStructureStartIn(ServerLevel world, Structure structure, int xCenter, int zCenter, int quadRadius){
         for (int x = xCenter-quadRadius; x <= xCenter+quadRadius; x++) {
             for (int z = zCenter-quadRadius; z <= zCenter+quadRadius; z++) {
