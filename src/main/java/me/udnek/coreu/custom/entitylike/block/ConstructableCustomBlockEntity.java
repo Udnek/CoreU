@@ -16,7 +16,7 @@ public abstract class ConstructableCustomBlockEntity<T extends TileState> extend
     }
 
     @Override
-    public @NotNull TileState getReal() {
+    public @NotNull T getReal() {
         return tileState;
     }
 }

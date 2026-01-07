@@ -61,7 +61,7 @@ public class Reflex {
         }
     }
 
-    public static void setRecordFieldValue(@NotNull Object instance, @NotNull String fieldName, @Nullable Object value) {
+    public static void setRecordFieldValue(@NotNull Record instance, @NotNull String fieldName, @Nullable Object value) {
         try {
             Field field = instance.getClass().getDeclaredField(fieldName);
 

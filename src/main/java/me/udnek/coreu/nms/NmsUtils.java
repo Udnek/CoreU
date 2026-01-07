@@ -356,9 +356,9 @@ public class NmsUtils {
         Identifier resourceLocation = Identifier.parse(id);
         return ResourceKey.create(Registries.LOOT_TABLE, resourceLocation);
     }
-    public static @NotNull LootTable getLootTable(@NotNull ResourceKey<@NotNull LootTable> resourceKey){
-        ReloadableServerRegistries.Holder registries = ((CraftServer) Bukkit.getServer()).getServer().reloadableRegistries();
-        return registries.getLootTable(resourceKey);
+    public static @Nullable LootTable getLootTable(@NotNull ResourceKey<@NotNull LootTable> key){
+        ReloadableServerRegistries.Holder registries = MinecraftServer.getServer().reloadableRegistries();
+        return registries.lookup().lookup(Registries.LOOT_TABLE).flatMap((registryLookup) -> registryLookup.get(key)).map(net.minecraft.core.Holder::value).orElse(null);
     }
 }
 

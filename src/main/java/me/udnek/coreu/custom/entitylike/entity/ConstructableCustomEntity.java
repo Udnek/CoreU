@@ -25,8 +25,8 @@ public abstract class ConstructableCustomEntity<VType extends Entity> extends Ab
         return entity;
     }
 
-    @Override
     @MustBeInvokedByOverriders
+    @Override
     public void remove() {
         entity.remove();
         CustomEntityManager.getInstance().unloadTicking(this);

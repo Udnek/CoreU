@@ -27,6 +27,7 @@ import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,12 +37,11 @@ import java.util.Map;
 public class CustomBlockManager extends EntityLikeManager<TileState, CustomBlockType, CustomBlockEntity> implements Listener {
 
     public static final int MAX_CUSTOM_BLOCK_PACKETS_PER_TICK = 50;
-
-    private static CustomBlockManager instance;
+    private static @Nullable CustomBlockManager instance;
 
     private final HashMap<Block, BreakData> breaking = new HashMap<>();
 
-    public static CustomBlockManager getInstance() {
+    public static @NotNull CustomBlockManager getInstance() {
         if (instance == null) {
             instance = new CustomBlockManager();
             Bukkit.getPluginManager().registerEvents(instance, CoreU.getInstance());
@@ -179,7 +179,7 @@ public class CustomBlockManager extends EntityLikeManager<TileState, CustomBlock
     @EventHandler
     public void onHopperInteract(HopperInventorySearchEvent event){
         CustomBlockType.consumeIfCustom(event.getSearchBlock(), block ->
-                block.getComponents().getOrDefault(CustomComponentType.HOPPER_INTERACTING_BLOCK).onHopperInteract(block, event)
+                block.getComponents().getOrDefault(CustomComponentType.HOPPER_INTERACTING_BLOCK).onHopperSearch(block, event)
         );
     }
 
@@ -209,6 +209,7 @@ public class CustomBlockManager extends EntityLikeManager<TileState, CustomBlock
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        assert event.getClickedBlock() != null;
         CustomBlockType customBlockType = CustomBlockType.get(event.getClickedBlock());
         if (customBlockType == null) return;
         customBlockType.getComponents().getOrDefault(CustomComponentType.RIGHT_CLICKABLE_BLOCK).onRightClick(customBlockType, event);

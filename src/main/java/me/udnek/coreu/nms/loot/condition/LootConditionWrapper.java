@@ -47,7 +47,7 @@ public class LootConditionWrapper implements NmsWrapper<@NotNull LootItemConditi
         ));
     }
 
-    protected LootItemCondition condition;
+    protected final LootItemCondition condition;
 
     public LootConditionWrapper(@NotNull LootItemCondition condition) {
         this.condition = condition;
@@ -55,28 +55,32 @@ public class LootConditionWrapper implements NmsWrapper<@NotNull LootItemConditi
 
     public @NotNull LootConditionPortrait getPortrait(){
         LootConditionPortrait portrait = new LootConditionPortrait();
-        if (condition instanceof TimeCheck time){
-            portrait.period = time.period().orElse(null);
+        switch (condition) {
+            case TimeCheck time -> portrait.period = time.period().orElse(null);
+
             // todo
 //            IntRange value = time.value();
 //            portrait.range = Range.of(value);
-        } else if (condition instanceof LocationCheck locationCheck){
-            LocationPredicate predicate = locationCheck.predicate().orElse(null);
-            if (predicate == null) return portrait;
-            predicate.biomes().ifPresent(holders -> {
-                holders.forEach(biomeHolder -> {
-                    portrait.biomes.add(CraftBiome.minecraftHolderToBukkit(biomeHolder));
+            case LocationCheck locationCheck -> {
+                LocationPredicate predicate = locationCheck.predicate().orElse(null);
+                if (predicate == null) return portrait;
+                predicate.biomes().ifPresent(holders -> {
+                    holders.forEach(biomeHolder -> {
+                        portrait.biomes.add(CraftBiome.minecraftHolderToBukkit(biomeHolder));
+                    });
                 });
-            });
-            predicate.structures().ifPresent(holders -> {
-                holders.forEach(structureHolder -> {
-                    portrait.structures.add(CraftStructure.minecraftHolderToBukkit(structureHolder));
+                predicate.structures().ifPresent(holders -> {
+                    holders.forEach(structureHolder -> {
+                        portrait.structures.add(CraftStructure.minecraftHolderToBukkit(structureHolder));
+                    });
                 });
-            });
-        } else if (condition instanceof LootItemRandomChanceCondition randomChanceCondition){
-            portrait.randomChance = NmsUtils.averageFromNumberProvider(randomChanceCondition.chance(), 1);
-        } else if (condition instanceof LootItemRandomChanceWithEnchantedBonusCondition randomChanceCondition){
-            portrait.unenchantedRandomChance = randomChanceCondition.unenchantedChance();
+            }
+            case LootItemRandomChanceCondition randomChanceCondition ->
+                    portrait.randomChance = NmsUtils.averageFromNumberProvider(randomChanceCondition.chance(), 1);
+            case LootItemRandomChanceWithEnchantedBonusCondition randomChanceCondition ->
+                    portrait.unenchantedRandomChance = randomChanceCondition.unenchantedChance();
+            default -> {
+            }
         }
         return portrait;
     }

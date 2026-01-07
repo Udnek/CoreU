@@ -16,7 +16,7 @@ public class LootFunctionWrapper implements NmsWrapper<@NotNull LootItemFunction
         return functions.stream().map(LootFunctionWrapper::getNms).toList();
     }
 
-    protected @NotNull LootItemFunction function;
+    protected final @NotNull LootItemFunction function;
 
     public LootFunctionWrapper(@NotNull LootItemFunction function) {
         this.function = function;

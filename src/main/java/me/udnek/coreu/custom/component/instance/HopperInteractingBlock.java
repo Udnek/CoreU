@@ -11,7 +11,7 @@ public interface HopperInteractingBlock extends CustomComponent<CustomBlockType>
 
     HopperInteractingBlock DENY = new HopperInteractingBlock() {
         @Override
-        public void onHopperInteract(@NotNull CustomBlockType blockType, @NotNull HopperInventorySearchEvent event) {
+        public void onHopperSearch(@NotNull CustomBlockType blockType, @NotNull HopperInventorySearchEvent event) {
             event.setInventory(null);
         }
         @Override
@@ -24,7 +24,7 @@ public interface HopperInteractingBlock extends CustomComponent<CustomBlockType>
         }
     };
 
-    void onHopperInteract(@NotNull CustomBlockType blockType, @NotNull HopperInventorySearchEvent event);
+    void onHopperSearch(@NotNull CustomBlockType blockType, @NotNull HopperInventorySearchEvent event);
 
     void onItemMoveInto(@NotNull CustomBlockType blockType, @NotNull InventoryMoveItemEvent event);
     void onItemMoveFrom(@NotNull CustomBlockType blockType, @NotNull InventoryMoveItemEvent event);

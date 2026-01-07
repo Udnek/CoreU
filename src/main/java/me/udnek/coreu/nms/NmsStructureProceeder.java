@@ -12,6 +12,7 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.random.Weighted;
+import net.minecraft.world.entity.vehicle.minecart.MinecartSpawner;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.JigsawBlockEntity;
@@ -29,6 +30,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.level.storage.loot.LootTable;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Minecart;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
@@ -39,7 +41,7 @@ import java.util.*;
 public class NmsStructureProceeder {
 
     private final StructureTemplateManager structureManager;
-    private final Registry<StructureTemplatePool> poolRegistry;
+    private final Registry<@NotNull StructureTemplatePool> poolRegistry;
     private final Method getTemplateMethod;
     private final Structure structure;
 
@@ -58,9 +60,9 @@ public class NmsStructureProceeder {
         alreadyCheckedPoolIds = new HashSet<>();
     }
 
-    public @NotNull Collection<ResourceKey<LootTable>> extractLootTables(){
+    public @NotNull Collection<ResourceKey<@NotNull LootTable>> extractLootTables(){
         Codec<VaultConfig> vaultCodec = Reflex.getFieldValue(VaultConfig.class, "CODEC");
-        HashMap<String, ResourceKey<LootTable>> lootTables = new HashMap<>();
+        HashMap<String, ResourceKey<@NotNull LootTable>> lootTables = new HashMap<>();
         for (StructureTemplate template : new HashSet<>(templates)) {
             for (StructureTemplate.Palette palette : template.palettes) {
                 for (StructureTemplate.StructureBlockInfo info : palette.blocks()) {
@@ -68,7 +70,7 @@ public class NmsStructureProceeder {
                     if (nbt == null) continue;
 
                     // ANY LOOTABLE
-                    final ResourceKey<LootTable> lootTable = nbt.read("LootTable", LootTable.KEY_CODEC).orElse(null);
+                    final ResourceKey<@NotNull LootTable> lootTable = nbt.read("LootTable", LootTable.KEY_CODEC).orElse(null);
                     if (lootTable != null){
                         lootTables.put(lootTable.toString(), lootTable);
                         continue;
@@ -91,7 +93,7 @@ public class NmsStructureProceeder {
                                 config = nbt.read(key, TrialSpawnerConfig.DIRECT_CODEC).orElse(null);
                             }
                             if (config == null) continue;
-                            for (Weighted<ResourceKey<LootTable>> weighted : config.lootTablesToEject().unwrap()) {
+                            for (Weighted<@NotNull ResourceKey<@NotNull LootTable>> weighted : config.lootTablesToEject().unwrap()) {
                                 lootTables.put(weighted.value().toString(), weighted.value());
                             }
                         }
@@ -102,7 +104,7 @@ public class NmsStructureProceeder {
         return lootTables.values();
     }
 
-    public void iterateThroughBlocks(@NotNull Function<StructureTemplate.StructureBlockInfo, Boolean> takeAndContinue){
+    public void iterateThroughBlocks(@NotNull Function<StructureTemplate.@NotNull StructureBlockInfo, @NotNull Boolean> takeAndContinue){
         for (StructureTemplate template : new HashSet<>(templates)) {
             for (StructureTemplate.Palette palette : template.palettes) {
                 for (StructureTemplate.StructureBlockInfo info : palette.blocks()) {

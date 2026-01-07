@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 
 public class DefaultLootTableWrapper implements LootTableWrapper {
 
-    @NotNull LootTable lootTable;
+    protected final @NotNull LootTable lootTable;
 
     public DefaultLootTableWrapper(@NotNull LootTable lootTable) {
         this.lootTable = lootTable;

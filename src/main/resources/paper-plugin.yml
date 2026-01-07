@@ -1,13 +1,26 @@
 name: CoreU
-version: '${project.version}'
+version: '1.0-SNAPSHOT'
 main: me.udnek.coreu.CoreU
 description: CoreU
 api-version: '1.21.11'
 bootstrapper: me.udnek.coreu.bootstrap.Bootstrap
-#loader: io.papermc.testplugin.TestPluginLoader
+
+mixins: [
+  "coreu.mixins.json"
+]
+wideners: [
+  "eclipse.accesswidener"
+]
+datapack-entry: true
+
 
 dependencies:
   server:
+#    Eclipse:
+#      load: BEFORE
+#      required: true
+#      join-classpath: true
+
     ProtocolLib:
       load: BEFORE
       required: true

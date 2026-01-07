@@ -37,7 +37,7 @@ import java.util.function.Predicate;
 
 public class SingletonEntryWrapper implements EntryWrapper, NmsFunctioned {
 
-    protected @NotNull LootPoolSingletonContainer container;
+    protected final @NotNull LootPoolSingletonContainer container;
 
     public SingletonEntryWrapper(@NotNull LootPoolSingletonContainer container) {
         this.container = container;

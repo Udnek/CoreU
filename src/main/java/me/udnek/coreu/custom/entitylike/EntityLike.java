@@ -6,7 +6,10 @@ public interface EntityLike<Real, Type extends EntityLikeTickingType<?, ?>> {
     void load(@NotNull Real real);
     void unload();
     void tick();
-    void remove();
+
+    /**
+     * @return false, if entityLike should be unloaded next tick
+     */
     boolean isValid();
     @NotNull Real getReal();
     @NotNull Type getType();

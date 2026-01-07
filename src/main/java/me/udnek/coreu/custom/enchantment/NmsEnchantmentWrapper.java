@@ -19,11 +19,11 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NmsEnchantmentContainer implements NmsWrapper<@NotNull Enchantment> {
+public class NmsEnchantmentWrapper implements NmsWrapper<@NotNull Enchantment> {
 
-    protected Enchantment enchantment;
+    protected @NotNull Enchantment enchantment;
 
-    public NmsEnchantmentContainer(@NotNull Enchantment enchantment) {
+    public NmsEnchantmentWrapper(@NotNull Enchantment enchantment) {
         this.enchantment = enchantment;
     }
 

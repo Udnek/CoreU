@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 
 public class CompositeEntryWrapper implements EntryWrapper {
 
-    protected CompositeEntryBase entry;
+    protected final CompositeEntryBase entry;
 
     public CompositeEntryWrapper(@NotNull CompositeEntryBase entry) {
         this.entry = entry;

@@ -1,0 +1,7 @@
+{
+  "mixins": [
+    "IngredientMixin"
+  ],
+  "package": "me.udnek.coreu.mixin",
+  "compatibilityLevel": "JAVA_21"
+}

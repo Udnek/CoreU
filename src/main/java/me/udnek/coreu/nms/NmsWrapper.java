@@ -1,5 +1,7 @@
 package me.udnek.coreu.nms;
 
+import org.jetbrains.annotations.NotNull;
+
 public interface NmsWrapper<T> {
-    T getNms();
+    @NotNull T getNms();
 }

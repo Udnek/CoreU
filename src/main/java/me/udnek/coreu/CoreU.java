@@ -1,6 +1,8 @@
 package me.udnek.coreu;
 
 import com.sun.net.httpserver.HttpServer;
+import io.papermc.paper.registry.data.dialog.ActionButton;
+import io.papermc.paper.registry.keys.StructureKeys;
 import me.udnek.coreu.custom.attribute.CustomAttribute;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockManager;
 import me.udnek.coreu.custom.entitylike.entity.CustomEntityManager;
@@ -19,7 +21,12 @@ import me.udnek.coreu.custom.registry.CustomRegistries;
 import me.udnek.coreu.custom.registry.CustomRegistry;
 import me.udnek.coreu.custom.registry.InitializationProcess;
 import me.udnek.coreu.mgu.MGUItems;
+import me.udnek.coreu.nms.MobCategoryWrapper;
+import me.udnek.coreu.nms.Nms;
 import me.udnek.coreu.nms.PacketHandler;
+import me.udnek.coreu.nms.structure.BoundingBoxTypeWrapper;
+import me.udnek.coreu.nms.structure.StructureSpawnOverrideWrapper;
+import me.udnek.coreu.nms.structure.StructureWrapper;
 import me.udnek.coreu.resourcepack.ResourcePackablePlugin;
 import me.udnek.coreu.resourcepack.host.RpHost;
 import me.udnek.coreu.rpgu.attribute.RPGUAttributes;
@@ -28,10 +35,14 @@ import me.udnek.coreu.rpgu.component.ability.property.type.AttributeBasedPropert
 import me.udnek.coreu.serializabledata.SerializableDataManager;
 import me.udnek.coreu.util.LogUtils;
 import net.kyori.adventure.key.Key;
+import net.minecraft.world.level.block.entity.BlastFurnaceBlockEntity;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
 
 public final class CoreU extends JavaPlugin implements ResourcePackablePlugin {
 

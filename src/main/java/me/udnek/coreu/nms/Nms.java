@@ -4,12 +4,13 @@ import com.google.common.base.Function;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.ints.IntImmutableList;
-import me.udnek.coreu.custom.enchantment.NmsEnchantmentContainer;
+import me.udnek.coreu.custom.enchantment.NmsEnchantmentWrapper;
 import me.udnek.coreu.nms.loot.LootContextBuilder;
 import me.udnek.coreu.nms.loot.entry.NmsCustomEntry;
 import me.udnek.coreu.nms.loot.table.DefaultLootTableWrapper;
 import me.udnek.coreu.nms.loot.table.LootTableWrapper;
 import me.udnek.coreu.nms.loot.util.NmsFields;
+import me.udnek.coreu.nms.structure.StructureWrapper;
 import me.udnek.coreu.util.LogUtils;
 import me.udnek.coreu.util.Reflex;
 import net.kyori.adventure.key.Key;
@@ -19,6 +20,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundCooldownPacket;
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
@@ -27,7 +29,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.ReloadableServerRegistries;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.TagKey;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.context.ContextKeySet;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -40,7 +42,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.BundleContents;
-import net.minecraft.world.item.component.MapDecorations;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
@@ -58,9 +59,6 @@ import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.pathfinder.Path;
-import net.minecraft.world.level.saveddata.maps.MapDecoration;
-import net.minecraft.world.level.saveddata.maps.MapDecorationType;
-import net.minecraft.world.level.saveddata.maps.MapDecorationTypes;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -69,9 +67,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntry;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
-import net.minecraft.world.level.storage.loot.functions.ExplorationMapFunction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.minecraft.world.level.storage.loot.predicates.LocationCheck;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.util.TriConsumer;
@@ -208,7 +204,7 @@ public class Nms {
                 nmsWorld,
                 NmsUtils.toNmsBlockPos(block),
                 NmsUtils.toNmsBlockState(block.getState()),
-                nmsWorld.getBlockEntity(NmsUtils.toNmsBlockPos(block), BlockEntityType.DISPENSER).orElse(null)
+                nmsWorld.getBlockEntity(NmsUtils.toNmsBlockPos(block), BlockEntityType.DISPENSER).orElseThrow()
         );
 
         ItemEntity nmsItemEntity = Reflex.invokeMethod(null, Reflex.getMethod(DefaultDispenseItemBehavior.class, "prepareItem"),
@@ -249,8 +245,6 @@ public class Nms {
         return placeBlockFromItem(player, itemStack, hand, hitPos, blockFace, clicked, false);
     }
 
-
-
     public @NotNull Nms.BlockPlaceResult placeBlockFromItem(@NotNull Player player, @Nullable ItemStack itemStack, @NotNull EquipmentSlot hand, @NotNull Location hitPos, @NotNull BlockFace blockFace, @NotNull Block clicked, boolean isInside){
         net.minecraft.world.item.ItemStack stack = NmsUtils.toNmsItemStack(itemStack);
         if (!(stack.getItem() instanceof BlockItem blockItem)) return new BlockPlaceResult(false, itemStack);
@@ -285,6 +279,7 @@ public class Nms {
         BlockState state = Reflex.getFieldValue(material.createBlockData().createBlockState(), "data");
         return state.getDestroyProgress(NmsUtils.toNmsPlayer(player), null, null);
     }
+
     public int getBreakSpeed(@NotNull Player player, @NotNull Material material){
         return (int) (1 / getBreakProgressPerTick(player, material));
     }
@@ -301,12 +296,12 @@ public class Nms {
     // ENCHANTMENT
     ///////////////////////////////////////////////////////////////////////////
 
-    public @NotNull NmsEnchantmentContainer getEnchantment(@NotNull Enchantment bukkitEnchantment){
-        Registry<net.minecraft.world.item.enchantment.Enchantment> registry = NmsUtils.getRegistry(Registries.ENCHANTMENT);
+    public @NotNull NmsEnchantmentWrapper getEnchantmentWrapper(@NotNull Enchantment bukkitEnchantment){
+        Registry<net.minecraft.world.item.enchantment.@NotNull Enchantment> registry = NmsUtils.getRegistry(Registries.ENCHANTMENT);
         net.minecraft.world.item.enchantment.Enchantment enchantment = registry.getValue(NmsUtils.toNmsIdentifier(bukkitEnchantment.getKey()));
-        return new NmsEnchantmentContainer(enchantment);
+        assert enchantment != null;
+        return new NmsEnchantmentWrapper(enchantment);
     }
-
 
     ///////////////////////////////////////////////////////////////////////////
     // LOOT
@@ -319,6 +314,7 @@ public class Nms {
     public void removeAllEntriesContains(@NotNull org.bukkit.loot.LootTable bukkitLootTable, @NotNull Predicate<ItemStack> predicate){
         replaceAllEntriesContains(bukkitLootTable, predicate, null);
     }
+
     public void replaceAllEntriesContains(@NotNull org.bukkit.loot.LootTable bukkitLootTable, @NotNull Predicate<ItemStack> predicate, @Nullable NmsCustomEntry.Builder newEntry){
         LootTable lootTable = NmsUtils.toNmsLootTable(bukkitLootTable);
 
@@ -358,6 +354,7 @@ public class Nms {
         keys.forEach(key -> ids.add(key.toString()));
         return ids;
     }
+
     public @NotNull List<org.bukkit.loot.LootTable> getRegisteredLootTables(){
         List<org.bukkit.loot.LootTable> lootTables = new ArrayList<>();
         ReloadableServerRegistries.Holder registries = ((CraftServer) Bukkit.getServer()).getServer().reloadableRegistries();
@@ -366,10 +363,13 @@ public class Nms {
             lootTables.add(registries.getLootTable(ResourceKey.create(Registries.LOOT_TABLE, Identifier.parse(key.toString()))).craftLootTable));
         return lootTables;
     }
-    public @NotNull org.bukkit.loot.LootTable getLootTable(@NotNull String id){
-        Identifier resourceLocation = Identifier.parse(id);
-        ResourceKey<LootTable> key = ResourceKey.create(Registries.LOOT_TABLE, resourceLocation);
-        return NmsUtils.getLootTable(key).craftLootTable;
+
+    public @Nullable org.bukkit.loot.LootTable getLootTable(@NotNull NamespacedKey id){
+        Identifier resourceLocation = CraftNamespacedKey.toMinecraft(id);
+        ResourceKey<@NotNull LootTable> key = ResourceKey.create(Registries.LOOT_TABLE, resourceLocation);
+        LootTable lootTable = NmsUtils.getLootTable(key);
+        if (lootTable == null) return null;
+        return lootTable.craftLootTable;
     }
 
     public @NotNull List<ItemStack> getPossibleLoot(@NotNull org.bukkit.loot.LootTable lootTable) {
@@ -378,9 +378,10 @@ public class Nms {
         NmsUtils.getPossibleLoot(nmsLootTable, itemStack -> result.add(NmsUtils.toBukkitItemStack(itemStack)));
         return result;
     }
+
     public @Nullable org.bukkit.loot.LootTable getDeathLootTable(@NotNull org.bukkit.entity.LivingEntity bukkitEntity){
         LivingEntity entity = NmsUtils.toNmsEntity(bukkitEntity);
-        Optional<ResourceKey<LootTable>> lootTable = entity.getLootTable();
+        Optional<ResourceKey<@NotNull LootTable>> lootTable = entity.getLootTable();
         if (lootTable.isEmpty()) return null;
         return NmsUtils.getLootTable(lootTable.get()).craftLootTable;
     }
@@ -406,14 +407,21 @@ public class Nms {
     // STRUCTURE
     ///////////////////////////////////////////////////////////////////////////
 
+    public @Nullable StructureWrapper getStructureWrapper(@NotNull NamespacedKey structureId){
+        Structure structure = NmsUtils.getRegistry(Registries.STRUCTURE).getOptional(CraftNamespacedKey.toMinecraft(structureId)).orElse(null);
+        if (structure == null) return null;
+        return new StructureWrapper(structure);
+    }
+
+    @SuppressWarnings("ConstantValue")
     public void getAllPossibleLootTablesInStructure(@NotNull NamespacedKey structureId, @NotNull Consumer<org.bukkit.loot.LootTable> bukkitLootTables){
         Structure structure = NmsUtils.getRegistry(Registries.STRUCTURE).getOptional(CraftNamespacedKey.toMinecraft(structureId)).orElse(null);
         if (structure == null) return;
         NmsStructureProceeder proceeder = new NmsStructureProceeder(structureId, structure);
         proceeder.extractAllTemplates();
-        for (ResourceKey<LootTable> lootTableKey : proceeder.extractLootTables()) {
+        for (ResourceKey<@NotNull LootTable> lootTableKey : proceeder.extractLootTables()) {
             LootTable lootTable = NmsUtils.getLootTable(lootTableKey);
-            if (lootTable.craftLootTable == null){
+            if (lootTable == null || lootTable.craftLootTable == null){
                 LogUtils.pluginWarning("null lootTable: " + lootTableKey);
                 continue;
             }
@@ -421,7 +429,40 @@ public class Nms {
         }
     }
 
-    public void modifyVaultsInStructure(@NotNull NamespacedKey structureId, Function<@NotNull ItemStack, @NotNull ItemStack> oldKeyToNew){
+
+//    public void replaceContainerWithVaultInStructure(@NotNull NamespacedKey structureId, Function<>){
+//        Codec<VaultConfig> vaultCodec = Reflex.getFieldValue(VaultConfig.class, "CODEC");
+//        Iterable<Holder<net.minecraft.world.level.block.@NotNull Block>> copperChests
+//                = NmsUtils.getRegistry(Registries.BLOCK).getTagOrEmpty(BlockTags.COPPER_CHESTS)
+//                        .
+//
+//        modifyStructure(structureId, new Function<>() {
+//            @Override
+//            public @NotNull Boolean apply(StructureTemplate.StructureBlockInfo info) {
+//                if (info.nbt() == null) return true;
+//                if (info.state().getBlock() != BlockTags.COPPER_CHESTS.) return true;
+//                VaultConfig config = info.nbt().read("config", vaultCodec).orElse(null);
+//                if (config == null) return true;
+//                net.minecraft.world.item.ItemStack keyItem = config.keyItem();
+//                ItemStack bukkitKey = NmsUtils.toBukkitItemStack(keyItem);
+//                ItemStack newBukkitKey = oldKeyToNew.apply(bukkitKey);
+//                if (bukkitKey == newBukkitKey) return true;
+//
+//                info.nbt().store("config", vaultCodec, new VaultConfig(
+//                        config.lootTable(),
+//                        config.activationRange(),
+//                        config.deactivationRange(),
+//                        NmsUtils.toNmsItemStack(newBukkitKey),
+//                        config.overrideLootTableToDisplay(),
+//                        config.playerDetector(),
+//                        config.entitySelector()
+//                ));
+//                return true;
+//            }
+//        });
+//    }
+
+    public void modifyVaultsKeysInStructure(@NotNull NamespacedKey structureId, Function<@NotNull ItemStack, @NotNull ItemStack> oldKeyToNew){
         Codec<VaultConfig> vaultCodec = Reflex.getFieldValue(VaultConfig.class, "CODEC");
         modifyStructure(structureId, new Function<>() {
             @Override

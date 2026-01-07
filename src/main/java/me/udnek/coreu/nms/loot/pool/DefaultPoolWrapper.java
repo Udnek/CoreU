@@ -25,7 +25,7 @@ import java.util.function.Consumer;
 
 public class DefaultPoolWrapper implements PoolWrapper {
 
-    protected LootPool pool;
+    protected final LootPool pool;
 
     public DefaultPoolWrapper(@NotNull LootPool pool) {
         this.pool = pool;

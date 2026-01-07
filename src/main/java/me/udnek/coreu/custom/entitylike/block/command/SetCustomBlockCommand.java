@@ -34,8 +34,9 @@ public class SetCustomBlockCommand implements BasicCommand {
     public @NotNull Collection<String> suggest(@NotNull CommandSourceStack commandSourceStack, String @NotNull [] args) {
         if (args.length > 1) return List.of();
 
+        String arg = args.length == 0 ? "" : args[0];
         List<String> ids = new ArrayList<>(CustomRegistries.BLOCK_TYPE.getIds());
-        ids.removeIf(id -> !id.contains(args[0]));
+        ids.removeIf(id -> !id.contains(arg));
 
         return ids;
     }

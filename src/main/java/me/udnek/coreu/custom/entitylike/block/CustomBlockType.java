@@ -24,6 +24,14 @@ public interface CustomBlockType extends ComponentHolder<CustomBlockType>, Entit
 
     NamespacedKey PDC_KEY = new NamespacedKey(CoreU.getInstance(), "custom_block_type");
 
+    static @Nullable CustomBlockEntity getTicking(@NotNull Block block){
+        BlockState state = block.getState();
+        if (state instanceof TileState tileState){
+            return CustomBlockManager.getInstance().getTicking(tileState);
+        }
+        return null;
+    }
+
     static @Nullable String getId(@NotNull Block block){
         BlockState state = block.getState();
         if (state instanceof TileState tileState) return getId(tileState);
