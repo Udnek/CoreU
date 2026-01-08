@@ -1,5 +1,6 @@
 package me.udnek.coreu;
 
+import com.google.common.base.Function;
 import com.sun.net.httpserver.HttpServer;
 import io.papermc.paper.registry.data.dialog.ActionButton;
 import io.papermc.paper.registry.keys.StructureKeys;
@@ -36,8 +37,11 @@ import me.udnek.coreu.serializabledata.SerializableDataManager;
 import me.udnek.coreu.util.LogUtils;
 import net.kyori.adventure.key.Key;
 import net.minecraft.world.level.block.entity.BlastFurnaceBlockEntity;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.EntityType;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.loot.LootTable;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;

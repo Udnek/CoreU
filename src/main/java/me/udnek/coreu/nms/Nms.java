@@ -1,10 +1,10 @@
 package me.udnek.coreu.nms;
 
 import com.google.common.base.Function;
+import com.google.common.base.Preconditions;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.ints.IntImmutableList;
-import me.udnek.coreu.custom.enchantment.NmsEnchantmentWrapper;
 import me.udnek.coreu.nms.loot.LootContextBuilder;
 import me.udnek.coreu.nms.loot.entry.NmsCustomEntry;
 import me.udnek.coreu.nms.loot.table.DefaultLootTableWrapper;
@@ -20,7 +20,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundCooldownPacket;
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
@@ -44,10 +43,9 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.DispenserBlock;
-import net.minecraft.world.level.block.RespawnAnchorBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.entity.vault.VaultConfig;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -75,10 +73,13 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
+import org.bukkit.block.data.type.Vault;
 import org.bukkit.craftbukkit.CraftChunk;
 import org.bukkit.craftbukkit.CraftEquipmentSlot;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.block.CraftBlock;
+import org.bukkit.craftbukkit.block.data.CraftBlockData;
+import org.bukkit.craftbukkit.block.impl.CraftVault;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftEntityType;
 import org.bukkit.craftbukkit.entity.CraftMob;
@@ -89,6 +90,7 @@ import org.bukkit.craftbukkit.util.CraftLocation;
 import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.craftbukkit.util.CraftVector;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -296,11 +298,11 @@ public class Nms {
     // ENCHANTMENT
     ///////////////////////////////////////////////////////////////////////////
 
-    public @NotNull NmsEnchantmentWrapper getEnchantmentWrapper(@NotNull Enchantment bukkitEnchantment){
+    public @NotNull EnchantmentWrapper getEnchantmentWrapper(@NotNull Enchantment bukkitEnchantment){
         Registry<net.minecraft.world.item.enchantment.@NotNull Enchantment> registry = NmsUtils.getRegistry(Registries.ENCHANTMENT);
         net.minecraft.world.item.enchantment.Enchantment enchantment = registry.getValue(NmsUtils.toNmsIdentifier(bukkitEnchantment.getKey()));
         assert enchantment != null;
-        return new NmsEnchantmentWrapper(enchantment);
+        return new EnchantmentWrapper(enchantment);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -429,49 +431,62 @@ public class Nms {
         }
     }
 
+    public void convertContainerWithVaultInStructure(@NotNull NamespacedKey structureId, Function<org.bukkit.loot.@NotNull LootTable, @Nullable ItemStack> lootTableToKey){
+        Codec<VaultConfig> vaultCodec = Reflex.getFieldValue(VaultConfig.class, "CODEC");
+        VaultConfig DEFAULT_CONFIG = Reflex.getFieldValue(VaultConfig.class, "DEFAULT");
 
-//    public void replaceContainerWithVaultInStructure(@NotNull NamespacedKey structureId, Function<>){
-//        Codec<VaultConfig> vaultCodec = Reflex.getFieldValue(VaultConfig.class, "CODEC");
-//        Iterable<Holder<net.minecraft.world.level.block.@NotNull Block>> copperChests
-//                = NmsUtils.getRegistry(Registries.BLOCK).getTagOrEmpty(BlockTags.COPPER_CHESTS)
-//                        .
-//
-//        modifyStructure(structureId, new Function<>() {
-//            @Override
-//            public @NotNull Boolean apply(StructureTemplate.StructureBlockInfo info) {
-//                if (info.nbt() == null) return true;
-//                if (info.state().getBlock() != BlockTags.COPPER_CHESTS.) return true;
-//                VaultConfig config = info.nbt().read("config", vaultCodec).orElse(null);
-//                if (config == null) return true;
-//                net.minecraft.world.item.ItemStack keyItem = config.keyItem();
-//                ItemStack bukkitKey = NmsUtils.toBukkitItemStack(keyItem);
-//                ItemStack newBukkitKey = oldKeyToNew.apply(bukkitKey);
-//                if (bukkitKey == newBukkitKey) return true;
-//
-//                info.nbt().store("config", vaultCodec, new VaultConfig(
-//                        config.lootTable(),
-//                        config.activationRange(),
-//                        config.deactivationRange(),
-//                        NmsUtils.toNmsItemStack(newBukkitKey),
-//                        config.overrideLootTableToDisplay(),
-//                        config.playerDetector(),
-//                        config.entitySelector()
-//                ));
-//                return true;
-//            }
-//        });
-//    }
+        Set<net.minecraft.world.level.block.Block> copperChests = new HashSet<>();
+        NmsUtils.getRegistry(Registries.BLOCK).getTagOrEmpty(BlockTags.COPPER_CHESTS)
+                .forEach(h -> copperChests.add(h.value()));
+
+        modifyStructure(structureId, new Function<>() {
+            @Override
+            public @NotNull Boolean apply(StructureTemplate.StructureBlockInfo info) {
+                if (info.nbt() == null) return true;
+                System.out.println(info);
+                net.minecraft.world.level.block.Block blockType = info.state().getBlock();
+                if (!copperChests.contains(blockType)
+                        && blockType != Blocks.CHEST
+                        && blockType != Blocks.TRAPPED_CHEST
+                        && blockType != Blocks.BARREL
+                        && blockType != Blocks.SHULKER_BOX)
+                {
+                    return true;
+                }
+                ResourceKey<@NotNull LootTable> lootTableKey = info.nbt().read(ChestBlockEntity.LOOT_TABLE_TAG, LootTable.KEY_CODEC).orElse(null);
+                if (lootTableKey == null) return true;
+                LootTable lootTable = NmsUtils.getLootTable(lootTableKey);
+                if (lootTable == null) return true;
+                ItemStack key = lootTableToKey.apply(lootTable.craftLootTable);
+                if (key == null) return true;
+
+                CraftVault vaultState = (CraftVault) Material.VAULT.createBlockData();
+
+                info.state().getOptionalValue(HorizontalDirectionalBlock.FACING).ifPresent(direction -> {
+                    vaultState.setFacing(CraftBlockData.toBukkit(direction, BlockFace.class));
+                });
+
+                Reflex.setRecordFieldValue(info, "state", vaultState.getState());
+                info.nbt().remove(ChestBlockEntity.LOOT_TABLE_SEED_TAG);
+                info.nbt().store("config", vaultCodec, new VaultConfig(
+                        lootTableKey,
+                        DEFAULT_CONFIG.activationRange(),
+                        DEFAULT_CONFIG.deactivationRange(),
+                        NmsUtils.toNmsItemStack(key),
+                        DEFAULT_CONFIG.overrideLootTableToDisplay(),
+                        DEFAULT_CONFIG.playerDetector(),
+                        DEFAULT_CONFIG.entitySelector()
+                ));
+                return true;
+            }
+        });
+    }
 
     public void modifyVaultsKeysInStructure(@NotNull NamespacedKey structureId, Function<@NotNull ItemStack, @NotNull ItemStack> oldKeyToNew){
         Codec<VaultConfig> vaultCodec = Reflex.getFieldValue(VaultConfig.class, "CODEC");
         modifyStructure(structureId, new Function<>() {
             @Override
             public @NotNull Boolean apply(StructureTemplate.StructureBlockInfo info) {
-                if (info.state().getBlock() == Blocks.TUFF_BRICKS){
-                    BlockState newState = Blocks.DEEPSLATE.defaultBlockState();
-                    Reflex.setRecordFieldValue(info, "state", newState);
-                    return true;
-                }
                 if (info.nbt() == null) return true;
                 if (info.state().getBlock() != Blocks.VAULT) return true;
                 VaultConfig config = info.nbt().read("config", vaultCodec).orElse(null);
@@ -497,7 +512,7 @@ public class Nms {
 
     private void modifyStructure(@NotNull NamespacedKey structureId, Function<StructureTemplate.@NotNull StructureBlockInfo, @NotNull Boolean> takeAndContinue){
         Structure structure = NmsUtils.getRegistry(Registries.STRUCTURE).getOptional(CraftNamespacedKey.toMinecraft(structureId)).orElse(null);
-        if (structure == null) return;
+        Preconditions.checkArgument(structure != null, "Structure not found: " + structureId);
         NmsStructureProceeder proceeder = new NmsStructureProceeder(structureId, structure);
         proceeder.extractAllTemplates();
         proceeder.iterateThroughBlocks(takeAndContinue);
@@ -557,7 +572,7 @@ public class Nms {
     public boolean containStructure(Chunk bukitChunk, org.bukkit.generator.structure.Structure bukkitStructure){
         Structure targerStructure = ((CraftStructure) bukkitStructure).getHandle();
         ChunkAccess chunk = ((CraftChunk) bukitChunk).getHandle(ChunkStatus.FEATURES);
-        return chunk.getReferencesForStructure(targerStructure) != null;
+        return !chunk.getReferencesForStructure(targerStructure).isEmpty();
     }
     // TODO: 6/21/2024 REMOVE DEBUG 
     public boolean isInStructure(Location location, org.bukkit.generator.structure.Structure bukkitStructure, StructureStartSearchMethod method, int radius){
@@ -675,7 +690,7 @@ public class Nms {
         if (path != null) followerNavigation.moveTo(path, 1D);
     }
 
-    public void moveNaturally(@NotNull org.bukkit.entity.Entity entity, @NotNull Vector velocity){
+    public void moveNaturally(@NotNull Entity entity, @NotNull Vector velocity){
         NmsUtils.toNmsEntity(entity).move(MoverType.SELF, CraftVector.toVec3(velocity));
     }
 
@@ -690,7 +705,7 @@ public class Nms {
                 ));
     }
 
-    public void sendFakeDestroyEntities(@NotNull List<org.bukkit.entity.Entity> entities, @NotNull Player observer) {
+    public void sendFakeDestroyEntities(@NotNull List<Entity> entities, @NotNull Player observer) {
         var idNmsEntities = new ArrayList<Integer>();
         entities.forEach(entity ->  idNmsEntities.add(NmsUtils.toNmsEntity(entity).getId()));
         NmsUtils.sendPacket(observer, new ClientboundRemoveEntitiesPacket(new IntImmutableList(idNmsEntities)));

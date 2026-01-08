@@ -1,7 +1,5 @@
-package me.udnek.coreu.custom.enchantment;
+package me.udnek.coreu.nms;
 
-import me.udnek.coreu.nms.NmsUtils;
-import me.udnek.coreu.nms.NmsWrapper;
 import me.udnek.coreu.util.Reflex;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentType;
@@ -19,11 +17,11 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NmsEnchantmentWrapper implements NmsWrapper<@NotNull Enchantment> {
+public class EnchantmentWrapper implements NmsWrapper<@NotNull Enchantment> {
 
     protected @NotNull Enchantment enchantment;
 
-    public NmsEnchantmentWrapper(@NotNull Enchantment enchantment) {
+    public EnchantmentWrapper(@NotNull Enchantment enchantment) {
         this.enchantment = enchantment;
     }
 
@@ -36,13 +34,13 @@ public class NmsEnchantmentWrapper implements NmsWrapper<@NotNull Enchantment> {
         Reflex.setRecordFieldValue(enchantment, "effects", effects);
     }
 
-    public DataComponentMap getEffects(){
+    public DataComponentMap getEffectsNms(){
         return Reflex.getFieldValue(enchantment, "effects");
     }
 
     public <T> void setEffect(@NotNull DataComponentType<T> type, @Nullable T effect){
         DataComponentMap.Builder builder = DataComponentMap.builder();
-        builder.addAll(getEffects());
+        builder.addAll(getEffectsNms());
         builder.set(type, effect);
         setEffects(builder.build());
     }
@@ -60,7 +58,7 @@ public class NmsEnchantmentWrapper implements NmsWrapper<@NotNull Enchantment> {
                 LevelBasedValue.perLevel(baseValue, valueAboveFirst),
                 operation
         );
-        List<EnchantmentAttributeEffect> attributes = getEffects().get(EnchantmentEffectComponents.ATTRIBUTES);
+        List<EnchantmentAttributeEffect> attributes = getEffectsNms().get(EnchantmentEffectComponents.ATTRIBUTES);
         if (attributes == null) attributes = new ArrayList<>();
         else attributes = new ArrayList<>(attributes);
         attributes.add(effect);
