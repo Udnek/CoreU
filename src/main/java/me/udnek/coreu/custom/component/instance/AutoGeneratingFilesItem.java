@@ -22,6 +22,7 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
     Generated GENERATED = new Generated();
     HandHeld HANDHELD = new HandHeld();
     Bow BOW = new Bow();
+    Crossbow CROSSBOW = new Crossbow();
     CustomModelDataColorable CUSTOM_MODEL_DATA_COLORABLE = new CustomModelDataColorable();
     DyeColorable DYE_COLORABLE = new DyeColorable();
     Generated20x20 GENERATED_20X20 = new Generated20x20();
