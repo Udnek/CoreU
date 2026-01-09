@@ -242,6 +242,91 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
         }
 
     }
+    class Crossbow extends Bow{
+        @Override
+        public @NotNull JsonObject getDefinition(@NotNull Key itemModel) {
+            return  (JsonObject) JsonParser.parseString(replacePlaceHolders("""
+                    {
+                    "model": {
+                       "type": "minecraft:select",
+                       "cases": [
+                         {
+                           "model": {
+                             "type": "minecraft:model",
+                             "model": "minecraft:item/crossbow_arrow"
+                           },
+                           "when": "arrow"
+                         },
+                         {
+                           "model": {
+                             "type": "minecraft:model",
+                             "model": "minecraft:item/crossbow_firework"
+                           },
+                           "when": "rocket"
+                         }
+                       ],
+                       "fallback": {
+                         "type": "minecraft:condition",
+                         "on_false": {
+                           "type": "minecraft:model",
+                           "model": "minecraft:item/crossbow"
+                         },
+                         "on_true": {
+                           "type": "minecraft:range_dispatch",
+                           "entries": [
+                             {
+                               "model": {
+                                 "type": "minecraft:model",
+                                 "model": "minecraft:item/crossbow_pulling_1"
+                               },
+                               "threshold": 0.58
+                             },
+                             {
+                               "model": {
+                                 "type": "minecraft:model",
+                                 "model": "minecraft:item/crossbow_pulling_2"
+                               },
+                               "threshold": 1.0
+                             }
+                           ],
+                           "fallback": {
+                             "type": "minecraft:model",
+                             "model": "minecraft:item/crossbow_pulling_0"
+                           },
+                           "property": "minecraft:crossbow/pull"
+                         },
+                         "property": "minecraft:using_item"
+                       },
+                       "property": "minecraft:charge_type"
+                     },
+                        "oversized_in_gui": %oversized_in_gui%,
+                        "hand_animation_on_swap": %hand_animation_on_swap%,
+                        "swap_animation_scale": %swap_animation_scale%
+                    }""", itemModel));
+        }
+
+        @Override
+        public @NotNull JsonObject generateModel(@NotNull Key modelKey) {
+            JsonObject model = super.generateModel(modelKey);
+            model.addProperty("parent", "minecraft:item/crossbow");
+            return model;
+        }
+
+
+        @Override
+        public @NotNull List<Pair<Key, JsonObject>> getModels(@NotNull Key modelKey) {
+            List<Pair<Key, JsonObject>> models = super.getModels(modelKey);
+            {
+                NamespacedKey key = new NamespacedKey(modelKey.namespace(), modelKey.value() + "_arrow");
+                models.add(Pair.of(key, generateModel(key)));
+            }
+            {
+                NamespacedKey key = new NamespacedKey(modelKey.namespace(), modelKey.value() + "_firework");
+                models.add(Pair.of(key, generateModel(key)));
+            }
+            return models;
+        }
+    }
     class Generated20x20 extends Generated{
         @Override
         public @NotNull JsonObject generateModel(@NotNull Key modelKey) {
