@@ -4,6 +4,10 @@ import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
+import io.papermc.paper.dialog.Dialog;
+import io.papermc.paper.dialog.PaperDialog;
+import io.papermc.paper.registry.keys.DialogKeys;
+import io.papermc.paper.registry.keys.tags.DialogTagKeys;
 import it.unimi.dsi.fastutil.ints.IntImmutableList;
 import me.udnek.coreu.nms.loot.LootContextBuilder;
 import me.udnek.coreu.nms.loot.entry.NmsCustomEntry;
@@ -29,6 +33,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.ReloadableServerRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.DialogTags;
 import net.minecraft.util.context.ContextKeySet;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -73,7 +78,6 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
-import org.bukkit.block.data.type.Vault;
 import org.bukkit.craftbukkit.CraftChunk;
 import org.bukkit.craftbukkit.CraftEquipmentSlot;
 import org.bukkit.craftbukkit.CraftServer;
@@ -140,8 +144,14 @@ public class Nms {
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    // TAGS
+    // DIALOGS
     ///////////////////////////////////////////////////////////////////////////
+
+    public void addDialogToQuickActions(@NotNull NamespacedKey key, @NotNull Dialog dialog){
+        net.minecraft.server.dialog.Dialog nmsDialog = PaperDialog.bukkitToMinecraftHolder(dialog).value();
+        NmsUtils.registerInRegistry(Registries.DIALOG, nmsDialog, key);
+        NmsUtils.addValueToTag(Registries.DIALOG, DialogTags.QUICK_ACTIONS, nmsDialog);
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     // ITEMS

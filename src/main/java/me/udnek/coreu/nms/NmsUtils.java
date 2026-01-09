@@ -19,6 +19,7 @@ import net.minecraft.server.ReloadableServerRegistries;
 import net.minecraft.server.dedicated.DedicatedPlayerList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -26,6 +27,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootPool;
@@ -60,7 +62,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -84,57 +88,77 @@ public class NmsUtils {
         return ResourceKey.create(registry, toNmsIdentifier(key));
     }
 
-    public static @NotNull <T> Holder<@NotNull T> toNms(@NotNull ResourceKey<Registry<T>> registry, @NotNull Keyed keyed){
+    public static @NotNull <T> Holder<T> toNms(@NotNull ResourceKey<Registry<T>> registry, @NotNull Keyed keyed){
         return toNms(registry, keyed.key());
     }
 
-    public static @NotNull <T> Holder<@NotNull T> toNms(@NotNull ResourceKey<Registry<T>> registry, @NotNull Key key){
+    public static @NotNull <T> Holder<T> toNms(@NotNull ResourceKey<Registry<T>> registry, @NotNull Key key){
         return getRegistry(registry).get(toNmsIdentifier(key)).get();
     }
 
 
-    public static <T> void editRegistry(@NotNull ResourceKey<Registry<T>> registryKey, @NotNull Consumer<Registry<T>> consumer){
+    public static <T> void modifyRegistry(@NotNull ResourceKey<Registry<T>> registryKey, @NotNull BiConsumer<Registry<T>, Map<TagKey<T>, HolderSet.Named<T>>> consumer){
         Registry<T> registry = getRegistry(registryKey);
 
         Reflex.setFieldValue(registry, "frozen", false);
 
-        Object frozenTags = Reflex.getFieldValue(registry, "frozenTags");
+        Map<TagKey<T>, HolderSet.Named<T>> frozenTags = Reflex.getFieldValue(registry, "frozenTags");
         Object allTags = Reflex.getFieldValue(registry, "allTags");
 
+        // 'unfreezing'
         Class<?> tagSetClass;
         try {tagSetClass = Class.forName("net.minecraft.core.MappedRegistry$TagSet");
         } catch (ClassNotFoundException e) {throw new RuntimeException(e);}
         Method unboundMethod = Reflex.getMethod(tagSetClass, "unbound");
-        Object tags = Reflex.invokeMethod(null, unboundMethod);
-        Reflex.setFieldValue(registry, "allTags", tags);
+        Object unboundTags = Reflex.invokeMethod(null, unboundMethod);
+        Reflex.setFieldValue(registry, "allTags", unboundTags);
 
-        consumer.accept(registry);
+        // modifying
+        consumer.accept(registry, frozenTags);
+
+        // freezing
         registry.freeze();
 
-        Reflex.setFieldValue(registry, "frozenTags", frozenTags);
-        Reflex.setFieldValue(registry, "allTags", allTags);
-        Reflex.invokeMethod(registry, Reflex.getMethod(MappedRegistry.class, "refreshTagsInHolders"));
+        // setting tags back
+        //Reflex.setFieldValue(registry, "frozenTags", frozenTags);
+        //Reflex.setFieldValue(registry, "allTags", allTags);
+        //Reflex.invokeMethod(registry, Reflex.getMethod(MappedRegistry.class, "refreshTagsInHolders"));
     }
 
-    public static <T> Holder<T> registerInIntrusiveRegistry(@NotNull ResourceKey<Registry<T>> registry, @NotNull Supplier<T> supplier, @NotNull Key key){
-        final Holder<T>[] holder = new Holder[1];
-        editRegistry(registry, new Consumer<>() {
-            @Override
-            public void accept(Registry<T> registry) {
-                Reflex.setFieldValue(registry, "unregisteredIntrusiveHolders", new IdentityHashMap<T, Holder.Reference<T>>());
-                holder[0] = Registry.registerForHolder(registry, toNmsIdentifier(key), supplier.get());
+    @SuppressWarnings("unchecked")
+    public static <T> void addValueToTag(@NotNull ResourceKey<Registry<T>> registryKey,
+                                              @NotNull TagKey<T> tagKey,
+                                              @NotNull T value)
+    {
+        modifyRegistry(registryKey, (registry, tags) -> {
+            HolderSet.Named<T> holders = tags.get(tagKey);
+            @Nullable List<Holder<T>> contents = Reflex.getFieldValue(holders, "contents");
+            if (contents == null){
+                contents = new ArrayList<>();
+            } else {
+                contents = new ArrayList<>(contents);
             }
+            contents.add(registry.wrapAsHolder(value));
+            Reflex.setFieldValue(holders, "contents", contents);
+        });
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> Holder<T> registerInIntrusiveRegistry(@NotNull ResourceKey<Registry<T>> registryKey, @NotNull T object, @NotNull Key key){
+        final Holder<T>[] holder = new Holder[1];
+        modifyRegistry(registryKey, (registry, tags) -> {
+            // this shit makes me not able to register sometimes
+            Reflex.setFieldValue(registry, "unregisteredIntrusiveHolders", new IdentityHashMap<T, Holder.Reference<T>>());
+            holder[0] = Registry.registerForHolder(registry, toNmsIdentifier(key), object);
         });
         return holder[0];
     }
 
-    public static <T> Holder<T> registerInRegistry(@NotNull ResourceKey<Registry<T>> registry, @NotNull T object, @NotNull Key key){
+    @SuppressWarnings("unchecked")
+    public static <T> Holder<T> registerInRegistry(@NotNull ResourceKey<Registry<T>> registryKey, @NotNull T object, @NotNull Key key){
         final Holder<T>[] holder = new Holder[1];
-        editRegistry(registry, new Consumer<>() {
-            @Override
-            public void accept(Registry<T> registry) {
-                holder[0] = Registry.registerForHolder(registry, toNmsIdentifier(key), object);
-            }
+        modifyRegistry(registryKey, (registry, allTags) -> {
+            holder[0] = Registry.registerForHolder(registry, toNmsIdentifier(key), object);
         });
         return holder[0];
     }
@@ -302,7 +326,7 @@ public class NmsUtils {
 
     public static void getPossibleLoot(@NotNull LootPoolSingletonContainer container, @NotNull Consumer<net.minecraft.world.item.ItemStack> consumer){
         if (container instanceof LootItem){
-            Item item = Reflex.<Holder<@NotNull Item>>getFieldValue(container, "item").value();
+            Item item = Reflex.<Holder<Item>>getFieldValue(container, "item").value();
             if (item == Items.MAP){
                 List<LootItemFunction> functions = Reflex.getFieldValue(container, "functions");
                 boolean containsMapFunction = functions.stream().anyMatch(function -> function instanceof ExplorationMapFunction);
@@ -352,11 +376,11 @@ public class NmsUtils {
         }
         return null;
     }
-    public static @NotNull ResourceKey<@NotNull LootTable> getResourceKeyLootTable(String id){
+    public static @NotNull ResourceKey<LootTable> getResourceKeyLootTable(String id){
         Identifier resourceLocation = Identifier.parse(id);
         return ResourceKey.create(Registries.LOOT_TABLE, resourceLocation);
     }
-    public static @Nullable LootTable getLootTable(@NotNull ResourceKey<@NotNull LootTable> key){
+    public static @Nullable LootTable getLootTable(@NotNull ResourceKey<LootTable> key){
         ReloadableServerRegistries.Holder registries = MinecraftServer.getServer().reloadableRegistries();
         return registries.lookup().lookup(Registries.LOOT_TABLE).flatMap((registryLookup) -> registryLookup.get(key)).map(net.minecraft.core.Holder::value).orElse(null);
     }

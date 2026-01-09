@@ -24,6 +24,7 @@ import me.udnek.coreu.custom.registry.InitializationProcess;
 import me.udnek.coreu.mgu.MGUItems;
 import me.udnek.coreu.nms.MobCategoryWrapper;
 import me.udnek.coreu.nms.Nms;
+import me.udnek.coreu.nms.NmsUtils;
 import me.udnek.coreu.nms.PacketHandler;
 import me.udnek.coreu.nms.structure.BoundingBoxTypeWrapper;
 import me.udnek.coreu.nms.structure.StructureSpawnOverrideWrapper;
@@ -36,6 +37,9 @@ import me.udnek.coreu.rpgu.component.ability.property.type.AttributeBasedPropert
 import me.udnek.coreu.serializabledata.SerializableDataManager;
 import me.udnek.coreu.util.LogUtils;
 import net.kyori.adventure.key.Key;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.BiomeTags;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.entity.BlastFurnaceBlockEntity;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -94,6 +98,8 @@ public final class CoreU extends JavaPlugin implements ResourcePackablePlugin {
                 InitializationProcess.start();
             }
         });
+
+        NmsUtils.addValueToTag(Registries.BIOME, BiomeTags.IS_OCEAN, NmsUtils.getRegistry(Registries.BIOME).getOrThrow(Biomes.PLAINS).value());
 
         rpHost = new RpHost().start();
     }

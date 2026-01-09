@@ -3,6 +3,7 @@ package me.udnek.coreu.util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
+import org.jline.utils.Log;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.*;
@@ -14,13 +15,27 @@ public class Reflex {
         }
         catch (NoSuchFieldException exception) {
             Class<?> superClass = source.getSuperclass();
-            if (superClass == null) throw new RuntimeException(exception);
+            if (superClass == null) {
+                if (source.getFields().length == 0){
+                    LogUtils.pluginLog("No fields found in class " + source.getName());
+                } else {
+                    LogUtils.pluginLog("Available fields in class " + source.getName() + ":");
+                    for (Field field : source.getFields()) {
+                        LogUtils.pluginLog(field);
+                    }
+                }
+
+                throw new RuntimeException(exception);
+            }
             return getField(superClass, name);
         }
     }
 
     public static @UnknownNullability <T> T getFieldValue(@NotNull Object source, @NotNull String name) {
-        Class<?> clazz = source instanceof Class<?> ? (Class<?>) source : source.getClass();
+        Class<?> clazz;
+        if (source instanceof Class<?>) clazz = (Class<?>) source;
+        else clazz = source.getClass();
+
         Field field = getField(clazz, name);
 
         field.setAccessible(true);
