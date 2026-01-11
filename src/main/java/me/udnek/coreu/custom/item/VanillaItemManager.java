@@ -31,30 +31,32 @@ import java.util.function.Predicate;
 public class VanillaItemManager extends SelfRegisteringListener {
 
     private static final EquipmentSlot[] ENTITY_SLOTS = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET, EquipmentSlot.HAND, EquipmentSlot.OFF_HAND};
-    private final Set<Material> disabled = new HashSet<>();
-    private final EnumMap<Material, VanillaBasedCustomItem> replacedByMaterial = new EnumMap<>(Material.class);
-    private final List<VanillaBasedCustomItem> replacedItems = new ArrayList<>();
     private static VanillaItemManager instance;
+
     public static VanillaItemManager getInstance() {
         if (instance == null) instance = new VanillaItemManager();
         return instance;
     }
+
+    private final Set<Material> disabled = new HashSet<>();
+    private final EnumMap<Material, VanillaBasedCustomItem> replacedByMaterial = new EnumMap<>(Material.class);
+    private final List<VanillaBasedCustomItem> replacedItems = new ArrayList<>();
+
     private VanillaItemManager(){
         super(CoreU.getInstance());
     }
 
     public void disableVanillaMaterial(@NotNull Material material){
-        Preconditions.checkArgument(material != null, "Material can not be null!");
+        if (isReplaced(material)) throw new RuntimeException("Disabling material that was replaced: " + material);
         disabled.add(material);
     }
     public void replaceVanillaMaterial(@NotNull Material material){
-        Preconditions.checkArgument(material != null, "Material can not be null!");
+        if (isDisabled(material)) throw new RuntimeException("Replacing material that was disabled: " + material);
         if (isReplaced(material)) return;
         VanillaBasedCustomItem customItem = new VanillaBasedCustomItem(material);
         replacedByMaterial.put(material, customItem);
         replacedItems.add(customItem);
         CustomRegistries.ITEM.register(CoreU.getInstance(), customItem);
-        
     }
 
     public void start(){
@@ -125,9 +127,12 @@ public class VanillaItemManager extends SelfRegisteringListener {
         }
     }
 
+    public static boolean isDisabled(@NotNull Material material){
+        return getInstance().disabled.contains(material);
+    }
     public static boolean isDisabled(@NotNull ItemStack item){
         if (CustomItem.isCustom(item)) return false;
-        return getInstance().disabled.contains(item.getType());
+        return isDisabled(item.getType());
     }
     public static boolean isReplaced(@NotNull ItemStack itemStack){
         CustomItem customItem = CustomItem.get(itemStack);

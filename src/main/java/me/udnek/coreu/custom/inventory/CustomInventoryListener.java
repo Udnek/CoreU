@@ -29,7 +29,7 @@ public class CustomInventoryListener extends SelfRegisteringListener {
                 public void run() {
                     customInventory.afterPlayerClicksItem(event);
                 }
-            }.runTaskLater(CoreU.getInstance(), 1);
+            }.runTask(CoreU.getInstance());
         }
     }
     @EventHandler

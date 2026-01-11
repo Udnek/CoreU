@@ -38,6 +38,7 @@ import me.udnek.coreu.serializabledata.SerializableDataManager;
 import me.udnek.coreu.util.LogUtils;
 import net.kyori.adventure.key.Key;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.server.dialog.Dialog;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.entity.BlastFurnaceBlockEntity;

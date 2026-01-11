@@ -30,8 +30,10 @@ public interface CustomInventory extends InventoryHolder {
     default void onPlayerDragsItem(@NotNull InventoryDragEvent event){}
     default void onPlayerClosesInventory(@NotNull InventoryCloseEvent event){}
     default void onPlayerOpensInventory(@NotNull InventoryOpenEvent event){}
-    default boolean shouldAutoUpdateItems(){return true;}
-    default boolean isOpened(@NotNull Player player){ return get(player.getOpenInventory().getTopInventory()) == this; }
+    default boolean shouldAutoUpdateItems() { return true; }
+    default boolean isOpened(@NotNull Player player){
+        return get(player.getOpenInventory().getTopInventory()) == this;
+    }
     default boolean isOpenedByAnyone() { return !getInventory().getViewers().isEmpty(); }
     default @NotNull List<Player> getViewers(){
         return getInventory().getViewers().stream().map(human -> (Player) human).toList();
