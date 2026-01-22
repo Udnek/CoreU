@@ -33,6 +33,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("unused")
 public final class CoreU extends JavaPlugin implements ResourcePackablePlugin {
 
     private static Plugin instance;
