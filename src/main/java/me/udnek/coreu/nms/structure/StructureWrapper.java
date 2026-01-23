@@ -4,7 +4,6 @@ import me.udnek.coreu.nms.MobCategoryWrapper;
 import me.udnek.coreu.nms.NmsWrapper;
 import me.udnek.coreu.util.Reflex;
 import net.minecraft.world.entity.MobCategory;
-
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureSpawnOverride;
 import org.jetbrains.annotations.NotNull;

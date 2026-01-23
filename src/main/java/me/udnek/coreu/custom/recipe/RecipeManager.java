@@ -18,15 +18,19 @@ import java.util.function.Consumer;
 
 public class RecipeManager {
 
-    private final HashMap<String, CustomRecipe<?>> customRecipes = new HashMap<>();
     private static RecipeManager instance;
-    private RecipeManager(){}
+
+    private final HashMap<String, CustomRecipe> customRecipes = new HashMap<>();
+
     public static RecipeManager getInstance() {
         if (instance == null) instance = new RecipeManager();
         return instance;
     }
+
+    private RecipeManager(){}
+
     public void register(@NotNull Recipe recipe){
-        if (recipe instanceof CustomRecipe<?> customRecipe){
+        if (recipe instanceof CustomRecipe customRecipe){
             Preconditions.checkArgument(
                     !customRecipes.containsKey(customRecipe.key().asString()),
                     "Recipe id duplicate: " + customRecipe.key().asString() + "!"
@@ -39,8 +43,8 @@ public class RecipeManager {
     }
     public void getRecipesAsResult(@NotNull ItemStack itemStack, @NotNull Consumer<Recipe> consumer){
         Set<Recipe> recipes = new HashSet<>();
-        if (CustomItem.isCustom(itemStack) && !VanillaItemManager.isReplaced(itemStack)){
-            CustomItem customItem = CustomItem.get(itemStack);
+        CustomItem customItem = CustomItem.get(itemStack);
+        if (customItem != null && !VanillaItemManager.isReplaced(itemStack)){
             customItem.getRecipes(recipes::add);
         }
         else {
@@ -61,7 +65,7 @@ public class RecipeManager {
         }
 
 
-        for (CustomRecipe<?> recipe : customRecipes.values()) {
+        for (CustomRecipe recipe : customRecipes.values()) {
             if (recipe.isResult(itemStack)) recipes.add(recipe);
         }
         recipes.forEach(consumer);
@@ -70,21 +74,21 @@ public class RecipeManager {
     public void getRecipesAsIngredient(@NotNull ItemStack itemStack, @NotNull Consumer<Recipe> consumer){
         Set<Recipe> recipes = new HashSet<>();
         ItemUtils.getItemInRecipesUsages(itemStack, recipes::add);
-        for (CustomRecipe<?> recipe : customRecipes.values()) {
+        for (CustomRecipe recipe : customRecipes.values()) {
             if (recipe.isIngredient(itemStack)) recipes.add(recipe);
         }
         recipes.forEach(consumer);
     }
 
-    public <T extends CustomRecipe<?>> List<T> getByType(@NotNull CustomRecipeType<T> type){
+    public <T extends CustomRecipe> List<T> getByType(@NotNull CustomRecipeType<T> type){
         List<T> recipes = new ArrayList<>();
-        for (CustomRecipe<?> recipe : customRecipes.values()) {
+        for (CustomRecipe recipe : customRecipes.values()) {
             if (recipe.getType() == type) recipes.add((T) recipe);
         }
         return recipes;
     }
 
-    public <T extends CustomRecipe<?>> @Nullable T getCustom(@NotNull CustomRecipeType<T> type, @NotNull NamespacedKey id){
+    public <T extends CustomRecipe> @Nullable T getCustom(@NotNull CustomRecipeType<T> type, @NotNull NamespacedKey id){
         List<T> byType = getByType(type);
         for (T recipe : byType) {
             if (recipe.getKey().equals(id)) return recipe;
@@ -104,7 +108,7 @@ public class RecipeManager {
     }
 
     public void unregister(@NotNull Recipe recipe){
-        if (recipe instanceof CustomRecipe<?> customRecipe){
+        if (recipe instanceof CustomRecipe customRecipe){
             customRecipes.remove(customRecipe.key().asString());
         } else {
             if (!(recipe instanceof Keyed keyed)) return;

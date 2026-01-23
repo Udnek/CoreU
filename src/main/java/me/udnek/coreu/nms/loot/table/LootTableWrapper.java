@@ -9,7 +9,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-
 import java.util.List;
 import java.util.function.Consumer;
 

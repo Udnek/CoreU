@@ -104,7 +104,7 @@ public class VanillaItemManager extends SelfRegisteringListener {
             recipeManager.getRecipesAsResult(oldItem, recipes::add);
 
             for (Recipe oldRecipe : recipes) {
-                if (oldRecipe instanceof CustomRecipe<?> customRecipe){
+                if (oldRecipe instanceof CustomRecipe customRecipe){
                     customRecipe.replaceItem(oldItem, newItem.getItem());
                 } else {
                     recipeManager.unregister(oldRecipe);

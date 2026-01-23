@@ -9,6 +9,7 @@ import me.udnek.coreu.custom.entitylike.block.CustomBlockType;
 import me.udnek.coreu.custom.entitylike.entity.CustomEntityType;
 import me.udnek.coreu.custom.equipment.slot.CustomEquipmentSlot;
 import me.udnek.coreu.custom.item.CustomItem;
+import me.udnek.coreu.custom.recipe.CustomRecipeType;
 import me.udnek.coreu.custom.sound.CustomSound;
 import me.udnek.coreu.mgu.game.MGUGameType;
 import org.bukkit.plugin.Plugin;
@@ -25,6 +26,7 @@ public class CustomRegistries {
     public static final CustomRegistry<CustomEffect> EFFECT;
     public static final CustomRegistry<CustomEnchantment> ENCHANTMENT;
     public static final CustomRegistry<CustomSound> SOUND;
+    public static final CustomRegistry<CustomRecipeType<?>> RECIPE_TYPE;
     public static final CustomRegistry<MGUGameType> MGU_GAME_TYPE;
 
     static {
@@ -40,6 +42,7 @@ public class CustomRegistries {
         ENTITY_TYPE = addRegistry(new MappedCustomRegistry<>("entity_type"));
         EFFECT = addRegistry(new MappedCustomRegistry<>("effect"));
         SOUND = addRegistry(new MappedCustomRegistry<>("sound"));
+        RECIPE_TYPE = addRegistry(new MappedCustomRegistry<>("recipe_type"));
         MGU_GAME_TYPE = addRegistry(new MappedCustomRegistry<>("mgu_game_type"));
     }
 

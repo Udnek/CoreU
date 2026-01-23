@@ -4,8 +4,6 @@ import me.udnek.coreu.nms.NmsWrapper;
 import net.minecraft.world.level.levelgen.structure.StructureSpawnOverride;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-
 public final class BoundingBoxTypeWrapper implements NmsWrapper<StructureSpawnOverride.BoundingBoxType> {
 
     public static final BoundingBoxTypeWrapper PIECE = new BoundingBoxTypeWrapper(StructureSpawnOverride.BoundingBoxType.PIECE);

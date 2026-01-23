@@ -3,7 +3,6 @@ package me.udnek.coreu.util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
-import org.jline.utils.Log;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.*;

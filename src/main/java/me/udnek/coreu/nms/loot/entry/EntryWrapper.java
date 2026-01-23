@@ -1,12 +1,9 @@
 package me.udnek.coreu.nms.loot.entry;
 
 import me.udnek.coreu.nms.NmsWrapper;
-import me.udnek.coreu.nms.loot.util.LootInfo;
 import me.udnek.coreu.nms.loot.util.NmsConditioned;
 import net.minecraft.world.level.storage.loot.entries.*;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import oshi.util.tuples.Pair;
 
 import java.util.function.Consumer;
 
