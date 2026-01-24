@@ -3,7 +3,7 @@ package me.udnek.coreu.custom.recipe;
 import me.udnek.coreu.custom.registry.AbstractRegistrableComponentable;
 import org.jetbrains.annotations.NotNull;
 
-public class CustomRecipeType<R> extends AbstractRegistrableComponentable<CustomRecipeType<R>> {
+public class CustomRecipeType<Recipe extends CustomRecipe> extends AbstractRegistrableComponentable<CustomRecipeType<Recipe>> {
 
     private final @NotNull String rawId;
 
