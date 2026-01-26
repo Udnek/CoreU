@@ -6,6 +6,7 @@ import io.papermc.paper.event.player.PlayerPickBlockEvent;
 import me.udnek.coreu.CoreU;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.entitylike.EntityLikeManager;
+import me.udnek.coreu.custom.inventory.CustomInventory;
 import me.udnek.coreu.nms.Nms;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -25,6 +26,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -198,11 +200,16 @@ public class CustomBlockManager extends EntityLikeManager<TileState, CustomBlock
             CustomBlockType.consumeIfCustom(source.getBlock(), block ->
                     block.getComponents().getOrDefault(CustomComponentType.HOPPER_INTERACTING_BLOCK).onItemMoveFrom(block, event)
             );
+        } else if (event.getSource() instanceof CustomInventory customInventory) {
+            customInventory.onHopperMoveFrom(event);
         }
+
         if (destination != null){
             CustomBlockType.consumeIfCustom(destination.getBlock(), block ->
                     block.getComponents().getOrDefault(CustomComponentType.HOPPER_INTERACTING_BLOCK).onItemMoveInto(block, event)
             );
+        } else if (event.getDestination() instanceof CustomInventory customInventory) {
+            customInventory.onHopperMoveInto(event);
         }
     }
     

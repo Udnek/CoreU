@@ -1,10 +1,8 @@
 package me.udnek.coreu.custom.inventory;
 
+import me.udnek.coreu.custom.component.instance.HopperInteractingBlock;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
@@ -31,6 +29,8 @@ public interface CustomInventory extends InventoryHolder {
     default void onPlayerClosesInventory(@NotNull InventoryCloseEvent event){}
     default void onPlayerOpensInventory(@NotNull InventoryOpenEvent event){}
     default boolean shouldAutoUpdateItems() { return true; }
+    default void onHopperMoveFrom(@NotNull InventoryMoveItemEvent event){}
+    default void onHopperMoveInto(@NotNull InventoryMoveItemEvent event){}
     default boolean isOpened(@NotNull Player player){
         return get(player.getOpenInventory().getTopInventory()) == this;
     }
