@@ -200,16 +200,22 @@ public class CustomBlockManager extends EntityLikeManager<TileState, CustomBlock
             CustomBlockType.consumeIfCustom(source.getBlock(), block ->
                     block.getComponents().getOrDefault(CustomComponentType.HOPPER_INTERACTING_BLOCK).onItemMoveFrom(block, event)
             );
-        } else if (event.getSource() instanceof CustomInventory customInventory) {
-            customInventory.onHopperMoveFrom(event);
+        } else {
+            CustomInventory customInventory = CustomInventory.get(event.getSource());
+            if (customInventory != null) {
+                customInventory.onHopperMoveFrom(event);
+            }
         }
 
         if (destination != null){
             CustomBlockType.consumeIfCustom(destination.getBlock(), block ->
                     block.getComponents().getOrDefault(CustomComponentType.HOPPER_INTERACTING_BLOCK).onItemMoveInto(block, event)
             );
-        } else if (event.getDestination() instanceof CustomInventory customInventory) {
-            customInventory.onHopperMoveInto(event);
+        } else {
+            CustomInventory customInventory = CustomInventory.get(event.getDestination());
+            if (customInventory != null) {
+                customInventory.onHopperMoveInto(event);
+            }
         }
     }
     
