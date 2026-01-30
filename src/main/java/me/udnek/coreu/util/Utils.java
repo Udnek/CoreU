@@ -3,6 +3,8 @@ package me.udnek.coreu.util;
 import com.destroystokyo.paper.ParticleBuilder;
 import com.google.common.base.Preconditions;
 import me.udnek.coreu.CoreU;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
@@ -27,6 +29,13 @@ public class Utils {
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##", new DecimalFormatSymbols(Locale.US));
 
     // GENERAL
+
+    public static @NotNull Component translateStructure(@NotNull Key structureKey){
+        return Component.translatable(
+                String.format("structure.%s.%s", structureKey.namespace(), structureKey.value()),
+                structureKey.asString()
+        );
+    }
 
     public static @NotNull String roundToTwoDigits(double value){
         return DECIMAL_FORMAT.format(value);

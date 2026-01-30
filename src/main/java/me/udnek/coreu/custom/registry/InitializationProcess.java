@@ -3,17 +3,21 @@ package me.udnek.coreu.custom.registry;
 import me.udnek.coreu.custom.event.InitializationEvent;
 import me.udnek.coreu.custom.item.VanillaItemManager;
 import me.udnek.coreu.util.LogUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class InitializationProcess {
 
-    private static InitializationProcess.Step step = null;
+    private static InitializationProcess.Step step = Step.BEFORE_REGISTRIES_LOADED;
 
-    public static @Nullable InitializationProcess.Step getStep(){
+    public static @NotNull InitializationProcess.Step getStep(){
         return step;
     }
 
     public static void start(){
+        step = Step.BEFORE_REGISTRIES_LOADED;
+        new InitializationEvent(step).callEvent();
+
         step = Step.GLOBAL_INITIALIZATION;
         new InitializationEvent(step).callEvent();
 
