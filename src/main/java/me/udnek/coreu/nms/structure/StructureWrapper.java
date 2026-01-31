@@ -1,11 +1,18 @@
 package me.udnek.coreu.nms.structure;
 
 import me.udnek.coreu.nms.MobCategoryWrapper;
+import me.udnek.coreu.nms.NmsUtils;
 import me.udnek.coreu.nms.NmsWrapper;
 import me.udnek.coreu.util.Reflex;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureSpawnOverride;
+import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -28,6 +35,12 @@ public class StructureWrapper implements NmsWrapper<@NotNull Structure> {
         HashMap<MobCategoryWrapper, StructureSpawnOverrideWrapper> overrides = getSpawnOverrides();
         overrides = edit.apply(overrides);
         setSpawnOverrides(overrides);
+    }
+
+    public boolean isInBounds(@NotNull Location location){
+        BlockPos blockPos = NmsUtils.toNmsBlockPos(location.getBlock());
+        ServerLevel level = NmsUtils.toNmsWorld(location.getWorld());
+        return level.structureManager().getStructureWithPieceAt(blockPos, structure).isValid();
     }
 
     public @NotNull HashMap<MobCategoryWrapper, StructureSpawnOverrideWrapper> getSpawnOverrides(){

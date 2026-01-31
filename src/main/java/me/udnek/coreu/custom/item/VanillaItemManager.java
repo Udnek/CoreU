@@ -290,7 +290,6 @@ public class VanillaItemManager extends SelfRegisteringListener {
         throw new IllegalArgumentException("Replacer does not support recipe: " + abstractRecipe);
     }
 
-
     public @NotNull Recipe copyRecipeWithReplacedItem(@NotNull Recipe recipe, @NotNull Material oldMaterial, @NotNull VanillaBasedCustomItem newItem){
         return Objects.requireNonNull(copyRecipeWithReplacedItem(recipe, new NotNullToNullFunction<ItemStack>() {
             @Override

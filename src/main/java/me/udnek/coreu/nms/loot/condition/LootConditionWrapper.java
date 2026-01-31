@@ -3,6 +3,7 @@ package me.udnek.coreu.nms.loot.condition;
 import me.udnek.coreu.nms.NmsUtils;
 import me.udnek.coreu.nms.NmsWrapper;
 import net.kyori.adventure.key.Key;
+import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.advancements.criterion.LocationPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -11,6 +12,7 @@ import net.minecraft.world.level.storage.loot.predicates.*;
 import org.apache.commons.lang3.Range;
 import org.bukkit.block.Biome;
 import org.bukkit.craftbukkit.block.CraftBiome;
+import org.bukkit.craftbukkit.entity.CraftEntityType;
 import org.bukkit.craftbukkit.generator.structure.CraftStructure;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -56,11 +58,8 @@ public class LootConditionWrapper implements NmsWrapper<@NotNull LootItemConditi
     public @NotNull LootConditionPortrait getPortrait(){
         LootConditionPortrait portrait = new LootConditionPortrait();
         switch (condition) {
-            case TimeCheck time -> portrait.period = time.period().orElse(null);
+            case TimeCheck time -> {}// todo
 
-            // todo
-//            IntRange value = time.value();
-//            portrait.range = Range.of(value);
             case LocationCheck locationCheck -> {
                 LocationPredicate predicate = locationCheck.predicate().orElse(null);
                 if (predicate == null) return portrait;
@@ -77,8 +76,19 @@ public class LootConditionWrapper implements NmsWrapper<@NotNull LootItemConditi
             }
             case LootItemRandomChanceCondition randomChanceCondition ->
                     portrait.randomChance = NmsUtils.averageFromNumberProvider(randomChanceCondition.chance(), 1);
+
             case LootItemRandomChanceWithEnchantedBonusCondition randomChanceCondition ->
                     portrait.unenchantedRandomChance = randomChanceCondition.unenchantedChance();
+
+            case LootItemEntityPropertyCondition entityCondition -> {
+                entityCondition.predicate()
+                        .flatMap(EntityPredicate::vehicle)
+                        .flatMap(EntityPredicate::entityType)
+                        .ifPresent(
+                                typePredicate -> typePredicate.types()
+                                        .forEach(type -> portrait.vehicles.add(CraftEntityType.minecraftToBukkit(type.value()))
+                ));
+            }
             default -> {
             }
         }

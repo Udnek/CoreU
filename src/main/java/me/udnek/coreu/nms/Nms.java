@@ -580,64 +580,6 @@ public class Nms {
         MapItem.renderBiomePreviewMap(serverLevel, NmsUtils.toNmsItemStack(map));
     }
 
-    public boolean containStructure(Chunk bukitChunk, org.bukkit.generator.structure.Structure bukkitStructure){
-        Structure targerStructure = ((CraftStructure) bukkitStructure).getHandle();
-        ChunkAccess chunk = ((CraftChunk) bukitChunk).getHandle(ChunkStatus.FEATURES);
-        return !chunk.getReferencesForStructure(targerStructure).isEmpty();
-    }
-    // TODO: 6/21/2024 REMOVE DEBUG 
-    public boolean isInStructure(Location location, org.bukkit.generator.structure.Structure bukkitStructure, StructureStartSearchMethod method, int radius){
-
-        long startTime = System.nanoTime();
-
-        StructureStart startForStructure;
-
-        if (method == StructureStartSearchMethod.LOCATE_STRUCTURE){
-            StructureSearchResult searchResult = location.getWorld().locateNearestStructure(location, bukkitStructure, radius, false);
-            if (searchResult == null){
-                LogUtils.log("search result is null");
-                return false;
-            }
-            Location searchLocation = searchResult.getLocation();
-
-            Structure structure = ((CraftStructure) bukkitStructure).getHandle();
-
-            ChunkAccess chunk = ((CraftChunk) searchLocation.getChunk()).getHandle(ChunkStatus.FULL);
-            startForStructure = chunk.getStartForStructure(structure);
-        }
-        else {
-            Structure structure = ((CraftStructure) bukkitStructure).getHandle();
-            startForStructure = findStructureStartIn((NmsUtils.toNmsWorld(location.getWorld())), structure, location.getChunk().getX(), location.getChunk().getZ(), radius);
-        }
-        
-        LogUtils.log("time taken:" + (System.nanoTime() - startTime));
-
-
-        if (startForStructure == null){
-            LogUtils.log("start is null");
-            return false;
-        }
-
-        BlockPos position = CraftLocation.toBlockPosition(location);
-
-        for (StructurePiece piece : startForStructure.getPieces()) {
-            if (piece.getBoundingBox().isInside(position)) return true;
-        }
-        LogUtils.log("not in bounds");
-        return false;
-    }
-
-    private StructureStart findStructureStartIn(ServerLevel world, Structure structure, int xCenter, int zCenter, int quadRadius){
-        for (int x = xCenter-quadRadius; x <= xCenter+quadRadius; x++) {
-            for (int z = zCenter-quadRadius; z <= zCenter+quadRadius; z++) {
-                LevelChunk chunk = world.getChunk(x, z);
-                StructureStart startForStructure = chunk.getStartForStructure(structure);
-                if (startForStructure != null) return startForStructure;
-            }
-        }
-        return null;
-    }
-
     ///////////////////////////////////////////////////////////////////////////
     // MISC
     ///////////////////////////////////////////////////////////////////////////
@@ -675,14 +617,15 @@ public class Nms {
     public void setSpinAttack(@NotNull Player player, int ticks, float damage, @Nullable ItemStack itemStack){
         NmsUtils.toNmsPlayer(player).startAutoSpinAttack(ticks, damage, NmsUtils.toNmsItemStack(itemStack));
     }
+
     public void resetSpinAttack(@NotNull Player player){
         setSpinAttack(player, 0, 0, null);
     }
 
-    public void iterateTroughCooldowns(@NotNull Player player, @NotNull TriConsumer<Key, Integer, Integer> consumer){
+    public void iterateTroughCooldowns(@NotNull Player player, @NotNull TriConsumer<Key, Integer, Integer> keyStartEndConsumer){
         for (Map.Entry<Identifier, ItemCooldowns.CooldownInstance> entry : NmsUtils.toNmsPlayer(player).getCooldowns().cooldowns.entrySet()) {
             Identifier location = entry.getKey();
-            consumer.accept(new NamespacedKey(location.getNamespace(), location.getPath()), entry.getValue().startTime(), entry.getValue().endTime());
+            keyStartEndConsumer.accept(new NamespacedKey(location.getNamespace(), location.getPath()), entry.getValue().startTime(), entry.getValue().endTime());
         }
     }
 
@@ -693,7 +636,6 @@ public class Nms {
     public boolean mayBuild(@NotNull Player player){
         return NmsUtils.toNmsPlayer(player).mayBuild();
     }
-
 
     public void moveWithPathfind(@NotNull org.bukkit.entity.Mob follower, @NotNull Location location){
         PathNavigation followerNavigation = ((Mob) ((CraftEntity) follower).getHandle()).getNavigation();
@@ -725,13 +667,12 @@ public class Nms {
     ///////////////////////////////////////////////////////////////////////////
     // BIOME
     ///////////////////////////////////////////////////////////////////////////
-    public DownfallType getDownfallType(Location location){
+
+    public @NotNull DownfallType getDownfallType(@NotNull Location location){
         BlockPos blockPosition = CraftLocation.toBlockPosition(location);
         Biome.Precipitation precipitation = NmsUtils.toNmsWorld(location.getWorld()).getBiome(blockPosition).value().getPrecipitationAt(blockPosition, location.getWorld().getSeaLevel());
         return DownfallType.fromNMS(precipitation);
     }
-
-
 }
 
 

@@ -26,10 +26,10 @@ public class EnchantmentWrapper implements NmsWrapper<@NotNull Enchantment> {
     }
 
     public void clearEffects(){
-        setEffects(null);
+        setEffectsNms(null);
     }
 
-    public void setEffects(@Nullable DataComponentMap effects){
+    public void setEffectsNms(@Nullable DataComponentMap effects){
         if (effects == null) effects = DataComponentMap.EMPTY;
         Reflex.setRecordFieldValue(enchantment, "effects", effects);
     }
@@ -42,7 +42,7 @@ public class EnchantmentWrapper implements NmsWrapper<@NotNull Enchantment> {
         DataComponentMap.Builder builder = DataComponentMap.builder();
         builder.addAll(getEffectsNms());
         builder.set(type, effect);
-        setEffects(builder.build());
+        setEffectsNms(builder.build());
     }
 
     public void addEffect(@NotNull NamespacedKey id, @NotNull Attribute bukkitAttribute, float baseValue, float valueAboveFirst, @NotNull org.bukkit.attribute.AttributeModifier.Operation bukkitOperation){
