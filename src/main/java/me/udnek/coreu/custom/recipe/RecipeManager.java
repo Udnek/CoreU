@@ -1,19 +1,22 @@
 package me.udnek.coreu.custom.recipe;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Predicate;
 import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.custom.item.ItemUtils;
-import me.udnek.coreu.custom.item.VanillaItemManager;
 import net.kyori.adventure.key.Keyed;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 public class RecipeManager {
@@ -41,43 +44,129 @@ public class RecipeManager {
             Bukkit.addRecipe(recipe);
         }
     }
-    public void getRecipesAsResult(@NotNull ItemStack itemStack, @NotNull Consumer<Recipe> consumer){
-        Set<Recipe> recipes = new HashSet<>();
-        CustomItem customItem = CustomItem.get(itemStack);
-        if (customItem != null && !VanillaItemManager.isReplaced(itemStack)){
-            customItem.getRecipes(recipes::add);
-        }
-        else {
-            // FIXED DURABILITY BUG
-            if (itemStack.hasItemMeta()){
-                if (itemStack.getItemMeta() instanceof Damageable damageable){
-                    damageable.setDamage(0);
-                    itemStack = itemStack.clone();
-                    itemStack.setItemMeta(damageable);
-                }
-            }
 
-            List<Recipe> rawRecipes = Bukkit.getRecipesFor(itemStack);
-            for (Recipe recipe : rawRecipes) {
-                if (!ItemUtils.isSameIds(recipe.getResult(), itemStack)) continue;
-                recipes.add(recipe);
-            }
-        }
-
-
-        for (CustomRecipe recipe : customRecipes.values()) {
-            if (recipe.isResult(itemStack)) recipes.add(recipe);
-        }
-        recipes.forEach(consumer);
+    public void getRecipesAsResult(@NotNull ItemStack itemStack, @NotNull Consumer<Recipe> recipeConsumer){
+        getRecipesAsResult(input -> ItemUtils.isSameIds(input, itemStack), recipeConsumer);
     }
 
-    public void getRecipesAsIngredient(@NotNull ItemStack itemStack, @NotNull Consumer<Recipe> consumer){
-        Set<Recipe> recipes = new HashSet<>();
-        ItemUtils.getItemInRecipesUsages(itemStack, recipes::add);
+    public void getRecipesAsResult(@NotNull Predicate<@NotNull ItemStack> predicate, @NotNull Consumer<Recipe> recipeConsumer){
+        Bukkit.recipeIterator().forEachRemaining(recipe -> {
+            if (predicate.test(recipe.getResult())){
+                recipeConsumer.accept(recipe);
+            }
+        });
+
         for (CustomRecipe recipe : customRecipes.values()) {
-            if (recipe.isIngredient(itemStack)) recipes.add(recipe);
+            AtomicBoolean contains = new AtomicBoolean(false);
+            recipe.getPossibleResults(stack -> {
+                if (contains.get()) return;
+                if (predicate.test(stack)) {
+                    contains.set(true);
+                }
+            });
+            if (contains.get()) {
+                recipeConsumer.accept(recipe);
+            }
         }
-        recipes.forEach(consumer);
+    }
+
+    public void getRecipesAsIngredient(@NotNull ItemStack itemStack, @NotNull Consumer<Recipe> recipeConsumer){
+        CustomItem customItem = CustomItem.get(itemStack);
+        if (customItem != null){
+            getItemInRecipesUsages(itemStack,
+                    stack -> CustomItem.get(stack) == customItem,
+                    m -> false,
+                    recipeConsumer);
+        }
+        else {
+            Material type = itemStack.getType();
+            getItemInRecipesUsages(itemStack,
+                    stack -> ItemUtils.isVanillaMaterial(stack, type),
+                    m -> m == type,
+                    recipeConsumer);
+        }
+    }
+
+
+    private void getItemInRecipesUsages(@NotNull ItemStack stack,
+                                        @NotNull Predicate<@NotNull ItemStack> stackPredicate,
+                                        @NotNull Predicate<@NotNull Material> materialPredicate,
+                                        @NotNull Consumer<Recipe> recipeConsumer)
+    {
+        iterateTroughRecipesChoosing(recipeConsumer, recipeChoice -> {
+            if (recipeChoice instanceof RecipeChoice.MaterialChoice choice)
+                return choice.getChoices().stream().anyMatch(materialPredicate);
+            if (recipeChoice instanceof RecipeChoice.ExactChoice choice)
+                return choice.getChoices().stream().anyMatch(stackPredicate);
+            return false;
+        });
+
+        for (CustomRecipe recipe : customRecipes.values()) {
+            AtomicBoolean contains = new AtomicBoolean(false);
+            recipe.getPossibleIngredients(choice -> {
+                if (contains.get()) return;
+                if (choice.test(stack)) {
+                    contains.set(true);
+                }
+            });
+            if (contains.get()) {
+                recipeConsumer.accept(recipe);
+            }
+        }
+    }
+
+    public void iterateTroughRecipesChoosing(@NotNull Consumer<Recipe> recipes, @NotNull java.util.function.Predicate<RecipeChoice> predicate){
+        Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
+        while (recipeIterator.hasNext()){
+            Recipe recipe = recipeIterator.next();
+
+            if (recipe instanceof ShapedRecipe shapedRecipe){
+                for(RecipeChoice recipeChoice: shapedRecipe.getChoiceMap().values()) {
+                    if (predicate.test(recipeChoice)){
+                        recipes.accept(recipe);
+                        break;
+                    }
+                }
+            }
+            else if (recipe instanceof ShapelessRecipe shapelessRecipe){
+                for (RecipeChoice recipeChoice : shapelessRecipe.getChoiceList()) {
+                    if (predicate.test(recipeChoice)){
+                        recipes.accept(recipe);
+                        break;
+                    }
+                }
+            }
+            else if (recipe instanceof CookingRecipe<?> cookingRecipe){
+                if (predicate.test(cookingRecipe.getInputChoice())){
+                    recipes.accept(recipe);
+                }
+            }
+            else if (recipe instanceof StonecuttingRecipe stonecuttingRecipe){
+                if (predicate.test(stonecuttingRecipe.getInputChoice())){
+                    recipes.accept(recipe);
+                }
+            }
+            else if (recipe instanceof SmithingTransformRecipe smithingTransformRecipe){
+                if (
+                        predicate.test(smithingTransformRecipe.getBase()) ||
+                                predicate.test(smithingTransformRecipe.getTemplate()) ||
+                                predicate.test(smithingTransformRecipe.getAddition())
+                )
+                {recipes.accept(recipe);}
+            }
+            else if (recipe instanceof SmithingTrimRecipe smithingTrimRecipe){
+                if (
+                        predicate.test(smithingTrimRecipe.getBase()) ||
+                                predicate.test(smithingTrimRecipe.getTemplate()) ||
+                                predicate.test(smithingTrimRecipe.getAddition())
+                )
+                {recipes.accept(recipe);}
+            } else if (recipe instanceof TransmuteRecipe transmuteRecipe) {
+                if (predicate.test(transmuteRecipe.getInput()) || predicate.test(transmuteRecipe.getMaterial())){
+                    recipes.accept(recipe);
+                }
+            }
+        }
     }
 
     public <T extends CustomRecipe> List<T> getByType(@NotNull CustomRecipeType<T> type){
@@ -115,17 +204,11 @@ public class RecipeManager {
             Bukkit.removeRecipe((NamespacedKey) keyed.key());
         }
     }
+
     public void unregister(@NotNull NamespacedKey key){
         Recipe recipe = get(key);
         if (recipe == null) return;
         unregister(recipe);
-    }
-
-    public void unregister(@NotNull Iterable<Recipe> recipes){
-        for (Recipe recipe : recipes) unregister(recipe);
-    }
-    public void unregister(@NotNull Recipe[] recipes){
-        for (Recipe recipe : recipes) unregister(recipe);
     }
 }
 

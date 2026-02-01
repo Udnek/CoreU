@@ -18,7 +18,6 @@ public class CustomHudManager extends TickingTask {
     public static @NotNull CustomHudManager getInstance() {
         if (instance == null) instance = new CustomHudManager();
         return instance;
-
     }
 
     private CustomHudManager(){}
@@ -31,20 +30,16 @@ public class CustomHudManager extends TickingTask {
         tickets.remove(plugin);
     }
 
-    public @NotNull HashMap<JavaPlugin, CustomHud> getAllTickets() {
-        return tickets;
-    }
-
     @Override
     public int getDelay() {return 1;}
 
     @Override
     public void run() {
-        if (getAllTickets().isEmpty()) return;
+        if (tickets.isEmpty()) return;
         for (Player player : Bukkit.getOnlinePlayers()) {
             Component text = Component.empty();
 
-            for (CustomHud customHud : getAllTickets().values()) {
+            for (CustomHud customHud : tickets.values()) {
                 text =  text.append(customHud.getText(player));
             }
 

@@ -1,6 +1,5 @@
 package me.udnek.coreu.custom.inventory;
 
-import me.udnek.coreu.custom.component.instance.HopperInteractingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;

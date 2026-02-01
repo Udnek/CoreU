@@ -21,6 +21,7 @@ import org.bukkit.event.entity.VillagerAcquireTradeEvent;
 import org.bukkit.event.inventory.InventoryCreativeEvent;
 import org.bukkit.inventory.*;
 import org.bukkit.loot.LootTable;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -179,7 +180,12 @@ public class VanillaItemManager extends SelfRegisteringListener {
             event.getViewers().getFirst().sendMessage(Component.text("Item is disabled!").color(NamedTextColor.RED));
         } else if (isReplaced(item)){
             event.getViewers().getFirst().sendMessage(Component.text("Item is replaced!").color(NamedTextColor.GREEN));
-            event.setCursor(replace(item));
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    event.setCurrentItem(replace(item));
+                }
+            }.runTask(CoreU.getInstance());
         }
     }
 

@@ -9,6 +9,4 @@ import java.util.List;
 public interface CustomRecipeChoice extends RecipeChoice {
     @NotNull List<@NotNull ItemStack> getAllPossible();
     boolean replaceItem(@NotNull ItemStack oldItem, @NotNull ItemStack newItem);
-    boolean addItem(@NotNull ItemStack itemStack);
-    boolean removeItem(@NotNull ItemStack itemStack);
 }

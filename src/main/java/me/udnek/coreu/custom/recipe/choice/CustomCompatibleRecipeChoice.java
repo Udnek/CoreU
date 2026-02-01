@@ -55,7 +55,6 @@ public class CustomCompatibleRecipeChoice implements CustomRecipeChoice {
         return addItem(newItem);
     }
 
-    @Override
     public boolean addItem(@NotNull ItemStack itemStack) {
         if (test(itemStack)) return false;
         CustomItem customItem = CustomItem.get(itemStack);
@@ -63,7 +62,6 @@ public class CustomCompatibleRecipeChoice implements CustomRecipeChoice {
         else return materials.add(itemStack.getType());
     }
 
-    @Override
     public boolean removeItem(@NotNull ItemStack itemStack) {
         if (!test(itemStack)) return false;
         CustomItem customItem = CustomItem.get(itemStack);

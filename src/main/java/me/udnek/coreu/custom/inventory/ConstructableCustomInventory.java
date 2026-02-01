@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class ConstructableCustomInventory implements CustomInventory{
+public abstract class ConstructableCustomInventory implements CustomInventory {
 
     private @Nullable Inventory inventory;
 

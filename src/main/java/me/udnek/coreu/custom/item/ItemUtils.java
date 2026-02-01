@@ -5,17 +5,18 @@ import io.papermc.paper.datacomponent.item.Repairable;
 import me.udnek.coreu.custom.equipment.universal.UniversalInventorySlot;
 import me.udnek.coreu.nms.Nms;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.*;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.loot.LootTable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
-import java.util.function.Consumer;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 import java.util.function.Predicate;
 
 
@@ -130,89 +131,6 @@ public class ItemUtils {
         Material material = Material.getMaterial(name.toUpperCase());
         if (material != null && material.isItem()) return new ItemStack(material);
         return null;
-    }
-
-    @Deprecated
-    public static void getItemInRecipesUsages(@NotNull ItemStack itemStack, @NotNull Consumer<Recipe> consumer){
-        if (CustomItem.isCustom(itemStack)){
-            CustomItem customItem = CustomItem.get(itemStack);
-            iterateTroughRecipesChoosing(consumer, new Predicate<RecipeChoice>() {
-                @Override
-                public boolean test(RecipeChoice recipeChoice) {
-                    if (recipeChoice instanceof RecipeChoice.MaterialChoice materialChoice)
-                        return materialChoice.getChoices().stream().anyMatch(choice -> customItem.isThisItem(new ItemStack(choice)));
-                    if (recipeChoice instanceof RecipeChoice.ExactChoice exactChoice)
-                        return exactChoice.getChoices().stream().anyMatch(choice -> customItem.isThisItem(choice));
-                    return false;
-                }
-            });
-        }
-        else {
-            Material neededMaterial = itemStack.getType();
-            iterateTroughRecipesChoosing(consumer, new Predicate<RecipeChoice>() {
-                @Override
-                public boolean test(RecipeChoice recipeChoice) {
-                    if (!(recipeChoice instanceof RecipeChoice.MaterialChoice materialChoice)) return false;
-                    List<Material> choices = materialChoice.getChoices();
-                    return choices.contains(neededMaterial);
-                }
-            });
-        }
-    }
-
-
-    public static void iterateTroughRecipesChoosing(@NotNull Consumer<Recipe> recipes, @NotNull Predicate<RecipeChoice> predicate){
-        Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
-        while (recipeIterator.hasNext()){
-            Recipe recipe = recipeIterator.next();
-
-            if (recipe instanceof ShapedRecipe shapedRecipe){
-                for(RecipeChoice recipeChoice: shapedRecipe.getChoiceMap().values()) {
-                    if (predicate.test(recipeChoice)){
-                        recipes.accept(recipe);
-                        break;
-                    }
-                }
-            }
-            else if (recipe instanceof ShapelessRecipe shapelessRecipe){
-                for (RecipeChoice recipeChoice : shapelessRecipe.getChoiceList()) {
-                    if (predicate.test(recipeChoice)){
-                        recipes.accept(recipe);
-                        break;
-                    }
-                }
-            }
-            else if (recipe instanceof CookingRecipe<?> cookingRecipe){
-                if (predicate.test(cookingRecipe.getInputChoice())){
-                    recipes.accept(recipe);
-                }
-            }
-            else if (recipe instanceof StonecuttingRecipe stonecuttingRecipe){
-                if (predicate.test(stonecuttingRecipe.getInputChoice())){
-                    recipes.accept(recipe);
-                }
-            }
-            else if (recipe instanceof SmithingTransformRecipe smithingTransformRecipe){
-                if (
-                        predicate.test(smithingTransformRecipe.getBase()) ||
-                        predicate.test(smithingTransformRecipe.getTemplate()) ||
-                        predicate.test(smithingTransformRecipe.getAddition())
-                )
-                {recipes.accept(recipe);}
-            }
-            else if (recipe instanceof SmithingTrimRecipe smithingTrimRecipe){
-                if (
-                        predicate.test(smithingTrimRecipe.getBase()) ||
-                        predicate.test(smithingTrimRecipe.getTemplate()) ||
-                        predicate.test(smithingTrimRecipe.getAddition())
-                )
-                {recipes.accept(recipe);}
-            } else if (recipe instanceof TransmuteRecipe transmuteRecipe) {
-                if (predicate.test(transmuteRecipe.getInput()) || predicate.test(transmuteRecipe.getMaterial())){
-                    recipes.accept(recipe);
-                }
-            }
-        }
     }
 }
 
