@@ -7,7 +7,7 @@ import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class AbstractRegistrable implements Registrable{
-    private String id;
+    protected String id;
     @Override
     @MustBeInvokedByOverriders
     public void initialize(@NotNull Plugin plugin) {

@@ -13,5 +13,4 @@ public abstract class AbstractRegistrableComponentable<HolderType> extends Abstr
         if (components == null) components = new CustomComponentMap<>();
         return components;
     }
-
 }

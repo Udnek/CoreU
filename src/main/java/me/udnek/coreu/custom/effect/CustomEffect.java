@@ -29,6 +29,7 @@ public interface CustomEffect extends Registrable, ComponentHolder<CustomEffect>
     }
 
     void apply(@NotNull LivingEntity entity, int duration, int amplifier, boolean ambient, boolean showParticles, boolean showIcon);
+
     default void apply(@NotNull LivingEntity entity, @NotNull PotionEffect effect){
         apply(entity, effect.getDuration(), effect.getAmplifier(), effect.isAmbient(), effect.hasParticles(), effect.hasIcon());
     }
@@ -42,7 +43,9 @@ public interface CustomEffect extends Registrable, ComponentHolder<CustomEffect>
         entity.removePotionEffect(getBukkitType());
     }
 
-    boolean has(@NotNull LivingEntity entity);
+    default boolean has(@NotNull LivingEntity entity){
+        return get(entity) != null;
+    }
     @Nullable PotionEffect get(@NotNull LivingEntity entity);
     default int getAppliedLevel(@NotNull LivingEntity entity){
         PotionEffect effect = get(entity);

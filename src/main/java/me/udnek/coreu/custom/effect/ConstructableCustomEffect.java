@@ -122,11 +122,6 @@ public abstract class ConstructableCustomEffect extends AbstractRegistrableCompo
         return living.getPotionEffect(bukkitEffect);
     }
 
-    @Override
-    public boolean has(@NotNull LivingEntity entity) {
-        return entity.hasPotionEffect(bukkitEffect);
-    }
-
     public interface AttributeConsumer{
         void accept(@NotNull Attribute attribute, @NotNull Key key, double amount, @NotNull org.bukkit.attribute.AttributeModifier.Operation operation);
     }
