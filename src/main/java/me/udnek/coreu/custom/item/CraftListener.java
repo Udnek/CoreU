@@ -14,14 +14,13 @@ import org.bukkit.event.inventory.PrepareGrindstoneEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.*;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class CraftListener extends SelfRegisteringListener {
+@org.jspecify.annotations.NullMarked public class CraftListener extends SelfRegisteringListener{
 
     public CraftListener(JavaPlugin plugin) {
         super(plugin);
@@ -57,7 +56,7 @@ public class CraftListener extends SelfRegisteringListener {
                 customItem.onCrafterCraft(event));
     }
 
-    public void craft(@NotNull final Recipe recipe, @NotNull final ItemStack result, final @Nullable ItemStack[] matrix, final boolean isRepair, @NotNull final Consumer<ItemStack> resultConsumer){
+    public void craft(final Recipe recipe, final ItemStack result, final @Nullable ItemStack[] matrix, final boolean isRepair, final Consumer<ItemStack> resultConsumer){
         List<RecipeChoice> recipeChoices;
 
         if (recipe instanceof ShapedRecipe shapedRecipe) {
@@ -129,7 +128,7 @@ public class CraftListener extends SelfRegisteringListener {
         }
     }
 
-    public boolean extraTestChoice(@NotNull RecipeChoice recipeChoice, @NotNull ItemStack stack){
+    public boolean extraTestChoice(RecipeChoice recipeChoice, ItemStack stack){
         if (recipeChoice instanceof RecipeChoice.MaterialChoice){
             return !CustomItem.isCustom(stack) || VanillaItemManager.isReplaced(stack);
         } if (recipeChoice instanceof RecipeChoice.ExactChoice exactChoice){
@@ -170,7 +169,7 @@ public class CraftListener extends SelfRegisteringListener {
         if (!canBeRepaired(firstItem, secondItem)) event.setResult(new ItemStack(Material.AIR));
     }
 
-    public boolean canBeRepaired(@NotNull ItemStack toBeRepaired, @NotNull ItemStack repairer){
+    public boolean canBeRepaired(ItemStack toBeRepaired, ItemStack repairer){
         CustomItem toBeRepairedCustom = CustomItem.get(toBeRepaired);
         CustomItem repairerCustom = CustomItem.get(repairer);
         if (toBeRepairedCustom != null){

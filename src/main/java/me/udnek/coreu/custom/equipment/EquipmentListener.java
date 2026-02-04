@@ -12,22 +12,16 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
-public class EquipmentListener extends SelfRegisteringListener {
+@org.jspecify.annotations.NullMarked public class EquipmentListener extends SelfRegisteringListener{
     public EquipmentListener(JavaPlugin plugin) {
         super(plugin);
     }
 
-//    private @NotNull String idOrNull(@Nullable ItemStack stack){
-//        if (stack == null) return "null";
-//        return ItemUtils.getId(stack);
-//    }
-
-    private void proceed(@NotNull Player player, int oldSlotId, int newSlotId, @Nullable ItemStack oldStack, @Nullable ItemStack newStack){
+    private void proceed(Player player, int oldSlotId, int newSlotId, @Nullable ItemStack oldStack, @Nullable ItemStack newStack){
         //System.out.println("PROCEEDING: " + player.getName() + " " +oldSlotId + " " + newSlotId + " "+ idOrNull(oldStack) + " " + idOrNull(newStack));
         PlayerEquipment data = PlayerEquipmentManager.getInstance().getData(player);
         BaseUniversalSlot oldSlot = new BaseUniversalSlot(oldSlotId);

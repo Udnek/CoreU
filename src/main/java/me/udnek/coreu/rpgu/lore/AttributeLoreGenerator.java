@@ -14,17 +14,16 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
-public class AttributeLoreGenerator {
+@org.jspecify.annotations.NullMarked public class AttributeLoreGenerator{
 
     public static final TextColor MELEE_DESCRIPTION_COLOR = NamedTextColor.DARK_GREEN;
     public static final TextColor OTHER_DESCRIPTION_COLOR = NamedTextColor.BLUE;
     public static final TextColor HEADER_COLOR = NamedTextColor.GRAY;
 
-    public static void generateVanillaAttributes(@NotNull ItemStack item, @NotNull LoreBuilder builder){
+    public static void generateVanillaAttributes(ItemStack item, LoreBuilder builder){
         LoreBuilder.Componentable componentable = builder.get(LoreBuilder.Position.ATTRIBUTES);
         AttributesLorePart attributesLorePart;
         if (componentable instanceof AttributesLorePart){
@@ -34,7 +33,7 @@ public class AttributeLoreGenerator {
             builder.set(LoreBuilder.Position.ATTRIBUTES, attributesLorePart);
         }
 
-        Multimap<@NotNull Attribute, @NotNull AttributeModifier> attributes = AttributeUtils.getAttributes(item);
+        Multimap<Attribute, AttributeModifier> attributes = AttributeUtils.getAttributes(item);
 
         for (Attribute attribute : sortAttributes(attributes)) {
             for (AttributeModifier modifier : attributes.get(attribute)) {
@@ -46,7 +45,7 @@ public class AttributeLoreGenerator {
     }
 
 
-    public static @NotNull Attribute[] sortAttributes(@NotNull Multimap<Attribute, AttributeModifier> multimap){
+    public static Attribute[] sortAttributes(Multimap<Attribute, AttributeModifier> multimap){
         Attribute[] keys = new Attribute[multimap.keys().size()];
         multimap.keys().toArray(keys);
         Arrays.sort(keys, (a1, a2) -> {
@@ -61,7 +60,7 @@ public class AttributeLoreGenerator {
     }
 
 
-    public static @NotNull Component getAttributeLine(@NotNull Attribute attribute, double amount, @NotNull AttributeModifier.Operation operation, @NotNull CustomEquipmentSlot slot){
+    public static Component getAttributeLine(Attribute attribute, double amount, AttributeModifier.Operation operation, CustomEquipmentSlot slot){
         String key;
         TextColor color;
         if (attribute == Attribute.ATTACK_SPEED && slot == CustomEquipmentSlot.MAIN_HAND){
@@ -91,12 +90,12 @@ public class AttributeLoreGenerator {
         return Component.translatable(key, Component.text(Utils.roundToTwoDigits(Math.abs(amount))), Component.translatable(attribute.translationKey())).color(color);
     }
 
-    public static @NotNull Component getHeader(@NotNull CustomEquipmentSlot slot){
+    public static Component getHeader(CustomEquipmentSlot slot){
         String line = slot.translationKey();
         return Component.translatable(line).color(HEADER_COLOR).decoration(TextDecoration.ITALIC, false);
     }
 
-    public static @NotNull Component addTab(@NotNull Component noOuter){
+    public static Component addTab(Component noOuter){
         return ComponentU.translatableWithInsertion("rpgu_equipment.coreu.description_tab", noOuter).decoration(TextDecoration.ITALIC, false);
     }
 

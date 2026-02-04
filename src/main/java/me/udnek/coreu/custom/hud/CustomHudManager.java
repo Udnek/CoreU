@@ -5,28 +5,29 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 
-public class CustomHudManager extends TickingTask {
+@org.jspecify.annotations.NullMarked public class CustomHudManager extends TickingTask{
 
     private static final HashMap<JavaPlugin, CustomHud> tickets = new HashMap<>();
 
-    private static CustomHudManager instance;
 
-    public static @NotNull CustomHudManager getInstance() {
+    private static @Nullable CustomHudManager instance;
+
+    public static CustomHudManager getInstance() {
         if (instance == null) instance = new CustomHudManager();
         return instance;
     }
 
     private CustomHudManager(){}
 
-    public void addTicket(@NotNull JavaPlugin plugin, @NotNull CustomHud customHud){
+    public void addTicket(JavaPlugin plugin, CustomHud customHud){
         tickets.put(plugin, customHud);
     }
 
-    public void removeTicket(@NotNull JavaPlugin plugin){
+    public void removeTicket(JavaPlugin plugin){
         tickets.remove(plugin);
     }
 

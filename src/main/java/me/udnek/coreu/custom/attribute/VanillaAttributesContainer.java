@@ -9,33 +9,20 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Map;
 
-public class VanillaAttributesContainer extends AbstractAttributeContainer<Attribute, CustomKeyedAttributeModifier, VanillaAttributesContainer>{
+@org.jspecify.annotations.NullMarked public class VanillaAttributesContainer extends AbstractAttributeContainer<Attribute, CustomKeyedAttributeModifier, VanillaAttributesContainer>{
 
-    public static @NotNull VanillaAttributesContainer empty(){return new VanillaAttributesContainer();}
-
-//    @Override
-//    public @NotNull VanillaAttributesContainer get(@NotNull Predicate<@NotNull CustomEquipmentSlot> predicate) {
-//        VanillaAttributesContainer newContainer = new VanillaAttributesContainer();
-//        for (var entry : attributes.entrySet()) {
-//            Attribute attribute = entry.getKey();
-//            for (var modifier : entry.getValue()) {
-//                if (predicate.test(modifier.getEquipmentSlot())) newContainer.add(attribute, modifier);
-//            }
-//
-//        }
-//        return newContainer;
-//    }
+    public static VanillaAttributesContainer empty(){return new VanillaAttributesContainer();}
 
     public static class Builder{
 
         private final VanillaAttributesContainer container;
-        
+
         public Builder(){
             container = new VanillaAttributesContainer();
         }
 
-        public @NotNull VanillaAttributesContainer.Builder add(@NotNull VanillaAttributesContainer container){
-            for (Map.Entry<@NotNull Attribute, @NotNull List<@NotNull CustomKeyedAttributeModifier>> entry : container.getAll().entrySet()) {
+        public Builder add(VanillaAttributesContainer container){
+            for (Map.Entry<Attribute, List<CustomKeyedAttributeModifier>> entry : container.getAll().entrySet()) {
                 for (@NotNull CustomKeyedAttributeModifier modifier : entry.getValue()) {
                     add(entry.getKey(), modifier);
                 }
@@ -43,17 +30,17 @@ public class VanillaAttributesContainer extends AbstractAttributeContainer<Attri
             return this;
         }
 
-        public @NotNull VanillaAttributesContainer.Builder add(@NotNull Attribute attribute, @NotNull NamespacedKey key, double amount, @NotNull AttributeModifier.Operation operation, @NotNull CustomEquipmentSlot slot){
+        public Builder add(Attribute attribute, NamespacedKey key, double amount, AttributeModifier.Operation operation, CustomEquipmentSlot slot){
             CustomKeyedAttributeModifier attributeModifier = new CustomKeyedAttributeModifier(key, amount, operation, slot);
             return add(attribute, attributeModifier);
         }
 
-        public @NotNull VanillaAttributesContainer.Builder add(@NotNull Attribute attribute, @NotNull CustomKeyedAttributeModifier attributeModifier){
+        public Builder add(Attribute attribute, CustomKeyedAttributeModifier attributeModifier){
             container.add(attribute, attributeModifier);
             return this;
         }
 
-        public @NotNull VanillaAttributesContainer build(){
+        public VanillaAttributesContainer build(){
             return container;
         }
     }

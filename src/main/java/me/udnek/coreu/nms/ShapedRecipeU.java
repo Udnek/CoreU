@@ -6,14 +6,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-public class ShapedRecipeU extends ShapedRecipe {
+@org.jspecify.annotations.NullMarked public class ShapedRecipeU extends ShapedRecipe{
 
     protected final ShapedRecipePattern pattern;
 
@@ -22,7 +21,7 @@ public class ShapedRecipeU extends ShapedRecipe {
         this.pattern = pattern;
     }
 
-    protected @NotNull List<Optional<Ingredient>> pattern_ingredients(){
+    protected List<Optional<Ingredient>> pattern_ingredients(){
         return Reflex.getFieldValue(pattern, "ingredients");
     }
     protected int pattern_ingredientCount(){
@@ -40,7 +39,7 @@ public class ShapedRecipeU extends ShapedRecipe {
 
 
     @Override
-    public boolean matches(@NotNull CraftingInput input, @NotNull Level level) {
+    public boolean matches(CraftingInput input, Level level) {
         return pattern_matches(input);
     }
 
@@ -86,7 +85,7 @@ public class ShapedRecipeU extends ShapedRecipe {
         return (Boolean)var10000.orElseGet(stack::isEmpty);
     }
      */
-    protected static boolean testOptionalIngredient(@NotNull Optional<Ingredient> ingredient, @NotNull ItemStack stack){
+    protected static boolean testOptionalIngredient(Optional<Ingredient> ingredient, ItemStack stack){
         Objects.requireNonNull(stack);
         org.bukkit.inventory.ItemStack bukkitStack = CraftItemStack.asBukkitCopy(stack);
         CustomItem customItem = CustomItem.get(bukkitStack);

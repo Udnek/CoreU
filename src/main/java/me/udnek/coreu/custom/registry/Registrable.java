@@ -4,16 +4,15 @@ import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
-import org.jetbrains.annotations.NotNull;
 
-public interface Registrable extends Keyed {
-    void initialize(@NotNull Plugin plugin);
+@org.jspecify.annotations.NullMarked public  interface Registrable extends Keyed{
+    void initialize(Plugin plugin);
     @MustBeInvokedByOverriders
     default void globalInitialization(){}
-    @NotNull String getId();
+    String getId();
 
     @Override
-    default @NotNull NamespacedKey getKey(){
+    default NamespacedKey getKey(){
         return NamespacedKey.fromString(getId());
     }
 }

@@ -4,13 +4,12 @@ import io.papermc.paper.command.brigadier.BasicCommand;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
 
-public class CurrentEquipmentCommand implements BasicCommand {
+@org.jspecify.annotations.NullMarked public class CurrentEquipmentCommand implements BasicCommand{
 
     @Override
-    public void execute(@NotNull CommandSourceStack commandSourceStack, String @NotNull [] args) {
+    public void execute(CommandSourceStack commandSourceStack, String[] args) {
         CommandSender sender = commandSourceStack.getSender();
         if (!(sender instanceof Player player)){
             return;

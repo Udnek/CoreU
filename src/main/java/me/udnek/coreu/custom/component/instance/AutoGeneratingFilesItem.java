@@ -12,12 +12,11 @@ import me.udnek.coreu.resourcepack.path.VirtualRpJsonFile;
 import net.kyori.adventure.key.Key;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.NamespacedKey;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
+@org.jspecify.annotations.NullMarked public  interface AutoGeneratingFilesItem extends CustomComponent<CustomItem>{
 
     Generated GENERATED = new Generated();
     HandHeld HANDHELD = new HandHeld();
@@ -32,10 +31,9 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
     Compass COMPASS_SINGLE_LAYER = new Compass(false);
     Compass COMPASS_TWO_LAYERS = new Compass(true);
 
-    @NotNull List<VirtualRpJsonFile> getFiles(@NotNull CustomItem customItem);
+    List<VirtualRpJsonFile> getFiles(CustomItem customItem);
 
     @Override
-    @NotNull
     default CustomComponentType<CustomItem, ? extends CustomComponent<CustomItem>> getType(){
         return CustomComponentType.AUTO_GENERATING_FILES_ITEM;
     }
@@ -47,37 +45,36 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
         public float swapAnimationScale(){return 1.0f;}
 
         @Override
-        public @NotNull List<VirtualRpJsonFile> getFiles(@NotNull CustomItem customItem){
+        public List<VirtualRpJsonFile> getFiles(CustomItem customItem){
             Key itemModel = customItem.getItem().getData(DataComponentTypes.ITEM_MODEL);
             if (itemModel == null || itemModel.namespace().equals(Key.MINECRAFT_NAMESPACE)) return List.of();
             return getFiles(itemModel);
         }
 
-        public @NotNull ArrayList<VirtualRpJsonFile> getFiles(@NotNull Key itemModel){
+        public ArrayList<VirtualRpJsonFile> getFiles(Key itemModel){
             ArrayList<VirtualRpJsonFile> files = new ArrayList<>();
             files.add(getDefinitionFile(itemModel));
             files.addAll(getModelsFiles(itemModel));
             return files;
         }
 
-        public @NotNull String getModelPath(@NotNull Key itemModel){
+        public String getModelPath(Key itemModel){
             return "assets/" + itemModel.namespace() + "/models/item/" + itemModel.value() + ".json";
         }
-        public @NotNull String getDefinitionPath(@NotNull Key itemModel){
+        public String getDefinitionPath(Key itemModel){
             return "assets/" + itemModel.namespace() + "/items/" + itemModel.value() + ".json";
         }
-        public @NotNull List<VirtualRpJsonFile> getModelsFiles(@NotNull Key itemModel){
+        public List<VirtualRpJsonFile> getModelsFiles(Key itemModel){
             List<VirtualRpJsonFile> files = new ArrayList<>();
             for (Pair<Key, JsonObject> keyAndModel : getModels(itemModel)) {
                 files.add(new VirtualRpJsonFile(keyAndModel.getRight(), getModelPath(keyAndModel.getLeft())));
             }
             return files;
         }
-        public @NotNull VirtualRpJsonFile getDefinitionFile(@NotNull Key itemModel){
+        public VirtualRpJsonFile getDefinitionFile(Key itemModel){
             return new VirtualRpJsonFile(getDefinition(itemModel), getDefinitionPath(itemModel));
         }
-        @NotNull
-        public String replacePlaceHolders(@NotNull String data, @NotNull Key itemModel){
+        public String replacePlaceHolders(String data, Key itemModel){
             return data
                     .replace("%namespace%", itemModel.namespace())
                     .replace("%key%", itemModel.value())
@@ -88,8 +85,8 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
                     .replace("%swap_animation_scale%", String.valueOf(swapAnimationScale()));
         }
 
-        public abstract @NotNull List<Pair<Key, JsonObject>> getModels(@NotNull Key modelKey);
-        public @NotNull JsonObject getDefinition(@NotNull Key modelKey){
+        public abstract List<Pair<Key, JsonObject>> getModels(Key modelKey);
+        public JsonObject getDefinition(Key modelKey){
             return (JsonObject) JsonParser.parseString(replacePlaceHolders("""
                         {
                             "model": {
@@ -105,11 +102,11 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
     }
     class Generated extends Base {
         @Override
-        public @NotNull List<Pair<Key, JsonObject>> getModels(@NotNull Key modelKey) {
+        public List<Pair<Key, JsonObject>> getModels(Key modelKey) {
             return List.of(Pair.of(modelKey, generateModel(modelKey)));
         }
 
-        public @NotNull JsonObject generateModel(@NotNull Key modelKey){
+        public JsonObject generateModel(Key modelKey){
             return (JsonObject) JsonParser.parseString(replacePlaceHolders("""
                         {
                             "parent": "minecraft:item/generated",
@@ -121,7 +118,7 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
         }
     }
     class TwoLayered extends Generated{
-        public @NotNull JsonObject generateModel(@NotNull Key modelKey){
+        public JsonObject generateModel(Key modelKey){
             return (JsonObject) JsonParser.parseString(replacePlaceHolders("""
                         {
                             "parent": "minecraft:item/generated",
@@ -135,7 +132,7 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
     }
     class HandHeld extends Generated{
         @Override
-        public @NotNull JsonObject generateModel(@NotNull Key modelKey) {
+        public JsonObject generateModel(Key modelKey) {
             JsonObject model = super.generateModel(modelKey);
             model.addProperty("parent", "minecraft:item/handheld");
             return model;
@@ -143,7 +140,7 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
     }
     class CustomModelDataColorable extends Generated{
         @Override
-        public @NotNull JsonObject getDefinition(@NotNull Key itemModel) {
+        public JsonObject getDefinition(Key itemModel) {
             JsonObject definition = super.getDefinition(itemModel);
             JsonElement tints = JsonParser.parseString(
                     """
@@ -162,7 +159,7 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
     }
     class DyeColorable extends Generated{
         @Override
-        public @NotNull JsonObject getDefinition(@NotNull Key itemModel) {
+        public JsonObject getDefinition(Key itemModel) {
             JsonObject definition = super.getDefinition(itemModel);
             JsonElement tints = JsonParser.parseString(
                     """
@@ -182,7 +179,7 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
     class Bow extends Generated{
 
         @Override
-        public @NotNull JsonObject getDefinition(@NotNull Key itemModel) {
+        public JsonObject getDefinition(Key itemModel) {
             return (JsonObject) JsonParser.parseString(replacePlaceHolders("""
                     {
                       "model": {
@@ -225,14 +222,14 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
         }
 
         @Override
-        public @NotNull JsonObject generateModel(@NotNull Key modelKey) {
+        public JsonObject generateModel(Key modelKey) {
             JsonObject model = super.generateModel(modelKey);
             model.addProperty("parent", "minecraft:item/bow");
             return model;
         }
 
         @Override
-        public @NotNull List<Pair<Key, JsonObject>> getModels(@NotNull Key modelKey) {
+        public List<Pair<Key, JsonObject>> getModels(Key modelKey) {
             ArrayList<Pair<Key, JsonObject>> models = new ArrayList<>();
             models.add(Pair.of(modelKey, generateModel(modelKey)));
             for (int i = 0; i < 3; i++) {
@@ -245,7 +242,7 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
     }
     class Crossbow extends Bow{
         @Override
-        public @NotNull JsonObject getDefinition(@NotNull Key itemModel) {
+        public JsonObject getDefinition(Key itemModel) {
             return  (JsonObject) JsonParser.parseString(replacePlaceHolders("""
                     {
                     "model": {
@@ -307,7 +304,7 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
         }
 
         @Override
-        public @NotNull JsonObject generateModel(@NotNull Key modelKey) {
+        public JsonObject generateModel(Key modelKey) {
             JsonObject model = super.generateModel(modelKey);
             model.addProperty("parent", "minecraft:item/crossbow");
             return model;
@@ -315,7 +312,7 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
 
 
         @Override
-        public @NotNull List<Pair<Key, JsonObject>> getModels(@NotNull Key modelKey) {
+        public List<Pair<Key, JsonObject>> getModels(Key modelKey) {
             List<Pair<Key, JsonObject>> models = super.getModels(modelKey);
             {
                 NamespacedKey key = new NamespacedKey(modelKey.namespace(), modelKey.value() + "_arrow");
@@ -330,7 +327,7 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
     }
     class Generated20x20 extends Generated{
         @Override
-        public @NotNull JsonObject generateModel(@NotNull Key modelKey) {
+        public JsonObject generateModel(Key modelKey) {
             JsonObject model = super.generateModel(modelKey);
             model.addProperty("parent", CoreU.getKey("item/generated_20x20").toString());
             return model;
@@ -338,7 +335,7 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
     }
     class Bow20x20 extends Bow{
         @Override
-        public @NotNull JsonObject generateModel(@NotNull Key modelKey) {
+        public JsonObject generateModel(Key modelKey) {
             JsonObject model = super.generateModel(modelKey);
             model.addProperty("parent", CoreU.getKey("item/bow_20x20").toString());
             return model;
@@ -346,7 +343,7 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
     }
     class Handheld20x20 extends Generated20x20{
         @Override
-        public @NotNull JsonObject generateModel(@NotNull Key modelKey) {
+        public JsonObject generateModel(Key modelKey) {
             JsonObject model = super.generateModel(modelKey);
             model.addProperty("parent", CoreU.getKey("item/handheld_20x20").toString());
             return model;
@@ -360,7 +357,7 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
             this.twoLayered = twoLayered;
         }
 
-        public @NotNull String rawCompassDefinition(){
+        public String rawCompassDefinition(){
             return """
                     {
                     "model": {
@@ -854,7 +851,7 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
         }
 
         @Override
-        public @NotNull JsonObject getDefinition(@NotNull Key itemModel) {
+        public JsonObject getDefinition(Key itemModel) {
             String rawDefinition = rawCompassDefinition()
                     .replace(   "\"model\": \"minecraft:item/compass_",
                             "\"model\": \"%namespace%:item/%key%/"
@@ -862,7 +859,7 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
             return (JsonObject) JsonParser.parseString(replacePlaceHolders(rawDefinition, itemModel));
         }
 
-        public @NotNull Pair<Key, JsonObject> generateTwoLayeredModel(@NotNull Key baseModel, String n){
+        public Pair<Key, JsonObject> generateTwoLayeredModel(Key baseModel, String n){
             NamespacedKey localModel = new NamespacedKey(baseModel.namespace(), baseModel.value() + "/" + n);
             return Pair.of(localModel, (JsonObject) JsonParser.parseString(replacePlaceHolders("""
                         {
@@ -875,13 +872,13 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem> {
                         """.replace("%n%", n), baseModel)));
         }
 
-        public @NotNull Pair<Key, JsonObject> generateSingleLayeredModel(@NotNull Key modelKey, String n){
+        public Pair<Key, JsonObject> generateSingleLayeredModel(Key modelKey, String n){
             NamespacedKey newKey = new NamespacedKey(modelKey.namespace(), modelKey.value() + "/" + n);
             return Pair.of(newKey, generateModel(newKey));
         }
 
         @Override
-        public @NotNull List<Pair<Key, JsonObject>> getModels(@NotNull Key modelKey) {
+        public List<Pair<Key, JsonObject>> getModels(Key modelKey) {
             List<Pair<Key, JsonObject>> all = new ArrayList<>();
             for (int i = 0; i < 32; i++) {
                 String n = String.format("%02d", i);

@@ -6,14 +6,14 @@ import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface CustomTickingEntityType<CEntity extends CustomEntity> extends EntityLikeTickingType<Entity, CEntity>, CustomEntityType {
+@org.jspecify.annotations.NullMarked public  interface CustomTickingEntityType<CEntity extends CustomEntity> extends EntityLikeTickingType<Entity, CEntity>, CustomEntityType{
 
-    default @NotNull CEntity spawnAndGet(@NotNull Location location){
+    default @NotNull CEntity spawnAndGet(Location location){
         Entity spawned = spawn(location);
         return (CEntity) CustomEntityManager.getInstance().getTicking(spawned);
     }
 
-    default @Nullable CEntity getIsThis(@NotNull Entity entity) {
+    default @Nullable CEntity getIsThis(Entity entity) {
         CustomEntity customEntity = CustomEntityType.getTicking(entity);
         return customEntity == null || customEntity.getType() != this ? null : (CEntity) customEntity;
     }

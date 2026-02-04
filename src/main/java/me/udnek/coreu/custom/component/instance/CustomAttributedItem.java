@@ -10,16 +10,15 @@ import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.custom.item.LoreProvidingItemComponent;
 import me.udnek.coreu.rpgu.lore.AttributesLorePart;
 import me.udnek.coreu.util.LoreBuilder;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
 
-public class CustomAttributedItem implements LoreProvidingItemComponent {
+@org.jspecify.annotations.NullMarked public class CustomAttributedItem implements LoreProvidingItemComponent{
 
     public static final CustomAttributedItem EMPTY = new CustomAttributedItem(){
         @Override
-        public void addAttribute(@NotNull CustomAttribute attribute, @NotNull CustomAttributeModifier modifier) {
+        public void addAttribute(CustomAttribute attribute, CustomAttributeModifier modifier) {
             throwCanNotChangeDefault();
         }
     };
@@ -30,18 +29,18 @@ public class CustomAttributedItem implements LoreProvidingItemComponent {
         this(CustomAttributesContainer.empty());
     }
 
-    public CustomAttributedItem(@NotNull CustomAttributesContainer container){
+    public CustomAttributedItem(CustomAttributesContainer container){
         this.container = container;
     }
 
-    public void addAttribute(@NotNull CustomAttribute attribute, @NotNull CustomAttributeModifier modifier){
+    public void addAttribute(CustomAttribute attribute, CustomAttributeModifier modifier){
         container = new CustomAttributesContainer.Builder().add(container).add(attribute, modifier).build();
     }
 
-    public @NotNull CustomAttributesContainer getAttributes() {return container;}
+    public CustomAttributesContainer getAttributes() {return container;}
 
     @Override
-    public void getLore(@NotNull CustomItem customItem, @NotNull LoreBuilder builder) {
+    public void getLore(CustomItem customItem, LoreBuilder builder) {
         LoreBuilder.Componentable componentable = builder.get(LoreBuilder.Position.ATTRIBUTES);
         AttributesLorePart attributesLorePart;
         if (componentable instanceof AttributesLorePart){
@@ -62,7 +61,7 @@ public class CustomAttributedItem implements LoreProvidingItemComponent {
     }
 
     @Override
-    public @NotNull CustomComponentType<CustomItem, ? extends CustomComponent<CustomItem>> getType() {
+    public CustomComponentType<CustomItem, ? extends CustomComponent<CustomItem>> getType() {
         return CustomComponentType.CUSTOM_ATTRIBUTED_ITEM;
     }
 }

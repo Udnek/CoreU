@@ -6,7 +6,7 @@ import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
 
 
-public abstract class ConstructableCustomEntity<VType extends Entity> extends AbstractEntityLike<Entity, CustomTickingEntityType<?>> implements CustomEntity{
+@org.jspecify.annotations.NullMarked public abstract class ConstructableCustomEntity<VType extends Entity> extends AbstractEntityLike<Entity, CustomTickingEntityType<?>>implements CustomEntity{
 
     protected VType entity;
 
@@ -16,7 +16,7 @@ public abstract class ConstructableCustomEntity<VType extends Entity> extends Ab
     }
 
     @Override
-    public void load(@NotNull Entity entity) {
+    public void load(Entity entity) {
         this.entity = (VType) entity;
     }
 

@@ -7,9 +7,8 @@ import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.LivingEntity;
-import org.jetbrains.annotations.NotNull;
 
-public class ConstructableCustomAttribute extends AbstractRegistrable implements CustomAttribute{
+@org.jspecify.annotations.NullMarked public class ConstructableCustomAttribute extends AbstractRegistrable implements CustomAttribute{
 
     protected final String rawId;
     protected final double defaultValue;
@@ -18,7 +17,7 @@ public class ConstructableCustomAttribute extends AbstractRegistrable implements
     protected final boolean beneficial;
     protected final boolean numberAsPercentageLore; // lore: +n *attribute* -> +n(n*100%) *attribute*
 
-    public ConstructableCustomAttribute(@NotNull String rawId, double defaultValue, double min, double max, boolean beneficial, boolean numberAsPercentageLore){
+    public ConstructableCustomAttribute(String rawId, double defaultValue, double min, double max, boolean beneficial, boolean numberAsPercentageLore){
         this.rawId = rawId;
         this.defaultValue = defaultValue;
         this.minValue = min;
@@ -26,10 +25,10 @@ public class ConstructableCustomAttribute extends AbstractRegistrable implements
         this.beneficial = beneficial;
         this.numberAsPercentageLore = numberAsPercentageLore;
     }
-    public ConstructableCustomAttribute(@NotNull String rawId, double defaultValue, double min, double max, boolean beneficial){
+    public ConstructableCustomAttribute(String rawId, double defaultValue, double min, double max, boolean beneficial){
         this(rawId,defaultValue, min, max, beneficial, false);
     }
-    public ConstructableCustomAttribute(@NotNull String rawId, double defaultValue, double min, double max){
+    public ConstructableCustomAttribute(String rawId, double defaultValue, double min, double max){
         this(rawId,defaultValue, min, max, true);
     }
 
@@ -42,7 +41,7 @@ public class ConstructableCustomAttribute extends AbstractRegistrable implements
     public double getMax() {return maxValue;}
 
     @Override
-    public double calculateWithBase(@NotNull LivingEntity entity, double base) {
+    public double calculateWithBase(LivingEntity entity, double base) {
         return clamp(CustomAttributeUtils.calculate(this, entity, base, false));
     }
 
@@ -50,7 +49,7 @@ public class ConstructableCustomAttribute extends AbstractRegistrable implements
         return Math.clamp(value, getMin(), getMax());
     }
 
-    public @NotNull Component getLoreLine(double amount, @NotNull AttributeModifier.Operation operation, @NotNull DisplayMethod method) {
+    public Component getLoreLine(double amount, AttributeModifier.Operation operation, DisplayMethod method) {
         if (method == DisplayMethod.ABSOLUTE){
             return getLoreLineWithBase(amount);
         }
@@ -85,7 +84,7 @@ public class ConstructableCustomAttribute extends AbstractRegistrable implements
         return Component.translatable(key, amountText, Component.translatable(translationKey())).color(color);
     }
 
-    protected @NotNull Component getLoreLineWithBase(double base) {
+    protected Component getLoreLineWithBase(double base) {
         Component amountText;
         if (numberAsPercentageLore) amountText = Component.text(
                 Utils.roundToTwoDigits(Math.abs(base)) +
@@ -96,10 +95,10 @@ public class ConstructableCustomAttribute extends AbstractRegistrable implements
     }
 
     @Override
-    public @NotNull String getRawId() {return rawId;}
+    public String getRawId() {return rawId;}
 
     @Override
-    public @NotNull String translationKey() {
+    public String translationKey() {
         return "attribute."+ NamespacedKey.fromString(getId()).getNamespace() +".name."+getRawId();
     }
 }

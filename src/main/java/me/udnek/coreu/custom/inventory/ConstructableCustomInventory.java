@@ -6,17 +6,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class ConstructableCustomInventory implements CustomInventory {
+@org.jspecify.annotations.NullMarked public abstract class ConstructableCustomInventory implements CustomInventory{
 
     private @Nullable Inventory inventory;
 
     public abstract @Nullable Component getTitle();
     public abstract int getInventorySize();
 
-    public @NotNull Inventory generateInventory(int size, @Nullable Component title){
+    public Inventory generateInventory(int size, @Nullable Component title){
         Inventory inventory;
         if (title == null) inventory = Bukkit.createInventory(this, size);
         else inventory = Bukkit.createInventory(this, size, title);
@@ -27,11 +26,11 @@ public abstract class ConstructableCustomInventory implements CustomInventory {
         getInventory().setItem(slot, stack);
     }
 
-    public void setItem(int slot, @NotNull CustomItem item){
+    public void setItem(int slot, CustomItem item){
         setItem(slot, item.getItem());
     }
 
-    public void setItem(int slot, @NotNull Material material){
+    public void setItem(int slot, Material material){
         if (material.isItem()) setItem(slot, new ItemStack(material));
     }
 
@@ -45,7 +44,6 @@ public abstract class ConstructableCustomInventory implements CustomInventory {
         addItem(slot, -amount);
     }
 
-    @NotNull
     @Override
     public final Inventory getInventory() {
         if (inventory == null) inventory = generateInventory(getInventorySize(), getTitle());

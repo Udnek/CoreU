@@ -1,15 +1,14 @@
 package me.udnek.coreu.resourcepack;
 
 import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.NotNull;
 
-public interface ResourcePackablePlugin extends Plugin {
-    default @NotNull VirtualResourcePack getResourcePack(){
+@org.jspecify.annotations.NullMarked public  interface ResourcePackablePlugin extends Plugin{
+    default VirtualResourcePack getResourcePack(){
         return new VirtualResourcePack(this);
 
     }
 
-    @NotNull Priority getPriority();
+    Priority getPriority();
 
     enum Priority {
 

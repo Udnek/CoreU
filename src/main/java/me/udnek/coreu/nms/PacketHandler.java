@@ -22,9 +22,8 @@ import net.minecraft.world.effect.MobEffect;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.potion.PotionEffectType;
-import org.jetbrains.annotations.NotNull;
 
-public class PacketHandler {
+@org.jspecify.annotations.NullMarked public class PacketHandler{
 
     public static void initialize() {
         ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(
@@ -93,7 +92,7 @@ public class PacketHandler {
                 event.setCancelled(true);
             }
 
-            public boolean isFallingParticle(@NotNull ClientboundLevelParticlesPacket packet){
+            public boolean isFallingParticle(ClientboundLevelParticlesPacket packet){
                 if (packet.getParticle().getType() != ParticleTypes.BLOCK) return false;
                 return packet.getXDist() == 0 && packet.getYDist() == 0 && packet.getZDist() == 0 || packet.getMaxSpeed() != 0.15;
             }

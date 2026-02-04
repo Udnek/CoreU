@@ -2,37 +2,31 @@ package me.udnek.coreu.custom.item;
 
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import me.udnek.coreu.custom.event.CustomItemGeneratedEvent;
-import me.udnek.coreu.custom.recipe.RecipeManager;
 import me.udnek.coreu.custom.registry.AbstractRegistrableComponentable;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
-
 @ApiStatus.NonExtendable
-public class VanillaBasedCustomItem extends AbstractRegistrableComponentable<CustomItem> implements UpdatingCustomItem {
+@org.jspecify.annotations.NullMarked
+public class VanillaBasedCustomItem extends AbstractRegistrableComponentable<CustomItem>implements UpdatingCustomItem{
 
-    protected ItemStack itemStack;
-    protected RepairData repairData = null;
+    protected @Nullable ItemStack itemStack;
+    protected @Nullable RepairData repairData = null;
     protected final Material material;
 
-    public VanillaBasedCustomItem(@NotNull Material material){
+    public VanillaBasedCustomItem(Material material){
         this.material = material;
     }
 
     @Override
-    public @NotNull String getRawId() {return material.name().toLowerCase();}
+    public String getRawId() {return material.name().toLowerCase();}
 
     @Override
-    public @NotNull ItemStack getItem() {
+    public ItemStack getItem() {
         if (itemStack == null){
             ItemStack newItemStack = new ItemStack(material);
             CustomItemGeneratedEvent event = new CustomItemGeneratedEvent(this, newItemStack, null, null);
@@ -51,16 +45,16 @@ public class VanillaBasedCustomItem extends AbstractRegistrableComponentable<Cus
     }
 
     @Override
-    public void setCooldown(@NotNull Player player, int ticks) {player.setCooldown(getItem(), ticks);}
+    public void setCooldown(Player player, int ticks) {player.setCooldown(getItem(), ticks);}
 
     @Override
-    public int getCooldown(@NotNull Player player) {return player.getCooldown(getItem());}
+    public int getCooldown(Player player) {return player.getCooldown(getItem());}
 
     @Override
-    public boolean isTagged(@NotNull Tag<Material> tag) {return tag.isTagged(material);}
+    public boolean isTagged(Tag<Material> tag) {return tag.isTagged(material);}
 
     @Override
-    public @NotNull String translationKey() {
+    public String translationKey() {
         return material.translationKey();
     }
 }

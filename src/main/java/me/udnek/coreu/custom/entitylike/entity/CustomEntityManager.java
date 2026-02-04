@@ -11,14 +11,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.event.world.EntitiesLoadEvent;
 import org.bukkit.event.world.EntitiesUnloadEvent;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class CustomEntityManager extends EntityLikeManager<Entity, CustomEntityType, CustomEntity> implements Listener {
+@org.jspecify.annotations.NullMarked public class CustomEntityManager extends EntityLikeManager<Entity, CustomEntityType, CustomEntity>implements Listener{
 
-    private static CustomEntityManager instance;
+    private static @UnknownNullability CustomEntityManager instance;
 
     public static CustomEntityManager getInstance() {
         if (instance == null) {
@@ -31,11 +31,11 @@ public class CustomEntityManager extends EntityLikeManager<Entity, CustomEntityT
     private CustomEntityManager(){}
 
     @Override
-    protected boolean equals(@NotNull Entity r1, @NotNull Entity r2) {
+    protected boolean equals(Entity r1, Entity r2) {
         return r1 == r2;
     }
 
-    private void loadEntities(@NotNull List<Entity> entities){
+    private void loadEntities(List<Entity> entities){
         for (Entity entity : entities) {
             CustomEntityType entityType = CustomEntityType.get(entity);
             if (entityType != null) {

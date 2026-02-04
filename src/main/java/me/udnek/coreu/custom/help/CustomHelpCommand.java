@@ -5,14 +5,15 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomHelpCommand implements BasicCommand {
+@org.jspecify.annotations.NullMarked public class CustomHelpCommand implements BasicCommand{
 
+    @UnknownNullability
     private static CustomHelpCommand instance;
 
     private final List<Component> lines = new ArrayList<>();
@@ -41,7 +42,7 @@ public class CustomHelpCommand implements BasicCommand {
     }
 
     @Override
-    public void execute(@NotNull CommandSourceStack commandSourceStack, String @NotNull [] args) {
+    public void execute(CommandSourceStack commandSourceStack, String[] args) {
         trigger(commandSourceStack.getSender());
     }
 }

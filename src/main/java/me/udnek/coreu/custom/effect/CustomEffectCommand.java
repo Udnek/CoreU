@@ -10,16 +10,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class CustomEffectCommand implements BasicCommand {
+@org.jspecify.annotations.NullMarked public class CustomEffectCommand implements BasicCommand{
 
     @Override
-    public void execute(@NotNull CommandSourceStack commandSourceStack, String @NotNull [] args) {
+    public void execute(CommandSourceStack commandSourceStack, String[] args) {
         LivingEntity target;
         CommandSender commandSender = commandSourceStack.getSender();
         if (commandSender instanceof LivingEntity) target = (LivingEntity) commandSender;
@@ -49,7 +48,7 @@ public class CustomEffectCommand implements BasicCommand {
     }
 
     @Override
-    public @NotNull Collection<String> suggest(@NotNull CommandSourceStack commandSourceStack, String @NotNull [] args) {
+    public Collection<String> suggest(CommandSourceStack commandSourceStack, String[] args) {
         if (args.length >= 4) return List.of();
         if (args.length == 3) return List.of("level");
         if (args.length == 2) return List.of("duration");

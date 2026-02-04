@@ -1,9 +1,8 @@
 package me.udnek.coreu.nms;
 
 import net.minecraft.world.entity.MobCategory;
-import org.jetbrains.annotations.NotNull;
 
-public final class MobCategoryWrapper implements NmsWrapper<MobCategory>{
+@org.jspecify.annotations.NullMarked public final class MobCategoryWrapper implements NmsWrapper<MobCategory>{
 
     public static final MobCategoryWrapper MONSTER = new MobCategoryWrapper(MobCategory.MONSTER);
     public static final MobCategoryWrapper CREATURE = new MobCategoryWrapper(MobCategory.CREATURE);
@@ -14,15 +13,14 @@ public final class MobCategoryWrapper implements NmsWrapper<MobCategory>{
     public static final MobCategoryWrapper WATER_AMBIENT = new MobCategoryWrapper(MobCategory.WATER_AMBIENT);
     public static final MobCategoryWrapper MISC = new MobCategoryWrapper(MobCategory.MISC);
 
-    @NotNull
     private final MobCategory category;
 
-    public MobCategoryWrapper(@NotNull MobCategory category){
+    public MobCategoryWrapper(MobCategory category){
         this.category = category;
     }
 
     @Override
-    public @NotNull MobCategory getNms() {
+    public MobCategory getNms() {
         return category;
     }
 }

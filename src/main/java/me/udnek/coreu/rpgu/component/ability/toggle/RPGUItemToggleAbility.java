@@ -7,16 +7,14 @@ import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.rpgu.component.RPGUToggleItem;
 import me.udnek.coreu.rpgu.component.ability.RPGUItemAbility;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
-public interface RPGUItemToggleAbility<ActivationContext> extends RPGUItemAbility<ActivationContext>, CustomComponent<RPGUToggleItem> {
+@org.jspecify.annotations.NullMarked public  interface RPGUItemToggleAbility<ActivationContext> extends RPGUItemAbility<ActivationContext>, CustomComponent<RPGUToggleItem>{
 
-    @NotNull CustomEquipmentSlot getSlot();
+    CustomEquipmentSlot getSlot();
 
-    void tick(@NotNull CustomItem customItem, @NotNull Player player, @NotNull UniversalInventorySlot slot, int tickDelay);
+    void tick(CustomItem customItem, Player player, UniversalInventorySlot slot, int tickDelay);
 
-    boolean isToggled(@NotNull CustomItem customItem, @NotNull Player player, @NotNull UniversalInventorySlot slot);
+    boolean isToggled(CustomItem customItem, Player player, UniversalInventorySlot slot);
     @Override
-    @NotNull
     default String translationKey(){return "toggle_ability." + getType().getKey().namespace() + "." + getType().getKey().value();}
 }

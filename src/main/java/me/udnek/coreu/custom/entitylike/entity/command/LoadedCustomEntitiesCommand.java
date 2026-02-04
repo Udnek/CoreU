@@ -9,7 +9,7 @@ import me.udnek.coreu.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 
-public class LoadedCustomEntitiesCommand implements BasicCommand {
+@org.jspecify.annotations.NullMarked public class LoadedCustomEntitiesCommand implements BasicCommand{
     @Override
     public void execute(CommandSourceStack commandSourceStack, String[] args) {
         CommandSender sender = commandSourceStack.getSender();

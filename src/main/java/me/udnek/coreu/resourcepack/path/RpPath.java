@@ -5,23 +5,22 @@ import me.udnek.coreu.resourcepack.FileManager;
 import me.udnek.coreu.resourcepack.FileType;
 import me.udnek.coreu.resourcepack.ResourcePackablePlugin;
 import me.udnek.coreu.resourcepack.VirtualResourcePack;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RpPath {
+@org.jspecify.annotations.NullMarked public class RpPath{
 
     protected final @Nullable VirtualResourcePack resourcePack;
-    protected final @NotNull String path;
+    protected final String path;
 
-    public RpPath(@Nullable VirtualResourcePack resourcePack, @NotNull String path){
+    public RpPath(@Nullable VirtualResourcePack resourcePack, String path){
         this.resourcePack = resourcePack;
         this.path = FileManager.removeSlashes(path);
     }
-    public RpPath(@NotNull String path){
+    public RpPath(String path){
         this(null, path);
     }
 
@@ -33,27 +32,27 @@ public class RpPath {
     }
 
 
-    public @NotNull RpPath withAdded(@NotNull String added){
+    public RpPath withAdded(String added){
         String newPath = FileManager.joinPaths(path, added);
         return new RpPath(resourcePack, newPath);
     }
 
-    public @NotNull RpPath withRenamedLast(@NotNull String newName){
+    public RpPath withRenamedLast(String newName){
         if (path.isEmpty()) return this;
         return withLayerUp().withAdded(newName);
     }
 
-    public @NotNull RpPath withLayerUp(){
+    public RpPath withLayerUp(){
         String newPath = FileManager.layerUp(path);
         return new RpPath(resourcePack, newPath);
     }
 
-    public @NotNull RpPath withMergeId(@Nullable Integer mergeId){
+    public RpPath withMergeId(@Nullable Integer mergeId){
         if (mergeId == null) return this;
         return withRenamedLast("(MANUAL_MERGE_" + resourcePack.getName() + "_" + mergeId + ")" + getLast());
     }
 
-    public @NotNull List<RpPath> findFiles(){
+    public List<RpPath> findFiles(){
         //LogUtils.pluginLog(this);
         //LogUtils.pluginLog("Checking is file");
         Preconditions.checkArgument(resourcePack != null, "Resourcepack can not be null to find files: " + this);
@@ -71,37 +70,37 @@ public class RpPath {
         return subFiles;
     }
 
-    public boolean isBelow(@NotNull RpPath other){
+    public boolean isBelow(RpPath other){
         return path.matches(other.path.replace("*", ".*") + ".*");
     }
 
-    public @NotNull String getPath() {
+    public String getPath() {
         return path;
     }
-    public @NotNull String getLast(){
+    public String getLast(){
         if (path.isEmpty()) return "";
         int i = path.lastIndexOf("/");
         if (i == -1) return path;
         return path.substring(i);
     }
 
-    public @NotNull FileType getFileType(){
+    public FileType getFileType(){
         return FileType.get(path);
     }
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return "RPPath{ " + path + " (" + (resourcePack == null ? null : resourcePack.getName()) + ") }";
     }
 
-    public @NotNull InputStream getInputStream(){
+    public InputStream getInputStream(){
         return resourcePack.getInputStream(this);
     }
 
-    public @NotNull String getExtractPath(@NotNull String extract){
+    public String getExtractPath(String extract){
         return FileManager.joinPaths(extract, path);
     }
 
-    public boolean isSame(@NotNull RpPath other){
+    public boolean isSame(RpPath other){
         return FileManager.removeSlashes(this.path).equals(FileManager.removeSlashes(other.path));
     }
 

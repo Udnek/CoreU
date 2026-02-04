@@ -11,13 +11,13 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public interface AdvancementCriterion extends Supplier<Criterion<?>>{
+@org.jspecify.annotations.NullMarked
+public  interface AdvancementCriterion extends Supplier<Criterion<?>>{
 
     AdvancementCriterion TICK = () -> CriteriaTriggers.TICK.createCriterion(PlayerTrigger.TriggerInstance.tick().triggerInstance());
     AdvancementCriterion IMPOSSIBLE = () -> CriteriaTriggers.IMPOSSIBLE.createCriterion(new ImpossibleTrigger.TriggerInstance());
@@ -25,53 +25,52 @@ public interface AdvancementCriterion extends Supplier<Criterion<?>>{
     EnterBlock ENTER_BLOCK = new EnterBlock(null);
 
 
-    class EnterBlock implements AdvancementCriterion{
+    class EnterBlock implements AdvancementCriterion {
         private final Material material;
 
-        private EnterBlock(Material material){
+        private EnterBlock(Material material) {
             this.material = material;
         }
 
-        public @NotNull AdvancementCriterion.EnterBlock create(@NotNull Material material){
+        public EnterBlock create(Material material) {
             return new EnterBlock(material);
         }
 
         @Override
         public Criterion<?> get() {
-            Preconditions.checkArgument(material != null,"Create criterion first!");
+            Preconditions.checkArgument(material != null, "Create criterion first!");
             return EnterBlockTrigger.TriggerInstance.entersBlock(NmsUtils.toNmsBlock(material));
         }
     }
 
-    class InventoryChange implements AdvancementCriterion{
+    class InventoryChange implements AdvancementCriterion {
         private final ItemStack itemStack;
         private final Material material;
 
-        private InventoryChange(ItemStack itemStack, Material material){
+        private InventoryChange(ItemStack itemStack, Material material) {
             this.itemStack = itemStack;
             this.material = material;
         }
 
-        public @NotNull AdvancementCriterion create(@NotNull ItemStack itemStack){
+        public AdvancementCriterion create(ItemStack itemStack) {
             return new InventoryChange(itemStack, null);
         }
 
-        public @NotNull AdvancementCriterion create(@NotNull Material material){
+        public AdvancementCriterion create(Material material) {
             return new InventoryChange(null, material);
         }
 
         @Override
-        public Criterion<?> get(){
-            Preconditions.checkArgument(itemStack != null || material != null,"Create criterion first!");
+        public Criterion<?> get() {
+            Preconditions.checkArgument(itemStack != null || material != null, "Create criterion first!");
             ItemPredicate.Builder predicate;
-            if (material != null){
+            if (material != null) {
                 predicate = ItemPredicate.Builder.item()
                         .of(NmsUtils.getRegistry(Registries.ITEM), NmsUtils.toNmsMaterial(material));
-            }
-            else{
+            } else {
                 net.minecraft.world.item.ItemStack nmsItemStack = NmsUtils.toNmsItemStack(itemStack);
 
-                if (CustomItem.isCustom(itemStack)){
+                if (CustomItem.isCustom(itemStack)) {
                     predicate = ItemPredicate.Builder.item()
                             .of(NmsUtils.getRegistry(Registries.ITEM), nmsItemStack.getItem())
                             .withComponents(

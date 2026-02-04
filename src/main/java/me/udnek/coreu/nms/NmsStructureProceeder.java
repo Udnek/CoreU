@@ -29,17 +29,16 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.level.storage.loot.LootTable;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
-import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 
-public class NmsStructureProceeder {
+@org.jspecify.annotations.NullMarked public class NmsStructureProceeder{
 
     private final StructureTemplateManager structureManager;
-    private final Registry<@NotNull StructureTemplatePool> poolRegistry;
+    private final Registry<StructureTemplatePool> poolRegistry;
     private final Method getTemplateMethod;
     private final Structure structure;
 
@@ -48,7 +47,7 @@ public class NmsStructureProceeder {
     //Collection<ResourceKey<LootTable>> lootTables;
     private final NamespacedKey structureId;
 
-    NmsStructureProceeder(@NotNull NamespacedKey structureId, @NotNull Structure structure){
+    NmsStructureProceeder(NamespacedKey structureId, Structure structure){
         this.structure = structure;
         this.structureId = structureId;
         structureManager = NmsUtils.toNmsWorld(Bukkit.getWorlds().getFirst()).getStructureManager();
@@ -58,9 +57,9 @@ public class NmsStructureProceeder {
         alreadyCheckedPoolIds = new HashSet<>();
     }
 
-    public @NotNull Collection<ResourceKey<@NotNull LootTable>> extractLootTables(){
+    public Collection<ResourceKey<LootTable>> extractLootTables(){
         Codec<VaultConfig> vaultCodec = Reflex.getFieldValue(VaultConfig.class, "CODEC");
-        HashMap<String, ResourceKey<@NotNull LootTable>> lootTables = new HashMap<>();
+        HashMap<String, ResourceKey<LootTable>> lootTables = new HashMap<>();
         for (StructureTemplate template : new HashSet<>(templates)) {
             for (StructureTemplate.Palette palette : template.palettes) {
                 for (StructureTemplate.StructureBlockInfo info : palette.blocks()) {
@@ -68,7 +67,7 @@ public class NmsStructureProceeder {
                     if (nbt == null) continue;
 
                     // ANY LOOTABLE
-                    final ResourceKey<@NotNull LootTable> lootTable = nbt.read("LootTable", LootTable.KEY_CODEC).orElse(null);
+                    final ResourceKey<LootTable> lootTable = nbt.read("LootTable", LootTable.KEY_CODEC).orElse(null);
                     if (lootTable != null){
                         lootTables.put(lootTable.toString(), lootTable);
                         continue;
@@ -91,7 +90,7 @@ public class NmsStructureProceeder {
                                 config = nbt.read(key, TrialSpawnerConfig.DIRECT_CODEC).orElse(null);
                             }
                             if (config == null) continue;
-                            for (Weighted<@NotNull ResourceKey<@NotNull LootTable>> weighted : config.lootTablesToEject().unwrap()) {
+                            for (Weighted<ResourceKey<LootTable>> weighted : config.lootTablesToEject().unwrap()) {
                                 lootTables.put(weighted.value().toString(), weighted.value());
                             }
                         }
@@ -102,7 +101,7 @@ public class NmsStructureProceeder {
         return lootTables.values();
     }
 
-    public void iterateThroughBlocks(@NotNull Function<StructureTemplate.@NotNull StructureBlockInfo, @NotNull Boolean> takeAndContinue){
+    public void iterateThroughBlocks(Function<StructureTemplate.StructureBlockInfo, Boolean> takeAndContinue){
         for (StructureTemplate template : new HashSet<>(templates)) {
             for (StructureTemplate.Palette palette : template.palettes) {
                 for (StructureTemplate.StructureBlockInfo info : palette.blocks()) {
@@ -126,7 +125,7 @@ public class NmsStructureProceeder {
         extractLootTables();
     }
 
-    private void extractTemplatesFromPool(@NotNull StructureTemplatePool pool, int depth){
+    private void extractTemplatesFromPool(StructureTemplatePool pool, int depth){
         for (Pair<StructurePoolElement, Integer> pair : pool.getFallback().value().getTemplates()) {
             extractTemplatesFromElement(pair.getFirst(), depth);
         }
@@ -135,7 +134,7 @@ public class NmsStructureProceeder {
         }
     }
 
-    private void extractTemplatesFromElement(@NotNull StructurePoolElement rawElement, int depth){
+    private void extractTemplatesFromElement(StructurePoolElement rawElement, int depth){
         if (depth < 0) return;
 
         if (rawElement instanceof SinglePoolElement single){
@@ -155,7 +154,7 @@ public class NmsStructureProceeder {
         }
     }
 
-    private void extractTemplatesFromPalette(@NotNull StructureTemplate.Palette palette, int depth){
+    private void extractTemplatesFromPalette(StructureTemplate.Palette palette, int depth){
         for (StructureTemplate.StructureBlockInfo blockInfo : palette.blocks()) {
 
             // NBT EXAMPLE

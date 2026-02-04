@@ -29,10 +29,10 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class VanillaItemManager extends SelfRegisteringListener {
+@org.jspecify.annotations.NullMarked public class VanillaItemManager extends SelfRegisteringListener{
 
     private static final EquipmentSlot[] ENTITY_SLOTS = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET, EquipmentSlot.HAND, EquipmentSlot.OFF_HAND};
-    private static VanillaItemManager instance;
+    private static @Nullable VanillaItemManager instance;
 
     public static VanillaItemManager getInstance() {
         if (instance == null) instance = new VanillaItemManager();
@@ -47,11 +47,11 @@ public class VanillaItemManager extends SelfRegisteringListener {
         super(CoreU.getInstance());
     }
 
-    public void disableVanillaMaterial(@NotNull Material material){
+    public void disableVanillaMaterial(Material material){
         if (isReplaced(material)) throw new RuntimeException("Disabling material that was replaced: " + material);
         disabled.add(material);
     }
-    public void replaceVanillaMaterial(@NotNull Material material){
+    public void replaceVanillaMaterial(Material material){
         if (isDisabled(material)) throw new RuntimeException("Replacing material that was disabled: " + material);
         if (isReplaced(material)) return;
         VanillaBasedCustomItem customItem = new VanillaBasedCustomItem(material);
@@ -128,37 +128,35 @@ public class VanillaItemManager extends SelfRegisteringListener {
         }
     }
 
-    public static boolean isDisabled(@NotNull Material material){
+    public static boolean isDisabled(Material material){
         return getInstance().disabled.contains(material);
     }
-    public static boolean isDisabled(@NotNull ItemStack item){
+    public static boolean isDisabled(ItemStack item){
         if (CustomItem.isCustom(item)) return false;
         return isDisabled(item.getType());
     }
-    public static boolean isReplaced(@NotNull ItemStack itemStack){
+    public static boolean isReplaced(ItemStack itemStack){
         CustomItem customItem = CustomItem.get(itemStack);
         if (customItem == null) return false;
         return isReplaced(customItem);
     }
-    public static boolean isReplaced(@NotNull CustomItem customItem){
+    public static boolean isReplaced(CustomItem customItem){
         return getInstance().replacedItems.contains(customItem);
     }
-    public static boolean isReplaced(@NotNull Material material){
+    public static boolean isReplaced(Material material){
         return getInstance().replacedByMaterial.containsKey(material);
     }
-    public static @NotNull ItemStack replace(@NotNull ItemStack itemStack){
+    public static ItemStack replace(ItemStack itemStack){
         if (!isReplaced(itemStack)) return itemStack;
         return getInstance().replacedByMaterial.get(itemStack.getType()).update(itemStack);
     }
-    public static @Nullable VanillaBasedCustomItem getReplaced(@NotNull ItemStack itemStack){
+    public static @Nullable VanillaBasedCustomItem getReplaced(ItemStack itemStack){
         if (!isReplaced(itemStack)) return null;
         return getInstance().replacedByMaterial.get(itemStack.getType());
     }
-    public static @Nullable VanillaBasedCustomItem getReplaced(@NotNull Material material){
+    public static @Nullable VanillaBasedCustomItem getReplaced(Material material){
         return getInstance().replacedByMaterial.get(material);
     }
-
-    // EVENTS
 
     @EventHandler
     public void onSpawn(EntitySpawnEvent event){
@@ -222,7 +220,7 @@ public class VanillaItemManager extends SelfRegisteringListener {
         event.setRecipe(recipe);
     }
 
-    public @Nullable Recipe copyRecipeWithReplacedItem(@NotNull Recipe abstractRecipe, @NotNull NotNullToNullFunction<ItemStack> resultFunction, @NotNull NotNullToNullFunction<RecipeChoice> choiceFunction){
+    public @Nullable Recipe copyRecipeWithReplacedItem(Recipe abstractRecipe, NotNullToNullFunction<ItemStack> resultFunction, NotNullToNullFunction<RecipeChoice> choiceFunction){
         Preconditions.checkArgument(!(abstractRecipe instanceof CustomRecipe), "Custom recipes are not allowed!");
         ItemStack result = resultFunction.apply(abstractRecipe.getResult());
         if (result == null) return null;
@@ -296,15 +294,15 @@ public class VanillaItemManager extends SelfRegisteringListener {
         throw new IllegalArgumentException("Replacer does not support recipe: " + abstractRecipe);
     }
 
-    public @NotNull Recipe copyRecipeWithReplacedItem(@NotNull Recipe recipe, @NotNull Material oldMaterial, @NotNull VanillaBasedCustomItem newItem){
+    public Recipe copyRecipeWithReplacedItem(Recipe recipe, Material oldMaterial, VanillaBasedCustomItem newItem){
         return Objects.requireNonNull(copyRecipeWithReplacedItem(recipe, new NotNullToNullFunction<ItemStack>() {
             @Override
-            public @NotNull ItemStack apply(@NotNull ItemStack itemStack) {
+            public ItemStack apply(ItemStack itemStack) {
                 return VanillaItemManager.isReplaced(itemStack) && itemStack.getType() == oldMaterial ? newItem.update(itemStack) : itemStack;
             }
         }, new NotNullToNullFunction<RecipeChoice>() {
             @Override
-            public @Nullable RecipeChoice apply(@NotNull RecipeChoice recipeChoice) {
+            public @Nullable RecipeChoice apply(RecipeChoice recipeChoice) {
                 if (recipeChoice instanceof RecipeChoice.MaterialChoice materialChoice) {
                     return materialChoice;
                 } else if (recipeChoice instanceof RecipeChoice.ExactChoice exactChoice) {
@@ -322,15 +320,15 @@ public class VanillaItemManager extends SelfRegisteringListener {
         }));
     }
 
-    public @Nullable Recipe copyRecipeWithRemovedItem(@NotNull Recipe recipe, @NotNull Material toRemove){
+    public @Nullable Recipe copyRecipeWithRemovedItem(Recipe recipe, Material toRemove){
         return copyRecipeWithReplacedItem(recipe, new NotNullToNullFunction<ItemStack>() {
             @Override
-            public @Nullable ItemStack apply(@NotNull ItemStack itemStack) {
+            public @Nullable ItemStack apply(ItemStack itemStack) {
                 return ItemUtils.isVanillaMaterial(itemStack, toRemove) ? null : itemStack;
             }
         }, new NotNullToNullFunction<RecipeChoice>() {
             @Override
-            public @Nullable RecipeChoice apply(@NotNull RecipeChoice recipeChoice) {
+            public @Nullable RecipeChoice apply(RecipeChoice recipeChoice) {
                 if (recipeChoice instanceof RecipeChoice.MaterialChoice materialChoice){
                     List<Material> newMaterials = new ArrayList<>();
                     for (Material choice : materialChoice.getChoices()) {

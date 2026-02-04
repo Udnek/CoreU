@@ -2,21 +2,20 @@ package me.udnek.coreu.nms.structure;
 
 import me.udnek.coreu.nms.NmsWrapper;
 import net.minecraft.world.level.levelgen.structure.StructureSpawnOverride;
-import org.jetbrains.annotations.NotNull;
 
-public final class BoundingBoxTypeWrapper implements NmsWrapper<StructureSpawnOverride.BoundingBoxType> {
+@org.jspecify.annotations.NullMarked public final class BoundingBoxTypeWrapper implements NmsWrapper<StructureSpawnOverride.BoundingBoxType>{
 
     public static final BoundingBoxTypeWrapper PIECE = new BoundingBoxTypeWrapper(StructureSpawnOverride.BoundingBoxType.PIECE);
     public static final BoundingBoxTypeWrapper FULL = new BoundingBoxTypeWrapper(StructureSpawnOverride.BoundingBoxType.STRUCTURE);
 
-    private final StructureSpawnOverride.@NotNull BoundingBoxType boxType;
+    private final StructureSpawnOverride.BoundingBoxType boxType;
 
-    public BoundingBoxTypeWrapper(@NotNull StructureSpawnOverride.BoundingBoxType boxType) {
+    public BoundingBoxTypeWrapper(StructureSpawnOverride.BoundingBoxType boxType) {
         this.boxType = boxType;
     }
 
     @Override
-    public @NotNull StructureSpawnOverride.BoundingBoxType getNms() {
+    public StructureSpawnOverride.BoundingBoxType getNms() {
         return boxType;
     }
 }

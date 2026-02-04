@@ -1,15 +1,14 @@
 package me.udnek.coreu.mgu;
 
 import org.bukkit.Location;
-import org.jetbrains.annotations.NotNull;
 
-public interface Originable {
+@org.jspecify.annotations.NullMarked public  interface Originable{
 
-    static @NotNull Location setOrigin(@NotNull Location location, @NotNull Location origin){
+    static Location setOrigin(Location location, Location origin){
         location.setWorld(origin.getWorld());
         location.add(origin.x(), origin.y(), origin.z());
         return location;
     }
 
-    void setOrigin(@NotNull Location origin);
+    void setOrigin(Location origin);
 }

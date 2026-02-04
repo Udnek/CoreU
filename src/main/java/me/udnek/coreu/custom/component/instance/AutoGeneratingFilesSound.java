@@ -6,15 +6,14 @@ import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.sound.ConstructableCustomSound;
 import me.udnek.coreu.custom.sound.CustomSound;
 import me.udnek.coreu.resourcepack.path.VirtualRpJsonFile;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class AutoGeneratingFilesSound implements CustomComponent<CustomSound> {
+@org.jspecify.annotations.NullMarked public class AutoGeneratingFilesSound implements CustomComponent<CustomSound>{
 
     public static final AutoGeneratingFilesSound DEFAULT = new AutoGeneratingFilesSound();
 
-    public @NotNull List<VirtualRpJsonFile> getFiles(@NotNull CustomSound unknowSound){
+    public List<VirtualRpJsonFile> getFiles(CustomSound unknowSound){
         if (!(unknowSound instanceof ConstructableCustomSound sound)) return List.of();
         VirtualRpJsonFile file = new VirtualRpJsonFile(JsonParser.parseString("""
                     {
@@ -34,7 +33,7 @@ public class AutoGeneratingFilesSound implements CustomComponent<CustomSound> {
 
 
     @Override
-    public @NotNull CustomComponentType<? super CustomSound, ? extends CustomComponent<? super CustomSound>> getType(){
+    public CustomComponentType<? super CustomSound, ? extends CustomComponent<? super CustomSound>> getType(){
         return CustomComponentType.AUTO_GENERATING_FILES_SOUND;
     }
 }

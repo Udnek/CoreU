@@ -2,26 +2,26 @@ package me.udnek.coreu.custom.equipment;
 
 import me.udnek.coreu.util.TickingTask;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class PlayerEquipmentManager extends TickingTask {
+@org.jspecify.annotations.NullMarked public class PlayerEquipmentManager extends TickingTask{
 
     public static final int DELAY = 1;
-    private static PlayerEquipmentManager instance;
+    private static @Nullable PlayerEquipmentManager instance;
 
     private final Map<Player, PlayerEquipment> playersData = new HashMap<>();
 
-    public static @NotNull PlayerEquipmentManager getInstance() {
+    public static PlayerEquipmentManager getInstance() {
         if (instance == null) instance = new PlayerEquipmentManager();
         return instance;
     }
 
     private PlayerEquipmentManager(){}
 
-    public @NotNull PlayerEquipment getData(@NotNull Player player){
+    public PlayerEquipment getData(Player player){
         PlayerEquipment equipment = playersData.get(player);
         if (equipment != null) return equipment;
         PlayerEquipment playerEquipment = new PlayerEquipment();

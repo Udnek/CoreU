@@ -23,7 +23,6 @@ import me.udnek.coreu.resourcepack.ResourcePackCommand;
 import me.udnek.coreu.util.ResetCooldownCommand;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,11 +36,12 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Stream;
 
-public class Bootstrap implements PluginBootstrap {
+@org.jspecify.annotations.NullMarked
+public class Bootstrap implements PluginBootstrap{
 
     @Override
     public void bootstrap(BootstrapContext context) {
-        final LifecycleEventManager<@NotNull BootstrapContext> lifecycleManager = context.getLifecycleManager();
+        final LifecycleEventManager<BootstrapContext> lifecycleManager = context.getLifecycleManager();
 
         // COMMANDS
         lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS, event -> {
@@ -122,7 +122,7 @@ public class Bootstrap implements PluginBootstrap {
         });
     }
 
-    public void extractDatapack(@NotNull Path extractPath, @NotNull JarFile jarFile) throws Exception {
+    public void extractDatapack(Path extractPath, JarFile jarFile) throws Exception {
         Enumeration<JarEntry> entries = jarFile.entries();
         while (entries.hasMoreElements()){
             JarEntry entry = entries.nextElement();

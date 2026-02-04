@@ -1,7 +1,6 @@
 package me.udnek.coreu.resourcepack;
 
 import com.google.common.base.Preconditions;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.InputStream;
@@ -12,43 +11,43 @@ import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-public class FileManager{
-    public static @NotNull String layerUp(@NotNull String path){
+@org.jspecify.annotations.NullMarked public class FileManager{
+    public static String layerUp(String path){
         path = removeSlashes(path);
         int i = path.lastIndexOf("/");
         if (i == -1) return "";
         return path.substring(0, i);
     }
 
-    public static @NotNull String removeSlashes(@NotNull String path){
+    public static String removeSlashes(String path){
         if (path.startsWith("/")) path = path.substring(1);
         if (path.endsWith("/")) path = path.substring(0, path.length()-1);
         return path;
     }
-    public static @NotNull String joinPaths(@NotNull String first, @NotNull String second){
+    public static String joinPaths(String first, String second){
         first = removeSlashes(first);
         second = removeSlashes(second);
         return first + "/" + second;
     }
 
-    public static @NotNull InputStream getInputStream(@NotNull Class<?> clazz, @NotNull String path){
+    public static InputStream getInputStream(Class<?> clazz, String path){
         Preconditions.checkArgument(isFile(clazz, path), "Can not read file: " + path);
         return clazz.getClassLoader().getResourceAsStream(path);
     }
 
 
-    public static boolean isFile(@NotNull Class<?> clazz, @NotNull String path){
+    public static boolean isFile(Class<?> clazz, String path){
         URL resource = clazz.getClassLoader().getResource(path);
         if (resource == null) return false;
         return FileType.get(removeSlashes(resource.getPath())) != FileType.UNKNOWN;
     }
 
-    public static boolean isDirectoryEmpty(@NotNull Class<?> clazz, @NotNull String path){
+    public static boolean isDirectoryEmpty(Class<?> clazz, String path){
         List<String> resources = getAllResources(clazz, path);
         return resources.isEmpty();
     }
 
-    public static @NotNull List<String> getAllResources(@NotNull Class<?> clazz, @NotNull String path){
+    public static List<String> getAllResources(Class<?> clazz, String path){
         path = removeSlashes(path) + "/";
         String[] allResources = getAllResourcesInternal(clazz, path);
         List<String> result = new ArrayList<>();
@@ -59,7 +58,7 @@ public class FileManager{
         return result;
     }
 
-    private static @NotNull String[] getAllResourcesInternal(@NotNull Class<?> clazz, @NotNull String path){
+    private static String[] getAllResourcesInternal(Class<?> clazz, String path){
         URL dirURL = clazz.getClassLoader().getResource(path);
         if (dirURL != null && dirURL.getProtocol().equals("file")) {
             /* A file path: easy enough */

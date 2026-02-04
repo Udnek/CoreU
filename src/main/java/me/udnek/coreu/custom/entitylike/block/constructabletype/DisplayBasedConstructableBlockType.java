@@ -21,16 +21,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Transformation;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
-public abstract class DisplayBasedConstructableBlockType extends AbstractCustomBlockType {
+@org.jspecify.annotations.NullMarked public abstract class DisplayBasedConstructableBlockType extends AbstractCustomBlockType{
 
     public static final BlockState DEFAULT_FAKE_STATE = Material.BARRIER.createBlockData().createBlockState();
     public static final TileState DEFAULT_REAL_STATE;
-    
+
     static {
         ShulkerBox state = (ShulkerBox) Material.SHULKER_BOX.createBlockData().createBlockState();
         ItemStack lock = new ItemStack(Material.COMMAND_BLOCK);
@@ -40,35 +39,35 @@ public abstract class DisplayBasedConstructableBlockType extends AbstractCustomB
     }
 
     @Override
-    public void load(@NotNull TileState tileState) {
+    public void load(TileState tileState) {
         if (getDisplay(tileState.getBlock()) != null) return;
         placeAndReturnDisplay(tileState.getLocation(), CustomBlockPlaceContext.EMPTY);
     }
 
     @Override
-    public void unload(@NotNull TileState tileState) {}
+    public void unload(TileState tileState) {}
 
-    public @NotNull ItemStack getFakeDisplay() {
+    public ItemStack getFakeDisplay() {
         CustomItem item = getItem();
         return item != null ? item.getItem() : new ItemStack(Material.BAMBOO_PLANKS);
     }
 
     @Override
-    public @NotNull ItemStack getParticleBase() {return getFakeDisplay();}
+    public ItemStack getParticleBase() {return getFakeDisplay();}
 
     @Override
-    public @NotNull TileState getRealState() {return DEFAULT_REAL_STATE;}
+    public TileState getRealState() {return DEFAULT_REAL_STATE;}
 
     @Override
     public @Nullable BlockState getFakeState() {return DEFAULT_FAKE_STATE;}
 
     @Override
-    protected void internalPlace(@NotNull Location location, @NotNull CustomBlockPlaceContext context) {
+    protected void internalPlace(Location location, CustomBlockPlaceContext context) {
         super.internalPlace(location, context);
         placeAndReturnDisplay(location, context);
     }
 
-    public @NotNull ItemDisplay placeAndReturnDisplay(@NotNull Location location, @NotNull CustomBlockPlaceContext context){
+    public ItemDisplay placeAndReturnDisplay(Location location, CustomBlockPlaceContext context){
         Location displayLocation = location.toCenterLocation();
         displayLocation.setYaw(0);
         displayLocation.setPitch(0);
@@ -89,14 +88,14 @@ public abstract class DisplayBasedConstructableBlockType extends AbstractCustomB
     }
 
     @Override
-    public void onGenericDestroy(@NotNull Block block) {
+    public void onGenericDestroy(Block block) {
         super.onGenericDestroy(block);
         ItemDisplay display = getDisplay(block);
         if (display != null) display.remove();
     }
 
 
-    public @Nullable ItemDisplay getDisplay(@NotNull Block block){
+    public @Nullable ItemDisplay getDisplay(Block block){
         Collection<Entity> displays = block.getWorld().getNearbyEntities(block.getLocation().toCenterLocation(), 0.5, 0.5, 0.5);
         for (Entity display : displays) {
             if (CustomEntityType.get(display) == CustomEntityType.BLOCK_DISPLAY) return (ItemDisplay) display;
@@ -111,10 +110,10 @@ public abstract class DisplayBasedConstructableBlockType extends AbstractCustomB
     }
 
     @Override
-    public void onDamage(@NotNull BlockDamageEvent event) {}
+    public void onDamage(BlockDamageEvent event) {}
 
     @Override
-    public void customBreakTickProgress(@NotNull Block block, @NotNull Player player, float progress) {
+    public void customBreakTickProgress(Block block, Player player, float progress) {
         super.customBreakTickProgress(block, player, progress);
         Location centerLocation = block.getLocation().toCenterLocation();
         new BlockCracksParticle((int) (progress*9)).play(centerLocation);
@@ -130,24 +129,24 @@ public abstract class DisplayBasedConstructableBlockType extends AbstractCustomB
     public static class DisplayEntity extends ConstructableCustomEntityType<ItemDisplay>{
 
         @Override
-        public @NotNull EntityType getVanillaType() {
+        public EntityType getVanillaType() {
             return EntityType.ITEM_DISPLAY;
         }
 
         @Override
-        public void load(@NotNull Entity entity) {
+        public void load(Entity entity) {
             if (CustomBlockType.get(entity.getLocation().getBlock()) != null) return;
             entity.remove();
         }
 
         @Override
-        public void unload(@NotNull Entity entity) {
+        public void unload(Entity entity) {
             if (CustomBlockType.get(entity.getLocation().getBlock()) != null) return;
             entity.remove();
         }
 
         @Override
-        public @NotNull String getRawId() {
+        public String getRawId() {
             return "block_display";
         }
     }

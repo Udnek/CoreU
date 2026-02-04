@@ -15,17 +15,13 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public interface CustomItem extends Registrable, ComponentHolder<CustomItem>, Translatable {
+@org.jspecify.annotations.NullMarked public  interface CustomItem extends Registrable, ComponentHolder<CustomItem>, Translatable{
 
     NamespacedKey PERSISTENT_DATA_CONTAINER_NAMESPACE = new NamespacedKey(CoreU.getInstance(), "item");
-
-    ///////////////////////////////////////////////////////////////////////////
-    // STATIC
     ///////////////////////////////////////////////////////////////////////////
 
     static @Nullable String getId(@Nullable ItemStack itemStack){
@@ -41,12 +37,12 @@ public interface CustomItem extends Registrable, ComponentHolder<CustomItem>, Tr
         return get(getId(itemStack));
     }
     static @Nullable CustomItem get(@Nullable String id){return CustomRegistries.ITEM.get(id);}
-    static void consumeIfCustom(@Nullable ItemStack itemStack, @NotNull Consumer<@NotNull CustomItem> consumer){
+    static void consumeIfCustom(@Nullable ItemStack itemStack, Consumer<CustomItem> consumer){
         CustomItem customItem = get(itemStack);
         if (customItem != null) consumer.accept(customItem);
     }
     static boolean idExists(String id){return CustomRegistries.ITEM.get(id) != null;}
-    static boolean isCustom(@NotNull ItemStack itemStack) {
+    static boolean isCustom(ItemStack itemStack) {
         if (itemStack.hasItemMeta()){
             if (itemStack.getItemMeta().getPersistentDataContainer().has(PERSISTENT_DATA_CONTAINER_NAMESPACE)) return true;
         }
@@ -62,32 +58,28 @@ public interface CustomItem extends Registrable, ComponentHolder<CustomItem>, Tr
         return get(itemStack) == this;
     }
     ///////////////////////////////////////////////////////////////////////////
-    // PROPERTIES
-    ///////////////////////////////////////////////////////////////////////////
-    void setCooldown(@NotNull Player player, int ticks);
-    default void setCooldownSeconds(@NotNull Player player, float seconds){
+    void setCooldown(Player player, int ticks);
+    default void setCooldownSeconds(Player player, float seconds){
         setCooldown(player, (int) (seconds * 20));
     }
-    int getCooldown(@NotNull Player player);
-    default boolean hasCooldown(@NotNull Player player){return getCooldown(player) != 0;}
-    @NotNull String getRawId();
-    @NotNull ItemStack getItem();
-    boolean isTagged(@NotNull Tag<Material> tag);
-    @NotNull ItemStack update(@NotNull ItemStack itemStack);
+    int getCooldown(Player player);
+    default boolean hasCooldown(Player player){return getCooldown(player) != 0;}
+    String getRawId();
+    ItemStack getItem();
+    boolean isTagged(Tag<Material> tag);
+    ItemStack update(ItemStack itemStack);
     @Nullable RepairData getRepairData();
     ///////////////////////////////////////////////////////////////////////////
-    // EVENTS
-    ///////////////////////////////////////////////////////////////////////////
-    default void onPrepareCraft(@NotNull PrepareItemCraftEvent event, @Nullable ItemStack newResult){
+    default void onPrepareCraft(PrepareItemCraftEvent event, @Nullable ItemStack newResult){
         event.getInventory().setResult(getItemFromCraftingMatrix(newResult, event.getInventory().getMatrix(), event.getRecipe()));
     }
 
-    default void onCrafterCraft(@NotNull CrafterCraftEvent event){
+    default void onCrafterCraft(CrafterCraftEvent event){
         ItemStack item = getItemFromCraftingMatrix(event.getResult(), ((Crafter) event.getBlock().getState()).getInventory().getContents(), event.getRecipe());
         event.setResult(item == null ? new ItemStack(Material.AIR) : item);
     }
 
-    default @Nullable ItemStack getItemFromCraftingMatrix(@Nullable ItemStack result, @Nullable ItemStack[] matrix, @NotNull Recipe recipe){
+    default @Nullable ItemStack getItemFromCraftingMatrix(@Nullable ItemStack result, @Nullable ItemStack[] matrix, Recipe recipe){
         return result;
     }
 

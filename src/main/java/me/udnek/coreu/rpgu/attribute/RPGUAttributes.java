@@ -5,7 +5,7 @@ import me.udnek.coreu.custom.attribute.ConstructableCustomAttribute;
 import me.udnek.coreu.custom.attribute.CustomAttribute;
 import me.udnek.coreu.custom.registry.CustomRegistries;
 
-public class RPGUAttributes {
+@org.jspecify.annotations.NullMarked public class RPGUAttributes{
 
     public static final CustomAttribute ABILITY_CAST_RANGE = register(new ConstructableCustomAttribute("rpgu_ability_cast_range",1,0, 1024));
     public static final CustomAttribute ABILITY_COOLDOWN_TIME = register(new ConstructableCustomAttribute("rpgu_ability_cooldown_time",1,0, 1024, false));

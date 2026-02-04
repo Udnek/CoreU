@@ -4,9 +4,8 @@ import me.udnek.coreu.util.LoreBuilder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
-import org.jetbrains.annotations.NotNull;
 
-public interface AbilityLorePart extends LoreBuilder.Componentable{
+@org.jspecify.annotations.NullMarked public  interface AbilityLorePart extends LoreBuilder.Componentable{
 
     TextColor ACTIVE_HEADER_COLOR = NamedTextColor.GREEN;
     TextColor PASSIVE_HEADER_COLOR = NamedTextColor.YELLOW;
@@ -18,9 +17,9 @@ public interface AbilityLorePart extends LoreBuilder.Componentable{
     TextColor PASSIVE_DESCRIPTION_COLOR = NamedTextColor.BLUE;
 
 
-    void setHeader(@NotNull Component component);
+    void setHeader(Component component);
 
-    void addAbilityProperty(@NotNull Component component);
-    void addAbilityPropertyDoubleTab(@NotNull Component component);
-    void addAbilityDescription(@NotNull Component component);
+    void addAbilityProperty(Component component);
+    void addAbilityPropertyDoubleTab(Component component);
+    void addAbilityDescription(Component component);
 }

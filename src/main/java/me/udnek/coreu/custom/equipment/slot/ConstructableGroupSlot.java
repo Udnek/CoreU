@@ -4,19 +4,18 @@ import me.udnek.coreu.custom.equipment.universal.UniversalInventorySlot;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.EquipmentSlotGroup;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class ConstructableGroupSlot extends AbstractCustomEquipmentSlot implements CustomEquipmentSlot.Group {
+@org.jspecify.annotations.NullMarked public class ConstructableGroupSlot extends AbstractCustomEquipmentSlot implements CustomEquipmentSlot.Group{
     protected final String translation;
     protected final EquipmentSlotGroup vanillaGroup;
     private final EquipmentSlot vanillaSlot;
     protected final Set<Single> subs;
 
-    public ConstructableGroupSlot(@NotNull String rawId, @NotNull Set<@NotNull Single> subs, @Nullable EquipmentSlotGroup vanillaGroup, @Nullable EquipmentSlot vanillaSlot, @NotNull String translation) {
+    public ConstructableGroupSlot(String rawId, Set<Single> subs, @Nullable EquipmentSlotGroup vanillaGroup, @Nullable EquipmentSlot vanillaSlot, String translation) {
         super(rawId);
         this.translation = translation;
         this.vanillaGroup = vanillaGroup;
@@ -33,26 +32,26 @@ public class ConstructableGroupSlot extends AbstractCustomEquipmentSlot implemen
     public EquipmentSlot getVanillaSlot() {return vanillaSlot;}
 
     @Override
-    public void getAllUniversal(@NotNull Consumer<@NotNull UniversalInventorySlot> consumer) {
+    public void getAllUniversal(Consumer<UniversalInventorySlot> consumer) {
         subs.forEach(singleSlot -> singleSlot.getAllUniversal(consumer));
     }
 
     @Override
-    public @NotNull String translationKey() {
+    public String translationKey() {
         return translation;
     }
     @Override
-    public void getAllSingle(@NotNull Consumer<@NotNull Single> consumer) {
+    public void getAllSingle(Consumer<Single> consumer) {
         subs.forEach(consumer);
     }
 
     @Override
-    public boolean intersects(@NotNull LivingEntity entity, @NotNull CustomEquipmentSlot other) {
+    public boolean intersects(LivingEntity entity, CustomEquipmentSlot other) {
         return other == this || subs.stream().anyMatch(s -> other == s);
     }
 
     @Override
-    public boolean intersects(@NotNull LivingEntity entity, @NotNull UniversalInventorySlot slot) {
+    public boolean intersects(LivingEntity entity, UniversalInventorySlot slot) {
         return subs.stream().anyMatch(singleSlot -> singleSlot.intersects(entity, slot));
     }
 }

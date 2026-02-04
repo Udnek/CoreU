@@ -7,15 +7,15 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Transformation;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.UnknownNullability;
 
-public abstract class CustomFlatParticle extends ConstructableCustomParticle<ItemDisplay> {
-    protected ItemStack displayItem;
+@org.jspecify.annotations.NullMarked public abstract class CustomFlatParticle extends ConstructableCustomParticle<ItemDisplay>{
+    protected @UnknownNullability ItemStack displayItem;
 
-    protected abstract @NotNull NamespacedKey getCurrentModelPath();
+    protected abstract NamespacedKey getCurrentModelPath();
 
     @Override
-    public @NotNull EntityType getType() {
+    public EntityType getType() {
         return EntityType.ITEM_DISPLAY;
     }
 
@@ -36,7 +36,7 @@ public abstract class CustomFlatParticle extends ConstructableCustomParticle<Ite
 
     abstract public double getScale();
 
-    protected abstract @NotNull ItemStack createDisplayItem();
+    protected abstract ItemStack createDisplayItem();
 
     @Override
     protected void spawn() {

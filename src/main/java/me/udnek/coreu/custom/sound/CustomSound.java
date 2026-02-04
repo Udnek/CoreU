@@ -6,20 +6,19 @@ import net.kyori.adventure.translation.Translatable;
 import org.bukkit.Location;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface CustomSound extends Registrable, ComponentHolder<CustomSound>, Translatable {
-    void play(@Nullable Location location, @Nullable Player player, @NotNull SoundCategory category, float volume, float pitch);
+@org.jspecify.annotations.NullMarked public  interface CustomSound extends Registrable, ComponentHolder<CustomSound>, Translatable{
+    void play(@Nullable Location location, @Nullable Player player, SoundCategory category, float volume, float pitch);
     void play(@Nullable Location location, @Nullable Player player, float volume, float pitch);
     void play(@Nullable Location location, @Nullable Player player, float volume);
     void play(@Nullable Location location, @Nullable Player player);
-    default void play(@NotNull Player player){play(null, player);}
-    default void play(@NotNull Location location){
+    default void play(Player player){play(null, player);}
+    default void play(Location location){
         play(location, null);
     }
-    void stop(@NotNull Player player);
-    void stop(@NotNull Player player, @NotNull SoundCategory soundCategory);
-    void stopInHearableRadius(@NotNull Location location);
-    void stopInRadius(@NotNull Location location, float radius);
+    void stop(Player player);
+    void stop(Player player, SoundCategory soundCategory);
+    void stopInHearableRadius(Location location);
+    void stopInRadius(Location location, float radius);
 }

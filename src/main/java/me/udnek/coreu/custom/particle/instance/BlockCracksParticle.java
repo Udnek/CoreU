@@ -10,10 +10,9 @@ import org.bukkit.entity.ItemDisplay;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Transformation;
 import org.checkerframework.checker.index.qual.Positive;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
-public class BlockCracksParticle extends ConstructableCustomParticle<ItemDisplay> {
+@org.jspecify.annotations.NullMarked public class BlockCracksParticle extends ConstructableCustomParticle<ItemDisplay>{
 
     protected int strength;
 
@@ -25,7 +24,7 @@ public class BlockCracksParticle extends ConstructableCustomParticle<ItemDisplay
     public @Positive int getFramesAmount() {return 2;}
 
     @Override
-    public @NotNull EntityType getType() {
+    public EntityType getType() {
         return EntityType.ITEM_DISPLAY;
     }
 

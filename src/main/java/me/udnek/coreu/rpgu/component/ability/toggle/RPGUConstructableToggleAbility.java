@@ -15,16 +15,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
-public abstract class RPGUConstructableToggleAbility<ActivationContext> extends RPGUItemAbstractAbility<ActivationContext> implements RPGUItemToggleAbility<ActivationContext> {
+@org.jspecify.annotations.NullMarked public abstract class RPGUConstructableToggleAbility<ActivationContext> extends RPGUItemAbstractAbility<ActivationContext>implements RPGUItemToggleAbility<ActivationContext>{
 
     public static final NamespacedKey TOGGLE_KEY = new NamespacedKey(CoreU.getInstance(), "rpgu_toggle_ability_is_toggled");
 
     @Override
-    public void getLore(@NotNull LoreBuilder loreBuilder){
+    public void getLore(LoreBuilder loreBuilder){
         LoreBuilder.Componentable componentable = loreBuilder.get(LoreBuilder.Position.ATTRIBUTES);
         PassiveAbilityLorePart lorePart;
         if (!(componentable instanceof AttributesLorePart attributesLorePart)){
@@ -42,12 +41,12 @@ public abstract class RPGUConstructableToggleAbility<ActivationContext> extends 
     }
 
     // RETURNS IS TOGGLED
-    public boolean toggle(@NotNull CustomItem customItem, @NotNull Player player, @NotNull UniversalInventorySlot slot){
+    public boolean toggle(CustomItem customItem, Player player, UniversalInventorySlot slot){
         return setToggled(customItem, player, slot, !isToggled(customItem, player, slot));
     }
 
     // RETURNS IS TOGGLED
-    public boolean setToggled(@NotNull CustomItem customItem, @NotNull Player player, @NotNull UniversalInventorySlot slot, boolean toggle){
+    public boolean setToggled(CustomItem customItem, Player player, UniversalInventorySlot slot, boolean toggle){
         slot.modifyItem(new Function<>() {
             @Override
             public ItemStack apply(ItemStack stack) {
@@ -63,12 +62,12 @@ public abstract class RPGUConstructableToggleAbility<ActivationContext> extends 
         return toggle;
     }
 
-    protected boolean isToggled(@NotNull PersistentDataContainerView container){
+    protected boolean isToggled(PersistentDataContainerView container){
         return container.getOrDefault(TOGGLE_KEY, PersistentDataType.BOOLEAN, false);
     }
 
     @Override
-    public boolean isToggled(@NotNull CustomItem customItem, @NotNull Player player, @NotNull UniversalInventorySlot slot) {
+    public boolean isToggled(CustomItem customItem, Player player, UniversalInventorySlot slot) {
         ItemStack item = slot.getItem(player);
         if (item == null) return false;
         return isToggled(item.getPersistentDataContainer());

@@ -15,7 +15,6 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.DecimalFormat;
@@ -24,28 +23,26 @@ import java.util.Collection;
 import java.util.Locale;
 import java.util.function.Consumer;
 
-public class Utils {
+@org.jspecify.annotations.NullMarked public class Utils{
 
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##", new DecimalFormatSymbols(Locale.US));
 
-    // GENERAL
-
-    public static @NotNull Component translateStructure(@NotNull Key structureKey){
+    public static Component translateStructure(Key structureKey){
         return Component.translatable(
                 String.format("structure.%s.%s", structureKey.namespace(), structureKey.value()),
                 structureKey.asString()
         );
     }
 
-    public static @NotNull String roundToTwoDigits(double value){
+    public static String roundToTwoDigits(double value){
         return DECIMAL_FORMAT.format(value);
     }
 
-    public static <T> void consumeIfNotNull(@Nullable T object, @NotNull Consumer<@NotNull T> consumer){
+    public static <T> void consumeIfNotNull(@Nullable T object, Consumer<T> consumer){
         if (object != null) consumer.accept(object);
     }
 
-    public static @NotNull TextColor mixColors(@NotNull TextColor from, @NotNull TextColor to, float progress){
+    public static TextColor mixColors(TextColor from, TextColor to, float progress){
         Preconditions.checkArgument(0 <= progress && progress <= 1, "Progress must be between 0 and 1, but is: " + progress);
         Vector fromV = new Vector(from.red()/255f, from.green()/255f, from.blue()/255f);
         Vector toV = new Vector(to.red()/255f, to.green()/255f, to.blue()/255f);
@@ -53,13 +50,11 @@ public class Utils {
         return TextColor.color((float) fromV.getX(), (float) fromV.getY(), (float) fromV.getZ());
     }
 
-    // WORLD
-
-    public static void sendBlockDamageForAllPlayers(@NotNull Location location, float startProgress) {
+    public static void sendBlockDamageForAllPlayers(Location location, float startProgress) {
         sendBlockDamageForAllPlayers(location, startProgress, startProgress, 5);
     }
 
-    public static void sendBlockDamageForAllPlayers(@NotNull Location location, float startProgress, float step, long tickRate) {
+    public static void sendBlockDamageForAllPlayers(Location location, float startProgress, float step, long tickRate) {
         location.getWorld().getPlayers().forEach(player ->
                         new BukkitRunnable() {
                             float progress = startProgress;
@@ -77,10 +72,10 @@ public class Utils {
     }
 
     // RAYTRACE
-    public static @Nullable RayTraceResult rayTraceBlockOrEntity(@NotNull LivingEntity livingEntity, double castRange){
+    public static @Nullable RayTraceResult rayTraceBlockOrEntity(LivingEntity livingEntity, double castRange){
         return rayTraceBlockOrEntity(livingEntity, castRange, 0);
     }
-    public static @Nullable RayTraceResult rayTraceBlockOrEntity(@NotNull LivingEntity livingEntity, double castRange, double raySize){
+    public static @Nullable RayTraceResult rayTraceBlockOrEntity(LivingEntity livingEntity, double castRange, double raySize){
         Location location = livingEntity.getEyeLocation();
         World world = livingEntity.getWorld();
 
@@ -89,10 +84,10 @@ public class Utils {
         if (rayTraceResultBlocks != null) return rayTraceResultBlocks;
         return world.rayTraceEntities(location, location.getDirection(), castRange, raySize, entity -> entity != livingEntity);
     }
-    public static @Nullable Location rayTraceBlockUnder(@NotNull LivingEntity livingEntity){
+    public static @Nullable Location rayTraceBlockUnder(LivingEntity livingEntity){
         return rayTraceBlockUnder(livingEntity.getLocation());
     }
-    public static @Nullable Location rayTraceBlockUnder(@NotNull Location location){
+    public static @Nullable Location rayTraceBlockUnder(Location location){
         World world = location.getWorld();
         RayTraceResult rayTraceResult = world.rayTraceBlocks(location.add(0 , 1, 0), new Vector().setY(-1), 10000, FluidCollisionMode.NEVER, true);
 
@@ -101,18 +96,16 @@ public class Utils {
     }
 
     // NEARBY
-    public static @NotNull Collection<LivingEntity> findLivingEntitiesInRadius(@NotNull Location location, double radius){
+    public static Collection<LivingEntity> findLivingEntitiesInRadius(Location location, double radius){
         return location.getWorld().getNearbyLivingEntities(location, radius,
                 livingEntity -> livingEntity.getLocation().distance(location) <= radius);
     }
-    public static @NotNull Collection<LivingEntity> findLivingEntitiesInRadiusIntersects(@NotNull Location location, double radius){
+    public static Collection<LivingEntity> findLivingEntitiesInRadiusIntersects(Location location, double radius){
         return location.getWorld().getNearbyLivingEntities(location, radius+15,
                 entity -> entity.getBoundingBox().expand(radius).contains(location.toVector()));
     }
 
-    // PARTICLE
-
-    public static void particlePlayUntilGround(@NotNull AbstractArrow arrow, @NotNull ParticleBuilder particle){
+    public static void particlePlayUntilGround(AbstractArrow arrow, ParticleBuilder particle){
         new BukkitRunnable() {
             public void run() {
                 if (arrow.isOnGround() || !arrow.isValid()) {
@@ -124,7 +117,7 @@ public class Utils {
         }.runTaskTimer(CoreU.getInstance(), 0, 1);
     }
 
-    public static void particleDrawLine(@NotNull Particle particle, @NotNull Location from, @NotNull Location to, double space) {
+    public static void particleDrawLine(Particle particle, Location from, Location to, double space) {
         World world = from.getWorld();
         double distance = from.distance(to);
         Vector pointFrom = from.toVector();
@@ -136,15 +129,15 @@ public class Utils {
         }
     }
 
-    public static void particleCircle(@NotNull ParticleBuilder particleBuilder, double radius) {
+    public static void particleCircle(ParticleBuilder particleBuilder, double radius) {
         particleCircleWithDensity(particleBuilder, radius, 0.5);
     }
 
-    public static void particleCircleWithDensity(@NotNull ParticleBuilder particleBuilder, double radius, double distanceBetweenParticles) {
+    public static void particleCircleWithDensity(ParticleBuilder particleBuilder, double radius, double distanceBetweenParticles) {
         particleCircleWithAngle(particleBuilder, radius, 360d/(2d*Math.PI*radius/distanceBetweenParticles));
     }
 
-    public static void particleCircleWithAngle(@NotNull ParticleBuilder particleBuilder, double radius, double angleDegrees) {
+    public static void particleCircleWithAngle(ParticleBuilder particleBuilder, double radius, double angleDegrees) {
         Location location = particleBuilder.location();
         Preconditions.checkArgument(location != null, "Location must be not null");
         for (double d = 0; d <= 360; d += angleDegrees) {

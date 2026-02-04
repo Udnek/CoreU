@@ -3,7 +3,6 @@ package me.udnek.coreu.resourcepack.host;
 import me.udnek.coreu.CoreU;
 import me.udnek.coreu.resourcepack.RPInfo;
 import me.udnek.coreu.serializabledata.SerializableDataManager;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -19,9 +18,9 @@ import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-public class RpUtils {
+@org.jspecify.annotations.NullMarked public class RpUtils{
 
-    public static void zipFolder(@NotNull Path sourcePath, @NotNull Path zipFilePath) {
+    public static void zipFolder(Path sourcePath, Path zipFilePath) {
         try (
                 ZipOutputStream zipOut = new ZipOutputStream(Files.newOutputStream(zipFilePath));
                 Stream<Path> walk = Files.walk(sourcePath)

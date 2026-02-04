@@ -3,13 +3,12 @@ package me.udnek.coreu.custom.registry;
 import me.udnek.coreu.custom.event.InitializationEvent;
 import me.udnek.coreu.custom.item.VanillaItemManager;
 import me.udnek.coreu.util.LogUtils;
-import org.jetbrains.annotations.NotNull;
 
-public class InitializationProcess {
+@org.jspecify.annotations.NullMarked public class InitializationProcess{
 
-    private static InitializationProcess.Step step = Step.BEFORE_REGISTRIES_LOADED;
+    private static Step step = Step.BEFORE_REGISTRIES_LOADED;
 
-    public static @NotNull InitializationProcess.Step getStep(){
+    public static Step getStep(){
         return step;
     }
 

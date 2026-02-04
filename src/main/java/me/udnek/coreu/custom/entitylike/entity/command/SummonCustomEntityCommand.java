@@ -8,16 +8,15 @@ import org.bukkit.Location;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class SummonCustomEntityCommand implements BasicCommand {
+@org.jspecify.annotations.NullMarked public class SummonCustomEntityCommand implements BasicCommand{
 
     @Override
-    public void execute(@NotNull CommandSourceStack commandSourceStack, String[] args) {
+    public void execute(CommandSourceStack commandSourceStack, String[] args) {
         if (args.length != 1) return;
         CustomEntityType entityType = CustomEntityType.get(args[0]);
         if (entityType == null) return;

@@ -30,12 +30,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.NotNull;
 
 import static io.papermc.paper.datacomponent.DataComponentTypes.TOOLTIP_DISPLAY;
 
-public class CustomItemListener extends SelfRegisteringListener {
-    public CustomItemListener(@NotNull Plugin plugin) {
+@org.jspecify.annotations.NullMarked public class CustomItemListener extends SelfRegisteringListener{
+    public CustomItemListener(Plugin plugin) {
         super(plugin);
     }
 
@@ -115,14 +114,14 @@ public class CustomItemListener extends SelfRegisteringListener {
 
         AttributeLoreGenerator.generateVanillaAttributes(event.getItemStack(), loreBuilder);
 
-        TooltipDisplay oldDisplay = event.getItemStack().getDataOrDefault(TOOLTIP_DISPLAY, TooltipDisplay.tooltipDisplay().build());
+        TooltipDisplay oldDisplay = event.getItemStack().getDataOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplay.tooltipDisplay().build());
         TooltipDisplay.Builder newDisplay = TooltipDisplay.tooltipDisplay().hideTooltip(oldDisplay.hideTooltip());
         for (DataComponentType oldComponent : oldDisplay.hiddenComponents()) {
             newDisplay.addHiddenComponents(oldComponent);
         }
         newDisplay.addHiddenComponents(DataComponentTypes.ATTRIBUTE_MODIFIERS);
 
-        event.getItemStack().setData(TOOLTIP_DISPLAY, newDisplay);
+        event.getItemStack().setData(DataComponentTypes.TOOLTIP_DISPLAY, newDisplay);
 
         loreBuilder.add(
                 LoreBuilder.Position.ID,

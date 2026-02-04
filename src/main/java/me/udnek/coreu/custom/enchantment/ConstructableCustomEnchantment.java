@@ -25,13 +25,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
-public abstract class ConstructableCustomEnchantment extends AbstractRegistrable implements CustomEnchantment {
+@org.jspecify.annotations.NullMarked public abstract class ConstructableCustomEnchantment extends AbstractRegistrable implements CustomEnchantment{
 
-    protected Holder<Enchantment> nms;
-    protected org.bukkit.enchantments.Enchantment bukkit;
+    protected @Nullable Holder<Enchantment> nms;
+    protected @Nullable org.bukkit.enchantments.Enchantment bukkit;
 
     @Override
-    public void initialize(@NotNull Plugin plugin) {
+    public void initialize(Plugin plugin) {
         super.initialize(plugin);
 
         DataComponentMap effects = DataComponentMap.builder().build();
@@ -71,51 +71,50 @@ public abstract class ConstructableCustomEnchantment extends AbstractRegistrable
     }
 
     @Override
-    public @NotNull ItemStack createEnchantedBook(int level) {
+    public ItemStack createEnchantedBook(int level) {
         ItemStack book = new ItemStack(Material.ENCHANTED_BOOK);
         enchantBook(book, level);
         return book;
     }
 
     @Override
-    public void enchant(@NotNull ItemStack itemStack, int level) {
+    public void enchant(ItemStack itemStack, int level) {
+        assert bukkit != null;
         itemStack.addEnchantment(bukkit, level);
     }
 
     @Override
-    public void enchantBook(@NotNull ItemStack itemStack, int level) {
+    public void enchantBook(ItemStack itemStack, int level) {
+        assert bukkit != null;
         itemStack.setData(DataComponentTypes.STORED_ENCHANTMENTS, ItemEnchantments.itemEnchantments().add(bukkit, level));
     }
 
     @Override
-    @NotNull
     public org.bukkit.enchantments.Enchantment getBukkit() {
+        assert bukkit != null;
         return bukkit;
     }
 
-    // PROPERTIES
-
-
     @Override
-    public void getCustomAttributes(int level, @NotNull CustomAttributeConsumer consumer) {}
+    public void getCustomAttributes(int level, CustomAttributeConsumer consumer) {}
 
     public @Nullable Iterable<org.bukkit.enchantments.Enchantment> getExclusives(){return null;}
-    public abstract @NotNull Iterable<@NotNull Material> getSupportedItems();
-    public @Nullable Iterable<@NotNull Material> getPrimaryItems() {return null;}
-    public @NotNull net.kyori.adventure.text.Component getDescription(){
+    public abstract Iterable<Material> getSupportedItems();
+    public @Nullable Iterable<Material> getPrimaryItems() {return null;}
+    public net.kyori.adventure.text.Component getDescription(){
         return net.kyori.adventure.text.Component.translatable("enchantment."+getKey().namespace()+"."+getRawId());
     }
-    public abstract @NotNull EquipmentSlotGroup[] getSlots();
+    public abstract EquipmentSlotGroup[] getSlots();
     public @Positive int getWeight(){return 1;}
     public abstract @Range(from = 1, to = 255) int getMaxLevel();
     public @Range(from = 1, to = 1024) int getAnvilCost(){return 2;}
     @ApiStatus.Experimental
-    public @NotNull Cost getMinCost(){return new Cost(0, 0);}
+    public Cost getMinCost(){return new Cost(0, 0);}
     @ApiStatus.Experimental
-    public @NotNull Cost getMaxCost(){return new Cost(0, 0);}
+    public Cost getMaxCost(){return new Cost(0, 0);}
 
     public record Cost(@NonNegative int base, @NonNegative int perLevelAboveFirst){
-        public @NotNull Enchantment.Cost toNms(){
+        public Enchantment.Cost toNms(){
             return new Enchantment.Cost(base, perLevelAboveFirst);
         }
     }

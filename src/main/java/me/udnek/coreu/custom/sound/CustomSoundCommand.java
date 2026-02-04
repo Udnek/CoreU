@@ -5,16 +5,15 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import me.udnek.coreu.custom.registry.CustomRegistries;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class CustomSoundCommand implements BasicCommand {
+@org.jspecify.annotations.NullMarked public class CustomSoundCommand implements BasicCommand{
 
     @Override
-    public void execute(@NotNull CommandSourceStack commandSourceStack, String @NotNull [] args) {
+    public void execute(CommandSourceStack commandSourceStack, String[] args) {
         CommandSender commandSender = commandSourceStack.getSender();
         if (!(commandSender instanceof Player player)) return;
 
@@ -26,7 +25,7 @@ public class CustomSoundCommand implements BasicCommand {
     }
 
     @Override
-    public @NotNull Collection<String> suggest(@NotNull CommandSourceStack commandSourceStack, String @NotNull [] args) {
+    public Collection<String> suggest(CommandSourceStack commandSourceStack, String[] args) {
         if (args.length > 1) return List.of();
         List<String> ids = new ArrayList<>(CustomRegistries.SOUND.getIds());
         ids.removeIf(id -> !id.contains(args[0]));

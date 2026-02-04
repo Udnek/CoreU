@@ -4,12 +4,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
-public class Modifiers {
+@org.jspecify.annotations.NullMarked public class Modifiers{
 
-    public static <Context extends Number> @NotNull Function<Context, Double> TICKS_TO_SECONDS(){
+    public static <Context extends Number> Function<Context, Double> TICKS_TO_SECONDS(){
         return new Function<>() {
             @Override
-            public @NotNull Double apply(@NotNull Context context) {
+            public Double apply(@NotNull Context context) {
                 return context.doubleValue() / 20d;
             }
         };

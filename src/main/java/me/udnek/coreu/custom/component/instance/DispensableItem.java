@@ -11,20 +11,19 @@ import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.NotNull;
 
-public interface DispensableItem extends CustomComponent<CustomItem> {
+@org.jspecify.annotations.NullMarked public  interface DispensableItem extends CustomComponent<CustomItem>{
     DispensableItem DEFAULT = new DispensableItem() {
         @Override
-        public void onDispense(@NotNull CustomItem item, @NotNull BlockDispenseEvent event) {}
+        public void onDispense(CustomItem item, BlockDispenseEvent event) {}
 
         @Override
-        public void onDrop(@NotNull CustomItem item, @NotNull BlockDispenseEvent event) {}
+        public void onDrop(CustomItem item, BlockDispenseEvent event) {}
     };
 
     DispensableItem ALWAYS_DROP = new DispensableItem() {
         @Override
-        public void onDispense(@NotNull CustomItem item, @NotNull BlockDispenseEvent event) {
+        public void onDispense(CustomItem item, BlockDispenseEvent event) {
             event.setCancelled(true);
             Block block = event.getBlock();
             ItemStack itemStack = event.getItem();
@@ -40,15 +39,14 @@ public interface DispensableItem extends CustomComponent<CustomItem> {
         }
 
         @Override
-        public void onDrop(@NotNull CustomItem item, @NotNull BlockDispenseEvent event) {}
+        public void onDrop(CustomItem item, BlockDispenseEvent event) {}
     };
 
-    void onDispense(@NotNull CustomItem item, @NotNull BlockDispenseEvent event);
+    void onDispense(CustomItem item, BlockDispenseEvent event);
 
-    void onDrop(@NotNull CustomItem item, @NotNull BlockDispenseEvent event);
+    void onDrop(CustomItem item, BlockDispenseEvent event);
 
     @Override
-    @NotNull
     default CustomComponentType<CustomItem, ? extends CustomComponent<CustomItem>> getType(){
         return CustomComponentType.DISPENSABLE_ITEM;
     }

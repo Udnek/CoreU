@@ -10,7 +10,6 @@ import me.udnek.coreu.serializabledata.SerializableDataManager;
 import me.udnek.coreu.util.LogUtils;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.command.ConsoleCommandSender;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,10 +17,10 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 
-public class ResourcePackCommand implements BasicCommand {
+@org.jspecify.annotations.NullMarked public class ResourcePackCommand implements BasicCommand{
 
     @Override
-    public void execute(@NotNull CommandSourceStack commandSourceStack, String @NotNull [] args) {
+    public void execute(CommandSourceStack commandSourceStack, String[] args) {
         if (!(commandSourceStack.getSender() instanceof ConsoleCommandSender)){
             commandSourceStack.getSender().sendMessage("Command can be executed in console only!");
             return;
@@ -78,7 +77,7 @@ public class ResourcePackCommand implements BasicCommand {
     }
 
     @Override
-    public @NotNull Collection<String> suggest(@NotNull CommandSourceStack commandSourceStack, String @NotNull [] args) {
+    public Collection<String> suggest(CommandSourceStack commandSourceStack, String[] args) {
         return List.of();
     }
 

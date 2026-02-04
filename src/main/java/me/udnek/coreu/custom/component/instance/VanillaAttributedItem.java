@@ -16,16 +16,15 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
 
-public class VanillaAttributedItem implements LoreProvidingItemComponent, EquippableItem {
+@org.jspecify.annotations.NullMarked public class VanillaAttributedItem implements LoreProvidingItemComponent, EquippableItem{
 
     public static final VanillaAttributedItem EMPTY = new VanillaAttributedItem(){
         @Override
-        public void addAttribute(@NotNull Attribute attribute, @NotNull CustomKeyedAttributeModifier modifier) {
+        public void addAttribute(Attribute attribute, CustomKeyedAttributeModifier modifier) {
             throwCanNotChangeDefault();
         }
     };
@@ -36,18 +35,18 @@ public class VanillaAttributedItem implements LoreProvidingItemComponent, Equipp
         this(VanillaAttributesContainer.empty());
     }
 
-    public VanillaAttributedItem(@NotNull VanillaAttributesContainer container){
+    public VanillaAttributedItem(VanillaAttributesContainer container){
         this.container = container;
     }
 
-    public @NotNull VanillaAttributesContainer getAttributes() {return container;}
+    public VanillaAttributesContainer getAttributes() {return container;}
 
-    public void addAttribute(@NotNull Attribute attribute, @NotNull CustomKeyedAttributeModifier modifier){
+    public void addAttribute(Attribute attribute, CustomKeyedAttributeModifier modifier){
         container = new VanillaAttributesContainer.Builder().add(container).add(attribute, modifier).build();
     }
 
     @Override
-    public void getLore(@NotNull CustomItem customItem, @NotNull LoreBuilder builder) {
+    public void getLore(CustomItem customItem, LoreBuilder builder) {
         LoreBuilder.Componentable componentable = builder.get(LoreBuilder.Position.ATTRIBUTES);
         AttributesLorePart attributesLorePart;
         if (componentable instanceof AttributesLorePart){
@@ -69,13 +68,13 @@ public class VanillaAttributedItem implements LoreProvidingItemComponent, Equipp
     }
 
     @Override
-    public @NotNull CustomComponentType<CustomItem, ? extends CustomComponent<CustomItem>> getType() {
+    public CustomComponentType<CustomItem, ? extends CustomComponent<CustomItem>> getType() {
         return CustomComponentType.VANILLA_ATTRIBUTED_ITEM;
     }
 
     @Override
-    public boolean isAppropriate(@NotNull CustomItem item, @NotNull Player player, @NotNull BaseUniversalSlot slot) {
-        for (List<@NotNull CustomKeyedAttributeModifier> modifiers : container.getAll().values()) {
+    public boolean isAppropriate(CustomItem item, Player player, BaseUniversalSlot slot) {
+        for (List<CustomKeyedAttributeModifier> modifiers : container.getAll().values()) {
             for (CustomKeyedAttributeModifier modifier : modifiers) {
                 if (modifier.getEquipmentSlot().intersects(player, slot)) return true;
             }
@@ -83,12 +82,12 @@ public class VanillaAttributedItem implements LoreProvidingItemComponent, Equipp
         return false;
     }
 
-    private @NotNull AttributeModifier toVanilla(@NotNull CustomKeyedAttributeModifier modifier, @NotNull BaseUniversalSlot slot, @NotNull Player player){
+    private AttributeModifier toVanilla(CustomKeyedAttributeModifier modifier, BaseUniversalSlot slot, Player player){
         return modifier.toVanillaWitAdjustedKey("_base_slot_" + slot.integerSlotToCompare(player));
     }
 
     @Override
-    public void onEquipped(@NotNull CustomItem item, @NotNull Player player, @NotNull BaseUniversalSlot slot) {
+    public void onEquipped(CustomItem item, Player player, BaseUniversalSlot slot) {
         container.getAll().forEach((attribute, modifiers) -> {
             AttributeInstance attributeInstance = player.getAttribute(attribute);
             if (attributeInstance == null) return;
@@ -108,7 +107,7 @@ public class VanillaAttributedItem implements LoreProvidingItemComponent, Equipp
     }
 
     @Override
-    public void onUnequipped(@NotNull CustomItem item, @NotNull Player player, @NotNull BaseUniversalSlot slot) {
+    public void onUnequipped(CustomItem item, Player player, BaseUniversalSlot slot) {
         container.getAll().forEach((attribute, modifiers) -> {
             AttributeInstance attributeInstance = player.getAttribute(attribute);
             if (attributeInstance == null) return;
@@ -128,5 +127,5 @@ public class VanillaAttributedItem implements LoreProvidingItemComponent, Equipp
     }
 
     @Override
-    public void tick(@NotNull CustomItem customItem, @NotNull Player player, @NotNull BaseUniversalSlot slot, int tickDelay) {}
+    public void tick(CustomItem customItem, Player player, BaseUniversalSlot slot, int tickDelay) {}
 }

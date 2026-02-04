@@ -11,17 +11,16 @@ import net.minecraft.world.item.enchantment.LevelBasedValue;
 import net.minecraft.world.item.enchantment.effects.EnchantmentAttributeEffect;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnchantmentWrapper implements NmsWrapper<@NotNull Enchantment> {
+@org.jspecify.annotations.NullMarked public class EnchantmentWrapper implements NmsWrapper<Enchantment>{
 
-    protected @NotNull Enchantment enchantment;
+    protected Enchantment enchantment;
 
-    public EnchantmentWrapper(@NotNull Enchantment enchantment) {
+    public EnchantmentWrapper(Enchantment enchantment) {
         this.enchantment = enchantment;
     }
 
@@ -38,14 +37,14 @@ public class EnchantmentWrapper implements NmsWrapper<@NotNull Enchantment> {
         return Reflex.getFieldValue(enchantment, "effects");
     }
 
-    public <T> void setEffect(@NotNull DataComponentType<T> type, @Nullable T effect){
+    public <T> void setEffect(DataComponentType<T> type, @Nullable T effect){
         DataComponentMap.Builder builder = DataComponentMap.builder();
         builder.addAll(getEffectsNms());
         builder.set(type, effect);
         setEffectsNms(builder.build());
     }
 
-    public void addEffect(@NotNull NamespacedKey id, @NotNull Attribute bukkitAttribute, float baseValue, float valueAboveFirst, @NotNull org.bukkit.attribute.AttributeModifier.Operation bukkitOperation){
+    public void addEffect(NamespacedKey id, Attribute bukkitAttribute, float baseValue, float valueAboveFirst, org.bukkit.attribute.AttributeModifier.Operation bukkitOperation){
         AttributeModifier.Operation operation = switch (bukkitOperation){
             case ADD_NUMBER -> AttributeModifier.Operation.ADD_VALUE;
             case MULTIPLY_SCALAR_1 -> AttributeModifier.Operation.ADD_MULTIPLIED_BASE;
@@ -66,7 +65,7 @@ public class EnchantmentWrapper implements NmsWrapper<@NotNull Enchantment> {
     }
 
     @Override
-    public @NotNull Enchantment getNms() {
+    public Enchantment getNms() {
         return enchantment;
     }
 }

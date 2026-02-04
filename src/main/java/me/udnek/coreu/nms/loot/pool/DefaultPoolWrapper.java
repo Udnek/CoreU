@@ -17,31 +17,30 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class DefaultPoolWrapper implements PoolWrapper {
+@org.jspecify.annotations.NullMarked public class DefaultPoolWrapper implements PoolWrapper{
 
     protected final LootPool pool;
 
-    public DefaultPoolWrapper(@NotNull LootPool pool) {
+    public DefaultPoolWrapper(LootPool pool) {
         this.pool = pool;
     }
 
-    public @NotNull List<LootPoolEntryContainer> getEntriesNms(){
+    public List<LootPoolEntryContainer> getEntriesNms(){
         return Reflex.getFieldValue(pool, NmsFields.ENTRIES);
     }
 
     @Override
-    public @NotNull List<EntryWrapper> getEntries() {
+    public List<EntryWrapper> getEntries() {
         return getEntriesNms().stream().map(EntryWrapper::fromNms).toList();
     }
 
     @Override
-    public void addEntry(@NotNull EntryWrapper entry) {
+    public void addEntry(EntryWrapper entry) {
         List<LootPoolEntryContainer> newEntries = new ArrayList<>(getEntriesNms());
         newEntries.add(entry.getNms());
         Reflex.setFieldValue(pool, NmsFields.ENTRIES, newEntries);
@@ -55,12 +54,12 @@ public class DefaultPoolWrapper implements PoolWrapper {
     }
 
     @Override
-    public @NotNull EntryWrapper getEntry(int n) {
+    public EntryWrapper getEntry(int n) {
         return EntryWrapper.fromNms(getEntriesNms().get(n));
     }
 
     @Override
-    public void extractItems(@NotNull LootInfo base, @NotNull Consumer<Pair<ItemStack, LootInfo>> consumer) {
+    public void extractItems(LootInfo base, Consumer<Pair<ItemStack, LootInfo>> consumer) {
         List<SingletonEntryWrapper> singletons = new ArrayList<>();
         getEntries().forEach(e -> e.extractAllSingleton(singletons::add));
 
@@ -91,31 +90,31 @@ public class DefaultPoolWrapper implements PoolWrapper {
     }
 
     @Override
-    public @NotNull List<LootConditionWrapper> getConditions() {
+    public List<LootConditionWrapper> getConditions() {
         return LootConditionWrapper.wrap(Reflex.getFieldValue(pool, NmsFields.CONDITIONS));
     }
 
     @Override
-    public void setConditions(@NotNull List<LootConditionWrapper> conditions) {
+    public void setConditions(List<LootConditionWrapper> conditions) {
         List<LootItemCondition> list = LootConditionWrapper.unwrap(conditions);
         Reflex.setFieldValue(pool, NmsFields.CONDITIONS, list);
         Reflex.setFieldValue(pool, NmsFields.COMPOSITE_CONDITIONS, Util.allOf(list));
     }
 
     @Override
-    public @NotNull List<LootFunctionWrapper> getFunctions() {
+    public List<LootFunctionWrapper> getFunctions() {
         return LootFunctionWrapper.wrap(Reflex.getFieldValue(pool, NmsFields.FUNCTIONS));
     }
 
     @Override
-    public void setFunctions(@NotNull List<LootFunctionWrapper> functions) {
+    public void setFunctions(List<LootFunctionWrapper> functions) {
         List<LootItemFunction> list = LootFunctionWrapper.unwrap(functions);
         Reflex.setFieldValue(pool, NmsFields.FUNCTIONS, list);
         Reflex.setFieldValue(pool, NmsFields.COMPOSITE_FUNCTIONS, LootItemFunctions.compose(list));
     }
 
     @Override
-    public @NotNull LootPool getNms() {
+    public LootPool getNms() {
         return pool;
     }
 }

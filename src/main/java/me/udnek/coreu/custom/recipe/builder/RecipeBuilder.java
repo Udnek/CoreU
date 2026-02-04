@@ -12,7 +12,7 @@ import org.jspecify.annotations.Nullable;
 
 @SuppressWarnings("unchecked")
 @NullMarked
-public abstract class RecipeBuilder<Builder extends RecipeBuilder<?>> {
+public abstract class RecipeBuilder<Builder extends RecipeBuilder<?>>{
     protected static int recipeCounter = 0;
 
     protected boolean removeVanillaRecipes = true;
@@ -47,13 +47,14 @@ public abstract class RecipeBuilder<Builder extends RecipeBuilder<?>> {
     }
 
     public Builder resultAmount(int amount){
-        assert this.result != null;
-        this.result.setAmount(amount);
+        assert result != null;
+        result.setAmount(amount);
         return (Builder) this;
     }
 
     public void build(Plugin plugin){
         if (removeVanillaRecipes){
+            assert result != null;
             RecipeManager.getInstance().getRecipesAsResult(result,
                     recipe -> {
                         if (!(recipe instanceof Keyed keyedRecipe)) return;

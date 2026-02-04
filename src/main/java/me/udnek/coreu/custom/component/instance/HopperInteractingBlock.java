@@ -5,33 +5,31 @@ import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockType;
 import org.bukkit.event.inventory.HopperInventorySearchEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
-import org.jetbrains.annotations.NotNull;
 
-public interface HopperInteractingBlock extends CustomComponent<CustomBlockType> {
+@org.jspecify.annotations.NullMarked public  interface HopperInteractingBlock extends CustomComponent<CustomBlockType>{
 
     HopperInteractingBlock DENY = new HopperInteractingBlock() {
         @Override
-        public void onHopperSearch(@NotNull CustomBlockType blockType, @NotNull HopperInventorySearchEvent event) {
+        public void onHopperSearch(CustomBlockType blockType, HopperInventorySearchEvent event) {
             event.setInventory(null);
         }
         @Override
-        public void onItemMoveInto(@NotNull CustomBlockType blockType, @NotNull InventoryMoveItemEvent event) {
+        public void onItemMoveInto(CustomBlockType blockType, InventoryMoveItemEvent event) {
             event.setCancelled(true);
         }
         @Override
-        public void onItemMoveFrom(@NotNull CustomBlockType blockType, @NotNull InventoryMoveItemEvent event) {
+        public void onItemMoveFrom(CustomBlockType blockType, InventoryMoveItemEvent event) {
             event.setCancelled(true);
         }
     };
 
-    void onHopperSearch(@NotNull CustomBlockType blockType, @NotNull HopperInventorySearchEvent event);
+    void onHopperSearch(CustomBlockType blockType, HopperInventorySearchEvent event);
 
-    void onItemMoveInto(@NotNull CustomBlockType blockType, @NotNull InventoryMoveItemEvent event);
-    void onItemMoveFrom(@NotNull CustomBlockType blockType, @NotNull InventoryMoveItemEvent event);
+    void onItemMoveInto(CustomBlockType blockType, InventoryMoveItemEvent event);
+    void onItemMoveFrom(CustomBlockType blockType, InventoryMoveItemEvent event);
 
 
     @Override
-    @NotNull
     default CustomComponentType<CustomBlockType, ? extends CustomComponent<CustomBlockType>> getType(){
         return CustomComponentType.HOPPER_INTERACTING_BLOCK;
     }

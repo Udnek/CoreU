@@ -6,14 +6,13 @@ import me.udnek.coreu.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.RayTraceResult;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
-public interface RayTraceActiveAbility<Context> extends RPGUItemActiveAbility<Context> {
+@org.jspecify.annotations.NullMarked public  interface RayTraceActiveAbility<Context> extends RPGUItemActiveAbility<Context>{
 
-    default @Nullable Collection<LivingEntity> findLivingEntitiesInRayTraceRadius(@NotNull LivingEntity livingEntity, @Nullable ParticleBuilder particle){
+    default @Nullable Collection<LivingEntity> findLivingEntitiesInRayTraceRadius(LivingEntity livingEntity, @Nullable ParticleBuilder particle){
         RayTraceResult rayTraceResult = Utils.rayTraceBlockOrEntity(livingEntity, getComponents().getOrException(RPGUComponents.ABILITY_CAST_RANGE).get(livingEntity));
         if (rayTraceResult == null) return null;
         Location location = rayTraceResult.getHitPosition().toLocation(livingEntity.getWorld());
@@ -23,11 +22,11 @@ public interface RayTraceActiveAbility<Context> extends RPGUItemActiveAbility<Co
         return nearbyLivingEntities;
     }
 
-    default @Nullable Collection<LivingEntity> findLivingEntitiesInRayTraceRadius(@NotNull LivingEntity player){
+    default @Nullable Collection<LivingEntity> findLivingEntitiesInRayTraceRadius(LivingEntity player){
         return findLivingEntitiesInRayTraceRadius(player, null);
     }
 
-    default void showRadius(@NotNull ParticleBuilder particleBuilder, double size){
+    default void showRadius(ParticleBuilder particleBuilder, double size){
         Utils.particleCircle(particleBuilder, size);
     }
 }

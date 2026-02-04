@@ -4,23 +4,22 @@ import me.udnek.coreu.mgu.MGUId;
 import me.udnek.coreu.mgu.command.MGUCommandContext;
 import me.udnek.coreu.mgu.command.MGUCommandType;
 import me.udnek.coreu.mgu.map.MGUMap;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public interface MGUGameInstance {
+@org.jspecify.annotations.NullMarked public  interface MGUGameInstance{
 
-    @NotNull MGUGameType getType();
+    MGUGameType getType();
 
-    @NotNull MGUMap getMap();
+    MGUMap getMap();
 
-    @NotNull MGUId getId();
+    MGUId getId();
 
     boolean isRunning();
 
     void stop();
 
-    @NotNull MGUCommandType.ExecutionResult executeCommand(@NotNull MGUCommandContext context);
-    @NotNull List<String> getCommandOptions(@NotNull MGUCommandContext context);
-    boolean testCommandArgs(@NotNull MGUCommandContext context);
+    MGUCommandType.ExecutionResult executeCommand(MGUCommandContext context);
+    List<String> getCommandOptions(MGUCommandContext context);
+    boolean testCommandArgs(MGUCommandContext context);
 }

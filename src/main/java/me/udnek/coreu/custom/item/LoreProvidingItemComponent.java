@@ -2,8 +2,7 @@ package me.udnek.coreu.custom.item;
 
 import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.util.LoreBuilder;
-import org.jetbrains.annotations.NotNull;
 
-public interface LoreProvidingItemComponent extends CustomComponent<CustomItem> {
-    void getLore(@NotNull CustomItem customItem, @NotNull LoreBuilder loreBuilder);
+@org.jspecify.annotations.NullMarked public  interface LoreProvidingItemComponent extends CustomComponent<CustomItem>{
+    void getLore(CustomItem customItem, LoreBuilder loreBuilder);
 }

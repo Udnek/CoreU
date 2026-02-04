@@ -6,22 +6,20 @@ import me.udnek.coreu.mgu.game.MGUGameType;
 import me.udnek.coreu.mgu.player.MGUPlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record MGUCommandContext(
-        @NotNull MGUCommandType commandType,
-        @NotNull CommandSender sender,
-        @NotNull String[] args,
+@org.jspecify.annotations.NullMarked public  record MGUCommandContext(
+        MGUCommandType commandType,
+        CommandSender sender,
+        String[] args,
         @Nullable Player player,
         @Nullable MGUPlayer mguPlayer,
         @Nullable MGUGameInstance gameInstance,
-        @Nullable MGUGameType gameType)
-{
+        @Nullable MGUGameType gameType){
     public MGUCommandContext(
-            @NotNull MGUCommandType type,
-            @NotNull CommandSender sender,
-            @NotNull String[] args,
+            MGUCommandType type,
+            CommandSender sender,
+            String[] args,
             @Nullable MGUGameInstance gameInstance,
             @Nullable MGUGameType gameType)
     {
@@ -32,9 +30,9 @@ public record MGUCommandContext(
     }
 
     public MGUCommandContext(
-            @NotNull MGUCommandType type,
-            @NotNull CommandSender sender,
-            @NotNull String[] args
+            MGUCommandType type,
+            CommandSender sender,
+            String[] args
     ){
         this(type, sender, args, null, null);
     }

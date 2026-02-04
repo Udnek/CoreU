@@ -2,9 +2,8 @@ package me.udnek.coreu.multiblockstructure.blockchoice;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.jetbrains.annotations.NotNull;
 
-public class MaterialBlockChoice implements BlockChoice {
+@org.jspecify.annotations.NullMarked public class MaterialBlockChoice implements BlockChoice{
 
     public final Material material;
 
@@ -18,7 +17,7 @@ public class MaterialBlockChoice implements BlockChoice {
     }
 
     @Override
-    public @NotNull Material getExample() {
+    public Material getExample() {
         return material;
     }
 

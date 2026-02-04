@@ -1,23 +1,22 @@
 package me.udnek.coreu.resourcepack;
 
 import me.udnek.coreu.serializabledata.SerializableData;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
-public class RPInfo implements SerializableData {
+@org.jspecify.annotations.NullMarked public class RPInfo implements SerializableData{
 
     public @Nullable String extractDirectory;
     public @Nullable String checksum_zip;
     public @Nullable String checksum_folder;
-    public @NotNull String ip = "null";
+    public String ip = "null";
     public int port;
 
     public RPInfo(){}
 
     @Override
-    public @NotNull String serialize() {
+    public String serialize() {
         return SerializableData.serializeMap(Map.of(
                 "extract_directory", extractDirectory == null ? "null": extractDirectory ,
                 "checksum_zip", checksum_zip == null ? "null": checksum_zip,
@@ -35,7 +34,7 @@ public class RPInfo implements SerializableData {
         port = Integer.parseInt(map.getOrDefault("port", "25566"));
     }
     @Override
-    public @NotNull String getDataName() {
+    public String getDataName() {
         return "resourcepack_settings";
     }
 }

@@ -3,17 +3,16 @@ package me.udnek.coreu.util;
 import org.bukkit.Bukkit;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlotGroup;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
 
-public class ClickRateLimit {
+@org.jspecify.annotations.NullMarked public class ClickRateLimit{
 
     private static final HashMap<UUID, Trigger> triggers = new HashMap<>();
 
-    public static boolean triggerAndCanUse(@NotNull PlayerInteractEvent event, int rateLimit, boolean blockBothHands){
+    public static boolean triggerAndCanUse(PlayerInteractEvent event, int rateLimit, boolean blockBothHands){
         if (event.getHand() == null) return true;
         UUID playerId = event.getPlayer().getUniqueId();
         var trigger = triggers.get(playerId);
@@ -34,21 +33,21 @@ public class ClickRateLimit {
         return true;
     }
 
-    public static boolean triggerAndCanUse(@NotNull PlayerInteractEvent event){
+    public static boolean triggerAndCanUse(PlayerInteractEvent event){
         return triggerAndCanUse(event, 1, false);
     }
 
 
-    private record Trigger(@NotNull EquipmentSlotGroup hand, long endsIn){
+    private record Trigger(EquipmentSlotGroup hand, long endsIn){
 
-        static @NotNull Trigger fromEvent(@NotNull PlayerInteractEvent event, int rateLimit, boolean blockBothHands){
+        static Trigger fromEvent(PlayerInteractEvent event, int rateLimit, boolean blockBothHands){
             if (blockBothHands){
                 return new Trigger(EquipmentSlotGroup.HAND, Bukkit.getCurrentTick()+rateLimit);
             }
             return new Trigger(Objects.requireNonNull(event.getHand()).getGroup(), Bukkit.getCurrentTick()+rateLimit);
         }
 
-        static @NotNull Trigger withBothHands(@NotNull Trigger old){
+        static Trigger withBothHands(Trigger old){
             return new Trigger(EquipmentSlotGroup.HAND, old.endsIn);
         }
 

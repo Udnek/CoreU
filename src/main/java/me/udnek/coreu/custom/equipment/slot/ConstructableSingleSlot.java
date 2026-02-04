@@ -3,17 +3,16 @@ package me.udnek.coreu.custom.equipment.slot;
 import me.udnek.coreu.custom.equipment.universal.UniversalInventorySlot;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.EquipmentSlotGroup;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ConstructableSingleSlot extends AbstractCustomEquipmentSlot implements CustomEquipmentSlot.Single {
+@org.jspecify.annotations.NullMarked public class ConstructableSingleSlot extends AbstractCustomEquipmentSlot implements CustomEquipmentSlot.Single{
 
     protected final String translation;
     protected final EquipmentSlotGroup vanillaGroup;
     protected final EquipmentSlot vanillaSlot;
     protected final UniversalInventorySlot universalSlot;
 
-    public ConstructableSingleSlot(@NotNull String rawId, @Nullable EquipmentSlotGroup vanillaGroup, @Nullable EquipmentSlot vanillaSlot, @Nullable UniversalInventorySlot universalSlot, @NotNull String translation){
+    public ConstructableSingleSlot(String rawId, @Nullable EquipmentSlotGroup vanillaGroup, @Nullable EquipmentSlot vanillaSlot, @Nullable UniversalInventorySlot universalSlot, String translation){
         super(rawId);
         this.translation = translation;
         this.vanillaGroup = vanillaGroup;
@@ -32,5 +31,5 @@ public class ConstructableSingleSlot extends AbstractCustomEquipmentSlot impleme
     public @Nullable EquipmentSlot getVanillaSlot() {return vanillaSlot;}
 
     @Override
-    public @NotNull String translationKey() {return translation;}
+    public String translationKey() {return translation;}
 }

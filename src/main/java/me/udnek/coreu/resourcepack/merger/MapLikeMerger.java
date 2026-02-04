@@ -5,19 +5,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class MapLikeMerger implements RpFileMerger {
+@org.jspecify.annotations.NullMarked public class MapLikeMerger implements RpFileMerger{
     private final List<JsonObject> jsons = new ArrayList<>();
     private JsonObject merged = null;
 
     public MapLikeMerger(){}
     @Override
-    public void add(@NotNull JsonObject jsonObject){
+    public void add(JsonObject jsonObject){
         jsons.add(jsonObject);
     }
 
@@ -33,7 +32,7 @@ public class MapLikeMerger implements RpFileMerger {
 
 
     @Override
-    public @NotNull String getMergedAsString() {
+    public String getMergedAsString() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         JsonNode jsonNode;

@@ -6,17 +6,16 @@ import me.udnek.coreu.mgu.MGUManager;
 import me.udnek.coreu.mgu.game.MGUGameInstance;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class MGUAbstractPlayer extends AbstractComponentHolder<MGUPlayer> implements MGUPlayer {
+@org.jspecify.annotations.NullMarked public abstract class MGUAbstractPlayer extends AbstractComponentHolder<MGUPlayer>implements MGUPlayer{
 
     private final MGUGameInstance game;
     private final Player player;
 
-    public MGUAbstractPlayer(@NotNull Player player, @NotNull MGUGameInstance game){
+    public MGUAbstractPlayer(Player player, MGUGameInstance game){
         this.game = game;
         this.player = player;
         MGUManager.get().registerPlayer(this);
@@ -31,12 +30,12 @@ public abstract class MGUAbstractPlayer extends AbstractComponentHolder<MGUPlaye
     }
 
     @Override
-    public @NotNull MGUGameInstance getGame() {
+    public MGUGameInstance getGame() {
         return game;
     }
 
     @Override
-    public @NotNull Player getPlayer() {
+    public Player getPlayer() {
         return player;
     }
 

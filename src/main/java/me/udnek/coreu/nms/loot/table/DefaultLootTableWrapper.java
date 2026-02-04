@@ -12,22 +12,21 @@ import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctions;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class DefaultLootTableWrapper implements LootTableWrapper {
+@org.jspecify.annotations.NullMarked public class DefaultLootTableWrapper implements LootTableWrapper{
 
-    protected final @NotNull LootTable lootTable;
+    protected final LootTable lootTable;
 
-    public DefaultLootTableWrapper(@NotNull LootTable lootTable) {
+    public DefaultLootTableWrapper(LootTable lootTable) {
         this.lootTable = lootTable;
     }
 
     @Override
-    public @NotNull DefaultLootTableWrapper copy(){
+    public DefaultLootTableWrapper copy(){
         LootTable newLootTable = Reflex.construct(
                 Reflex.getFirstConstructor(LootTable.class),
 
@@ -40,26 +39,26 @@ public class DefaultLootTableWrapper implements LootTableWrapper {
     }
 
     @Override
-    public void extractItems(@NotNull LootInfo base, @NotNull Consumer<Pair<ItemStack, LootInfo>> consumer) {
+    public void extractItems(LootInfo base, Consumer<Pair<ItemStack, LootInfo>> consumer) {
         for (PoolWrapper pool : getPools()) {
             pool.extractItems(base.copyAndMultiplyProbability(1), consumer);
         }
     }
 
     @Override
-    public void addPool(@NotNull PoolWrapper container) {
+    public void addPool(PoolWrapper container) {
         List<LootPool> pools = new ArrayList<>(Reflex.getFieldValue(lootTable, NmsFields.POOLS));
         pools.add(container.getNms());
         Reflex.setFieldValue(lootTable, NmsFields.POOLS, pools);
     }
 
     @Override
-    public @NotNull PoolWrapper getPool(int n) {
+    public PoolWrapper getPool(int n) {
         return new DefaultPoolWrapper(Reflex.<List<LootPool>>getFieldValue(lootTable, NmsFields.POOLS).get(n));
     }
 
     @Override
-    public @NotNull List<PoolWrapper> getPools() {
+    public List<PoolWrapper> getPools() {
         return Reflex.<List<LootPool>>getFieldValue(lootTable, NmsFields.POOLS).stream()
                 .map(e -> (PoolWrapper) new DefaultPoolWrapper(e)).toList();
     }
@@ -72,19 +71,19 @@ public class DefaultLootTableWrapper implements LootTableWrapper {
     }
 
     @Override
-    public @NotNull List<LootFunctionWrapper> getFunctions() {
+    public List<LootFunctionWrapper> getFunctions() {
         return LootFunctionWrapper.wrap(Reflex.getFieldValue(lootTable, NmsFields.FUNCTIONS));
     }
 
     @Override
-    public void setFunctions(@NotNull List<LootFunctionWrapper> functions) {
+    public void setFunctions(List<LootFunctionWrapper> functions) {
         List<LootItemFunction> value = LootFunctionWrapper.unwrap(functions);
         Reflex.setFieldValue(lootTable, NmsFields.FUNCTIONS, value);
         Reflex.setFieldValue(lootTable, NmsFields.COMPOSITE_FUNCTIONS, LootItemFunctions.compose(value));
     }
 
     @Override
-    public @NotNull LootTable getNms() {
+    public LootTable getNms() {
         return lootTable;
     }
 }

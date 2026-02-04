@@ -6,33 +6,32 @@ import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class FakeBlock {
+@org.jspecify.annotations.NullMarked public class FakeBlock{
 
     private static final HashMap<Block, FakeBlock> fakes = new HashMap<>();
 
     private @Nullable BukkitRunnable task;
-    private final @NotNull Location location;
-    private final @NotNull BlockData blockData;
+    private final Location location;
+    private final BlockData blockData;
     private final long duration;
-    private final @NotNull List<Player> players;
+    private final List<Player> players;
 
 
-    public static void show(@NotNull Location location, @NotNull BlockData blockData, @NotNull List<@NotNull Player> players, long duration) {
+    public static void show(Location location, BlockData blockData, List<Player> players, long duration) {
         new FakeBlock(location, blockData, players, duration).run();
     }
-    public static void stop(@NotNull Location location){
+    public static void stop(Location location){
         FakeBlock fakeBlock = fakes.get(location.getBlock());
         if (fakeBlock == null) return;
         fakeBlock.stop(true);
     }
 
-    private FakeBlock(@NotNull Location location, @NotNull BlockData blockData, @NotNull List<@NotNull Player> players, long duration){
+    private FakeBlock(Location location, BlockData blockData, List<Player> players, long duration){
         this.players = players;
         this.location = location.clone();
         this.blockData = blockData;

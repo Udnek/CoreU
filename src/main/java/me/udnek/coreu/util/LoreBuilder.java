@@ -4,37 +4,36 @@ import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.ItemLore;
 import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
 
-public class LoreBuilder {
+@org.jspecify.annotations.NullMarked public class LoreBuilder{
 
-    Map<@NotNull Integer, @NotNull Componentable> lore = new HashMap<>();
+    Map<Integer, Componentable> lore = new HashMap<>();
 
     public LoreBuilder(){}
 
-    public void add(int priority, @NotNull Component line){
+    public void add(int priority, Component line){
         Componentable components = lore.getOrDefault(priority, new Componentable.Simple());
         components.add(line);
         lore.put(priority, components);
     }
-    public void add(@NotNull Position position, @NotNull Component line){
+    public void add(Position position, Component line){
         add(position.priority, line);
     }
-    public void set(int priority, @Nullable Componentable componentable){
+    public void set(int priority, @Nullable LoreBuilder.Componentable componentable){
         if (componentable == null) lore.remove(priority);
         else lore.put(priority, componentable);
     }
-    public void set(@NotNull Position position, @Nullable Componentable componentable){
+    public void set(Position position, @Nullable LoreBuilder.Componentable componentable){
         set(position.priority, componentable);
     }
-    public @Nullable Componentable get(int priority){
+    public @Nullable LoreBuilder.Componentable get(int priority){
         return lore.get(priority);
     }
-    public @Nullable Componentable get(@NotNull Position position){
+    public @Nullable LoreBuilder.Componentable get(Position position){
         return get(position.priority);
     }
     public boolean isEmpty(){
@@ -42,7 +41,7 @@ public class LoreBuilder {
     }
     public void clear(){lore.clear();}
 
-    public @NotNull List<Component> build(){
+    public List<Component> build(){
         TreeMap<Integer, Componentable> sorted = new TreeMap<>(Integer::compare);
         sorted.putAll(lore);
         List<Component> finalLore = new ArrayList<>();
@@ -50,7 +49,7 @@ public class LoreBuilder {
         return finalLore;
     }
 
-    public void buildAndApply(@NotNull ItemStack itemStack){
+    public void buildAndApply(ItemStack itemStack){
         List<Component> lore = LoreBuilder.this.build();
         if (lore.isEmpty()) return;
         itemStack.setData(DataComponentTypes.LORE, ItemLore.lore(lore));
@@ -70,9 +69,9 @@ public class LoreBuilder {
     }
 
     public interface Componentable{
-        void toComponents(@NotNull Consumer<Component> consumer);
-        void add(@NotNull Component component);
-        void addFirst(@NotNull Component component);
+        void toComponents(Consumer<Component> consumer);
+        void add(Component component);
+        void addFirst(Component component);
         boolean isEmpty();
 
         class Simple implements Componentable{
@@ -80,17 +79,17 @@ public class LoreBuilder {
             List<Component> components = new ArrayList<>();
 
             @Override
-            public void toComponents(@NotNull Consumer<Component> consumer) {
+            public void toComponents(Consumer<Component> consumer) {
                 components.forEach(consumer);
             }
 
             @Override
-            public void add(@NotNull Component component) {
+            public void add(Component component) {
                 components.add(component);
             }
 
             @Override
-            public void addFirst(@NotNull Component component) {
+            public void addFirst(Component component) {
                 components.addFirst(component);
             }
 

@@ -7,35 +7,33 @@ import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.structure.StructureSpawnOverride;
 import org.bukkit.craftbukkit.entity.CraftEntityType;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StructureSpawnOverrideWrapper implements NmsWrapper<StructureSpawnOverride> {
+@org.jspecify.annotations.NullMarked public class StructureSpawnOverrideWrapper implements NmsWrapper<StructureSpawnOverride>{
 
-    public static @NotNull StructureSpawnOverrideWrapper of(@NotNull BoundingBoxTypeWrapper box){
+    public static StructureSpawnOverrideWrapper of(BoundingBoxTypeWrapper box){
         return new StructureSpawnOverrideWrapper(new StructureSpawnOverride(box.getNms(), WeightedList.of()));
     }
 
-    @NotNull
     protected final StructureSpawnOverride override;
 
-    public StructureSpawnOverrideWrapper(@NotNull StructureSpawnOverride override){
+    public StructureSpawnOverrideWrapper(StructureSpawnOverride override){
         this.override = override;
     }
 
     @Override
-    public @NotNull StructureSpawnOverride getNms() {
+    public StructureSpawnOverride getNms() {
         return override;
     }
 
-    public void setBoundingBoxType(@NotNull BoundingBoxTypeWrapper boxType){
+    public void setBoundingBoxType(BoundingBoxTypeWrapper boxType){
         Reflex.setRecordFieldValue(override, "boundingBox", boxType.getNms());
     }
 
-    public void setSpawns(@NotNull List<@NotNull SpawnEntry> spawns){
-        List<Weighted<MobSpawnSettings.@NotNull SpawnerData>> nmsSpawns =
+    public void setSpawns(List<SpawnEntry> spawns){
+        List<Weighted<MobSpawnSettings.SpawnerData>> nmsSpawns =
                 spawns.stream().map(e -> {
                     MobSpawnSettings.SpawnerData spawnerData = new MobSpawnSettings.SpawnerData(
                             CraftEntityType.bukkitToMinecraft(e.entityType()),
@@ -44,18 +42,18 @@ public class StructureSpawnOverrideWrapper implements NmsWrapper<StructureSpawnO
                     );
                     return new Weighted<>(spawnerData, e.weight);
                 }).toList();
-        WeightedList<MobSpawnSettings.@NotNull SpawnerData> weightedList = WeightedList.of(nmsSpawns);
+        WeightedList<MobSpawnSettings.SpawnerData> weightedList = WeightedList.of(nmsSpawns);
         Reflex.setRecordFieldValue(override, "spawns", weightedList);
     }
 
-    public void addSpawn(@NotNull SpawnEntry entry){
-        ArrayList<@NotNull SpawnEntry> spawns = new ArrayList<>(getSpawns());
+    public void addSpawn(SpawnEntry entry){
+        ArrayList<SpawnEntry> spawns = new ArrayList<>(getSpawns());
         spawns.add(entry);
         setSpawns(spawns);
     }
 
 
-    public @NotNull List<@NotNull SpawnEntry> getSpawns(){
+    public List<SpawnEntry> getSpawns(){
         return override.spawns().unwrap().stream().map(w -> {
             int weight = w.weight();
             MobSpawnSettings.SpawnerData spawnerData = w.value();
@@ -67,5 +65,5 @@ public class StructureSpawnOverrideWrapper implements NmsWrapper<StructureSpawnO
         }).toList();
     }
 
-    public record SpawnEntry(int weight, @NotNull org.bukkit.entity.EntityType entityType, int min, int max){}
+    public record SpawnEntry(int weight, org.bukkit.entity.EntityType entityType, int min, int max){}
 }

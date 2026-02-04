@@ -7,12 +7,11 @@ import me.udnek.coreu.custom.entitylike.block.CustomBlockManager;
 import me.udnek.coreu.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
 
-public class LoadedCustomBlocksCommand implements BasicCommand {
+@org.jspecify.annotations.NullMarked public class LoadedCustomBlocksCommand implements BasicCommand{
 
     @Override
-    public void execute(@NotNull CommandSourceStack commandSourceStack, String @NotNull [] args) {
+    public void execute(CommandSourceStack commandSourceStack, String[] args) {
         CommandSender commandSender = commandSourceStack.getSender();
         commandSender.sendMessage("Loaded blocks:");
         for (CustomBlockEntity block : CustomBlockManager.getInstance().getAllLoaded()) {

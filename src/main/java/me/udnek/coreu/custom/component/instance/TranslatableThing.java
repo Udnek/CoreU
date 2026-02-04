@@ -7,23 +7,22 @@ import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.registry.Registrable;
 import me.udnek.coreu.resourcepack.path.VirtualRpJsonFile;
 import net.kyori.adventure.translation.Translatable;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class TranslatableThing implements CustomComponent<Object> {
+@org.jspecify.annotations.NullMarked public class TranslatableThing implements CustomComponent<Object>{
 
     public static final TranslatableThing DEFAULT = new TranslatableThing(null)
         {
             @Override
-            public @NotNull TranslatableThing addAdditional(@NotNull String key, Translations translations) {
+            public TranslatableThing addAdditional(String key, Translations translations) {
                 throwCanNotChangeDefault();
                 return this;
             }
 
             @Override
-            public @NotNull List<VirtualRpJsonFile> getFiles(@NotNull Translatable translatable, @NotNull Registrable registrable) {
+            public List<VirtualRpJsonFile> getFiles(Translatable translatable, Registrable registrable) {
                 return List.of();
             }
         };
@@ -31,23 +30,23 @@ public class TranslatableThing implements CustomComponent<Object> {
     public static final String EN_US = "en_us";
     public static final String RU_RU = "ru_ru";
 
-    protected @NotNull Map<String, Translations> additionalSuffixesTranslations = Map.of();
-    public final @NotNull Translations main;
+    protected Map<String, Translations> additionalSuffixesTranslations = Map.of();
+    public final Translations main;
 
-    public static @NotNull TranslatableThing ofEngAndRu(@NotNull String eng, @NotNull String ru){
+    public static TranslatableThing ofEngAndRu(String eng, String ru){
         return new TranslatableThing(Translations.ofEngAndRu(eng, ru));
     }
 
-    public static @NotNull TranslatableThing ofEng(@NotNull String eng){
+    public static TranslatableThing ofEng(String eng){
         return new TranslatableThing(Translations.ofEng(eng));
     }
 
-    public TranslatableThing(@Nullable Translations main){
+    public TranslatableThing(@Nullable TranslatableThing.Translations main){
         if (main == null) main = Translations.EMPTY;
         this.main = main;
     }
 
-    public @NotNull List<VirtualRpJsonFile> getFiles(@NotNull Translatable translatable, @NotNull Registrable registrable){
+    public List<VirtualRpJsonFile> getFiles(Translatable translatable, Registrable registrable){
         Set<String> langs = new HashSet<>(main.langToTranslation.keySet());
         additionalSuffixesTranslations.forEach((string, translations) -> langs.addAll(translations.langToTranslation.keySet()));
         List<VirtualRpJsonFile> files = new ArrayList<>();
@@ -67,46 +66,46 @@ public class TranslatableThing implements CustomComponent<Object> {
         return files;
     }
 
-    public @NotNull TranslatableThing addAdditional(@NotNull String key, Translations translations){
+    public TranslatableThing addAdditional(String key, Translations translations){
         if (additionalSuffixesTranslations.isEmpty()) additionalSuffixesTranslations = new HashMap<>();
         additionalSuffixesTranslations.put(key, translations);
         return this;
     }
 
     @Override
-    public @NotNull CustomComponentType<Object, ? extends CustomComponent<Object>> getType() {
+    public CustomComponentType<Object, ? extends CustomComponent<Object>> getType() {
         return CustomComponentType.TRANSLATABLE_THING;
     }
 
     public static class Translations{
 
-        private @NotNull Map<String, String> langToTranslation;
+        private Map<String, String> langToTranslation;
 
         public static final Translations EMPTY = new Translations(Map.of()){
             @Override
-            public void addLang(@NotNull String lang, @NotNull String translation) {
+            public void addLang(String lang, String translation) {
                 throwCanNotChangeDefault();
             }
         };
 
-        public static @NotNull Translations ofEngAndRu(@NotNull String eng, @NotNull String ru){
+        public static Translations ofEngAndRu(String eng, String ru){
             return new Translations(Map.of(EN_US, eng, RU_RU, ru));
         }
 
-        public static @NotNull Translations ofEng(@NotNull String eng){
+        public static Translations ofEng(String eng){
             return new Translations(Map.of(EN_US, eng));
         }
 
-        public Translations(@NotNull Map<String, String> langToTranslation){
+        public Translations(Map<String, String> langToTranslation){
             this.langToTranslation = langToTranslation;
         }
 
-        public void addLang(@NotNull String lang, @NotNull String translation){
+        public void addLang(String lang, String translation){
             if (!(langToTranslation instanceof HashMap<String, String>)) langToTranslation = new HashMap<>(langToTranslation);
             langToTranslation.put(lang, translation);
         }
 
-        public @Nullable String getByLang(@NotNull String lang){
+        public @Nullable String getByLang(String lang){
             return langToTranslation.getOrDefault(lang, null);
         }
 

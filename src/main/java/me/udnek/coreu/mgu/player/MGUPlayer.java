@@ -8,19 +8,18 @@ import me.udnek.coreu.mgu.component.MGUComponents;
 import me.udnek.coreu.mgu.component.MGUPlayerDataHolder;
 import me.udnek.coreu.mgu.game.MGUGameInstance;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
-public interface MGUPlayer extends ComponentHolder<MGUPlayer>, Resettable {
+@org.jspecify.annotations.NullMarked public  interface MGUPlayer extends ComponentHolder<MGUPlayer>, Resettable{
 
-    @NotNull MGUGameInstance getGame();
+    MGUGameInstance getGame();
 
-    @NotNull Player getPlayer();
+    Player getPlayer();
 
     default void unregister(){
         MGUManager.get().unregisterPlayer(this);
     }
 
-    default @NotNull CustomComponentMap<MGUPlayerDataHolder> getData(){
+    default CustomComponentMap<MGUPlayerDataHolder> getData(){
         return getComponents().getOrCreateDefault(MGUComponents.PLAYER_DATA).getComponents();
     }
 

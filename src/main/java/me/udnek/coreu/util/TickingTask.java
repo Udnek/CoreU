@@ -4,13 +4,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.checkerframework.checker.index.qual.Positive;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public abstract class TickingTask implements Runnable{
+@org.jspecify.annotations.NullMarked public abstract class TickingTask implements Runnable{
 
-    protected BukkitTask task;
+    protected @Nullable BukkitTask task;
 
-    public void start(@NotNull JavaPlugin plugin){
+    public void start(JavaPlugin plugin){
         task = Bukkit.getScheduler().runTaskTimer(plugin, this, 0, getDelay());
     }
 

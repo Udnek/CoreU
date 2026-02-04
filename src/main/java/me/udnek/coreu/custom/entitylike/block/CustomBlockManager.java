@@ -27,7 +27,6 @@ import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -35,14 +34,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CustomBlockManager extends EntityLikeManager<TileState, CustomBlockType, CustomBlockEntity> implements Listener {
+@org.jspecify.annotations.NullMarked public class CustomBlockManager extends EntityLikeManager<TileState, CustomBlockType, CustomBlockEntity>implements Listener{
 
     public static final int MAX_CUSTOM_BLOCK_PACKETS_PER_TICK = 50;
     private static @Nullable CustomBlockManager instance;
 
     private final HashMap<Block, BreakData> breaking = new HashMap<>();
 
-    public static @NotNull CustomBlockManager getInstance() {
+    public static CustomBlockManager getInstance() {
         if (instance == null) {
             instance = new CustomBlockManager();
             Bukkit.getPluginManager().registerEvents(instance, CoreU.getInstance());
@@ -53,11 +52,11 @@ public class CustomBlockManager extends EntityLikeManager<TileState, CustomBlock
     private CustomBlockManager(){}
 
     @Override
-    protected boolean equals(@NotNull TileState r1, @NotNull TileState r2) {
+    protected boolean equals(TileState r1, TileState r2) {
         return r1.equals(r2);
     }
 
-    public void loadChunk(@NotNull Chunk chunk){
+    public void loadChunk(Chunk chunk){
         for (BlockState blockState : chunk.getTileEntities()) {
             CustomBlockType customBlockType = CustomBlockType.get((TileState) blockState);
             if (customBlockType != null) loadAny(customBlockType, (TileState) blockState);
@@ -65,7 +64,7 @@ public class CustomBlockManager extends EntityLikeManager<TileState, CustomBlock
     }
 
     // TODO FIX SERVER CALLS
-    public void unloadChunk(@NotNull Chunk chunk){
+    public void unloadChunk(Chunk chunk){
         for (BlockState blockState : chunk.getTileEntities()) {
             CustomBlockType customBlockType = CustomBlockType.get((TileState) blockState);
             if (customBlockType != null) unloadAny(customBlockType, (TileState) blockState);
@@ -137,16 +136,14 @@ public class CustomBlockManager extends EntityLikeManager<TileState, CustomBlock
     }
 
     public static class BreakData {
-        private final @NotNull CustomBlockType customBlock;
+        private final CustomBlockType customBlock;
         private final HashMap<Player, Float> progress = new HashMap<>();
 
-        public BreakData(@NotNull CustomBlockType customBlock, @NotNull Player player) {
+        public BreakData(CustomBlockType customBlock, Player player) {
             this.customBlock = customBlock;
             progress.put(player, 0f);
         }
     }
-
-    // EVENTS
 
     @EventHandler
     public void onDestroy(BlockDestroyEvent event){
@@ -217,7 +214,7 @@ public class CustomBlockManager extends EntityLikeManager<TileState, CustomBlock
             }
         }
     }
-    
+
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
@@ -228,7 +225,7 @@ public class CustomBlockManager extends EntityLikeManager<TileState, CustomBlock
     }
 
     @EventHandler
-    public void onPlayerChunkLoad(@NotNull PlayerChunkLoadEvent event){
+    public void onPlayerChunkLoad(PlayerChunkLoadEvent event){
         List<BlockState> blocksToSendPackets = new ArrayList<>();
         for (BlockState blockState : event.getChunk().getTileEntities()) {
             CustomBlockType customBlockType = CustomBlockType.get((TileState) blockState);

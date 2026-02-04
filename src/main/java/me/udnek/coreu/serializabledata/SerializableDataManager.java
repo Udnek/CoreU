@@ -6,55 +6,49 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 
-public class SerializableDataManager {
+@org.jspecify.annotations.NullMarked public class SerializableDataManager{
 
-    private static FileConfiguration config;
+    private static @UnknownNullability FileConfiguration config;
     private static final String PLUGIN_PATH = "plugin";
     private static final String PLAYER_PATH = "player";
-
     ///////////////////////////////////////////////////////////////////////////
-    // READING
-    ///////////////////////////////////////////////////////////////////////////
-    public static <T extends SerializableData> @NotNull T read(@NotNull T data, @NotNull Plugin plugin, @NotNull Player player){
+    public static <T extends SerializableData> T read(@NotNull T data, Plugin plugin, Player player){
         String readRaw = readRaw(getPath(data, plugin, player));
         data.deserialize(readRaw);
         return data;
     }
-    public static <T extends SerializableData> @NotNull T read(@NotNull T data, @NotNull Plugin plugin){
+    public static <T extends SerializableData> T read(@NotNull T data, Plugin plugin){
         String readRaw = readRaw(getPath(data, plugin));
         data.deserialize(readRaw);
         return data;
     }
-    private static @Nullable String readRaw(@NotNull String path){
+    private static @Nullable String readRaw(String path){
         loadConfig();
         return config.getString(path);
     }
     ///////////////////////////////////////////////////////////////////////////
-    // WRITING
-    ///////////////////////////////////////////////////////////////////////////
-    public static void write(@NotNull SerializableData data, @NotNull Plugin plugin, @NotNull Player player){
+    public static void write(SerializableData data, Plugin plugin, Player player){
         writeRaw(data, getPath(data, plugin, player));
     }
-    public static void write(@NotNull SerializableData data, @NotNull Plugin plugin){
+    public static void write(SerializableData data, Plugin plugin){
         writeRaw(data, getPath(data, plugin));
     }
-    private static void writeRaw(@NotNull SerializableData serializableData, @NotNull String path){
+    private static void writeRaw(SerializableData serializableData, String path){
         loadConfig();
         config.set(path, serializableData.serialize());
         saveConfig();
     }
     ///////////////////////////////////////////////////////////////////////////
-    // INITIAL
-    ///////////////////////////////////////////////////////////////////////////
-    private static @NotNull String getPath(@NotNull SerializableData data, @NotNull Plugin plugin, @NotNull Player player){
+    private static String getPath(SerializableData data, Plugin plugin, Player player){
         return toStringPath(
                 PLAYER_PATH,
                 player.getUniqueId().toString(),
                 plugin.getName() + ":" + data.getDataName()
         );
     }
-    private static @NotNull String getPath(@NotNull SerializableData data, @NotNull Plugin plugin){
+    private static String getPath(SerializableData data, Plugin plugin){
         return toStringPath(
                 PLUGIN_PATH,
                 plugin.getName(),
@@ -62,7 +56,7 @@ public class SerializableDataManager {
         );
     }
 
-    private static @NotNull String toStringPath(@NotNull String ...path){
+    private static String toStringPath(String ...path){
         return String.join(".", path);
     }
 

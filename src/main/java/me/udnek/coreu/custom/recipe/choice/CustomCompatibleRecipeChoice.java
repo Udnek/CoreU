@@ -7,42 +7,46 @@ import me.udnek.coreu.custom.item.VanillaItemManager;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class CustomCompatibleRecipeChoice implements CustomRecipeChoice {
+@NullMarked
+public class CustomCompatibleRecipeChoice implements CustomRecipeChoice{
 
     protected Set<CustomItem> customs;
     protected Set<Material> materials;
 
-    public CustomCompatibleRecipeChoice(@NotNull Set<@NotNull CustomItem> customItems, @NotNull Set<@NotNull Material> materialItems){
+    public static CustomCompatibleRecipeChoice fromCustomItems(CustomItem ...customItems){
+        return new CustomCompatibleRecipeChoice(Set.of(customItems), Set.of());
+    }
+
+    public static CustomCompatibleRecipeChoice fromMaterials(Material ...materialItems){
+        return new CustomCompatibleRecipeChoice(Set.of(), Set.of(materialItems));
+    }
+
+    public CustomCompatibleRecipeChoice(Set<CustomItem> customItems, Set<Material> materialItems){
         Preconditions.checkArgument(customItems.size() + materialItems.size() > 0, "Choice can not be empty!");
         customs = new HashSet<>(customItems);
         materials = new HashSet<>(materialItems);
     }
-    public static @NotNull CustomCompatibleRecipeChoice fromCustomItems(@NotNull CustomItem ...customItems){
-        return new CustomCompatibleRecipeChoice(Set.of(customItems), Set.of());
-    }
-    public static @NotNull CustomCompatibleRecipeChoice fromMaterials(@NotNull Material ...materialItems){
-        return new CustomCompatibleRecipeChoice(Set.of(), Set.of(materialItems));
-    }
 
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
-    public @NotNull RecipeChoice clone() {
+    public RecipeChoice clone() {
         return new CustomCompatibleRecipeChoice(customs, materials);
     }
 
     @Override
-    public boolean test(@NotNull ItemStack itemStack) {
+    public boolean test(ItemStack itemStack) {
         return ItemUtils.containsSame(itemStack, materials, customs);
     }
 
     @Override
-    public @NotNull List<ItemStack> getAllPossible() {
+    public List<ItemStack> getAllPossible() {
         List<ItemStack> itemStacks = new ArrayList<>();
         for (Material material : materials) itemStacks.add(new ItemStack(material));
         for (CustomItem customItem : customs) itemStacks.add(customItem.getItem());
@@ -50,19 +54,19 @@ public class CustomCompatibleRecipeChoice implements CustomRecipeChoice {
     }
 
     @Override
-    public boolean replaceItem(@NotNull ItemStack oldItem, @NotNull ItemStack newItem) {
+    public boolean replaceItem(ItemStack oldItem, ItemStack newItem) {
         if (!removeItem(oldItem)) return false;
         return addItem(newItem);
     }
 
-    public boolean addItem(@NotNull ItemStack itemStack) {
+    public boolean addItem(ItemStack itemStack) {
         if (test(itemStack)) return false;
         CustomItem customItem = CustomItem.get(itemStack);
         if (customItem != null) return customs.add(customItem);
         else return materials.add(itemStack.getType());
     }
 
-    public boolean removeItem(@NotNull ItemStack itemStack) {
+    public boolean removeItem(ItemStack itemStack) {
         if (!test(itemStack)) return false;
         CustomItem customItem = CustomItem.get(itemStack);
         if (customItem != null){
@@ -73,7 +77,7 @@ public class CustomCompatibleRecipeChoice implements CustomRecipeChoice {
     }
 
     @Override
-    public @NotNull ItemStack getItemStack() {
+    public ItemStack getItemStack() {
         return customs.isEmpty() ? new ItemStack(materials.stream().toList().getFirst()) : customs.stream().toList().getFirst().getItem();
     }
 }

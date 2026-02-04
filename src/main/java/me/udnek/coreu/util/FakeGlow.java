@@ -9,34 +9,33 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-public class FakeGlow {
+@org.jspecify.annotations.NullMarked public class FakeGlow{
     private static final HashMap<Entity, FakeGlow> fakes = new HashMap<>();
 
     private static final EntityDataAccessor<Byte> DATA_KEY = Reflex.getFieldValue(Entity.class, "DATA_SHARED_FLAGS_ID");
 
     private @Nullable BukkitRunnable task;
-    private final @NotNull List<Player> observers;
-    private final @NotNull net.minecraft.world.entity.Entity nmsEntity;
+    private final List<Player> observers;
+    private final Entity nmsEntity;
     private final long duration;
 
-    public static void glow(@NotNull org.bukkit.entity.Entity entity, @NotNull List<Player> observers, long duration) {
+    public static void glow(org.bukkit.entity.Entity entity, List<Player> observers, long duration) {
         new FakeGlow(entity, observers, duration).run();
     }
 
-    public static void stop(@NotNull org.bukkit.entity.Entity entity){
+    public static void stop(org.bukkit.entity.Entity entity){
         FakeGlow fakeGlow = fakes.get(NmsUtils.toNmsEntity(entity));
         if (fakeGlow == null) return;
         fakeGlow.stop(true);
     }
 
-    private FakeGlow(@NotNull org.bukkit.entity.Entity entity, @NotNull List<Player> observers, long duration) {
+    private FakeGlow(org.bukkit.entity.Entity entity, List<Player> observers, long duration) {
         this.observers = observers;
         this.nmsEntity = NmsUtils.toNmsEntity(entity);
         this.duration = duration;

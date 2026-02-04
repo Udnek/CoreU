@@ -7,12 +7,11 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class BaseUniversalSlot implements UniversalInventorySlot {
+@org.jspecify.annotations.NullMarked public class BaseUniversalSlot implements UniversalInventorySlot{
     public final @Nullable Integer slot;
     public final @Nullable EquipmentSlot equipmentSlot;
 
@@ -21,13 +20,13 @@ public class BaseUniversalSlot implements UniversalInventorySlot {
         equipmentSlot = null;
     }
 
-    public BaseUniversalSlot(@NotNull EquipmentSlot slot){
+    public BaseUniversalSlot(EquipmentSlot slot){
         this.equipmentSlot = slot;
         this.slot = null;
     }
 
     @Override
-    public @Nullable Integer integerSlotToCompare(@NotNull LivingEntity entity) {
+    public @Nullable Integer integerSlotToCompare(LivingEntity entity) {
         if (slot != null) return slot;
         if (entity instanceof  Player){
             return switch (Objects.requireNonNull(equipmentSlot)) {
@@ -54,7 +53,7 @@ public class BaseUniversalSlot implements UniversalInventorySlot {
     }
 
     @Override
-    public @Nullable ItemStack getItem(@NotNull LivingEntity entity) {
+    public @Nullable ItemStack getItem(LivingEntity entity) {
         if (slot != null && entity instanceof InventoryHolder inventoryHolder && 0 <= slot && slot <= inventoryHolder.getInventory().getSize()){
             return inventoryHolder.getInventory().getItem(slot);
         } else if (equipmentSlot != null) {
@@ -70,7 +69,7 @@ public class BaseUniversalSlot implements UniversalInventorySlot {
     }
 
     @Override
-    public void setItem(@Nullable ItemStack itemStack, @NotNull LivingEntity entity) {
+    public void setItem(@Nullable ItemStack itemStack, LivingEntity entity) {
         if (slot != null){
             if (entity instanceof InventoryHolder inventoryHolder){
                 if (0 <= slot && slot <= inventoryHolder.getInventory().getSize()) {

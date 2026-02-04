@@ -1,14 +1,13 @@
 package me.udnek.coreu.util;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.*;
 
-public class Reflex {
-    public static @NotNull Field getField(@NotNull Class<?> source, @NotNull String name) {
+@org.jspecify.annotations.NullMarked public class Reflex{
+    public static Field getField(Class<?> source, String name) {
         try {
             return source.getDeclaredField(name);
         }
@@ -30,7 +29,7 @@ public class Reflex {
         }
     }
 
-    public static @UnknownNullability <T> T getFieldValue(@NotNull Object source, @NotNull String name) {
+    public static @UnknownNullability <T> T getFieldValue(Object source, String name) {
         Class<?> clazz;
         if (source instanceof Class<?>) clazz = (Class<?>) source;
         else clazz = source.getClass();
@@ -46,7 +45,7 @@ public class Reflex {
 
     }
 
-    public static void setStaticFinalFieldValue(@NotNull Class<?> clazz, @NotNull String name, @Nullable Object value){
+    public static void setStaticFinalFieldValue(Class<?> clazz, String name, @Nullable Object value){
         try {
             Field field = getField(clazz, name);
             field.setAccessible(true);
@@ -61,7 +60,7 @@ public class Reflex {
         }
     }
 
-    public static void setFieldValue(@NotNull Object source, @NotNull String name, @Nullable Object value) {
+    public static void setFieldValue(Object source, String name, @Nullable Object value) {
         try {
             boolean isStatic = source instanceof Class;
             Class<?> clazz = isStatic ? (Class<?>) source : source.getClass();
@@ -75,7 +74,7 @@ public class Reflex {
         }
     }
 
-    public static void setRecordFieldValue(@NotNull Record instance, @NotNull String fieldName, @Nullable Object value) {
+    public static void setRecordFieldValue(Record instance, String fieldName, @Nullable Object value) {
         try {
             Field field = instance.getClass().getDeclaredField(fieldName);
 
@@ -97,7 +96,7 @@ public class Reflex {
     }
 
 
-    public static @NotNull Method getMethod(@NotNull Class<?> clazz, @NotNull String name, @Nullable Class<?>... parameterTypes){
+    public static Method getMethod(Class<?> clazz, String name, @Nullable Class<?>... parameterTypes){
         try {
             Method method = clazz.getDeclaredMethod(name, parameterTypes);
             method.setAccessible(true);
@@ -106,7 +105,7 @@ public class Reflex {
             throw new RuntimeException(e);
         }
     }
-    public static @NotNull Method getMethod(@NotNull Class<?> clazz, @NotNull String name){
+    public static Method getMethod(Class<?> clazz, String name){
         Method[] methods = clazz.getDeclaredMethods();
         for (Method method : methods) {
             if (method.getName().equals(name)){
@@ -117,7 +116,7 @@ public class Reflex {
         throw new RuntimeException(new NoSuchMethodException(name));
     }
 
-    public static <T> @UnknownNullability T invokeMethod(@Nullable Object object, @NotNull Method method, @Nullable Object ...args){
+    public static <T> @UnknownNullability T invokeMethod(@Nullable Object object, Method method, @Nullable Object ...args){
         try {
             return (T) method.invoke(object, args);
         } catch (IllegalAccessException | InvocationTargetException e) {
@@ -125,13 +124,13 @@ public class Reflex {
         }
     }
 
-    public static <T> @NotNull Constructor<T> getFirstConstructor(@NotNull Class<T> clazz){
+    public static <T> Constructor<T> getFirstConstructor(Class<T> clazz){
         Constructor<?>[] constructor = clazz.getDeclaredConstructors();
         constructor[0].setAccessible(true);
         return (Constructor<T>) constructor[0];
     }
 
-    public static <T> @NotNull Constructor<T> getConstructor(@NotNull Class<T> clazz, @NotNull Class<?> ...parameterTypes){
+    public static <T> Constructor<T> getConstructor(Class<T> clazz, Class<?> ...parameterTypes){
         try {
             Constructor<T> constructor = clazz.getDeclaredConstructor(parameterTypes);
             constructor.setAccessible(true);
@@ -141,7 +140,7 @@ public class Reflex {
         }
     }
 
-    public static <T> @NotNull T construct(@NotNull Constructor<T> constructor, @Nullable Object ...args){
+    public static <T> T construct(Constructor<T> constructor, @Nullable Object ...args){
         try {
             return constructor.newInstance(args);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {

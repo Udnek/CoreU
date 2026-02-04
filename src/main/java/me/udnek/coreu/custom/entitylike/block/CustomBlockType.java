@@ -15,16 +15,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public interface CustomBlockType extends ComponentHolder<CustomBlockType>, EntityLikeType<TileState> {
+@org.jspecify.annotations.NullMarked public  interface CustomBlockType extends ComponentHolder<CustomBlockType>, EntityLikeType<TileState>{
 
     NamespacedKey PDC_KEY = new NamespacedKey(CoreU.getInstance(), "custom_block_type");
 
-    static @Nullable CustomBlockEntity getTicking(@NotNull Block block){
+    static @Nullable CustomBlockEntity getTicking(Block block){
         BlockState state = block.getState();
         if (state instanceof TileState tileState){
             return CustomBlockManager.getInstance().getTicking(tileState);
@@ -32,31 +31,31 @@ public interface CustomBlockType extends ComponentHolder<CustomBlockType>, Entit
         return null;
     }
 
-    static @Nullable String getId(@NotNull Block block){
+    static @Nullable String getId(Block block){
         BlockState state = block.getState();
         if (state instanceof TileState tileState) return getId(tileState);
         return null;
     }
 
-    static @Nullable String getId(@NotNull TileState blockState){
+    static @Nullable String getId(TileState blockState){
         return blockState.getPersistentDataContainer().get(PDC_KEY, PersistentDataType.STRING);
     }
 
-    static @Nullable String getId(@NotNull Location location){
+    static @Nullable String getId(Location location){
         return getId(location.getBlock());
     }
 
-    static @Nullable CustomBlockType get(@NotNull Block block){
+    static @Nullable CustomBlockType get(Block block){
         return CustomRegistries.BLOCK_TYPE.get(getId(block));
     }
-    static @Nullable CustomBlockType get(@NotNull TileState blockState){
+    static @Nullable CustomBlockType get(TileState blockState){
         return CustomRegistries.BLOCK_TYPE.get(getId(blockState));
     }
-    static @Nullable CustomBlockType get(@NotNull String id){
+    static @Nullable CustomBlockType get(String id){
         return CustomRegistries.BLOCK_TYPE.get(id);
     }
 
-    static void consumeIfCustom(@NotNull Block block, @NotNull Consumer<CustomBlockType> consumer){
+    static void consumeIfCustom(Block block, Consumer<CustomBlockType> consumer){
         CustomBlockType blockType = get(block);
         if (blockType != null) consumer.accept(blockType);
     }
@@ -67,22 +66,22 @@ public interface CustomBlockType extends ComponentHolder<CustomBlockType>, Entit
 
     @Nullable BlockState getFakeState();
 
-    float getCustomBreakProgress(@NotNull Player player, @NotNull Block block);
+    float getCustomBreakProgress(Player player, Block block);
 
-    void onPlayerFall(@NotNull Player player, @NotNull Location location, int particlesCount);
+    void onPlayerFall(Player player, Location location, int particlesCount);
 
-    void onDamage(@NotNull BlockDamageEvent event);
+    void onDamage(BlockDamageEvent event);
 
-    void place(@NotNull Location location, @NotNull CustomBlockPlaceContext context);
-    void destroy(@NotNull Location location);
-    void onDestroy(@NotNull BlockFadeEvent event);
-    void onDestroy(@NotNull BlockBurnEvent event);
-    void onTouchedByExplosion(@NotNull EntityExplodeEvent event, @NotNull Block block);
-    void onDestroy(@NotNull BlockDestroyEvent event);
-    void onDestroy(@NotNull BlockBreakEvent event);
-    void onTouchedByExplosion(@NotNull BlockExplodeEvent event, @NotNull Block block);
+    void place(Location location, CustomBlockPlaceContext context);
+    void destroy(Location location);
+    void onDestroy(BlockFadeEvent event);
+    void onDestroy(BlockBurnEvent event);
+    void onTouchedByExplosion(EntityExplodeEvent event, Block block);
+    void onDestroy(BlockDestroyEvent event);
+    void onDestroy(BlockBreakEvent event);
+    void onTouchedByExplosion(BlockExplodeEvent event, Block block);
 
-    void customBreakTickProgress(@NotNull Block block, @NotNull Player player, float progress);
+    void customBreakTickProgress(Block block, Player player, float progress);
 
     boolean doCustomBreakTimeAndAnimation();
 }

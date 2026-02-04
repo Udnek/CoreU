@@ -5,7 +5,6 @@ import me.udnek.coreu.custom.recipe.RecipeManager;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.plugin.Plugin;
@@ -49,6 +48,9 @@ public class ShapelessRecipeBuilder extends RecipeBuilder<ShapelessRecipeBuilder
 
     @Override
     protected void buildAndRegisterRecipe(Plugin plugin) {
+        assert key != null;
+        assert result != null;
+
         ShapelessRecipe recipe = new ShapelessRecipe(new NamespacedKey(plugin, key), result);
         for (RecipeChoice recipeChoice : recipeChoices){
             recipe.addIngredient(recipeChoice);

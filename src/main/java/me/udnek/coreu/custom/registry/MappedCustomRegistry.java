@@ -12,22 +12,22 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class MappedCustomRegistry<T extends Registrable> extends AbstractRegistrable implements CustomRegistry<T>{
+@org.jspecify.annotations.NullMarked public class MappedCustomRegistry<T extends Registrable> extends AbstractRegistrable implements CustomRegistry<T>{
 
     protected HashMap<String, T> map = new HashMap<>();
     protected List<String> indexes = new ArrayList<>();
     protected String rawId;
 
-    public MappedCustomRegistry(@NotNull String rawId){
+    public MappedCustomRegistry(String rawId){
         this.rawId = rawId;
     }
 
     @Override
-    public @NotNull String getRawId() {return rawId;}
+    public String getRawId() {return rawId;}
 
 
     @Override
-    public <V extends T> @NotNull V register(@NotNull Plugin plugin, @NotNull V custom) {
+    public <V extends T> V register(Plugin plugin, @NotNull V custom) {
         custom.initialize(plugin);
         Preconditions.checkArgument(!map.containsKey(custom.getId()), "Registry already contains key " + custom.getId());
         map.put(custom.getId(), custom);
@@ -61,7 +61,7 @@ public class MappedCustomRegistry<T extends Registrable> extends AbstractRegistr
     }
 
     @Override
-    public @NotNull Collection<String> getIds() {
+    public Collection<String> getIds() {
         return new ArrayList<>(map.keySet());
     }
 
@@ -70,15 +70,15 @@ public class MappedCustomRegistry<T extends Registrable> extends AbstractRegistr
     }
 
     @Override
-    public void getAll(@NotNull Consumer<T> consumer) {
+    public void getAll(Consumer<T> consumer) {
         map.values().forEach(consumer);
     }
     @Override
-    public @NotNull Collection<T> getAll() {
+    public Collection<T> getAll() {
         return new ArrayList<>(map.values());
     }
     @Override
-    public @NotNull Collection<T> getAllByPlugin(@NotNull Plugin plugin) {
+    public Collection<T> getAllByPlugin(Plugin plugin) {
         Collection<T> all = getAll();
         String namespace = new NamespacedKey(plugin, "text").getNamespace();
         all.removeIf(object -> !object.getKey().getNamespace().equals(namespace));

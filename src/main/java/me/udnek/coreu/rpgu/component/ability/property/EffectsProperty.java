@@ -14,31 +14,30 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class EffectsProperty implements RPGUAbilityProperty<LivingEntity, List<PotionEffect>> {
+@org.jspecify.annotations.NullMarked public class EffectsProperty implements RPGUAbilityProperty<LivingEntity, List<PotionEffect>>{
 
     public static EffectsProperty DEFAULT = new EffectsProperty(){
         @Override
-        public void add(@NotNull PotionData data) {throwCanNotChangeDefault();}
+        public void add(PotionData data) {throwCanNotChangeDefault();}
     };
 
     protected List<PotionData> effects = new ArrayList<>();
 
     public EffectsProperty(){}
 
-    public EffectsProperty(@NotNull PotionData ...data){
+    public EffectsProperty(PotionData ...data){
         Arrays.stream(data).forEach(this::add);
     }
 
-    public void add(@NotNull PotionData data){effects.add(data);}
+    public void add(PotionData data){effects.add(data);}
 
     @Override
-    public @NotNull List<PotionEffect> getBase() {
+    public List<PotionEffect> getBase() {
         List<PotionEffect> potionEffects = new ArrayList<>();
         for (PotionData data : effects) {
             RPGUPropertyFunction<LivingEntity, Integer> duration = data.duration;
@@ -48,7 +47,7 @@ public class EffectsProperty implements RPGUAbilityProperty<LivingEntity, List<P
     }
 
     @Override
-    public @NotNull List<PotionEffect> get(@NotNull LivingEntity livingEntity) {
+    public List<PotionEffect> get(LivingEntity livingEntity) {
         List<PotionEffect> potionEffects = new ArrayList<>();
         for (PotionData data : effects) {
             RPGUPropertyFunction<LivingEntity, Integer> duration = data.duration;
@@ -57,7 +56,7 @@ public class EffectsProperty implements RPGUAbilityProperty<LivingEntity, List<P
         return potionEffects;
     }
 
-    public @NotNull Component describeSingle(int index){
+    public Component describeSingle(int index){
         PotionData data = effects.get(index);
 
         List<Component> args = new ArrayList<>();
@@ -80,7 +79,7 @@ public class EffectsProperty implements RPGUAbilityProperty<LivingEntity, List<P
     }
 
     @Override
-    public void describe(@NotNull AbilityLorePart componentable) {
+    public void describe(AbilityLorePart componentable) {
         if (effects.size() > 1){
             componentable.addAbilityProperty(Component.translatable("rpgu_ability_property.coreu.effects", Component.empty()));
             for (int i = 0; i < effects.size(); i++) {
@@ -96,7 +95,7 @@ public class EffectsProperty implements RPGUAbilityProperty<LivingEntity, List<P
         }
     }
 
-    public void applyOn(@NotNull LivingEntity source, @NotNull LivingEntity target){
+    public void applyOn(LivingEntity source, LivingEntity target){
         for (PotionEffect effect : get(source)) {
             CustomEffect customEffect = CustomEffect.get(effect.getType());
             if (customEffect == null) target.addPotionEffect(effect);
@@ -104,7 +103,7 @@ public class EffectsProperty implements RPGUAbilityProperty<LivingEntity, List<P
         }
     }
 
-    public void applyOn(@NotNull LivingEntity source, @NotNull Iterable<LivingEntity> targets){
+    public void applyOn(LivingEntity source, Iterable<LivingEntity> targets){
         for (PotionEffect effect : get(source)) {
             CustomEffect customEffect = CustomEffect.get(effect.getType());
             for (LivingEntity target : targets) {
@@ -115,28 +114,28 @@ public class EffectsProperty implements RPGUAbilityProperty<LivingEntity, List<P
     }
 
     @Override
-    public @NotNull CustomComponentType<RPGUItemAbility<?>, ?> getType() {
+    public CustomComponentType<RPGUItemAbility<?>, ?> getType() {
         return RPGUComponents.ABILITY_EFFECTS;
     }
 
     public record PotionData(
-            @NotNull PotionEffectType type,
-            @NotNull RPGUPropertyFunction<LivingEntity, Integer> duration,
-            @NotNull RPGUPropertyFunction<LivingEntity, Integer> amplifier,
+            PotionEffectType type,
+            RPGUPropertyFunction<LivingEntity, Integer> duration,
+            RPGUPropertyFunction<LivingEntity, Integer> amplifier,
             boolean ambient,
             boolean particles,
             boolean icon
     ){
 
-        public static @NotNull RPGUPropertyFunction<LivingEntity, Integer> functionFromDuration(int duration){
+        public static RPGUPropertyFunction<LivingEntity, Integer> functionFromDuration(int duration){
             return PropertyFunctions.CEIL(PropertyFunctions.ATTRIBUTE_WITH_BASE(RPGUAttributes.ABILITY_DURATION, duration));
         }
 
-        public PotionData(@NotNull PotionEffectType type, @NotNull RPGUPropertyFunction<LivingEntity, Integer> duration, @NotNull RPGUPropertyFunction<LivingEntity, Integer> amplifier){
+        public PotionData(PotionEffectType type, RPGUPropertyFunction<LivingEntity, Integer> duration, RPGUPropertyFunction<LivingEntity, Integer> amplifier){
             this(type, duration, amplifier, false, true, true);
         }
 
-        public PotionData(@NotNull PotionEffect effect){
+        public PotionData(PotionEffect effect){
             this(
                     effect.getType(),
                     functionFromDuration(effect.getDuration()),
@@ -147,7 +146,7 @@ public class EffectsProperty implements RPGUAbilityProperty<LivingEntity, List<P
             );
         }
 
-        public PotionData(@NotNull PotionEffectType type, int duration, int amplifier){
+        public PotionData(PotionEffectType type, int duration, int amplifier){
             this(type, functionFromDuration(duration), PropertyFunctions.CONSTANT(amplifier));
         }
     }

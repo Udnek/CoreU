@@ -7,14 +7,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractAttributeContainer<Attribute, Modifier, Self extends AbstractAttributeContainer<Attribute, Modifier, ?>> {
+@org.jspecify.annotations.NullMarked public abstract class AbstractAttributeContainer<Attribute, Modifier, Self extends AbstractAttributeContainer<Attribute, Modifier, ?>>{
 
     protected final HashMap<Attribute, List<Modifier>> attributes = new HashMap<>();
 
-    public @NotNull List<@NotNull Modifier> get(@NotNull Attribute attribute) {
+    public List<Modifier> get(@NotNull Attribute attribute) {
         return attributes.get(attribute);
     }
-    public @NotNull Map<@NotNull Attribute, @NotNull List<@NotNull Modifier>> getAll(){
+    public Map<Attribute, List<Modifier>> getAll(){
         return attributes;
     }
 //    public abstract @NotNull Self get(@NotNull Predicate<@NotNull CustomEquipmentSlot> predicate);

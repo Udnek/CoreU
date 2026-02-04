@@ -4,16 +4,14 @@ import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.item.CustomItem;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.jetbrains.annotations.NotNull;
 
-public interface RightClickableItem extends CustomComponent<CustomItem> {
+@org.jspecify.annotations.NullMarked public  interface RightClickableItem extends CustomComponent<CustomItem>{
 
     RightClickableItem EMPTY = (item, event) -> {};
 
-    void onRightClick(@NotNull CustomItem item, @NotNull PlayerInteractEvent event);
+    void onRightClick(CustomItem item, PlayerInteractEvent event);
 
     @Override
-    @NotNull
     default CustomComponentType<CustomItem, ? extends CustomComponent<CustomItem>> getType(){
         return CustomComponentType.RIGHT_CLICKABLE_ITEM;
     }

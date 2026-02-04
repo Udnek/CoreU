@@ -7,7 +7,6 @@ import net.minecraft.world.level.storage.loot.entries.AlternativesEntry;
 import net.minecraft.world.level.storage.loot.entries.CompositeEntryBase;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -15,33 +14,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class CompositeEntryWrapper implements EntryWrapper {
+@org.jspecify.annotations.NullMarked public class CompositeEntryWrapper implements EntryWrapper{
 
     protected final CompositeEntryBase entry;
 
-    public CompositeEntryWrapper(@NotNull CompositeEntryBase entry) {
+    public CompositeEntryWrapper(CompositeEntryBase entry) {
         this.entry = entry;
     }
 
-    public @NotNull CompositeEntryWrapper copy(){
+    public CompositeEntryWrapper copy(){
         Constructor<AlternativesEntry> constructor = Reflex.getFirstConstructor(AlternativesEntry.class);
         AlternativesEntry newEntry = Reflex.construct(constructor, getChildrenNms(), Reflex.getFieldValue(entry, NmsFields.CONDITIONS));
         return new CompositeEntryWrapper(newEntry);
     }
 
-    public void addChild(@NotNull EntryWrapper container){
+    public void addChild(EntryWrapper container){
         List<LootPoolEntryContainer> newChildren = new ArrayList<>(getChildrenNms());
         newChildren.add(container.getNms());
         setChildrenNms(newChildren);
     }
 
-    public void addChild(int n, @NotNull EntryWrapper container){
+    public void addChild(int n, EntryWrapper container){
         List<LootPoolEntryContainer> newChildren = new ArrayList<>(getChildrenNms());
         newChildren.add(n, container.getNms());
         setChildrenNms(newChildren);
     }
 
-    public @NotNull EntryWrapper getChild(int n){
+    public EntryWrapper getChild(int n){
         return EntryWrapper.fromNms(getChildrenNms().get(n));
     }
 
@@ -52,11 +51,11 @@ public class CompositeEntryWrapper implements EntryWrapper {
     }
 
     @Override
-    public void extractAllSingleton(@NotNull Consumer<SingletonEntryWrapper> consumer) {
+    public void extractAllSingleton(Consumer<SingletonEntryWrapper> consumer) {
         getChildrenNms().forEach(container -> EntryWrapper.fromNms(container).extractAllSingleton(consumer));
     }
 
-    protected void setChildrenNms(@NotNull List<LootPoolEntryContainer> newChildren){
+    protected void setChildrenNms(List<LootPoolEntryContainer> newChildren){
         Method composeMethod = Reflex.getMethod(
                 CompositeEntryBase.class,
                 "compose"
@@ -71,12 +70,12 @@ public class CompositeEntryWrapper implements EntryWrapper {
         Reflex.setFieldValue(entry, NmsFields.COMPOSED_CHILDREN, composedChildren);
     }
 
-    protected @NotNull List<LootPoolEntryContainer> getChildrenNms(){
+    protected List<LootPoolEntryContainer> getChildrenNms(){
         return Reflex.getFieldValue(entry, NmsFields.CHILDREN);
     }
 
     @Override
-    public @NotNull List<LootConditionWrapper> getConditions() {
+    public List<LootConditionWrapper> getConditions() {
         List<LootItemCondition> conditions = new ArrayList<>();
         getChildrenNms().forEach(nmsEntry -> {
             List<LootItemCondition> subConditions = LootConditionWrapper.unwrap(EntryWrapper.fromNms(nmsEntry).getConditions());
@@ -86,12 +85,12 @@ public class CompositeEntryWrapper implements EntryWrapper {
     }
 
     @Override
-    public void setConditions(@NotNull List<LootConditionWrapper> conditions) {
+    public void setConditions(List<LootConditionWrapper> conditions) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public @NotNull LootPoolEntryContainer getNms() {
+    public LootPoolEntryContainer getNms() {
         return entry;
     }
 }

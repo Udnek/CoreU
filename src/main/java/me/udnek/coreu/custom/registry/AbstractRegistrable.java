@@ -4,21 +4,20 @@ import com.google.common.base.Preconditions;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
-import org.jetbrains.annotations.NotNull;
 
-public abstract class AbstractRegistrable implements Registrable{
+@org.jspecify.annotations.NullMarked public abstract class AbstractRegistrable implements Registrable{
     protected String id;
     @Override
     @MustBeInvokedByOverriders
-    public void initialize(@NotNull Plugin plugin) {
+    public void initialize(Plugin plugin) {
         Preconditions.checkArgument(id == null, "Registrable already initialized!");
         id = new NamespacedKey(plugin, getRawId()).asString();
     }
 
-    public abstract @NotNull String getRawId();
+    public abstract String getRawId();
 
     @Override
-    public final @NotNull String getId() {
+    public final String getId() {
         Preconditions.checkArgument(id != null, "Id is not present (not registered yet probably)");
         return id;
     }

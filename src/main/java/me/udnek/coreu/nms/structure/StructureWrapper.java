@@ -10,37 +10,36 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureSpawnOverride;
 import org.bukkit.Location;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-public class StructureWrapper implements NmsWrapper<@NotNull Structure> {
+@org.jspecify.annotations.NullMarked public class StructureWrapper implements NmsWrapper<Structure>{
 
-    protected @NotNull Structure structure;
+    protected Structure structure;
 
-    public StructureWrapper(@NotNull Structure structure){
+    public StructureWrapper(Structure structure){
         this.structure = structure;
     }
 
-    protected @NotNull Structure.StructureSettings getSettingsNms(){
+    protected Structure.StructureSettings getSettingsNms(){
         return Reflex.getFieldValue(structure, "settings");
     }
 
-    public void editSpawnOverrides(@NotNull Function<HashMap<MobCategoryWrapper, StructureSpawnOverrideWrapper>, HashMap<MobCategoryWrapper, StructureSpawnOverrideWrapper>> edit){
+    public void editSpawnOverrides(Function<HashMap<MobCategoryWrapper, StructureSpawnOverrideWrapper>, HashMap<MobCategoryWrapper, StructureSpawnOverrideWrapper>> edit){
         HashMap<MobCategoryWrapper, StructureSpawnOverrideWrapper> overrides = getSpawnOverrides();
         overrides = edit.apply(overrides);
         setSpawnOverrides(overrides);
     }
 
-    public boolean isInBounds(@NotNull Location location){
+    public boolean isInBounds(Location location){
         BlockPos blockPos = NmsUtils.toNmsBlockPos(location.getBlock());
         ServerLevel level = NmsUtils.toNmsWorld(location.getWorld());
         return level.structureManager().getStructureWithPieceAt(blockPos, structure).isValid();
     }
 
-    public @NotNull HashMap<MobCategoryWrapper, StructureSpawnOverrideWrapper> getSpawnOverrides(){
+    public HashMap<MobCategoryWrapper, StructureSpawnOverrideWrapper> getSpawnOverrides(){
         HashMap<MobCategoryWrapper, StructureSpawnOverrideWrapper> overrides = new HashMap<>();
         for (Map.Entry<MobCategory, StructureSpawnOverride> entry : structure.spawnOverrides().entrySet()) {
             overrides.put(new MobCategoryWrapper(entry.getKey()), new StructureSpawnOverrideWrapper(entry.getValue()));
@@ -48,14 +47,14 @@ public class StructureWrapper implements NmsWrapper<@NotNull Structure> {
         return overrides;
     }
 
-    public void setSpawnOverrides(@NotNull Map<MobCategoryWrapper, StructureSpawnOverrideWrapper> overrides){
+    public void setSpawnOverrides(Map<MobCategoryWrapper, StructureSpawnOverrideWrapper> overrides){
         Map<MobCategory, StructureSpawnOverride> nmsOverrides = new HashMap<>();
         overrides.forEach((k, v) -> nmsOverrides.put(k.getNms(), v.getNms()));
         Reflex.setRecordFieldValue(getSettingsNms(), "spawnOverrides", nmsOverrides);
     }
 
     @Override
-    public @NotNull Structure getNms() {
+    public Structure getNms() {
         return structure;
     }
 }

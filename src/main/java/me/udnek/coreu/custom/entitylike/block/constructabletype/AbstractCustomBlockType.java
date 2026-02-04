@@ -23,7 +23,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.loot.LootTable;
 import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.MustBeInvokedByOverriders;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 import java.util.ArrayList;
@@ -32,15 +35,15 @@ import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public abstract class AbstractCustomBlockType extends AbstractRegistrableComponentable<CustomBlockType> implements CustomBlockType {
+@org.jspecify.annotations.NullMarked public abstract class AbstractCustomBlockType extends AbstractRegistrableComponentable<CustomBlockType>implements CustomBlockType{
 
-    public abstract @NotNull TileState getRealState();
+    public abstract TileState getRealState();
     public abstract @Nullable ItemStack getParticleBase();
 
-    public <T extends TileState> @NotNull T getState(@NotNull Location location){
+    public <T extends TileState> T getState(Location location){
         return getState(location.getBlock());
     }
-    public <T extends TileState> @NotNull T getState(@NotNull Block block){
+    public <T extends TileState> T getState(Block block){
         return (T) block.getState();
     }
 
@@ -49,7 +52,7 @@ public abstract class AbstractCustomBlockType extends AbstractRegistrableCompone
         return getBreakSpeedBaseBlock().createBlockData().getSoundGroup();
     }
 
-    public void storeData(@NotNull TileState state, @NotNull String name, @NotNull String value){
+    public void storeData(TileState state, String name, String value){
         state.getPersistentDataContainer().set(new NamespacedKey(key().namespace(), name), PersistentDataType.STRING, value);
         state.update();
     }
@@ -57,7 +60,7 @@ public abstract class AbstractCustomBlockType extends AbstractRegistrableCompone
         return deserializer.apply(state.getPersistentDataContainer().get(new NamespacedKey(key().namespace(), name), PersistentDataType.STRING));
     }
 
-    protected void internalPlace(@NotNull Location location, @NotNull CustomBlockPlaceContext context){
+    protected void internalPlace(Location location, CustomBlockPlaceContext context){
         @Nullable SoundGroup soundGroup = getSoundGroup();
         if (soundGroup != null) {
             location.getWorld().playSound(location.toCenterLocation(), soundGroup.getPlaceSound(), SoundCategory.BLOCKS, soundGroup.getVolume(), soundGroup.getPitch());
@@ -65,7 +68,7 @@ public abstract class AbstractCustomBlockType extends AbstractRegistrableCompone
     }
 
     @Override
-    public final void place(@NotNull Location location, @NotNull CustomBlockPlaceContext context){
+    public final void place(Location location, CustomBlockPlaceContext context){
         TileState blockState = (TileState) getRealState().copy(location);
         blockState.getPersistentDataContainer().set(PDC_KEY, PersistentDataType.STRING, getId());
         blockState.update(true, false);
@@ -87,30 +90,30 @@ public abstract class AbstractCustomBlockType extends AbstractRegistrableCompone
         initializeComponents();
     }
 
-    public abstract @NotNull Material getBreakSpeedBaseBlock();
+    public abstract Material getBreakSpeedBaseBlock();
 
     @Override
-    public float getCustomBreakProgress(@NotNull Player player, @NotNull Block block) {
+    public float getCustomBreakProgress(Player player, Block block) {
         return Nms.get().getBreakProgressPerTick(player, getBreakSpeedBaseBlock());
     }
 
 
     @Override
-    public void destroy(@NotNull Location location) {
+    public void destroy(Location location) {
         onGenericDestroy(location.getBlock());
         location.getBlock().setType(Material.AIR);
     }
 
     @Override
-    public void onTouchedByExplosion(@NotNull EntityExplodeEvent event, @NotNull Block block) {
+    public void onTouchedByExplosion(EntityExplodeEvent event, Block block) {
         onTouchedByExplosion(event.getExplosionResult(), event.getYield(), block);
     }
     @Override
-    public void onTouchedByExplosion(@NotNull BlockExplodeEvent event, @NotNull Block block) {
+    public void onTouchedByExplosion(BlockExplodeEvent event, Block block) {
         onTouchedByExplosion(event.getExplosionResult(), event.getYield(), block);
     }
 
-    protected void onTouchedByExplosion(@NotNull ExplosionResult explosionResult, float dropChance, @NotNull Block block){
+    protected void onTouchedByExplosion(ExplosionResult explosionResult, float dropChance, Block block){
         if (!(explosionResult == ExplosionResult.DESTROY || explosionResult == ExplosionResult.DESTROY_WITH_DECAY)) return;
         if (new Random().nextFloat() <= dropChance){
             // drop
@@ -121,7 +124,7 @@ public abstract class AbstractCustomBlockType extends AbstractRegistrableCompone
     }
 
     @Override
-    public void onDestroy(@NotNull BlockDestroyEvent event){
+    public void onDestroy(BlockDestroyEvent event){
         event.setWillDrop(false);
         dropItems(event.getBlock(), new ItemStack(Material.AIR));
         onGenericDestroy(event.getBlock());
@@ -131,7 +134,7 @@ public abstract class AbstractCustomBlockType extends AbstractRegistrableCompone
     public void initializeComponents() {
         getComponents().set(new RightClickableBlock() {
             @Override
-            public void onRightClick(@NotNull CustomBlockType customBlockType, @NotNull PlayerInteractEvent event) {
+            public void onRightClick(CustomBlockType customBlockType, PlayerInteractEvent event) {
                 event.setUseInteractedBlock(Event.Result.DENY);
 
                 ItemStack item = event.getItem();
@@ -170,7 +173,7 @@ public abstract class AbstractCustomBlockType extends AbstractRegistrableCompone
         });
     }
 
-    public void dropItems(@NotNull Block block, @NotNull ItemStack tool){
+    public void dropItems(Block block, ItemStack tool){
         @Nullable Either<LootTable, List<ItemStack>> loot = getLoot();
         if (loot == null) return;
         World world = block.getWorld();
@@ -199,7 +202,7 @@ public abstract class AbstractCustomBlockType extends AbstractRegistrableCompone
     }
 
     @Override
-    public void onDestroy(@NotNull BlockBreakEvent event){
+    public void onDestroy(BlockBreakEvent event){
         event.setExpToDrop(0);
         event.setDropItems(false);
         if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
@@ -208,16 +211,16 @@ public abstract class AbstractCustomBlockType extends AbstractRegistrableCompone
         onGenericDestroy(event.getBlock());
     }
     @Override
-    public void onDestroy(@NotNull BlockBurnEvent event) {
+    public void onDestroy(BlockBurnEvent event) {
         onGenericDestroy(event.getBlock());
     }
     @Override
-    public void onDestroy(@NotNull BlockFadeEvent event) {
+    public void onDestroy(BlockFadeEvent event) {
         onGenericDestroy(event.getBlock());
     }
 
     @Override
-    public void customBreakTickProgress(@NotNull Block block, @NotNull Player player, float progress) {
+    public void customBreakTickProgress(Block block, Player player, float progress) {
         ItemStack particleBase = getParticleBase();
         if (particleBase == null) return;
 
@@ -241,7 +244,7 @@ public abstract class AbstractCustomBlockType extends AbstractRegistrableCompone
     }
 
     @Override
-    public void onPlayerFall(@NotNull Player player, @NotNull Location location, int particlesCount) {
+    public void onPlayerFall(Player player, Location location, int particlesCount) {
         ItemStack particleBase = getParticleBase();
         if (particleBase != null){
             ParticleBuilder builder = new ParticleBuilder(Particle.ITEM);
@@ -261,7 +264,7 @@ public abstract class AbstractCustomBlockType extends AbstractRegistrableCompone
     }
 
     @OverridingMethodsMustInvokeSuper
-    public void onGenericDestroy(@NotNull Block block){
+    public void onGenericDestroy(Block block){
         CustomBlockManager.getInstance().unloadAny(this, getState(block));
 
         ItemStack particleBase = getParticleBase();

@@ -10,24 +10,24 @@ import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class ConstructableCustomEntityType<T extends Entity> extends AbstractRegistrable implements CustomEntityType {
+@org.jspecify.annotations.NullMarked public abstract class ConstructableCustomEntityType<T extends Entity> extends AbstractRegistrable implements CustomEntityType{
 
     private CustomComponentMap<CustomEntityType> components = null;
 
     @Override
-    public @NotNull CustomComponentMap<CustomEntityType> getComponents() {
+    public CustomComponentMap<CustomEntityType> getComponents() {
         if (components == null) components = new CustomComponentMap<>();
         return components;
     }
 
-    public abstract @NotNull EntityType getVanillaType();
+    public abstract EntityType getVanillaType();
 
     @MustBeInvokedByOverriders
-    protected @NotNull T spawnNewEntity(@NotNull Location location){
+    protected @NotNull T spawnNewEntity(Location location){
         return (T) location.getWorld().spawnEntity(location, getVanillaType());
     }
 
-    public final @NotNull T spawn(@NotNull Location location) {
+    public final @NotNull T spawn(Location location) {
         T entity = spawnNewEntity(location);
         PersistentDataContainer persistentDataContainer = entity.getPersistentDataContainer();
         persistentDataContainer.set(PDC_NAMESPACE, PersistentDataType.STRING, getId());

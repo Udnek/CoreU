@@ -17,7 +17,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -25,11 +24,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-public class CoordinateWand extends ConstructableCustomItem {
+@org.jspecify.annotations.NullMarked public class CoordinateWand extends ConstructableCustomItem{
 
     public static final NamespacedKey ORIGIN_KEY = new NamespacedKey(CoreU.getInstance(), "origin");
 
-    public static @NotNull ItemStack createWithOrigin(@NotNull Location location) {
+    public static ItemStack createWithOrigin(Location location) {
         ItemStack item = MGUItems.COORDINATE_WAND.getItem();
         List<Double> localZero = List.of(location.getX(), location.getY(), location.getZ());
         item.editPersistentDataContainer(persistentDataContainer ->
@@ -38,12 +37,12 @@ public class CoordinateWand extends ConstructableCustomItem {
     }
 
     @Override
-    public @NotNull String getRawId() {
+    public String getRawId() {
         return "coordinate_wand";
     }
 
     @Override
-    public @NotNull ItemStack update(@NotNull ItemStack itemStack) {
+    public ItemStack update(ItemStack itemStack) {
         return itemStack;
     }
 
@@ -108,10 +107,10 @@ public class CoordinateWand extends ConstructableCustomItem {
         });
     }
 
-    public @NotNull String round(double number) {
+    public String round(double number) {
         return new DecimalFormat("#.0#", new DecimalFormatSymbols(Locale.US)).format(number);
     }
-    public @NotNull String round(float number) {
+    public String round(float number) {
         return new DecimalFormat("#.#", new DecimalFormatSymbols(Locale.US)).format(number);
     }
 }

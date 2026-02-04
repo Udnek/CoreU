@@ -2,28 +2,27 @@ package me.udnek.coreu.nms.loot.function;
 
 import me.udnek.coreu.nms.NmsWrapper;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class LootFunctionWrapper implements NmsWrapper<@NotNull LootItemFunction> {
+@org.jspecify.annotations.NullMarked public class LootFunctionWrapper implements NmsWrapper<LootItemFunction>{
 
-    public static @NotNull List<LootFunctionWrapper> wrap(@NotNull List<LootItemFunction> functions) {
+    public static List<LootFunctionWrapper> wrap(List<LootItemFunction> functions) {
         return functions.stream().map(LootFunctionWrapper::new).toList();
     }
 
-    public static @NotNull List<LootItemFunction> unwrap(@NotNull List<LootFunctionWrapper> functions) {
+    public static List<LootItemFunction> unwrap(List<LootFunctionWrapper> functions) {
         return functions.stream().map(LootFunctionWrapper::getNms).toList();
     }
 
-    protected final @NotNull LootItemFunction function;
+    protected final LootItemFunction function;
 
-    public LootFunctionWrapper(@NotNull LootItemFunction function) {
+    public LootFunctionWrapper(LootItemFunction function) {
         this.function = function;
     }
 
     @Override
-    public @NotNull LootItemFunction getNms() {
+    public LootItemFunction getNms() {
         return function;
     }
 }

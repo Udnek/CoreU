@@ -2,8 +2,6 @@ package me.udnek.coreu.custom.recipe.builder;
 
 import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.custom.recipe.RecipeManager;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.key.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
@@ -12,14 +10,15 @@ import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @NullMarked
-public class ShapedRecipeBuilder extends RecipeBuilder<ShapedRecipeBuilder> {
-    private String[] shape;
+public class ShapedRecipeBuilder extends RecipeBuilder<ShapedRecipeBuilder>{
+    private String @Nullable [] shape;
     private Map<Character, Material> materialIngredients = new HashMap<>();
     private Map<Character, CustomItem> customItemIngredients = new HashMap<>();
     private Map<Character, Tag<Material>> tagIngredients = new HashMap<>();
@@ -60,6 +59,10 @@ public class ShapedRecipeBuilder extends RecipeBuilder<ShapedRecipeBuilder> {
 
     @Override
     public void buildAndRegisterRecipe(Plugin plugin){
+        assert key != null;
+        assert result != null;
+        assert shape != null;
+
         ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(plugin, key), result);
         recipe.shape(shape);
 

@@ -21,8 +21,8 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.loot.LootTable;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,46 +30,45 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public interface PoolWrapper extends NmsWrapper<@NotNull LootPool>, NmsConditioned, NmsFunctioned {
+@org.jspecify.annotations.NullMarked public  interface PoolWrapper extends NmsWrapper<LootPool>, NmsConditioned, NmsFunctioned{
 
-    void addEntry(@NotNull EntryWrapper entry);
+    void addEntry(EntryWrapper entry);
     void removeEntry(int n);
-    @NotNull EntryWrapper getEntry(int n);
-    @NotNull List<EntryWrapper> getEntries();
-    void extractItems(@NotNull LootInfo base, @NotNull Consumer<Pair<ItemStack, LootInfo>> consumer);
+    EntryWrapper getEntry(int n);
+    List<EntryWrapper> getEntries();
+    void extractItems(LootInfo base, Consumer<Pair<ItemStack, LootInfo>> consumer);
     int getAverageRolls();
     int getAverageBonusRolls();
-    //void extractAllSingletons(@NotNull Consumer<SingletonEntryWrapper> consumer);
 
     class Builder{
 
         protected int rolls = 1;
         protected int bonusRolls = 0;
         protected List<LootPoolEntryContainer> entries = new ArrayList<>();
-        protected List<LootItemCondition> conditions;
-        protected List<LootItemFunction> functions;
+        protected @UnknownNullability List<LootItemCondition> conditions;
+        protected @UnknownNullability List<LootItemFunction> functions;
 
-        public Builder(@NotNull EntryWrapper...entries){
+        public Builder(EntryWrapper...entries){
             Arrays.asList(entries).forEach(this::addEntry);
         }
 
-        public @NotNull Builder rolls(int rolls){
+        public Builder rolls(int rolls){
             this.rolls = rolls;
             return this;
         }
 
-        public @NotNull Builder bonusRolls(int bonusRolls){
+        public Builder bonusRolls(int bonusRolls){
             this.bonusRolls = bonusRolls;
             return this;
         }
 
-        public @NotNull Builder addEntry(@NotNull EntryWrapper entry) {
+        public Builder addEntry(EntryWrapper entry) {
             entries.add(entry.getNms());
             return this;
         }
 
 
-        protected @Nullable LootPool getPoolByPredicate(@NotNull LootTable lootTable, Predicate<ItemStack> predicate){
+        protected @Nullable LootPool getPoolByPredicate(LootTable lootTable, Predicate<ItemStack> predicate){
             LootPool found = NmsUtils.getLootPoolByPredicate(
                     NmsUtils.toNmsLootTable(lootTable),
                     itemStack -> predicate.test(NmsUtils.toBukkitItemStack(itemStack)));
@@ -77,14 +76,14 @@ public interface PoolWrapper extends NmsWrapper<@NotNull LootPool>, NmsCondition
             return found;
         }
 
-        public @NotNull PoolWrapper.Builder copyConditionsFrom(@NotNull LootTable lootTable, Predicate<ItemStack> predicate){
+        public Builder copyConditionsFrom(LootTable lootTable, Predicate<ItemStack> predicate){
             LootPool found = getPoolByPredicate(lootTable, predicate);
             Preconditions.checkArgument(found != null, "Pool not found!");
             this.conditions = Reflex.getFieldValue(found, NmsFields.CONDITIONS);
             return this;
         }
 
-        public @NotNull PoolWrapper.Builder copyFunctionsFrom(@NotNull LootTable lootTable, Predicate<ItemStack> predicate){
+        public Builder copyFunctionsFrom(LootTable lootTable, Predicate<ItemStack> predicate){
             LootPool found = getPoolByPredicate(lootTable, predicate);
             Preconditions.checkArgument(found != null, "Pool not found!");
             this.functions = Reflex.getFieldValue(found, NmsFields.FUNCTIONS);
@@ -92,11 +91,11 @@ public interface PoolWrapper extends NmsWrapper<@NotNull LootPool>, NmsCondition
         }
 
 
-        public void setConditions(@NotNull List<LootConditionWrapper> conditions) {
+        public void setConditions(List<LootConditionWrapper> conditions) {
             this.conditions = LootConditionWrapper.unwrap(conditions);
         }
 
-        public void setFunctions(@NotNull List<LootFunctionWrapper> functions) {
+        public void setFunctions(List<LootFunctionWrapper> functions) {
             this.functions =  LootFunctionWrapper.unwrap(functions);
         }
 
@@ -106,7 +105,7 @@ public interface PoolWrapper extends NmsWrapper<@NotNull LootPool>, NmsCondition
             }
         }
 
-        public @NotNull PoolWrapper build(){
+        public PoolWrapper build(){
             validate();
 
             LootPool.Builder builder = LootPool.lootPool()

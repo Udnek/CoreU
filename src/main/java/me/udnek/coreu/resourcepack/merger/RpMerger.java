@@ -20,8 +20,8 @@ import me.udnek.coreu.util.LogUtils;
 import net.kyori.adventure.translation.Translatable;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -34,7 +34,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RpMerger {
+@org.jspecify.annotations.NullMarked public class RpMerger{
 
     public static final RpPath LANG_DIRECTORY = new RpPath(null, "assets/*/lang");
     public static final RpPath SOUNDS_FILE = new RpPath(null, "assets/*/sounds.json");
@@ -43,7 +43,7 @@ public class RpMerger {
 
     private final SortedPathsContainer container = new SortedPathsContainer();
 
-    private String extractDirectory;
+    private @UnknownNullability String extractDirectory;
 
     public RpMerger(){}
 
@@ -57,7 +57,7 @@ public class RpMerger {
         return null;
     }
 
-    public void startMergeInto(@NotNull String extractDirectory){
+    public void startMergeInto(String extractDirectory){
 
         this.extractDirectory = extractDirectory;
         String error = checkExtractDirectoryAndError(extractDirectory);
@@ -127,7 +127,7 @@ public class RpMerger {
 
     }
 
-    public void autoMergeCopy(@NotNull SamePathsContainer container){
+    public void autoMergeCopy(SamePathsContainer container){
         RpFileMerger merger;
         if (container.getExample().isBelow(LANG_DIRECTORY) || container.getExample().isBelow(SOUNDS_FILE)){
             merger = new MapLikeMerger();
@@ -144,7 +144,7 @@ public class RpMerger {
     }
 
     // TODO COMPLETELY REMOVE ???
-    public void manualMergeCopy(@NotNull SamePathsContainer container){
+    public void manualMergeCopy(SamePathsContainer container){
         if (extractFileExists(container.getExample())){
             LogUtils.pluginLog("Manual file already exists: " + container.getExample());
             return;
@@ -156,28 +156,28 @@ public class RpMerger {
             mergeId++;
         }
     }
-    public boolean isInAutoMerge(@NotNull RpPath rpPath){
+    public boolean isInAutoMerge(RpPath rpPath){
         for (RpPath mergeDirectory : MERGE_DIRECTORIES) {
             if (rpPath.isBelow(mergeDirectory)) return true;
         }
         return false;
     }
-    public BufferedWriter newBufferedWriter(@NotNull RpPath rpPath){
+    public BufferedWriter newBufferedWriter(RpPath rpPath){
         Path path = Paths.get(rpPath.getExtractPath(extractDirectory));
         try {
             return Files.newBufferedWriter(path, StandardCharsets.UTF_8);
         } catch (IOException e) {throw new RuntimeException(e);}
     }
-    public BufferedReader newBufferedReader(@NotNull RpPath rpPath){
+    public BufferedReader newBufferedReader(RpPath rpPath){
         InputStream stream = rpPath.getInputStream();
         return new BufferedReader(new InputStreamReader(stream));
     }
 
-    public boolean extractFileExists(@NotNull RpPath rpPath){
+    public boolean extractFileExists(RpPath rpPath){
         String filePath = rpPath.getExtractPath(extractDirectory);
         return new File(filePath).exists();
     }
-    public void createNewFile(@NotNull RpPath rpPath){
+    public void createNewFile(RpPath rpPath){
         if (extractFileExists(rpPath)) return;
         String filePath = rpPath.getExtractPath(extractDirectory);
         String folderPath = rpPath.withLayerUp().getExtractPath(extractDirectory);
@@ -188,7 +188,7 @@ public class RpMerger {
             throw new RuntimeException(e);
         }
     }
-    public void copyFile(@NotNull RpPath from, @NotNull RpPath to){
+    public void copyFile(RpPath from, RpPath to){
         createNewFile(to);
         switch (from.getFileType()) {
             case PNG -> copyImage(from, to);
@@ -196,7 +196,7 @@ public class RpMerger {
             default -> copyText(from, to);
         }
     }
-    public void copySound(@NotNull RpPath from, @NotNull RpPath to){
+    public void copySound(RpPath from, RpPath to){
         Preconditions.checkArgument(from.getFileType() == FileType.OGG, "File " + to + " is not a sound!");
 
         try {
@@ -217,7 +217,7 @@ public class RpMerger {
         }
     }
 
-    public void copyImage(@NotNull RpPath from, @NotNull RpPath to){
+    public void copyImage(RpPath from, RpPath to){
         Preconditions.checkArgument(from.getFileType() == FileType.PNG, "File " + to + " is not an image!");
         try {
             InputStream inputStream = from.getInputStream();
@@ -228,7 +228,7 @@ public class RpMerger {
             throw new RuntimeException(e);
         }
     }
-    public void saveText(@NotNull RpPath to, @NotNull String text){
+    public void saveText(RpPath to, String text){
         createNewFile(to);
 
         BufferedWriter writer = newBufferedWriter(to);
@@ -240,7 +240,7 @@ public class RpMerger {
             throw new RuntimeException(e);
         }
     }
-    public void copyText(@NotNull RpPath from, @NotNull RpPath to){
+    public void copyText(RpPath from, RpPath to){
         try {
             InputStream inputStream = from.getInputStream();
             Files.copy(inputStream, Paths.get(to.getExtractPath(extractDirectory)), StandardCopyOption.REPLACE_EXISTING);

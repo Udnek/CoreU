@@ -4,14 +4,13 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface SmartIntractableCustomInventory extends CustomInventory {
+@org.jspecify.annotations.NullMarked public  interface SmartIntractableCustomInventory extends CustomInventory{
     boolean canPlaceItem(@Nullable ItemStack itemStack, int slot);
     boolean canTakeItem(@Nullable ItemStack itemStack, int slot);
     @Override
-    default void onPlayerClicksItem(@NotNull InventoryClickEvent event) {
+    default void onPlayerClicksItem(InventoryClickEvent event) {
         int slot = event.getSlot();
         if (isPlaceAction(event) && !canPlaceItem(event.getCurrentItem(), slot)){
             event.setCancelled(true);
@@ -21,7 +20,7 @@ public interface SmartIntractableCustomInventory extends CustomInventory {
     }
 
     @Override
-    default void onPlayerDragsItem(@NotNull InventoryDragEvent event) {
+    default void onPlayerDragsItem(InventoryDragEvent event) {
         Inventory upper = event.getView().getTopInventory();
         for (Integer rawSlot : event.getRawSlots()) {
             Inventory inventory = event.getView().getInventory(rawSlot);
@@ -34,7 +33,7 @@ public interface SmartIntractableCustomInventory extends CustomInventory {
         }
     }
 
-    default boolean isPlaceAction(@NotNull InventoryClickEvent event){
+    default boolean isPlaceAction(InventoryClickEvent event){
         // UPPER
         if (event.getClickedInventory() == event.getView().getTopInventory()){
             return switch (event.getAction()) {
@@ -63,7 +62,7 @@ public interface SmartIntractableCustomInventory extends CustomInventory {
             };
         }
     }
-    default boolean isTakeAction(@NotNull InventoryClickEvent event){
+    default boolean isTakeAction(InventoryClickEvent event){
         // UPPER
         if (event.getClickedInventory() == event.getView().getTopInventory()){
             return switch (event.getAction()) {

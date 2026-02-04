@@ -10,10 +10,10 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class RPGUConstructablePassiveAbility<ActivationContext> extends RPGUItemAbstractAbility<ActivationContext> implements RPGUItemPassiveAbility<ActivationContext> {
+@org.jspecify.annotations.NullMarked public abstract class RPGUConstructablePassiveAbility<ActivationContext> extends RPGUItemAbstractAbility<ActivationContext>implements RPGUItemPassiveAbility<ActivationContext>{
 
     @Override
-    public void getLore(@NotNull LoreBuilder loreBuilder){
+    public void getLore(LoreBuilder loreBuilder){
         LoreBuilder.Componentable componentable = loreBuilder.get(LoreBuilder.Position.ATTRIBUTES);
         PassiveAbilityLorePart lorePart;
         if (!(componentable instanceof AttributesLorePart attributesLorePart)){
@@ -30,7 +30,7 @@ public abstract class RPGUConstructablePassiveAbility<ActivationContext> extends
     }
 
     @Override
-    public void activate(@NotNull CustomItem customItem, @NotNull LivingEntity livingEntity, boolean cancelActivationContextIfCooldown, @NotNull UniversalInventorySlot slot, @NotNull ActivationContext activationContext) {
+    public void activate(CustomItem customItem, LivingEntity livingEntity, boolean cancelActivationContextIfCooldown, UniversalInventorySlot slot, @NotNull ActivationContext activationContext) {
         if (!getSlot().intersects(livingEntity, slot)) return;
         super.activate(customItem, livingEntity, cancelActivationContextIfCooldown, slot, activationContext);
     }

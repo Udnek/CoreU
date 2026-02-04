@@ -13,9 +13,8 @@ import me.udnek.coreu.custom.recipe.CustomRecipeType;
 import me.udnek.coreu.custom.sound.CustomSound;
 import me.udnek.coreu.mgu.game.MGUGameType;
 import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.NotNull;
 
-public class CustomRegistries {
+@org.jspecify.annotations.NullMarked public class CustomRegistries{
     public static final CustomRegistry<CustomRegistry<?>> REGISTRY;
     public static final CustomRegistry<CustomItem> ITEM;
     public static final CustomRegistry<CustomBlockType> BLOCK_TYPE;
@@ -46,12 +45,12 @@ public class CustomRegistries {
         MGU_GAME_TYPE = addRegistry(new MappedCustomRegistry<>("mgu_game_type"));
     }
 
-    public static @NotNull <T extends Registrable> CustomRegistry<T> addRegistry(@NotNull Plugin plugin, @NotNull CustomRegistry<T> registry){
+    public static <T extends Registrable> CustomRegistry<T> addRegistry(Plugin plugin, CustomRegistry<T> registry){
         REGISTRY.register(plugin, registry);
         return registry;
     }
 
-    private static @NotNull <T extends Registrable> CustomRegistry<T> addRegistry(@NotNull CustomRegistry<T> registry){
+    private static <T extends Registrable> CustomRegistry<T> addRegistry(CustomRegistry<T> registry){
         return addRegistry(CoreU.getInstance(), registry);
     }
 }

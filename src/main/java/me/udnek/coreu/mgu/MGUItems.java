@@ -4,7 +4,7 @@ import me.udnek.coreu.CoreU;
 import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.custom.registry.CustomRegistries;
 
-public class MGUItems {
+@org.jspecify.annotations.NullMarked public class MGUItems{
 
     public static final CustomItem COORDINATE_WAND = register(new CoordinateWand());
 

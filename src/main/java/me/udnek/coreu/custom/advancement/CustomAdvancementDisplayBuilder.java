@@ -10,28 +10,27 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class CustomAdvancementDisplayBuilder {
-    @NotNull ItemStack icon;
+@org.jspecify.annotations.NullMarked public class CustomAdvancementDisplayBuilder{
+    ItemStack icon;
     @Nullable String background;
     @Nullable net.kyori.adventure.text.Component title;
     @Nullable net.kyori.adventure.text.Component description;
-    @NotNull AdvancementDisplay.Frame frame = AdvancementDisplay.Frame.TASK;
+    AdvancementDisplay.Frame frame = AdvancementDisplay.Frame.TASK;
     boolean showToast = true;
     boolean announceToChat = true;
     boolean hidden = false;
     @Nullable Float x;
     @Nullable Float y;
 
-    public CustomAdvancementDisplayBuilder(@NotNull ItemStack icon) {
+    public CustomAdvancementDisplayBuilder(ItemStack icon) {
         this.icon = icon;
     }
 
-    public @NotNull CustomAdvancementDisplayBuilder clone(){
+    public CustomAdvancementDisplayBuilder clone(){
         CustomAdvancementDisplayBuilder displayBuilder = new CustomAdvancementDisplayBuilder(icon.clone());
         displayBuilder.background = this.background;
         displayBuilder.title = this.title;
@@ -45,57 +44,57 @@ public class CustomAdvancementDisplayBuilder {
         return displayBuilder;
     }
 
-    public @NotNull CustomAdvancementDisplayBuilder defaultSettings(){
+    public CustomAdvancementDisplayBuilder defaultSettings(){
         return hidden(false).showToast(true).announceToChat(true).background(null);
     }
-    public @NotNull CustomAdvancementDisplayBuilder rootSettings(@NotNull String background){
+    public CustomAdvancementDisplayBuilder rootSettings(String background){
         return hidden(false).showToast(false).announceToChat(false).background(background);
     }
 
-    public @NotNull CustomAdvancementDisplayBuilder icon(@NotNull ItemStack itemStack){
+    public CustomAdvancementDisplayBuilder icon(ItemStack itemStack){
         this.icon = itemStack; return this;
     }
-    public @NotNull CustomAdvancementDisplayBuilder x(@Nullable Float x){
+    public CustomAdvancementDisplayBuilder x(@Nullable Float x){
         this.x = x; return this;
     }
-    public @NotNull CustomAdvancementDisplayBuilder y(@Nullable Float y){
+    public CustomAdvancementDisplayBuilder y(@Nullable Float y){
         this.y = y; return this;
     }
-    public @NotNull CustomAdvancementDisplayBuilder title(@Nullable net.kyori.adventure.text.Component component){
+    public CustomAdvancementDisplayBuilder title(@Nullable net.kyori.adventure.text.Component component){
         title = component; return this;
     }
-    public @NotNull CustomAdvancementDisplayBuilder title(@Nullable String string){
+    public CustomAdvancementDisplayBuilder title(@Nullable String string){
         if (string == null) return title((net.kyori.adventure.text.Component) null);
         return title(net.kyori.adventure.text.Component.translatable(string));
     }
     public @Nullable net.kyori.adventure.text.Component title() {return title;}
 
-    public @NotNull CustomAdvancementDisplayBuilder description(@Nullable net.kyori.adventure.text.Component component){
+    public CustomAdvancementDisplayBuilder description(@Nullable net.kyori.adventure.text.Component component){
         description = component; return this;
     }
-    public @NotNull CustomAdvancementDisplayBuilder description(@Nullable String string){
+    public CustomAdvancementDisplayBuilder description(@Nullable String string){
         if (string == null) return description((net.kyori.adventure.text.Component) null);
         return description(net.kyori.adventure.text.Component.translatable(string));
     }
     public @Nullable net.kyori.adventure.text.Component description() {return description;}
 
-    public @NotNull CustomAdvancementDisplayBuilder background(@Nullable String background){
+    public CustomAdvancementDisplayBuilder background(@Nullable String background){
         this.background = background; return this;
     }
-    public @NotNull CustomAdvancementDisplayBuilder frame(@NotNull AdvancementDisplay.Frame frame){
+    public CustomAdvancementDisplayBuilder frame(AdvancementDisplay.Frame frame){
         this.frame = frame; return this;
     }
-    public @NotNull CustomAdvancementDisplayBuilder hidden(boolean hidden){
+    public CustomAdvancementDisplayBuilder hidden(boolean hidden){
         this.hidden = hidden; return this;
     }
-    public @NotNull CustomAdvancementDisplayBuilder announceToChat(boolean announceToChat){
+    public CustomAdvancementDisplayBuilder announceToChat(boolean announceToChat){
         this.announceToChat = announceToChat; return this;
     }
-    public @NotNull CustomAdvancementDisplayBuilder showToast(boolean showToast){
+    public CustomAdvancementDisplayBuilder showToast(boolean showToast){
         this.showToast = showToast; return this;
     }
 
-    public @NotNull DisplayInfo build(){
+    public DisplayInfo build(){
         AdvancementType type = switch (frame){
             case GOAL -> AdvancementType.GOAL;
             case CHALLENGE -> AdvancementType.CHALLENGE;

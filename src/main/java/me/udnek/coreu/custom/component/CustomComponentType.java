@@ -9,12 +9,10 @@ import me.udnek.coreu.custom.registry.Registrable;
 import me.udnek.coreu.custom.sound.CustomSound;
 import org.jetbrains.annotations.NotNull;
 
-public interface CustomComponentType<HolderType, Component extends CustomComponent<HolderType>> extends Registrable {
+@org.jspecify.annotations.NullMarked public  interface CustomComponentType<HolderType, Component extends CustomComponent<HolderType>> extends Registrable{
 
     CustomComponentType<Object, TranslatableThing>
             TRANSLATABLE_THING = register(new ConstructableComponentType<>("translatable_thing", TranslatableThing.DEFAULT));
-
-    // ITEM
 
     CustomComponentType<CustomItem, CustomAttributedItem>
             CUSTOM_ATTRIBUTED_ITEM = register(new ConstructableComponentType<>("custom_attributed_item", CustomAttributedItem.EMPTY, CustomAttributedItem::new));
@@ -40,8 +38,6 @@ public interface CustomComponentType<HolderType, Component extends CustomCompone
     CustomComponentType<CustomItem, DispensableItem>
             DISPENSABLE_ITEM = register(new ConstructableComponentType<>("dispensable_item", DispensableItem.DEFAULT));
 
-    // BLOCK
-
     CustomComponentType<CustomBlockType, RightClickableBlock>
             RIGHT_CLICKABLE_BLOCK = register(new ConstructableComponentType<>("right_clickable_block", RightClickableBlock.EMPTY));
 
@@ -51,8 +47,6 @@ public interface CustomComponentType<HolderType, Component extends CustomCompone
     CustomComponentType<CustomBlockType, HopperInteractingBlock>
             HOPPER_INTERACTING_BLOCK = register(new ConstructableComponentType<>("hopper_interacting_block", HopperInteractingBlock.DENY));
 
-    // SOUND
-
     CustomComponentType<CustomSound, AutoGeneratingFilesSound>
             AUTO_GENERATING_FILES_SOUND = register(new ConstructableComponentType<>("auto_generating_files_sound", AutoGeneratingFilesSound.DEFAULT));
 
@@ -60,7 +54,7 @@ public interface CustomComponentType<HolderType, Component extends CustomCompone
     @NotNull Component getDefault();
     @NotNull Component createNewDefault();
 
-    private static <T extends CustomComponentType<?, ?>> @NotNull T register(T type){
+    private static <T extends CustomComponentType<?, ?>> T register(T type){
         return CustomRegistries.COMPONENT_TYPE.register(CoreU.getInstance(), type);
     }
 }

@@ -7,15 +7,13 @@ import me.udnek.coreu.custom.attribute.CustomAttribute;
 import me.udnek.coreu.custom.attribute.CustomAttributeConsumer;
 import me.udnek.coreu.custom.attribute.CustomAttributeModifier;
 import me.udnek.coreu.custom.component.AbstractComponentHolder;
-import me.udnek.coreu.nms.Nms;
-import net.minecraft.world.effect.MobEffect;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
@@ -23,9 +21,9 @@ import java.util.List;
 import java.util.function.Function;
 
 @NullMarked
-public class VanillaBasedEffect extends AbstractComponentHolder<CustomEffect> implements CustomEffect{
+public class VanillaBasedEffect extends AbstractComponentHolder<CustomEffect>implements CustomEffect{
 
-    private String id;
+    private @UnknownNullability String id;
     private final PotionEffectType vanilla;
     private final List<Function<PotionEffect, Pair<CustomAttribute, CustomAttributeModifier>>> attributes = new ArrayList<>(0);
 
@@ -34,13 +32,13 @@ public class VanillaBasedEffect extends AbstractComponentHolder<CustomEffect> im
     }
 
     @Override
-    public void initialize(@NotNull Plugin plugin) {
+    public void initialize(Plugin plugin) {
         Preconditions.checkArgument(id == null, "Registrable already initialized!");
         id = RegistryAccess.registryAccess().getRegistry(RegistryKey.MOB_EFFECT).getKey(vanilla).asString();
     }
 
     @Override
-    public @NotNull String getId() {
+    public String getId() {
         return id;
     }
 

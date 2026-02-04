@@ -7,7 +7,6 @@ import me.udnek.coreu.rpgu.lore.ability.PassiveAbilityLorePart;
 import me.udnek.coreu.util.LoreBuilder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -16,14 +15,14 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Consumer;
 
-public class AttributesLorePart implements LoreBuilder.Componentable, PassiveAbilityLorePart {
+@org.jspecify.annotations.NullMarked public class AttributesLorePart implements LoreBuilder.Componentable, PassiveAbilityLorePart{
 
     protected HashMap<CustomEquipmentSlot, Simple> attributeData = new HashMap<>();
     protected HashMap<CustomEquipmentSlot, Simple> passiveData = new HashMap<>();
     protected CustomEquipmentSlot abilitySlot;
 
     @Override
-    public void toComponents(@NotNull Consumer<Component> consumer) {
+    public void toComponents(Consumer<Component> consumer) {
         if (isEmpty()) return;
         SortedMap<CustomEquipmentSlot, Simple> sorted = new TreeMap<>((o1, o2) -> {
             if (o1 == CustomEquipmentSlot.MAIN_HAND) return -1;
@@ -37,7 +36,7 @@ public class AttributesLorePart implements LoreBuilder.Componentable, PassiveAbi
             Simple simple = entry.getValue();
             simple.toComponents(component -> addLine(entry.getKey(), component, false, Position.ATTRIBUTE));
         }
-        
+
         sorted.putAll(attributeData);
 
         for (Map.Entry<CustomEquipmentSlot, Simple> entry : sorted.entrySet()) {
@@ -49,22 +48,22 @@ public class AttributesLorePart implements LoreBuilder.Componentable, PassiveAbi
             componentable.toComponents(consumer);
         }
     }
-    public void addAttribute(@NotNull CustomEquipmentSlot slot, @NotNull Component component){
+    public void addAttribute(CustomEquipmentSlot slot, Component component){
         addLine(slot, AttributeLoreGenerator.addTab(component), false, Position.ATTRIBUTE);
     }
 
-    public void addFullDescription(@NotNull CustomEquipmentSlot slot, @NotNull CustomItem customItem, int linesAmount){
+    public void addFullDescription(CustomEquipmentSlot slot, CustomItem customItem, int linesAmount){
         for (int i = 0; i < linesAmount; i++) addDescription(slot, customItem, i);
     }
-    public void addDescription(@NotNull CustomEquipmentSlot slot, @NotNull CustomItem customItem, int line){
+    public void addDescription(CustomEquipmentSlot slot, CustomItem customItem, int line){
         addDescription(slot, customItem.translationKey(), line);
     }
-    public void addDescription(@NotNull CustomEquipmentSlot slot, @NotNull String rawItemName, int line){
+    public void addDescription(CustomEquipmentSlot slot, String rawItemName, int line){
         addLine(slot, AttributeLoreGenerator.addTab(Component.translatable(rawItemName + ".description." + line)).color(CustomAttribute.PLUS_COLOR), false, Position.ATTRIBUTE);
     }
-    
 
-    public void addLine(@NotNull CustomEquipmentSlot slot, @NotNull Component component, boolean asFirst, @NotNull Position position){
+
+    public void addLine(CustomEquipmentSlot slot, Component component, boolean asFirst, Position position){
         if (position == Position.ATTRIBUTE){
             Simple componentable = attributeData.getOrDefault(slot, new Simple());
             if (asFirst) componentable.addFirst(component);
@@ -79,7 +78,7 @@ public class AttributesLorePart implements LoreBuilder.Componentable, PassiveAbi
     }
 
 
-    public @Nullable LoreBuilder.Componentable get(@NotNull CustomEquipmentSlot slot){
+    public @Nullable LoreBuilder.Componentable get(CustomEquipmentSlot slot){
         return attributeData.get(slot);
     }
     @Override
@@ -87,41 +86,41 @@ public class AttributesLorePart implements LoreBuilder.Componentable, PassiveAbi
 
     @Override
     @Deprecated
-    public void add(@NotNull Component component) {
+    public void add(Component component) {
         throw new RuntimeException("Can not use add on AttributesLorePart");
     }
     @Override
     @Deprecated
-    public void addFirst(@NotNull Component component) {
+    public void addFirst(Component component) {
         throw new RuntimeException("Can not use add on AttributesLorePart");
     }
 
     @Override
-    public void setHeader(@NotNull Component component) {
+    public void setHeader(Component component) {
         addLine(abilitySlot,  AttributeLoreGenerator.addTab(component.color(PASSIVE_HEADER_COLOR).decoration(TextDecoration.ITALIC, false)), true, Position.PASSIVE);
     }
 
     @Override
-    public void addAbilityProperty(@NotNull Component component) {
+    public void addAbilityProperty(Component component) {
         addWithAbilityFormat(component.color(PASSIVE_STATS_COLOR));
     }
 
     @Override
-    public void addAbilityPropertyDoubleTab(@NotNull Component component) {
+    public void addAbilityPropertyDoubleTab(Component component) {
         addAbilityProperty(AttributeLoreGenerator.addTab(component));
     }
 
     @Override
-    public void addAbilityDescription(@NotNull Component component) {
+    public void addAbilityDescription(Component component) {
         addWithAbilityFormat(component.color(PASSIVE_DESCRIPTION_COLOR));
     }
 
-    public void addWithAbilityFormat(@NotNull Component component) {
+    public void addWithAbilityFormat(Component component) {
         addLine(abilitySlot, AttributeLoreGenerator.addTab(AttributeLoreGenerator.addTab(component)), false, Position.PASSIVE);
     }
 
     @Override
-    public void setEquipmentSlot(@NotNull CustomEquipmentSlot slot) {
+    public void setEquipmentSlot(CustomEquipmentSlot slot) {
         abilitySlot = slot;
     }
 

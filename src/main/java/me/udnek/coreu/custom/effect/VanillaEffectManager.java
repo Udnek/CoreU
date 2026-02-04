@@ -1,6 +1,5 @@
 package me.udnek.coreu.custom.effect;
 
-import org.bukkit.craftbukkit.potion.CraftPotionEffectType;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
@@ -10,9 +9,9 @@ import java.util.Map;
 
 
 @NullMarked
-public class VanillaEffectManager {
+public class VanillaEffectManager{
 
-    private static VanillaEffectManager instance;
+    private static @Nullable VanillaEffectManager instance;
 
     private final Map<PotionEffectType, CustomEffect> vanillaToReplaced = new HashMap<>();
 

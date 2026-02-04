@@ -11,10 +11,10 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
 
-public class ClearAttributeCommand implements BasicCommand {
+@org.jspecify.annotations.NullMarked public class ClearAttributeCommand implements BasicCommand{
 
     @Override
-    public void execute(@NotNull CommandSourceStack commandSourceStack, String @NotNull [] args) {
+    public void execute(CommandSourceStack commandSourceStack, String[] args) {
         CommandSender commandSender = commandSourceStack.getSender();
         if (!(commandSender instanceof Player player)) return;
         for (@NotNull Attribute attribute : Registry.ATTRIBUTE.stream().toList()) {

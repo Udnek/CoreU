@@ -31,19 +31,20 @@ import net.kyori.adventure.key.Key;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.UnknownNullability;
 
 @SuppressWarnings("unused")
-public final class CoreU extends JavaPlugin implements ResourcePackablePlugin {
+@org.jspecify.annotations.NullMarked
+public final class CoreU extends JavaPlugin implements ResourcePackablePlugin{
 
-    private static Plugin instance;
-    private static HttpServer rpHost;
+    private static @UnknownNullability Plugin instance;
+    private static @UnknownNullability HttpServer rpHost;
 
-    public static @NotNull Plugin getInstance(){
+    public static Plugin getInstance() {
         return instance;
     }
 
-    public static @NotNull Key getKey(@NotNull String value){
+    public static Key getKey(String value) {
         return new NamespacedKey(getInstance(), value);
     }
 
@@ -75,7 +76,7 @@ public final class CoreU extends JavaPlugin implements ResourcePackablePlugin {
         PacketHandler.initialize();
 
         SerializableDataManager.loadConfig();
-        this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
+        this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
             public void run() {
                 InitializationProcess.start();
             }
@@ -92,7 +93,7 @@ public final class CoreU extends JavaPlugin implements ResourcePackablePlugin {
     }
 
     @Override
-    public @NotNull Priority getPriority() {
+    public Priority getPriority() {
         return Priority.TECHNICAL;
     }
 }

@@ -12,14 +12,13 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CustomAttributeUtils {
+@org.jspecify.annotations.NullMarked public class CustomAttributeUtils{
 
     private final CustomAttribute attribute;
     private final Collection<CustomEquipmentSlot> searchTroughSlots;
@@ -30,11 +29,11 @@ public class CustomAttributeUtils {
     private double multiply = 1;
     private final boolean reversed;
 
-    public CustomAttributeUtils(@NotNull CustomAttribute attribute, @NotNull Collection<CustomEquipmentSlot> searchTroughSlots, @NotNull LivingEntity entity, double base){
+    public CustomAttributeUtils(CustomAttribute attribute, Collection<CustomEquipmentSlot> searchTroughSlots, LivingEntity entity, double base){
         this(attribute, searchTroughSlots, entity, base, false);
     }
 
-    public CustomAttributeUtils(@NotNull CustomAttribute attribute, @NotNull Collection<CustomEquipmentSlot> searchTroughSlots, @NotNull LivingEntity entity, double base, boolean reversed){
+    public CustomAttributeUtils(CustomAttribute attribute, Collection<CustomEquipmentSlot> searchTroughSlots, LivingEntity entity, double base, boolean reversed){
         this.attribute = attribute;
         this.searchTroughSlots = searchTroughSlots;
         this.entity = entity;
@@ -44,7 +43,7 @@ public class CustomAttributeUtils {
 
     protected void calculate(){
 
-        Map<CustomEquipmentSlot.Single, @NotNull ItemStack> slots = new HashMap<>();
+        Map<CustomEquipmentSlot.Single, ItemStack> slots = new HashMap<>();
 
         for (CustomEquipmentSlot slot : searchTroughSlots) {
             slot.getAllSingle(singleSlot ->
@@ -58,7 +57,7 @@ public class CustomAttributeUtils {
             });
         }
 
-        for (Map.Entry<CustomEquipmentSlot.@NotNull Single, @NotNull ItemStack> slotEntry : slots.entrySet()) {
+        for (Map.Entry<CustomEquipmentSlot.Single, ItemStack> slotEntry : slots.entrySet()) {
             ItemStack item = slotEntry.getValue();
             CustomEquipmentSlot.Single slot = slotEntry.getKey();
             for (Map.Entry<Enchantment, Integer> enchantmentEntry : item.getEnchantments().entrySet()) {
@@ -99,7 +98,7 @@ public class CustomAttributeUtils {
         amount *= multiply;
     }
 
-    public void add(@NotNull AttributeModifier.Operation operation, double localAmount){
+    public void add(AttributeModifier.Operation operation, double localAmount){
         if (reversed) localAmount *= -1;
         switch (operation){
             case ADD_NUMBER -> amount += localAmount;
@@ -109,13 +108,13 @@ public class CustomAttributeUtils {
     }
 
 
-    public static double calculate(@NotNull CustomAttribute attribute, @NotNull Collection<CustomEquipmentSlot> slots, @NotNull LivingEntity entity, double base, boolean reversed){
+    public static double calculate(CustomAttribute attribute, Collection<CustomEquipmentSlot> slots, LivingEntity entity, double base, boolean reversed){
         CustomAttributeUtils attributeUtils = new CustomAttributeUtils(attribute, slots, entity, base, reversed);
         attributeUtils.calculate();
         return attributeUtils.amount;
     }
 
-    public static double calculate(@NotNull CustomAttribute attribute, @NotNull LivingEntity entity, double base, boolean reversed){
+    public static double calculate(CustomAttribute attribute, LivingEntity entity, double base, boolean reversed){
         return calculate(attribute, CustomRegistries.EQUIPMENT_SLOT.getAll(), entity, base, reversed);
     }
 }

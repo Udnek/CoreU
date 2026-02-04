@@ -7,7 +7,6 @@ import me.udnek.coreu.CoreU;
 import me.udnek.coreu.resourcepack.RPInfo;
 import me.udnek.coreu.serializabledata.SerializableDataManager;
 import me.udnek.coreu.util.LogUtils;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -17,21 +16,21 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class RpHost implements HttpHandler {
+@org.jspecify.annotations.NullMarked public class RpHost implements HttpHandler{
 
     private static final String NAME = "generated_resourcepack";
 
-    public static @NotNull Path getFolderPath(){
+    public static Path getFolderPath(){
         Path path = CoreU.getInstance().getDataPath().toAbsolutePath().resolve(NAME);
         path.toFile().mkdir();
         return path;
     }
 
-    public static @NotNull Path getZipFilePath(){
+    public static Path getZipFilePath(){
         return CoreU.getInstance().getDataPath().resolve(NAME + ".zip");
     }
 
-    public @NotNull HttpServer start(){
+    public HttpServer start(){
         if (!Files.exists(getZipFilePath())) LogUtils.pluginWarning("Resourcepack was not generated! Use /resourcepack");
         RpUtils.updateServerProperties();
 

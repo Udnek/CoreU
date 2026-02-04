@@ -24,30 +24,29 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionEffectTypeCategory;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.lang.reflect.Constructor;
 
-public abstract class ConstructableCustomEffect extends AbstractRegistrableComponentable<CustomEffect> implements CustomEffect{
-    protected Holder<MobEffect> nmsEffect;
-    protected PotionEffectType bukkitEffect;
-    
-    public abstract @NotNull PotionEffectTypeCategory getCategory();
+@org.jspecify.annotations.NullMarked public abstract class ConstructableCustomEffect extends AbstractRegistrableComponentable<CustomEffect>implements CustomEffect{
+    protected @Nullable Holder<MobEffect> nmsEffect;
+    protected @Nullable PotionEffectType bukkitEffect;
+
+    public abstract PotionEffectTypeCategory getCategory();
     public int getColorIfDefaultParticle(){return Color.WHITE.getRGB();}
     public @Nullable Particle getParticle(){return null;}
     public @Nullable Sound getApplySound(){return null;}
-    public void addAttributes(@NotNull AttributeConsumer consumer){}
-    public void modifyParticleIfNotDefault(@NotNull ModifyParticleConsumer consumer){}
+    public void addAttributes(AttributeConsumer consumer){}
+    public void modifyParticleIfNotDefault(ModifyParticleConsumer consumer){}
     @Override
-    public void getCustomAttributes(@NotNull PotionEffect context, @NotNull CustomAttributeConsumer consumer) {}
+    public void getCustomAttributes(PotionEffect context, CustomAttributeConsumer consumer) {}
 
     @Nullable
     public abstract PotionEffectType getVanillaDisguise();
 
     @Override
-    public void initialize(@NotNull Plugin plugin) {
+    public void initialize(Plugin plugin) {
         super.initialize(plugin);
         MobEffectCategory category = switch (getCategory()){
             case HARMFUL -> MobEffectCategory.HARMFUL;
@@ -64,9 +63,12 @@ public abstract class ConstructableCustomEffect extends AbstractRegistrableCompo
 
 
             ModifyParticleConsumerWithReturn modifyParticleConsumer = new ModifyParticleConsumerWithReturn() {
-                private ParticleOptions newParticle = null;
+                private @Nullable ParticleOptions newParticle = null;
+
                 @Override
-                public @Nullable ParticleOptions getOptions() {return newParticle;}
+                public @Nullable ParticleOptions getOptions() {
+                    return newParticle;
+                }
 
                 @Override
                 public void color(int color) {
@@ -107,23 +109,26 @@ public abstract class ConstructableCustomEffect extends AbstractRegistrableCompo
     }
 
     @Override
-    public void apply(@NotNull LivingEntity bukkit, int duration, int amplifier, boolean ambient, boolean showParticles, boolean showIcon) {
+    public void apply(LivingEntity bukkit, int duration, int amplifier, boolean ambient, boolean showParticles, boolean showIcon) {
         net.minecraft.world.entity.LivingEntity entity = NmsUtils.toNmsEntity(bukkit);
+        assert nmsEffect != null;
         entity.addEffect(new MobEffectInstance(nmsEffect, duration, amplifier, ambient, showParticles, showIcon));
     }
 
     @Override
-    public @NotNull PotionEffectType getBukkitType() {
+    public PotionEffectType getBukkitType() {
+        assert bukkitEffect != null;
         return bukkitEffect;
     }
 
     @Override
-    public @Nullable PotionEffect get(@NotNull LivingEntity living) {
+    public @Nullable PotionEffect get(LivingEntity living) {
+        assert bukkitEffect != null;
         return living.getPotionEffect(bukkitEffect);
     }
 
     public interface AttributeConsumer{
-        void accept(@NotNull Attribute attribute, @NotNull Key key, double amount, @NotNull org.bukkit.attribute.AttributeModifier.Operation operation);
+        void accept(Attribute attribute, Key key, double amount, org.bukkit.attribute.AttributeModifier.Operation operation);
     }
 
     public interface ModifyParticleConsumer{

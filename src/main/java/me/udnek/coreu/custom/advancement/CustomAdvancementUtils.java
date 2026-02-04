@@ -17,11 +17,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class CustomAdvancementUtils {
+@org.jspecify.annotations.NullMarked public class CustomAdvancementUtils{
 
     private static final HashMap<CustomAdvancementContainer, CustomAdvancementContainer> realPoses = new HashMap<>();
 
-    public static @NotNull ConstructableCustomAdvancement itemAdvancement(@NotNull Key key, @NotNull ItemStack itemStack){
+    public static ConstructableCustomAdvancement itemAdvancement(Key key, ItemStack itemStack){
         ConstructableCustomAdvancement advancement = new ConstructableCustomAdvancement(key);
         advancement.addCriterion(ItemUtils.getId(itemStack), AdvancementCriterion.INVENTORY_CHANGE.create(itemStack));
         CustomAdvancementDisplayBuilder display = new CustomAdvancementDisplayBuilder(itemStack);
@@ -30,7 +30,7 @@ public class CustomAdvancementUtils {
         return advancement;
     }
 
-    public static void register(@NotNull CustomAdvancementContainer advancementContainer){
+    public static void register(CustomAdvancementContainer advancementContainer){
         DedicatedServer server = ((CraftServer) Bukkit.getServer()).getServer();
         ServerAdvancementManager manager = server.getAdvancements();
 

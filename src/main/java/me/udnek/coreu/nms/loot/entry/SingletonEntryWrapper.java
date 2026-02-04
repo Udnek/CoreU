@@ -26,23 +26,24 @@ import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.loot.LootTable;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+@NullMarked
 public class SingletonEntryWrapper implements EntryWrapper, NmsFunctioned {
 
-    protected final @NotNull LootPoolSingletonContainer container;
+    protected final LootPoolSingletonContainer container;
 
-    public SingletonEntryWrapper(@NotNull LootPoolSingletonContainer container) {
+    public SingletonEntryWrapper(LootPoolSingletonContainer container) {
         this.container = container;
     }
 
-    public static @Nullable SingletonEntryWrapper fromVanillaByPredicate(@NotNull LootTable lootTable, @NotNull Predicate<ItemStack> predicate){
+    public static @Nullable SingletonEntryWrapper fromVanillaByPredicate(LootTable lootTable, Predicate<ItemStack> predicate){
         for (LootPoolSingletonContainer container : NmsUtils.getAllSingletonContainers(NmsUtils.toNmsLootTable(lootTable))) {
             LootPoolEntry entry = NmsUtils.getEntry(container);
             List<net.minecraft.world.item.ItemStack> loot = new ArrayList<>();
@@ -56,24 +57,24 @@ public class SingletonEntryWrapper implements EntryWrapper, NmsFunctioned {
     }
 
     @Override
-    public @NotNull List<LootConditionWrapper> getConditions() {
+    public List<LootConditionWrapper> getConditions() {
         return LootConditionWrapper.wrap(Reflex.getFieldValue(container, NmsFields.CONDITIONS));
     }
 
     @Override
-    public void setConditions(@NotNull List<LootConditionWrapper> conditions) {
+    public void setConditions(List<LootConditionWrapper> conditions) {
         List<LootItemCondition> list = conditions.stream().map(LootConditionWrapper::getNms).toList();
         Reflex.setFieldValue(container, NmsFields.CONDITIONS, list);
         Reflex.setFieldValue(container, NmsFields.COMPOSITE_CONDITIONS, Util.allOf(list));
     }
 
     @Override
-    public @NotNull List<LootFunctionWrapper> getFunctions() {
+    public List<LootFunctionWrapper> getFunctions() {
         return LootFunctionWrapper.wrap(Reflex.getFieldValue(container, NmsFields.FUNCTIONS));
     }
 
     @Override
-    public void setFunctions(@NotNull List<LootFunctionWrapper> functions) {
+    public void setFunctions(List<LootFunctionWrapper> functions) {
         List<LootItemFunction> list = functions.stream().map(LootFunctionWrapper::getNms).toList();
         Reflex.setFieldValue(container, NmsFields.CONDITIONS, list);
         Reflex.setFieldValue(container, NmsFields.COMPOSITE_CONDITIONS, LootItemFunctions.compose(list));
@@ -93,7 +94,7 @@ public class SingletonEntryWrapper implements EntryWrapper, NmsFunctioned {
     }
 
     @Override
-    public void extractAllSingleton(@NotNull Consumer<SingletonEntryWrapper> consumer) {
+    public void extractAllSingleton(Consumer<SingletonEntryWrapper> consumer) {
         consumer.accept(this);
     }
 
@@ -101,7 +102,7 @@ public class SingletonEntryWrapper implements EntryWrapper, NmsFunctioned {
         if (!(container instanceof LootItem)) {
             return null;
         }
-        Item item = Reflex.<Holder<@NotNull Item>>getFieldValue(container, "item").value();
+        Item item = Reflex.<Holder<Item>>getFieldValue(container, "item").value();
         if (item != Items.MAP) {
             return null;
         }
@@ -118,7 +119,7 @@ public class SingletonEntryWrapper implements EntryWrapper, NmsFunctioned {
         return map;
     }
 
-    protected float numberProviderCDF(@NotNull NumberProvider provider, float target, float fallback){
+    protected float numberProviderCDF(NumberProvider provider, float target, float fallback){
         if (provider instanceof ConstantValue(float value)){
             if (value <= target) return 1;
             return 0;
@@ -131,7 +132,7 @@ public class SingletonEntryWrapper implements EntryWrapper, NmsFunctioned {
         return fallback;
     }
 
-    public void extractItems(@NotNull LootInfo baseInfo, @NotNull Consumer<Pair<ItemStack, LootInfo>> consumer) {
+    public void extractItems(LootInfo baseInfo, Consumer<Pair<ItemStack, LootInfo>> consumer) {
         net.minecraft.world.item.ItemStack map = extractExplorerMap();
         for (LootFunctionWrapper wrapped : getFunctions()) {
             LootItemFunction func = wrapped.getNms();
@@ -157,7 +158,7 @@ public class SingletonEntryWrapper implements EntryWrapper, NmsFunctioned {
     }
 
     @Override
-    public @NotNull LootPoolSingletonContainer getNms() {
+    public LootPoolSingletonContainer getNms() {
         return container;
     }
 }

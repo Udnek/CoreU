@@ -10,18 +10,16 @@ import me.udnek.coreu.custom.item.CustomItem;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public interface MiddleClickableBlock extends CustomComponent<CustomBlockType> {
+@org.jspecify.annotations.NullMarked public  interface MiddleClickableBlock extends CustomComponent<CustomBlockType>{
 
     MiddleClickableBlock DEFAULT = new Implementation();
 
-    void onMiddleClick(@NotNull CustomBlockType block, @NotNull PlayerPickBlockEvent event);
+    void onMiddleClick(CustomBlockType block, PlayerPickBlockEvent event);
 
     @Override
-    @NotNull
     default CustomComponentType<CustomBlockType, ? extends CustomComponent<CustomBlockType>> getType(){
         return CustomComponentType.MIDDLE_CLICKABLE_BLOCK;
     }
@@ -29,7 +27,7 @@ public interface MiddleClickableBlock extends CustomComponent<CustomBlockType> {
     class Implementation implements MiddleClickableBlock{
 
         @Override
-        public void onMiddleClick(@NotNull CustomBlockType block, @NotNull PlayerPickBlockEvent event) {
+        public void onMiddleClick(CustomBlockType block, PlayerPickBlockEvent event) {
             event.setCancelled(true);
             CustomItem item = block.getItem();
             if (item == null) return;
@@ -60,7 +58,7 @@ public interface MiddleClickableBlock extends CustomComponent<CustomBlockType> {
             }
         }
 
-        public @NotNull ItemStack getItemForCreative(@NotNull CustomBlockType block, @NotNull PlayerPickBlockEvent event){
+        public ItemStack getItemForCreative(CustomBlockType block, PlayerPickBlockEvent event){
             return Objects.requireNonNull(block.getItem()).getItem();
         }
     }

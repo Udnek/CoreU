@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.function.Function;
 
-public class AttributeBasedPropertyType extends AbstractRegistrable implements CustomComponentType<RPGUItemAbility<?>, AttributeBasedProperty> {
+@org.jspecify.annotations.NullMarked public class AttributeBasedPropertyType extends AbstractRegistrable implements CustomComponentType<RPGUItemAbility<?>, AttributeBasedProperty>{
 
     protected AttributeBasedProperty defaultComponent;
     protected String rawId;
@@ -22,7 +22,7 @@ public class AttributeBasedPropertyType extends AbstractRegistrable implements C
     protected String translation;
     protected boolean divideValueBy20;
 
-    public AttributeBasedPropertyType(@NotNull String rawId, @NotNull CustomAttribute attribute, double defaultValue, @NotNull String translation, boolean divideValueBy20) {
+    public AttributeBasedPropertyType(String rawId, CustomAttribute attribute, double defaultValue, String translation, boolean divideValueBy20) {
         this.rawId = rawId;
         this.translation = translation;
         this.divideValueBy20 = divideValueBy20;
@@ -30,13 +30,13 @@ public class AttributeBasedPropertyType extends AbstractRegistrable implements C
         defaultComponent = new AttributeBasedProperty(defaultValue, this);
     }
 
-    public AttributeBasedPropertyType(@NotNull String rawId, @NotNull CustomAttribute attribute, double defaultValue, @NotNull String translation) {
+    public AttributeBasedPropertyType(String rawId, CustomAttribute attribute, double defaultValue, String translation) {
         this(rawId, attribute, defaultValue, translation, false);
     }
 
-    public @NotNull CustomAttribute getAttribute() {return attribute;}
+    public CustomAttribute getAttribute() {return attribute;}
 
-    public void describe(@NotNull AttributeBasedProperty attributeBasedProperty, @NotNull AbilityLorePart componentable) {
+    public void describe(AttributeBasedProperty attributeBasedProperty, AbilityLorePart componentable) {
         Function<Double, Double> modifier = divideValueBy20 ? Modifiers.TICKS_TO_SECONDS() : Function.identity();
         MultiLineDescription description = attributeBasedProperty.getFunction().describeWithModifier(modifier);
         if (description.getLines().isEmpty()) return;
@@ -49,17 +49,16 @@ public class AttributeBasedPropertyType extends AbstractRegistrable implements C
     }
 
     @Override
-    public @NotNull AttributeBasedProperty getDefault() {
+    public AttributeBasedProperty getDefault() {
         return defaultComponent;
     }
 
     @Override
-    public @NotNull AttributeBasedProperty createNewDefault() {
+    public AttributeBasedProperty createNewDefault() {
         return defaultComponent;
     }
 
     @Override
-    @NotNull
     public String getRawId() {
         return rawId;
     }

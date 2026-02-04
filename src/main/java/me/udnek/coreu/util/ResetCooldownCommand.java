@@ -6,13 +6,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
 
-public class ResetCooldownCommand implements BasicCommand {
+@org.jspecify.annotations.NullMarked public class ResetCooldownCommand implements BasicCommand{
 
     @Override
-    public void execute(@NotNull CommandSourceStack commandSourceStack, String @NotNull [] args) {
+    public void execute(CommandSourceStack commandSourceStack, String[] args) {
         CommandSender commandSender = commandSourceStack.getSender();
         if (!(commandSender instanceof Player player)) return;
         ItemStack item = player.getEquipment().getItem(EquipmentSlot.HAND);

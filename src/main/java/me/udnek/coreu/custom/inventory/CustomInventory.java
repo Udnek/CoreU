@@ -4,37 +4,36 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public interface CustomInventory extends InventoryHolder {
-    static boolean isCustom(@NotNull Inventory inventory){
+@org.jspecify.annotations.NullMarked public  interface CustomInventory extends InventoryHolder{
+    static boolean isCustom(Inventory inventory){
         return inventory.getHolder() instanceof CustomInventory;
     }
-    static boolean isCustom(@NotNull InventoryHolder holder){
+    static boolean isCustom(InventoryHolder holder){
         return holder instanceof CustomInventory;
     }
-    static @Nullable CustomInventory get(@NotNull Inventory inventory){
+    static @Nullable CustomInventory get(Inventory inventory){
         if (inventory.getHolder() instanceof CustomInventory customInventory){
             return customInventory;
         } return null;
     }
-    default void open(@NotNull Player player) {player.openInventory(getInventory());}
-    default void onPlayerClicksItem(@NotNull InventoryClickEvent event){}
-    default void afterPlayerClicksItem(@NotNull InventoryClickEvent event){}
-    default void onPlayerDragsItem(@NotNull InventoryDragEvent event){}
-    default void onPlayerClosesInventory(@NotNull InventoryCloseEvent event){}
-    default void onPlayerOpensInventory(@NotNull InventoryOpenEvent event){}
+    default void open(Player player) {player.openInventory(getInventory());}
+    default void onPlayerClicksItem(InventoryClickEvent event){}
+    default void afterPlayerClicksItem(InventoryClickEvent event){}
+    default void onPlayerDragsItem(InventoryDragEvent event){}
+    default void onPlayerClosesInventory(InventoryCloseEvent event){}
+    default void onPlayerOpensInventory(InventoryOpenEvent event){}
     default boolean shouldAutoUpdateItems() { return true; }
-    default void onHopperMoveFrom(@NotNull InventoryMoveItemEvent event){}
-    default void onHopperMoveInto(@NotNull InventoryMoveItemEvent event){}
-    default boolean isOpened(@NotNull Player player){
+    default void onHopperMoveFrom(InventoryMoveItemEvent event){}
+    default void onHopperMoveInto(InventoryMoveItemEvent event){}
+    default boolean isOpened(Player player){
         return get(player.getOpenInventory().getTopInventory()) == this;
     }
     default boolean isOpenedByAnyone() { return !getInventory().getViewers().isEmpty(); }
-    default @NotNull List<Player> getViewers(){
+    default List<Player> getViewers(){
         return getInventory().getViewers().stream().map(human -> (Player) human).toList();
     }
 }

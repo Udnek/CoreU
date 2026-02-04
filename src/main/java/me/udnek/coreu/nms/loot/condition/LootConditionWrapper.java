@@ -14,35 +14,34 @@ import org.bukkit.block.Biome;
 import org.bukkit.craftbukkit.block.CraftBiome;
 import org.bukkit.craftbukkit.entity.CraftEntityType;
 import org.bukkit.craftbukkit.generator.structure.CraftStructure;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
 
-public class LootConditionWrapper implements NmsWrapper<@NotNull LootItemCondition> {
+@org.jspecify.annotations.NullMarked public class LootConditionWrapper implements NmsWrapper<LootItemCondition>{
 
-    public static @NotNull List<LootConditionWrapper> wrap(@NotNull List<LootItemCondition> conditions) {
+    public static List<LootConditionWrapper> wrap(List<LootItemCondition> conditions) {
         return conditions.stream().map(LootConditionWrapper::new).toList();
     }
 
-    public static @NotNull List<LootItemCondition> unwrap(@NotNull List<LootConditionWrapper> functions) {
+    public static List<LootItemCondition> unwrap(List<LootConditionWrapper> functions) {
         return functions.stream().map(LootConditionWrapper::getNms).toList();
     }
 
-    public static @NotNull LootConditionWrapper time(@NotNull Range<Integer> range, @Nullable Long period){
+    public static LootConditionWrapper time(Range<Integer> range, @Nullable Long period){
         return new LootConditionWrapper(new TimeCheck(
                 Optional.ofNullable(period), IntRange.range(range.getMinimum(), range.getMaximum()))
         );
     }
 
-    public static @NotNull LootConditionWrapper structure(@NotNull Key structure){
+    public static LootConditionWrapper structure(Key structure){
         return new LootConditionWrapper(new LocationCheck(
                 Optional.of(LocationPredicate.Builder.inStructure(NmsUtils.toNms(Registries.STRUCTURE, structure)).build()),
                 BlockPos.ZERO
         ));
     }
-    public static @NotNull LootConditionWrapper biome(@NotNull Biome biome){
+    public static LootConditionWrapper biome(Biome biome){
         return new LootConditionWrapper(new LocationCheck(
                 Optional.of(LocationPredicate.Builder.inBiome(NmsUtils.toNms(Registries.BIOME, biome)).build()),
                 BlockPos.ZERO
@@ -51,11 +50,11 @@ public class LootConditionWrapper implements NmsWrapper<@NotNull LootItemConditi
 
     protected final LootItemCondition condition;
 
-    public LootConditionWrapper(@NotNull LootItemCondition condition) {
+    public LootConditionWrapper(LootItemCondition condition) {
         this.condition = condition;
     }
 
-    public @NotNull LootConditionPortrait getPortrait(){
+    public LootConditionPortrait getPortrait(){
         LootConditionPortrait portrait = new LootConditionPortrait();
         switch (condition) {
             case TimeCheck time -> {}// todo
@@ -96,7 +95,7 @@ public class LootConditionWrapper implements NmsWrapper<@NotNull LootItemConditi
     }
 
     @Override
-    public @NotNull LootItemCondition getNms() {
+    public LootItemCondition getNms() {
         return condition;
     }
 

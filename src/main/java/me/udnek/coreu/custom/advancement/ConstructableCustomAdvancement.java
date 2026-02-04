@@ -8,7 +8,6 @@ import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.resources.Identifier;
 import org.bukkit.NamespacedKey;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -16,22 +15,22 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class ConstructableCustomAdvancement implements CustomAdvancementContainer {
+@org.jspecify.annotations.NullMarked public class ConstructableCustomAdvancement implements CustomAdvancementContainer{
     protected boolean registered = false;
     protected @Nullable CustomAdvancementContainer parent;
     protected AdvancementHolder itself = null;
-    protected final @NotNull Key key;
+    protected final Key key;
     protected @Nullable CustomAdvancementDisplayBuilder display;
-    protected Set<@NotNull CustomAdvancementContainer> fakes = new HashSet<>();
+    protected Set<CustomAdvancementContainer> fakes = new HashSet<>();
 
-    @NotNull Map<String, Criterion<?>> criteria = new HashMap<>();
-    @NotNull AdvancementRequirements.Strategy requirementsStrategy = AdvancementRequirements.Strategy.AND;
+    Map<String, Criterion<?>> criteria = new HashMap<>();
+    AdvancementRequirements.Strategy requirementsStrategy = AdvancementRequirements.Strategy.AND;
 
-    public ConstructableCustomAdvancement(@NotNull Key key){
+    public ConstructableCustomAdvancement(Key key){
         this.key = key;
     }
 
-    public ConstructableCustomAdvancement(@NotNull Key key, @NotNull ConstructableCustomAdvancement other){
+    public ConstructableCustomAdvancement(Key key, ConstructableCustomAdvancement other){
         this(key);
         this.parent = other.parent;
         this.display= other.display == null ? null : other.display.clone();
@@ -40,7 +39,7 @@ public class ConstructableCustomAdvancement implements CustomAdvancementContaine
     }
 
     @Override
-    public @NotNull ConstructableCustomAdvancement copy(@NotNull Key key) {
+    public ConstructableCustomAdvancement copy(Key key) {
         return new ConstructableCustomAdvancement(key, this);
     }
 
@@ -53,28 +52,28 @@ public class ConstructableCustomAdvancement implements CustomAdvancementContaine
     }
 
 
-    public void addFakeParent(@NotNull CustomAdvancementContainer parent){
+    public void addFakeParent(CustomAdvancementContainer parent){
         ConstructableCustomAdvancement fake = copy(NamespacedKey.fromString(key.asString() + "_fake"));
         fake.setParent(parent);
         fake.getDisplay().showToast(false).announceToChat(false);
         fakes.add(fake);
     }
-    public void addCriterion(@NotNull AdvancementCriterion criterion){
+    public void addCriterion(AdvancementCriterion criterion){
         addCriterion(Integer.toString(criteria.size()), criterion);
     }
-    public void addCriterion(@NotNull String name, @NotNull AdvancementCriterion criterion){
+    public void addCriterion(String name, AdvancementCriterion criterion){
         criteria.put(name, criterion.get());
     }
-    public void removeCriterion(@NotNull String name){criteria.remove(name);}
+    public void removeCriterion(String name){criteria.remove(name);}
 
-    public void requirementsStrategy(@NotNull RequirementsStrategy strategy){requirementsStrategy = strategy.get();}
+    public void requirementsStrategy(RequirementsStrategy strategy){requirementsStrategy = strategy.get();}
     @Override
     public @Nullable CustomAdvancementDisplayBuilder getDisplay() {return display;}
     @Override
-    public @NotNull Set<@NotNull CustomAdvancementContainer> getFakes() {return fakes;}
+    public Set<CustomAdvancementContainer> getFakes() {return fakes;}
 
     @Override
-    public @NotNull AdvancementHolder get(){
+    public AdvancementHolder get(){
         if (itself == null){
             Advancement.Builder builder = new Advancement.Builder();
             builder.display(display == null ? null : display.build());

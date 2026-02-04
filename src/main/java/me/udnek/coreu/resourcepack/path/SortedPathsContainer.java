@@ -1,19 +1,18 @@
 package me.udnek.coreu.resourcepack.path;
 
 import me.udnek.coreu.util.LogUtils;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SortedPathsContainer {
+@org.jspecify.annotations.NullMarked public class SortedPathsContainer{
 
     private final List<RpPath> all = new ArrayList<>();
     private final List<SamePathsContainer> sames = new ArrayList<>();
 
     public SortedPathsContainer(){}
 
-    public void add(@NotNull RpPath newPath){
+    public void add(RpPath newPath){
 
         for (SamePathsContainer container : sames) {
             if (container.canAdd(newPath)){
@@ -35,7 +34,7 @@ public class SortedPathsContainer {
         all.add(newPath);
     }
 
-    public @NotNull List<SamePathsContainer> getSames() {
+    public List<SamePathsContainer> getSames() {
         return sames;
     }
 
@@ -51,7 +50,7 @@ public class SortedPathsContainer {
         }
     }
 
-    public @NotNull List<RpPath> getAllExcludingSame(){
+    public List<RpPath> getAllExcludingSame(){
         List<RpPath> toExclude = new ArrayList<>();
         for (RpPath path : all) {
             for (SamePathsContainer same : sames) {

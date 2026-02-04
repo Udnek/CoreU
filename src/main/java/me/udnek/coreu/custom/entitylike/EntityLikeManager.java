@@ -8,18 +8,17 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class EntityLikeManager<
+@org.jspecify.annotations.NullMarked public abstract class EntityLikeManager<
         Real,
         Type extends EntityLikeType<Real>,
-        Entity extends EntityLike<Real, ? extends Type>> extends TickingTask
-{
+        Entity extends EntityLike<Real, ? extends Type>> extends TickingTask{
 
     protected List<Entity> loaded = new ArrayList<>();
     protected List<Entity> toUnloadTickets = new ArrayList<>();
 
     protected abstract boolean equals(@NotNull Real r1, @NotNull Real r2);
 
-    public @NotNull List<Entity> getAllLoaded(){
+    public List<Entity> getAllLoaded(){
         return new ArrayList<>(loaded);
     }
 
@@ -30,7 +29,7 @@ public abstract class EntityLikeManager<
         }
         return null;
     }
-    
+
     public @NotNull Entity getTickingOrException(@NotNull Real real){
         Entity ticking = getTicking(real);
         Preconditions.checkArgument(ticking != null, "Ticking not fount: " + real);

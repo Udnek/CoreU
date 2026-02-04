@@ -1,6 +1,6 @@
 package me.udnek.coreu.nms.loot.util;
 
-public class NmsFields {
+@org.jspecify.annotations.NullMarked public class NmsFields{
 
     public static final String FUNCTIONS = "functions";
     public static final String CONDITIONS = "conditions";

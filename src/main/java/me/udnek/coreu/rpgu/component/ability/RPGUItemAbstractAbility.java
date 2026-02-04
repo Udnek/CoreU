@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class RPGUItemAbstractAbility<ActivationContext> extends AbstractComponentHolder<RPGUItemAbility<?>> implements RPGUItemAbility<ActivationContext> {
+@org.jspecify.annotations.NullMarked public abstract class RPGUItemAbstractAbility<ActivationContext> extends AbstractComponentHolder<RPGUItemAbility<?>>implements RPGUItemAbility<ActivationContext>{
 
     public RPGUItemAbstractAbility(){
         TranslatableThing translations = getTranslations();
@@ -29,10 +29,10 @@ public abstract class RPGUItemAbstractAbility<ActivationContext> extends Abstrac
         getComponents().set(translations);
     }
 
-    public void activate(@NotNull CustomItem customItem,
-                         @NotNull LivingEntity livingEntity,
+    public void activate(CustomItem customItem,
+                         LivingEntity livingEntity,
                          boolean cancelActivationContextIfCooldown,
-                         @NotNull UniversalInventorySlot slot,
+                         UniversalInventorySlot slot,
                          @NotNull ActivationContext activationContext)
     {
         if (!(livingEntity instanceof Player player)) {
@@ -55,17 +55,17 @@ public abstract class RPGUItemAbstractAbility<ActivationContext> extends Abstrac
     }
 
     @Override
-    public void activate(@NotNull CustomItem customItem, @NotNull LivingEntity livingEntity, @NotNull UniversalInventorySlot slot, @NotNull ActivationContext activationContext){
+    public void activate(CustomItem customItem, LivingEntity livingEntity, UniversalInventorySlot slot, @NotNull ActivationContext activationContext){
         activate(customItem, livingEntity, false, slot, activationContext);
     }
 
-    protected abstract @NotNull ActionResult action(@NotNull CustomItem customItem, @NotNull LivingEntity livingEntity,
-                                                    @NotNull UniversalInventorySlot slot, @NotNull ActivationContext activationContext);
+    protected abstract ActionResult action(CustomItem customItem, LivingEntity livingEntity,
+                                           UniversalInventorySlot slot, @NotNull ActivationContext activationContext);
 
 
     public abstract @Nullable Pair<List<String>, List<String>> getEngAndRuDescription();
 
-    public void getEngAndRuProperties(TriConsumer<@NotNull String, @NotNull String, @NotNull List<Component>> Eng_Ru_Args){}
+    public void getEngAndRuProperties(TriConsumer<String, String, List<Component>> Eng_Ru_Args){}
 
     public @Nullable TranslatableThing getTranslations(){
         TranslatableThing translations = new TranslatableThing(null);
@@ -97,9 +97,9 @@ public abstract class RPGUItemAbstractAbility<ActivationContext> extends Abstrac
     }
 
     @Override
-    public abstract void getLore(@NotNull LoreBuilder loreBuilder);
+    public abstract void getLore(LoreBuilder loreBuilder);
 
-    protected void addDescriptionLines(@NotNull AbilityLorePart lorePart){
+    protected void addDescriptionLines(AbilityLorePart lorePart){
         Pair<List<String>, List<String>> desc = getEngAndRuDescription();
         if (desc != null){
             int maxLen = Math.max(desc.getLeft().size(), desc.getRight().size());
@@ -109,7 +109,7 @@ public abstract class RPGUItemAbstractAbility<ActivationContext> extends Abstrac
         }
     }
 
-    protected void addPropertyLines(@NotNull AbilityLorePart lorePart){
+    protected void addPropertyLines(AbilityLorePart lorePart){
         getProperties().forEach(c -> c.describe(lorePart));
         {
             AtomicInteger i = new AtomicInteger(0);

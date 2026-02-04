@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public interface CustomEquipmentSlot extends Translatable, Registrable{
+@org.jspecify.annotations.NullMarked public  interface CustomEquipmentSlot extends Translatable, Registrable{
 
     Single MAIN_HAND = register(new ConstructableSingleSlot("mainhand", EquipmentSlotGroup.MAINHAND, EquipmentSlot.HAND, new BaseUniversalSlot(EquipmentSlot.HAND), "item.modifiers.mainhand"));
     Single OFF_HAND = register(new ConstructableSingleSlot("offhand", EquipmentSlotGroup.OFFHAND, EquipmentSlot.OFF_HAND, new BaseUniversalSlot(EquipmentSlot.OFF_HAND),"item.modifiers.offhand"));
@@ -45,7 +45,7 @@ public interface CustomEquipmentSlot extends Translatable, Registrable{
 
     Single SADDLE = register(new ConstructableSingleSlot("saddle", EquipmentSlotGroup.SADDLE, EquipmentSlot.SADDLE, new BaseUniversalSlot(EquipmentSlot.SADDLE), "item.modifiers.saddle"));
 
-    static @NotNull CustomEquipmentSlot getFromVanilla(@NotNull EquipmentSlot slot){
+    static CustomEquipmentSlot getFromVanilla(EquipmentSlot slot){
         return switch (slot){
             case HEAD -> HEAD;
             case CHEST -> CHEST;
@@ -57,7 +57,7 @@ public interface CustomEquipmentSlot extends Translatable, Registrable{
             case SADDLE -> SADDLE;
         };
     }
-    static @NotNull CustomEquipmentSlot getFromVanilla(@NotNull EquipmentSlotGroup slot){
+    static CustomEquipmentSlot getFromVanilla(EquipmentSlotGroup slot){
         if (slot == EquipmentSlotGroup.MAINHAND) return MAIN_HAND;
         if (slot == EquipmentSlotGroup.OFFHAND) return OFF_HAND;
         if (slot == EquipmentSlotGroup.HEAD) return HEAD;
@@ -72,14 +72,14 @@ public interface CustomEquipmentSlot extends Translatable, Registrable{
         return ANY_VANILLA;
     }
 
-    boolean intersects(@NotNull LivingEntity entity, @NotNull CustomEquipmentSlot slot);
-    boolean intersects(@NotNull LivingEntity entity, @NotNull UniversalInventorySlot slot);
+    boolean intersects(LivingEntity entity, CustomEquipmentSlot slot);
+    boolean intersects(LivingEntity entity, UniversalInventorySlot slot);
     @Nullable EquipmentSlotGroup getVanillaGroup();
     @Nullable EquipmentSlot getVanillaSlot();
-    void getAllUniversal(@NotNull Consumer<@NotNull UniversalInventorySlot> consumer);
-    void getAllSingle(@NotNull Consumer<@NotNull Single> consumer);
+    void getAllUniversal(Consumer<UniversalInventorySlot> consumer);
+    void getAllSingle(Consumer<Single> consumer);
 
-    private static <Slot extends CustomEquipmentSlot> @NotNull Slot register(@NotNull Slot slot){
+    private static <Slot extends CustomEquipmentSlot> Slot register(@NotNull Slot slot){
         return CustomRegistries.EQUIPMENT_SLOT.register(CoreU.getInstance(), slot);
     }
 
@@ -87,24 +87,24 @@ public interface CustomEquipmentSlot extends Translatable, Registrable{
         @Nullable UniversalInventorySlot getUniversal();
 
         @Override
-        default void getAllUniversal(@NotNull Consumer<@NotNull UniversalInventorySlot> consumer){
+        default void getAllUniversal(Consumer<UniversalInventorySlot> consumer){
             @Nullable UniversalInventorySlot slot = getUniversal();
             if (slot != null) consumer.accept(slot);
         }
 
         @Override
-        default void getAllSingle(@NotNull Consumer<@NotNull Single> consumer){
+        default void getAllSingle(Consumer<Single> consumer){
             consumer.accept(this);
         }
 
         @Override
-        default boolean intersects(@NotNull LivingEntity entity, @NotNull CustomEquipmentSlot other) {
+        default boolean intersects(LivingEntity entity, CustomEquipmentSlot other) {
             if (other instanceof Single) return other == this;
             else return other.intersects(entity, this);
         }
 
         @Override
-        default boolean intersects(@NotNull LivingEntity entity, @NotNull UniversalInventorySlot slot) {
+        default boolean intersects(LivingEntity entity, UniversalInventorySlot slot) {
             UniversalInventorySlot universal = getUniversal();
             if (universal == null) return false;
             return universal.equals(entity, slot);

@@ -7,16 +7,15 @@ import me.udnek.coreu.custom.entitylike.block.CustomBlockType;
 import me.udnek.coreu.custom.registry.CustomRegistries;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class SetCustomBlockCommand implements BasicCommand {
+@org.jspecify.annotations.NullMarked public class SetCustomBlockCommand implements BasicCommand{
 
     @Override
-    public void execute(@NotNull CommandSourceStack commandSourceStack, String @NotNull [] args) {
+    public void execute(CommandSourceStack commandSourceStack, String[] args) {
         CommandSender commandSender = commandSourceStack.getSender();
         if (!(commandSender instanceof Player player)) return;
 
@@ -31,7 +30,7 @@ public class SetCustomBlockCommand implements BasicCommand {
     }
 
     @Override
-    public @NotNull Collection<String> suggest(@NotNull CommandSourceStack commandSourceStack, String @NotNull [] args) {
+    public Collection<String> suggest(CommandSourceStack commandSourceStack, String[] args) {
         if (args.length > 1) return List.of();
 
         String arg = args.length == 0 ? "" : args[0];

@@ -9,7 +9,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.*;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -19,9 +18,9 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
-public class RecipeManager {
+@org.jspecify.annotations.NullMarked public class RecipeManager{
 
-    private static RecipeManager instance;
+    private static @Nullable RecipeManager instance;
 
     private final HashMap<String, CustomRecipe> customRecipes = new HashMap<>();
 
@@ -32,7 +31,7 @@ public class RecipeManager {
 
     private RecipeManager(){}
 
-    public void register(@NotNull Recipe recipe){
+    public void register(Recipe recipe){
         if (recipe instanceof CustomRecipe customRecipe){
             Preconditions.checkArgument(
                     !customRecipes.containsKey(customRecipe.key().asString()),
@@ -45,11 +44,11 @@ public class RecipeManager {
         }
     }
 
-    public void getRecipesAsResult(@NotNull ItemStack itemStack, @NotNull Consumer<Recipe> recipeConsumer){
+    public void getRecipesAsResult(ItemStack itemStack, Consumer<Recipe> recipeConsumer){
         getRecipesAsResult(input -> ItemUtils.isSameIds(input, itemStack), recipeConsumer);
     }
 
-    public void getRecipesAsResult(@NotNull Predicate<@NotNull ItemStack> predicate, @NotNull Consumer<Recipe> recipeConsumer){
+    public void getRecipesAsResult(Predicate<ItemStack> predicate, Consumer<Recipe> recipeConsumer){
         Bukkit.recipeIterator().forEachRemaining(recipe -> {
             if (predicate.test(recipe.getResult())){
                 recipeConsumer.accept(recipe);
@@ -70,7 +69,7 @@ public class RecipeManager {
         }
     }
 
-    public void getRecipesAsIngredient(@NotNull ItemStack itemStack, @NotNull Consumer<Recipe> recipeConsumer){
+    public void getRecipesAsIngredient(ItemStack itemStack, Consumer<Recipe> recipeConsumer){
         CustomItem customItem = CustomItem.get(itemStack);
         if (customItem != null){
             getItemInRecipesUsages(itemStack,
@@ -88,10 +87,10 @@ public class RecipeManager {
     }
 
 
-    private void getItemInRecipesUsages(@NotNull ItemStack stack,
-                                        @NotNull Predicate<@NotNull ItemStack> stackPredicate,
-                                        @NotNull Predicate<@NotNull Material> materialPredicate,
-                                        @NotNull Consumer<Recipe> recipeConsumer)
+    private void getItemInRecipesUsages(ItemStack stack,
+                                        Predicate<ItemStack> stackPredicate,
+                                        Predicate<Material> materialPredicate,
+                                        Consumer<Recipe> recipeConsumer)
     {
         iterateTroughRecipesChoosing(recipeConsumer, recipeChoice -> {
             if (recipeChoice instanceof RecipeChoice.MaterialChoice choice)
@@ -115,7 +114,7 @@ public class RecipeManager {
         }
     }
 
-    public void iterateTroughRecipesChoosing(@NotNull Consumer<Recipe> recipes, @NotNull java.util.function.Predicate<RecipeChoice> predicate){
+    public void iterateTroughRecipesChoosing(Consumer<Recipe> recipes, java.util.function.Predicate<RecipeChoice> predicate){
         Iterator<Recipe> recipeIterator = Bukkit.recipeIterator();
         while (recipeIterator.hasNext()){
             Recipe recipe = recipeIterator.next();
@@ -169,7 +168,7 @@ public class RecipeManager {
         }
     }
 
-    public <T extends CustomRecipe> List<T> getByType(@NotNull CustomRecipeType<T> type){
+    public <T extends CustomRecipe> List<T> getByType(CustomRecipeType<T> type){
         List<T> recipes = new ArrayList<>();
         for (CustomRecipe recipe : customRecipes.values()) {
             if (recipe.getType() == type) recipes.add((T) recipe);
@@ -177,26 +176,26 @@ public class RecipeManager {
         return recipes;
     }
 
-    public <T extends CustomRecipe> @Nullable T getCustom(@NotNull CustomRecipeType<T> type, @NotNull NamespacedKey id){
+    public <T extends CustomRecipe> @Nullable T getCustom(CustomRecipeType<T> type, NamespacedKey id){
         List<T> byType = getByType(type);
         for (T recipe : byType) {
             if (recipe.getKey().equals(id)) return recipe;
         }
         return null;
     }
-    
-    public @Nullable Recipe get(@NotNull NamespacedKey id){
+
+    public @Nullable Recipe get(NamespacedKey id){
         Recipe recipe = Bukkit.getRecipe(id);
         if (recipe != null) return recipe;
         return customRecipes.get(id.asString());
     }
 
-    public void getAll(@NotNull Consumer<Recipe> consumer){
+    public void getAll(Consumer<Recipe> consumer){
         customRecipes.values().forEach(consumer);
         Bukkit.recipeIterator().forEachRemaining(consumer);
     }
 
-    public void unregister(@NotNull Recipe recipe){
+    public void unregister(Recipe recipe){
         if (recipe instanceof CustomRecipe customRecipe){
             customRecipes.remove(customRecipe.key().asString());
         } else {
@@ -205,7 +204,7 @@ public class RecipeManager {
         }
     }
 
-    public void unregister(@NotNull NamespacedKey key){
+    public void unregister(NamespacedKey key){
         Recipe recipe = get(key);
         if (recipe == null) return;
         unregister(recipe);

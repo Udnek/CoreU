@@ -2,7 +2,7 @@ package me.udnek.coreu.custom.item;
 
 import com.google.errorprone.annotations.ForOverride;
 import io.papermc.paper.datacomponent.DataComponentType;
-import io.papermc.paper.datacomponent.item.*;
+import io.papermc.paper.datacomponent.DataComponentTypes;import io.papermc.paper.datacomponent.item.*;
 import me.udnek.coreu.custom.component.instance.TranslatableThing;
 import me.udnek.coreu.custom.event.CustomItemGeneratedEvent;
 import me.udnek.coreu.custom.recipe.RecipeManager;
@@ -21,7 +21,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
@@ -33,20 +32,17 @@ import java.util.function.Consumer;
 import static io.papermc.paper.datacomponent.DataComponentTypes.*;
 
 
-public abstract class ConstructableCustomItem extends AbstractRegistrableComponentable<CustomItem> implements CustomItemProperties, UpdatingCustomItem {
+@org.jspecify.annotations.NullMarked public abstract class ConstructableCustomItem extends AbstractRegistrableComponentable<CustomItem>implements CustomItemProperties, UpdatingCustomItem{
     public static final Material DEFAULT_MATERIAL = Material.GUNPOWDER;
     public static final Material DEFAULT_MATERIAL_FOR_BLOCK_PLACEABLE = Material.BARRIER;
 
     protected ItemStack itemStack = null;
     protected RepairData repairData = null;
     protected int recipeNumber = 0;
-
-    ///////////////////////////////////////////////////////////////////////////
-    // INITIAL
     ///////////////////////////////////////////////////////////////////////////
 
     @Override
-    public @NotNull Material getMaterial() {return DEFAULT_MATERIAL;}
+    public Material getMaterial() {return DEFAULT_MATERIAL;}
 
     @ForOverride
     @OverridingMethodsMustInvokeSuper
@@ -65,25 +61,22 @@ public abstract class ConstructableCustomItem extends AbstractRegistrableCompone
     }
 
     @Override
-    public void setCooldown(@NotNull Player player, int ticks) {
+    public void setCooldown(Player player, int ticks) {
         player.setCooldown(getItemNoClone(), ticks);
     }
     @Override
-    public int getCooldown(@NotNull Player player) {
+    public int getCooldown(Player player) {
         return player.getCooldown(getItemNoClone());
     }
 
     @Override
-    public boolean isTagged(@NotNull Tag<Material> tag) {
+    public boolean isTagged(Tag<Material> tag) {
         return tag.isTagged(getMaterial());
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // COMPONENTS
     ///////////////////////////////////////////////////////////////////////////
 
     @Override
-    public @NotNull String translationKey() {
+    public String translationKey() {
         return "item."+getKey().namespace()+"."+getKey().value();
     }
 
@@ -102,10 +95,10 @@ public abstract class ConstructableCustomItem extends AbstractRegistrableCompone
     }
 
     @ForOverride
-    public void getLore(@NotNull Consumer<Component> consumer){}
+    public void getLore(Consumer<Component> consumer){}
 
     @Override
-    public DataSupplier<ItemLore> getLore() {
+    public @Nullable DataSupplier<ItemLore> getLore() {
         LoreBuilder builder = getLoreBuilder();
         if (builder == null) return null;
         return DataSupplier.of(ItemLore.lore(builder.build()));
@@ -144,92 +137,90 @@ public abstract class ConstructableCustomItem extends AbstractRegistrableCompone
     @Override
     public @Nullable DataSupplier<ItemRarity> getRarity() {return DataSupplier.of(ItemRarity.COMMON);}
     ///////////////////////////////////////////////////////////////////////////
-    // CREATING
-    ///////////////////////////////////////////////////////////////////////////
-    protected void setPersistentData(@NotNull ItemStack itemStack){
+    protected void setPersistentData(ItemStack itemStack){
         itemStack.editMeta(itemMeta -> itemMeta.getPersistentDataContainer().set(PERSISTENT_DATA_CONTAINER_NAMESPACE, PersistentDataType.STRING, getId()));
     }
-    protected <T> void setData(@NotNull DataComponentType.Valued<@NotNull T> type, @Nullable DataSupplier<T> supplier){
+    protected <T> void setData(DataComponentType.Valued<T> type, @Nullable DataSupplier<T> supplier){
         if (supplier == null) return;
         T value = supplier.get();
         if (value == null) itemStack.unsetData(type);
         else itemStack.setData(type, value);
     }
-    protected void setData(@NotNull DataComponentType.NonValued type, @Nullable Boolean value){
+    protected void setData(DataComponentType.NonValued type, @Nullable Boolean value){
         if (value == null) return;
         if (value) itemStack.setData(type);
         else itemStack.resetData(type);
     }
-    protected void hideSpecificComponent(@NotNull DataComponentType type){
-        TooltipDisplay oldDisplay = itemStack.getDataOrDefault(TOOLTIP_DISPLAY, TooltipDisplay.tooltipDisplay().build());
+    protected void hideSpecificComponent(DataComponentType type){
+        TooltipDisplay oldDisplay = itemStack.getDataOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplay.tooltipDisplay().build());
         TooltipDisplay.Builder builder = TooltipDisplay.tooltipDisplay().hideTooltip(oldDisplay.hideTooltip());
         for (DataComponentType oldComponent : oldDisplay.hiddenComponents()) {
             builder.addHiddenComponents(oldComponent);
         }
         builder.addHiddenComponents(type);
-        itemStack.setData(TOOLTIP_DISPLAY, builder.build());
+        itemStack.setData(DataComponentTypes.TOOLTIP_DISPLAY, builder.build());
     }
 
     protected void initializeItemStack(){
         itemStack = new ItemStack(getMaterial());
         setPersistentData(itemStack);
 
-        int maxStackSize = CustomItemProperties.getInDataOrInStack(itemStack, MAX_STACK_SIZE, getMaxStackSize(), 1);
-        int maxDamage = CustomItemProperties.getInDataOrInStack(itemStack, MAX_DAMAGE, getMaxDamage(), 0);
+        int maxStackSize = CustomItemProperties.getInDataOrInStack(itemStack, DataComponentTypes.MAX_STACK_SIZE, getMaxStackSize(), 1);
+        int maxDamage = CustomItemProperties.getInDataOrInStack(itemStack, DataComponentTypes.MAX_DAMAGE, getMaxDamage(), 0);
         if (maxStackSize > 1 && maxDamage > 0){
             throw new RuntimeException("Item can not be stackable and damageable: " + getId());
         }
 
-        setData(MAX_STACK_SIZE, getMaxStackSize());
-        setData(MAX_DAMAGE, getMaxDamage());
+        setData(DataComponentTypes.MAX_STACK_SIZE, getMaxStackSize());
+        setData(DataComponentTypes.MAX_DAMAGE, getMaxDamage());
 
-        setData(ITEM_NAME, getItemName());
-        setData(LORE, getLore());
-        setData(RARITY, getRarity());
-        setData(TOOLTIP_DISPLAY, getTooltipDisplay());
-        setData(FOOD, getFood());
-        setData(TOOL, getTool());
-        setData(CUSTOM_NAME, getDisplayName());
-        setData(UNBREAKABLE, getUnbreakable());
-        setData(ENCHANTMENT_GLINT_OVERRIDE, getEnchantmentGlintOverride());
-        setData(CUSTOM_MODEL_DATA, getCustomModelData());
-        setData(DAMAGE_RESISTANT, getDamageResistant());
-        setData(TRIM, getTrim());
-        setData(INSTRUMENT, getMusicInstrument());
-        setData(ATTRIBUTE_MODIFIERS, getAttributeModifiers());
-        setData(BLOCK_DATA, getBlockData());
-        setData(GLIDER, getGlider());
-        setData(ITEM_MODEL, getItemModel());
-        setData(USE_REMAINDER, getUseRemainder());
-        setData(EQUIPPABLE, getEquippable());
-        setData(USE_COOLDOWN, getUseCooldown());
-        setData(REPAIRABLE, getRepairable());
-        setData(CONSUMABLE, getConsumable());
-        setData(POTION_CONTENTS, getPotionContents());
-        setData(DYED_COLOR, getDyedColor());
-        setData(FIREWORK_EXPLOSION, getFireworkExplosion());
-        setData(WEAPON, getWeapon());
-        setData(ATTACK_RANGE, getAttackRange());
-        setData(BLOCKS_ATTACKS, getBlocksAttacks());
-        setData(USE_EFFECTS, getUseEffects());
-        setData(KINETIC_WEAPON, getKineticWeapon());
-        setData(PIERCING_WEAPON, getPiercingWeapon());
-        setData(SWING_ANIMATION, getSwingAnimation());
-        
-        if (getUseRemainderCustom() != null) itemStack.setData(USE_REMAINDER, UseRemainder.useRemainder(getUseRemainderCustom().getItem()));
+        setData(DataComponentTypes.ITEM_NAME, getItemName());
+        setData(DataComponentTypes.LORE, getLore());
+        setData(DataComponentTypes.RARITY, getRarity());
+        setData(DataComponentTypes.TOOLTIP_DISPLAY, getTooltipDisplay());
+        setData(DataComponentTypes.FOOD, getFood());
+        setData(DataComponentTypes.TOOL, getTool());
+        setData(DataComponentTypes.CUSTOM_NAME, getDisplayName());
+        setData(DataComponentTypes.UNBREAKABLE, getUnbreakable());
+        setData(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, getEnchantmentGlintOverride());
+        setData(DataComponentTypes.CUSTOM_MODEL_DATA, getCustomModelData());
+        setData(DataComponentTypes.DAMAGE_RESISTANT, getDamageResistant());
+        setData(DataComponentTypes.TRIM, getTrim());
+        setData(DataComponentTypes.INSTRUMENT, getMusicInstrument());
+        setData(DataComponentTypes.ATTRIBUTE_MODIFIERS, getAttributeModifiers());
+        setData(DataComponentTypes.BLOCK_DATA, getBlockData());
+        setData(DataComponentTypes.GLIDER, getGlider());
+        setData(DataComponentTypes.ITEM_MODEL, getItemModel());
+        setData(DataComponentTypes.USE_REMAINDER, getUseRemainder());
+        setData(DataComponentTypes.EQUIPPABLE, getEquippable());
+        setData(DataComponentTypes.USE_COOLDOWN, getUseCooldown());
+        setData(DataComponentTypes.REPAIRABLE, getRepairable());
+        setData(DataComponentTypes.CONSUMABLE, getConsumable());
+        setData(DataComponentTypes.POTION_CONTENTS, getPotionContents());
+        setData(DataComponentTypes.DYED_COLOR, getDyedColor());
+        setData(DataComponentTypes.FIREWORK_EXPLOSION, getFireworkExplosion());
+        setData(DataComponentTypes.WEAPON, getWeapon());
+        setData(DataComponentTypes.ATTACK_RANGE, getAttackRange());
+        setData(DataComponentTypes.BLOCKS_ATTACKS, getBlocksAttacks());
+        setData(DataComponentTypes.USE_EFFECTS, getUseEffects());
+        setData(DataComponentTypes.KINETIC_WEAPON, getKineticWeapon());
+        setData(DataComponentTypes.PIERCING_WEAPON, getPiercingWeapon());
+        setData(DataComponentTypes.SWING_ANIMATION, getSwingAnimation());
+
+        if (getUseRemainderCustom() != null) itemStack.setData(DataComponentTypes.USE_REMAINDER, UseRemainder.useRemainder(getUseRemainderCustom().getItem()));
 
         List<ItemFlag> tooltipHides = getTooltipHides();
         if (tooltipHides != null){
             for (ItemFlag flag : tooltipHides) {
                 switch (flag){
-                    case HIDE_ENCHANTS -> hideSpecificComponent(ENCHANTMENTS);
-                    case HIDE_ATTRIBUTES -> hideSpecificComponent(ATTRIBUTE_MODIFIERS);
-                    case HIDE_UNBREAKABLE -> hideSpecificComponent(UNBREAKABLE);
-                    case HIDE_DESTROYS -> hideSpecificComponent(CAN_BREAK);
-                    case HIDE_PLACED_ON -> hideSpecificComponent(CAN_PLACE_ON);
-                    case HIDE_DYE -> hideSpecificComponent(DYED_COLOR);
-                    case HIDE_ARMOR_TRIM -> hideSpecificComponent(TRIM);
-                    case HIDE_STORED_ENCHANTS -> hideSpecificComponent(STORED_ENCHANTMENTS);
+                    case HIDE_ENCHANTS -> hideSpecificComponent(DataComponentTypes.ENCHANTMENTS);
+                    case HIDE_ATTRIBUTES -> hideSpecificComponent(DataComponentTypes.ATTRIBUTE_MODIFIERS);
+                    case HIDE_UNBREAKABLE -> hideSpecificComponent(DataComponentTypes.UNBREAKABLE);
+                    case HIDE_DESTROYS -> hideSpecificComponent(DataComponentTypes.CAN_BREAK);
+                    case HIDE_PLACED_ON -> hideSpecificComponent(DataComponentTypes.CAN_PLACE_ON);
+                    case HIDE_DYE -> hideSpecificComponent(DataComponentTypes.DYED_COLOR);
+                    case HIDE_ARMOR_TRIM -> hideSpecificComponent(DataComponentTypes.TRIM);
+                    case HIDE_STORED_ENCHANTS -> hideSpecificComponent(DataComponentTypes.STORED_ENCHANTMENTS);
                 }
             }
         }
@@ -237,9 +228,9 @@ public abstract class ConstructableCustomItem extends AbstractRegistrableCompone
         modifyFinalItemStack(itemStack);
     }
 
-    protected void modifyFinalItemStack(@NotNull ItemStack itemStack){}
+    protected void modifyFinalItemStack(ItemStack itemStack){}
 
-    protected @NotNull ItemStack getItemNoClone(){
+    protected ItemStack getItemNoClone(){
         if (InitializationProcess.getStep() == InitializationProcess.Step.BEFORE_REGISTRIES_LOADED) {
             throw new RuntimeException(String.format("item %s hasn't afterInitialized yet", getId()));
         }
@@ -249,23 +240,20 @@ public abstract class ConstructableCustomItem extends AbstractRegistrableCompone
             event.callEvent();
             event.getLoreBuilder().buildAndApply(event.getItemStack());
             repairData = event.getRepairData();
-            setData(REPAIRABLE, getRepairable());
+            setData(DataComponentTypes.REPAIRABLE, getRepairable());
         }
         return itemStack;
     }
 
     @Override
-    public @NotNull ItemStack getItem(){
+    public ItemStack getItem(){
         return getItemNoClone().clone();
     }
-
     ///////////////////////////////////////////////////////////////////////////
-    // RECIPES
-    ///////////////////////////////////////////////////////////////////////////
-    protected @NotNull NamespacedKey getNewRecipeKey() {
+    protected NamespacedKey getNewRecipeKey() {
         return Objects.requireNonNull(NamespacedKey.fromString(getId() + "_" + recipeNumber++));
     }
 
     @ForOverride
-    protected void generateRecipes(@NotNull Consumer<@NotNull Recipe> consumer){}
+    protected void generateRecipes(Consumer<Recipe> consumer){}
 }
