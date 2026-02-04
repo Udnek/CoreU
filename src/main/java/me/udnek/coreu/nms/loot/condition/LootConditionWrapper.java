@@ -9,6 +9,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.storage.loot.IntRange;
 import net.minecraft.world.level.storage.loot.predicates.*;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import org.apache.commons.lang3.Range;
 import org.bukkit.block.Biome;
 import org.bukkit.craftbukkit.block.CraftBiome;
@@ -19,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-@org.jspecify.annotations.NullMarked public class LootConditionWrapper implements NmsWrapper<LootItemCondition>{
+@org.jspecify.annotations.NullMarked public class LootConditionWrapper implements NmsWrapper<LootItemCondition> {
 
     public static List<LootConditionWrapper> wrap(List<LootItemCondition> conditions) {
         return conditions.stream().map(LootConditionWrapper::new).toList();
@@ -27,6 +29,10 @@ import java.util.Optional;
 
     public static List<LootItemCondition> unwrap(List<LootConditionWrapper> functions) {
         return functions.stream().map(LootConditionWrapper::getNms).toList();
+    }
+
+    public static LootConditionWrapper randomChange(@org.jetbrains.annotations.Range(from = 0, to = 1) float chance){
+        return new LootConditionWrapper(new LootItemRandomChanceCondition(new ConstantValue(chance)));
     }
 
     public static LootConditionWrapper time(Range<Integer> range, @Nullable Long period){
