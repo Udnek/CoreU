@@ -15,4 +15,5 @@ import java.util.Set;
     public Set<EntityType> vehicles = new HashSet<>();
     public @Nullable Float randomChance;
     public @Nullable Float unenchantedRandomChance;
+    public Set<EntityType> attackers = new HashSet<>();
 }

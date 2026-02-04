@@ -8,6 +8,7 @@ import net.minecraft.advancements.criterion.LocationPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.storage.loot.IntRange;
+import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.*;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
@@ -86,13 +87,26 @@ import java.util.Optional;
                     portrait.unenchantedRandomChance = randomChanceCondition.unenchantedChance();
 
             case LootItemEntityPropertyCondition entityCondition -> {
-                entityCondition.predicate()
-                        .flatMap(EntityPredicate::vehicle)
-                        .flatMap(EntityPredicate::entityType)
-                        .ifPresent(
-                                typePredicate -> typePredicate.types()
-                                        .forEach(type -> portrait.vehicles.add(CraftEntityType.minecraftToBukkit(type.value()))
-                ));
+                // vehicle
+                if (entityCondition.entityTarget() == LootContext.EntityTarget.THIS){
+                    entityCondition.predicate()
+                            .flatMap(EntityPredicate::vehicle)
+                            .flatMap(EntityPredicate::entityType)
+                            .ifPresent(
+                                    typePredicate -> typePredicate.types()
+                                            .forEach(type -> portrait.vehicles.add(CraftEntityType.minecraftToBukkit(type.value()))
+                                            ));
+                }
+
+                // killer
+                if (entityCondition.entityTarget() == LootContext.EntityTarget.ATTACKER){
+                    entityCondition.predicate()
+                            .flatMap(EntityPredicate::entityType)
+                            .ifPresent(
+                                    typePredicate -> typePredicate.types()
+                                            .forEach(type -> portrait.attackers.add(CraftEntityType.minecraftToBukkit(type.value()))
+                                            ));
+                }
             }
             default -> {
             }
