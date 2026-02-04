@@ -2,6 +2,8 @@ package me.udnek.coreu.custom.recipe.builder;
 
 import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.custom.recipe.RecipeManager;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.key.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
@@ -9,74 +11,57 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ShapedRecipeBuilder {
-    private final ItemStack replace;
-    private String recipeKey;
-    private String[] recipeShape;
-    private boolean rewriteRecipe = true;
+@NullMarked
+public class ShapedRecipeBuilder extends RecipeBuilder<ShapedRecipeBuilder> {
+    private String[] shape;
     private Map<Character, Material> materialIngredients = new HashMap<>();
     private Map<Character, CustomItem> customItemIngredients = new HashMap<>();
     private Map<Character, Tag<Material>> tagIngredients = new HashMap<>();
-    private Map<Character, List<ItemStack>> stackIngiridients = new HashMap<>();
+    private Map<Character, List<ItemStack>> stackIngredients = new HashMap<>();
 
-    public ShapedRecipeBuilder(@NotNull Material replaceMaterial){
-        this.replace = new ItemStack(replaceMaterial);
-        this.recipeKey = replaceMaterial.getKey().getKey().toLowerCase();
+    public ShapedRecipeBuilder(Material material) {
+        result(material);
     }
 
-    public ShapedRecipeBuilder recipeKey(@NotNull String recipeKey){
-        this.recipeKey = recipeKey;
+    public ShapedRecipeBuilder(CustomItem result) {
+        result(result);
+    }
+
+    public ShapedRecipeBuilder shape(String[] recipeShape){
+        this.shape = recipeShape;
         return this;
     }
 
-    public ShapedRecipeBuilder recipeShape(@NotNull String[] recipeShape){
-        this.recipeShape = recipeShape;
-        return this;
-    }
-
-    public ShapedRecipeBuilder materialIngredients(@NotNull Map<Character, Material> materialIngredients){
+    public ShapedRecipeBuilder materialIngredients(Map<Character, Material> materialIngredients){
         this.materialIngredients = materialIngredients;
         return this;
     }
 
-    public ShapedRecipeBuilder customItemIngredients(@NotNull Map<Character, CustomItem> customItemIngredients){
+    public ShapedRecipeBuilder customItemIngredients(Map<Character, CustomItem> customItemIngredients){
         this.customItemIngredients = customItemIngredients;
         return this;
     }
 
-    public ShapedRecipeBuilder tagIngredients(@NotNull Map<Character, Tag<Material>> tagIngredients){
+    public ShapedRecipeBuilder tagIngredients(Map<Character, Tag<Material>> tagIngredients){
         this.tagIngredients = tagIngredients;
         return this;
     }
 
-    public ShapedRecipeBuilder stackIngredients(@NotNull Map<Character, List<ItemStack>> stackIngredients){
-        this.stackIngiridients = stackIngredients;
+    public ShapedRecipeBuilder stackIngredients(Map<Character, List<ItemStack>> stackIngredients){
+        this.stackIngredients = stackIngredients;
         return this;
     }
 
-    public ShapedRecipeBuilder setAmount(int amount){
-        this.replace.setAmount(amount);
-        return this;
-    }
-
-    public ShapedRecipeBuilder rewriteRecipe(boolean rewriteRecipe) {
-        this.rewriteRecipe = rewriteRecipe;
-        return this;
-    }
-
-    public ShapedRecipeBuilder build(@NotNull Plugin plugin){
-        if (rewriteRecipe){
-            RecipeManager.getInstance().unregister(NamespacedKey.minecraft(recipeKey));
-        }
-
-        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(plugin, recipeKey), replace);
-        recipe.shape(recipeShape);
+    @Override
+    public void buildAndRegisterRecipe(Plugin plugin){
+        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(plugin, key), result);
+        recipe.shape(shape);
 
         for (Map.Entry<Character, Material> material : materialIngredients.entrySet()) {
             recipe.setIngredient(material.getKey(), new RecipeChoice.MaterialChoice(material.getValue()));
@@ -87,11 +72,10 @@ public class ShapedRecipeBuilder {
         for (Map.Entry<Character, Tag<Material>> tag : tagIngredients.entrySet()) {
             recipe.setIngredient(tag.getKey(), new RecipeChoice.MaterialChoice(tag.getValue()));
         }
-        for (Map.Entry<Character, List<ItemStack>> entry : stackIngiridients.entrySet()) {
+        for (Map.Entry<Character, List<ItemStack>> entry : stackIngredients.entrySet()) {
             recipe.setIngredient(entry.getKey(), new RecipeChoice.ExactChoice(entry.getValue()));
         }
 
         RecipeManager.getInstance().register(recipe);
-        return this;
     }
 }

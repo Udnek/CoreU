@@ -61,18 +61,17 @@ public interface CustomItem extends Registrable, ComponentHolder<CustomItem>, Tr
     default boolean isThisItem(@Nullable ItemStack itemStack){
         return get(itemStack) == this;
     }
-    @NotNull NamespacedKey getNewRecipeKey();
     ///////////////////////////////////////////////////////////////////////////
     // PROPERTIES
     ///////////////////////////////////////////////////////////////////////////
     void setCooldown(@NotNull Player player, int ticks);
-    default void setCooldownSeconds(@NotNull Player player, float seconds){setCooldown(player, (int) (seconds * 20));}
+    default void setCooldownSeconds(@NotNull Player player, float seconds){
+        setCooldown(player, (int) (seconds * 20));
+    }
     int getCooldown(@NotNull Player player);
     default boolean hasCooldown(@NotNull Player player){return getCooldown(player) != 0;}
     @NotNull String getRawId();
     @NotNull ItemStack getItem();
-    void getRecipes(@NotNull Consumer<@NotNull Recipe> consumer);
-    void registerRecipe(@NotNull Recipe recipe);
     boolean isTagged(@NotNull Tag<Material> tag);
     @NotNull ItemStack update(@NotNull ItemStack itemStack);
     @Nullable RepairData getRepairData();

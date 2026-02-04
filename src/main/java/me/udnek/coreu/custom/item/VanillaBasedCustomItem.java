@@ -51,14 +51,6 @@ public class VanillaBasedCustomItem extends AbstractRegistrableComponentable<Cus
     }
 
     @Override
-    public @NotNull NamespacedKey getNewRecipeKey() {
-        AtomicInteger amount = new AtomicInteger(0);
-        getRecipes(recipe -> amount.incrementAndGet());
-        if (amount.get() == 0) getKey();
-        return NamespacedKey.fromString(getId() + "_" + amount.get());
-    }
-
-    @Override
     public void setCooldown(@NotNull Player player, int ticks) {player.setCooldown(getItem(), ticks);}
 
     @Override
@@ -66,16 +58,6 @@ public class VanillaBasedCustomItem extends AbstractRegistrableComponentable<Cus
 
     @Override
     public boolean isTagged(@NotNull Tag<Material> tag) {return tag.isTagged(material);}
-
-    @Override
-    public void getRecipes(@NotNull Consumer<@NotNull Recipe> consumer) {
-        RecipeManager.getInstance().getRecipesAsResult(getItem(), consumer);
-    }
-
-    @Override
-    public void registerRecipe(@NotNull Recipe recipe) {
-        RecipeManager.getInstance().register(recipe);
-    }
 
     @Override
     public @NotNull String translationKey() {

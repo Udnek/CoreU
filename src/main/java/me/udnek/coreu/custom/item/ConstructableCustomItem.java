@@ -20,7 +20,6 @@ import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,18 +27,19 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import static io.papermc.paper.datacomponent.DataComponentTypes.*;
 
 
 public abstract class ConstructableCustomItem extends AbstractRegistrableComponentable<CustomItem> implements CustomItemProperties, UpdatingCustomItem {
-    protected ItemStack itemStack = null;
-    protected @Nullable List<Recipe> recipes = null;
-    protected RepairData repairData = null;
-
     public static final Material DEFAULT_MATERIAL = Material.GUNPOWDER;
     public static final Material DEFAULT_MATERIAL_FOR_BLOCK_PLACEABLE = Material.BARRIER;
+
+    protected ItemStack itemStack = null;
+    protected RepairData repairData = null;
+    protected int recipeNumber = 0;
 
     ///////////////////////////////////////////////////////////////////////////
     // INITIAL
@@ -61,7 +61,7 @@ public abstract class ConstructableCustomItem extends AbstractRegistrableCompone
         UpdatingCustomItem.super.globalInitialization();
         initializeComponents();
         repairData = initializeRepairData();
-        generateRecipes(this::registerRecipe);
+        generateRecipes(RecipeManager.getInstance()::register);
     }
 
     @Override
@@ -135,10 +135,6 @@ public abstract class ConstructableCustomItem extends AbstractRegistrableCompone
         return DataSupplier.of(UseCooldown.useCooldown(0.0000001f).cooldownGroup(getKey()).build());
     }
     public @Nullable CustomItem getUseRemainderCustom(){return null;}
-
-    @ForOverride
-    @ApiStatus.ScheduledForRemoval
-    public void initializeAdditionalAttributes(@NotNull ItemStack itemStack){}
 
     @Override
     public @Nullable List<ItemFlag> getTooltipHides() {
@@ -222,8 +218,6 @@ public abstract class ConstructableCustomItem extends AbstractRegistrableCompone
         
         if (getUseRemainderCustom() != null) itemStack.setData(USE_REMAINDER, UseRemainder.useRemainder(getUseRemainderCustom().getItem()));
 
-        initializeAdditionalAttributes(itemStack);
-
         List<ItemFlag> tooltipHides = getTooltipHides();
         if (tooltipHides != null){
             for (ItemFlag flag : tooltipHides) {
@@ -264,24 +258,14 @@ public abstract class ConstructableCustomItem extends AbstractRegistrableCompone
     public @NotNull ItemStack getItem(){
         return getItemNoClone().clone();
     }
+
     ///////////////////////////////////////////////////////////////////////////
     // RECIPES
     ///////////////////////////////////////////////////////////////////////////
-    @Override
-    public @NotNull NamespacedKey getNewRecipeKey() {
-        return NamespacedKey.fromString(getId() + "_" + (recipes != null ? Integer.toString(recipes.size()) : "0"));
+    protected @NotNull NamespacedKey getNewRecipeKey() {
+        return Objects.requireNonNull(NamespacedKey.fromString(getId() + "_" + recipeNumber++));
     }
-    @Override
-    public void getRecipes(@NotNull Consumer<@NotNull Recipe> consumer) {
-        if (recipes == null) return;
-        recipes.forEach(consumer);
-    }
-    @Override
-    public void registerRecipe(@NotNull Recipe recipe) {
-        if (recipes == null) recipes = new ArrayList<>();
-        recipes.add(recipe);
-        RecipeManager.getInstance().register(recipe);
-    }
+
     @ForOverride
     protected void generateRecipes(@NotNull Consumer<@NotNull Recipe> consumer){}
 }
