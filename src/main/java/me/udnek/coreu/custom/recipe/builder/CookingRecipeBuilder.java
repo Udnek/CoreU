@@ -44,6 +44,13 @@ public class CookingRecipeBuilder extends RecipeBuilder<CookingRecipeBuilder>{
         return this;
     }
 
+    public CookingRecipeBuilder addRecipeType(RecipeType ... recipeTypes) {
+        for(RecipeType recipeType : recipeTypes) {
+            addRecipeType(recipeType);
+        }
+        return this;
+    }
+
     @Override
     protected void buildAndRegisterRecipe(Plugin plugin) {
         for (RecipeType recipeType : recipeTypes) registerByType(recipeType, plugin);
