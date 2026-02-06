@@ -18,7 +18,7 @@ public class CookingRecipeBuilder extends RecipeBuilder<CookingRecipeBuilder>{
     private final RecipeChoice input;
     private float experience = 0.7f;
     private int cookingTime = 10 * 20;
-    private final List<RecipeType> recipeTypes = new ArrayList<>();
+    private final List<Type> types = new ArrayList<>();
 
     public CookingRecipeBuilder(Material material, RecipeChoice input) {
         this.input = input;
@@ -40,21 +40,21 @@ public class CookingRecipeBuilder extends RecipeBuilder<CookingRecipeBuilder>{
         return this;
     }
 
-    public CookingRecipeBuilder setRecipeTypes(RecipeType ... recipeTypes) {
-        this.recipeTypes.addAll(Arrays.asList(recipeTypes));
+    public CookingRecipeBuilder setRecipeTypes(Type... types) {
+        this.types.addAll(Arrays.asList(types));
         return this;
     }
 
     @Override
     protected void buildAndRegisterRecipe(Plugin plugin) {
-        for (RecipeType recipeType : recipeTypes) registerByType(recipeType, plugin);
+        for (Type type : types) registerByType(type, plugin);
     }
 
-    private void registerByType(RecipeType recipeType, Plugin plugin) {
+    private void registerByType(Type type, Plugin plugin) {
         assert key != null;
         assert result != null;
 
-        switch (recipeType) {
+        switch (type) {
             case FURNACE -> RecipeManager.getInstance().register(
                     new FurnaceRecipe(new NamespacedKey(plugin, key + "_furnace"), result, input, experience, cookingTime));
             case SMOKER -> RecipeManager.getInstance().register(
@@ -66,7 +66,7 @@ public class CookingRecipeBuilder extends RecipeBuilder<CookingRecipeBuilder>{
         }
     }
 
-    public enum RecipeType {
+    public enum Type {
         FURNACE,
         BLAST_FURNACE,
         SMOKER,
