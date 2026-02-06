@@ -9,23 +9,24 @@ import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @NullMarked
 public class CookingRecipeBuilder extends RecipeBuilder<CookingRecipeBuilder>{
 
-    private final RecipeChoice recipeChoice;
+    private final RecipeChoice input;
     private float experience = 0.7f;
     private int cookingTime = 10 * 20;
     private final List<RecipeType> recipeTypes = new ArrayList<>();
 
-    public CookingRecipeBuilder(Material material, RecipeChoice recipeChoice) {
-        this.recipeChoice = recipeChoice;
+    public CookingRecipeBuilder(Material material, RecipeChoice input) {
+        this.input = input;
         result(material);
     }
 
-    public CookingRecipeBuilder(CustomItem result, RecipeChoice recipeChoice) {
-        this.recipeChoice = recipeChoice;
+    public CookingRecipeBuilder(CustomItem result, RecipeChoice input) {
+        this.input = input;
         result(result);
     }
 
@@ -39,15 +40,8 @@ public class CookingRecipeBuilder extends RecipeBuilder<CookingRecipeBuilder>{
         return this;
     }
 
-    public CookingRecipeBuilder addRecipeType(RecipeType recipeType) {
-        recipeTypes.add(recipeType);
-        return this;
-    }
-
-    public CookingRecipeBuilder addRecipeTypes(RecipeType ... recipeTypes) {
-        for(RecipeType recipeType : recipeTypes) {
-            addRecipeType(recipeType);
-        }
+    public CookingRecipeBuilder setRecipeTypes(RecipeType ... recipeTypes) {
+        this.recipeTypes.addAll(Arrays.asList(recipeTypes));
         return this;
     }
 
@@ -62,13 +56,13 @@ public class CookingRecipeBuilder extends RecipeBuilder<CookingRecipeBuilder>{
 
         switch (recipeType) {
             case FURNACE -> RecipeManager.getInstance().register(
-                    new FurnaceRecipe(new NamespacedKey(plugin, key + "_furnace"), result, recipeChoice, experience, cookingTime));
+                    new FurnaceRecipe(new NamespacedKey(plugin, key + "_furnace"), result, input, experience, cookingTime));
             case SMOKER -> RecipeManager.getInstance().register(
-                    new SmokingRecipe(new NamespacedKey(plugin, key + "_smoker"), result, recipeChoice, experience, cookingTime / 2));
+                    new SmokingRecipe(new NamespacedKey(plugin, key + "_smoker"), result, input, experience, cookingTime / 2));
             case BLAST_FURNACE -> RecipeManager.getInstance().register(
-                    new BlastingRecipe(new NamespacedKey(plugin, key + "_blast_furnace"), result, recipeChoice, experience, cookingTime / 2));
+                    new BlastingRecipe(new NamespacedKey(plugin, key + "_blast_furnace"), result, input, experience, cookingTime / 2));
             case CAMPFIRE -> RecipeManager.getInstance().register(
-                    new CampfireRecipe(new NamespacedKey(plugin, key + "_campfire"), result, recipeChoice, experience, cookingTime * 3));
+                    new CampfireRecipe(new NamespacedKey(plugin, key + "_campfire"), result, input, experience, cookingTime * 3));
         }
     }
 
