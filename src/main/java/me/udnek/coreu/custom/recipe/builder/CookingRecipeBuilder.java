@@ -8,9 +8,7 @@ import org.bukkit.inventory.*;
 import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.NullMarked;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @NullMarked
 public class CookingRecipeBuilder extends RecipeBuilder<CookingRecipeBuilder>{
@@ -18,11 +16,11 @@ public class CookingRecipeBuilder extends RecipeBuilder<CookingRecipeBuilder>{
     private final RecipeChoice input;
     private float experience = 0.7f;
     private int cookingTime = 10 * 20;
-    private final List<Type> types = new ArrayList<>();
+    private final Set<Type> types = new HashSet<>();
 
-    public CookingRecipeBuilder(Material material, RecipeChoice input) {
+    public CookingRecipeBuilder(Material result, RecipeChoice input) {
         this.input = input;
-        result(material);
+        result(result);
     }
 
     public CookingRecipeBuilder(CustomItem result, RecipeChoice input) {
@@ -30,12 +28,12 @@ public class CookingRecipeBuilder extends RecipeBuilder<CookingRecipeBuilder>{
         result(result);
     }
 
-    public CookingRecipeBuilder setExperience(float experience) {
+    public CookingRecipeBuilder experience(float experience) {
         this.experience = experience;
         return this;
     }
 
-    public CookingRecipeBuilder setCookingTime(int cookingTime) {
+    public CookingRecipeBuilder cookingTime(int cookingTime) {
         this.cookingTime = cookingTime;
         return this;
     }
