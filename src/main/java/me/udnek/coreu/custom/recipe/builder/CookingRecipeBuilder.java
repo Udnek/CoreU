@@ -46,7 +46,7 @@ public class CookingRecipeBuilder extends RecipeBuilder<CookingRecipeBuilder>{
     @Override
     protected void buildAndRegisterRecipe(Plugin plugin) {
         if (types.isEmpty()) {
-            throw new IllegalStateException("CookingRecipeBuilder: No recipes have been registered");
+            throw new RuntimeException("CookingRecipeBuilder: No recipes have been registered");
         }
         for (Type type : types) registerByType(type, plugin);
     }
