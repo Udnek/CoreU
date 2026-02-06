@@ -38,7 +38,7 @@ public class CookingRecipeBuilder extends RecipeBuilder<CookingRecipeBuilder>{
         return this;
     }
 
-    public CookingRecipeBuilder setTypes(Type... types) {
+    public CookingRecipeBuilder types(Type... types) {
         this.types.addAll(Arrays.asList(types));
         return this;
     }
