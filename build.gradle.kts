@@ -24,7 +24,6 @@ dependencies {
     compileOnly("net.dmulloy2:ProtocolLib:5.4.0")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.18.3")
 
-    compileOnly("space.vectrix.ignite:ignite-api:1.1.0")
     compileOnly("net.fabricmc:sponge-mixin:0.15.2+mixin.0.8.7")
     compileOnly("io.github.llamalad7:mixinextras-common:0.4.1")
 }

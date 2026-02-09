@@ -5,6 +5,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import me.udnek.coreu.util.LogUtils;
 import me.udnek.coreu.util.Reflex;
+import net.kyori.adventure.key.Key;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -45,9 +46,9 @@ import java.util.*;
     private final List<StructureTemplate> templates;
     private final Set<String> alreadyCheckedPoolIds;
     //Collection<ResourceKey<LootTable>> lootTables;
-    private final NamespacedKey structureId;
+    private final Key structureId;
 
-    NmsStructureProceeder(NamespacedKey structureId, Structure structure){
+    NmsStructureProceeder(Key structureId, Structure structure){
         this.structure = structure;
         this.structureId = structureId;
         structureManager = NmsUtils.toNmsWorld(Bukkit.getWorlds().getFirst()).getStructureManager();

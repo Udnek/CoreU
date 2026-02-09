@@ -86,6 +86,16 @@ import java.util.Optional;
             case LootItemRandomChanceWithEnchantedBonusCondition randomChanceCondition ->
                     portrait.unenchantedRandomChance = randomChanceCondition.unenchantedChance();
 
+            case MatchTool matchTool -> {
+                // tool enchantments
+//                matchTool.predicate()
+//                        .flatMap(predicate -> predicate.)
+//                        .ifPresent(
+//                                typePredicate -> typePredicate.types()
+//                                        .forEach(type -> portrait.attackers.add(CraftEntityType.minecraftToBukkit(type.value()))
+//                                        ));
+            }
+
             case LootItemEntityPropertyCondition entityCondition -> {
                 // vehicle
                 if (entityCondition.entityTarget() == LootContext.EntityTarget.THIS){

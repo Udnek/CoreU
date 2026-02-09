@@ -85,7 +85,7 @@ public class NmsUtils{
     }
 
     public static Identifier toNmsIdentifier(Key key){
-        return Identifier.parse(key.asString());
+        return Identifier.tryBuild(key.namespace(), key.value());
     }
 
     public static <T> ResourceKey<T> toNmsResourceKey(ResourceKey<Registry<T>> registry, Key key){

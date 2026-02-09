@@ -414,8 +414,8 @@ public class Nms {
     // STRUCTURE
     ///////////////////////////////////////////////////////////////////////////
 
-    public @Nullable StructureWrapper getStructureWrapper(NamespacedKey structureId){
-        Structure structure = NmsUtils.getRegistry(Registries.STRUCTURE).getOptional(CraftNamespacedKey.toMinecraft(structureId)).orElse(null);
+    public @Nullable StructureWrapper getStructureWrapper(Key structureId){
+        Structure structure = NmsUtils.getRegistry(Registries.STRUCTURE).getOptional(NmsUtils.toNmsIdentifier(structureId)).orElse(null);
         if (structure == null) return null;
         return new StructureWrapper(structure);
     }
@@ -515,8 +515,8 @@ public class Nms {
         });
     }
 
-    private void modifyStructure(NamespacedKey structureId, Function<StructureTemplate.StructureBlockInfo, Boolean> takeAndContinue){
-        Structure structure = NmsUtils.getRegistry(Registries.STRUCTURE).getOptional(CraftNamespacedKey.toMinecraft(structureId)).orElse(null);
+    private void modifyStructure(Key structureId, Function<StructureTemplate.StructureBlockInfo, Boolean> takeAndContinue){
+        Structure structure = NmsUtils.getRegistry(Registries.STRUCTURE).getOptional(NmsUtils.toNmsIdentifier(structureId)).orElse(null);
         Preconditions.checkArgument(structure != null, "Structure not found: " + structureId);
         NmsStructureProceeder proceeder = new NmsStructureProceeder(structureId, structure);
         proceeder.extractAllTemplates();
