@@ -544,16 +544,9 @@ public class Nms {
     {
         ServerLevel level = NmsUtils.toNmsWorld(location.getWorld());
 
-        Registry<Structure> registry = NmsUtils.getRegistry(Registries.STRUCTURE);
-
-        List<Holder.Reference<Structure>> holders = structures.stream()
-                .map(id -> Holder.Reference.createStandAlone(
-                        registry, ResourceKey.create(Registries.STRUCTURE, NmsUtils.toNmsIdentifier(id)))).toList();
-
-        HolderSet.Direct<Structure> structureSet = HolderSet.direct(holders);
         @Nullable Pair<BlockPos, Holder<Structure>> result = level.getChunkSource().getGenerator().findNearestMapStructure(
                 level,
-                structureSet,
+                NmsUtils.toNms(Registries.STRUCTURE, structures),
                 NmsUtils.toNmsBlockPos(location.getBlock()),
                 chunkRadius,
                 skipKnownStructures

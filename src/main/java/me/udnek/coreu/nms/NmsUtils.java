@@ -28,6 +28,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.*;
@@ -61,16 +62,13 @@ import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-
+@NullMarked
 public class NmsUtils{
 
     // CHAT
@@ -85,7 +83,7 @@ public class NmsUtils{
     }
 
     public static Identifier toNmsIdentifier(Key key){
-        return Identifier.tryBuild(key.namespace(), key.value());
+        return Objects.requireNonNull(Identifier.tryBuild(key.namespace(), key.value()));
     }
 
     public static <T> ResourceKey<T> toNmsResourceKey(ResourceKey<Registry<T>> registry, Key key){
@@ -100,6 +98,14 @@ public class NmsUtils{
         return getRegistry(registry).get(toNmsIdentifier(key)).get();
     }
 
+    public static <T> HolderSet<T> toNms(ResourceKey<Registry<T>> registryKey, Set<Key> keys){
+        Registry<T> registry = NmsUtils.getRegistry(registryKey);
+        List<Holder.Reference<T>> holders = keys.stream()
+                .map(id -> Holder.Reference.createStandAlone(
+                        registry, ResourceKey.create(registryKey, NmsUtils.toNmsIdentifier(id)))).toList();
+
+        return HolderSet.direct(holders);
+    }
 
     public static <T> void modifyRegistry(ResourceKey<Registry<T>> registryKey, BiConsumer<Registry<T>, Map<TagKey<T>, HolderSet.Named<T>>> consumer){
         Registry<T> registry = getRegistry(registryKey);

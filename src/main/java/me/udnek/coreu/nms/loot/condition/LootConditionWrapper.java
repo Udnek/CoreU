@@ -6,6 +6,7 @@ import net.kyori.adventure.key.Key;
 import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.advancements.criterion.LocationPredicate;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.storage.loot.IntRange;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -21,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @org.jspecify.annotations.NullMarked public class LootConditionWrapper implements NmsWrapper<LootItemCondition> {
 
@@ -42,15 +44,19 @@ import java.util.Optional;
         );
     }
 
-    public static LootConditionWrapper structure(Key structure){
+    public static LootConditionWrapper structure(Set<Key> structures){
+        LocationPredicate.Builder location = LocationPredicate.Builder.location();
+        location.setStructures(NmsUtils.toNms(Registries.STRUCTURE, structures));
         return new LootConditionWrapper(new LocationCheck(
-                Optional.of(LocationPredicate.Builder.inStructure(NmsUtils.toNms(Registries.STRUCTURE, structure)).build()),
+                Optional.of(location.build()),
                 BlockPos.ZERO
         ));
     }
-    public static LootConditionWrapper biome(Biome biome){
+    public static LootConditionWrapper biome(Set<Key> biomes){
+        LocationPredicate.Builder location = LocationPredicate.Builder.location();
+        location.setBiomes(NmsUtils.toNms(Registries.BIOME, biomes));
         return new LootConditionWrapper(new LocationCheck(
-                Optional.of(LocationPredicate.Builder.inBiome(NmsUtils.toNms(Registries.BIOME, biome)).build()),
+                Optional.of(location.build()),
                 BlockPos.ZERO
         ));
     }
