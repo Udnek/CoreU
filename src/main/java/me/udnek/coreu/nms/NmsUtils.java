@@ -100,9 +100,11 @@ public class NmsUtils{
 
     public static <T> HolderSet<T> toNms(ResourceKey<Registry<T>> registryKey, Set<Key> keys){
         Registry<T> registry = NmsUtils.getRegistry(registryKey);
-        List<Holder.Reference<T>> holders = keys.stream()
-                .map(id -> Holder.Reference.createStandAlone(
-                        registry, ResourceKey.create(registryKey, NmsUtils.toNmsIdentifier(id)))).toList();
+        List<Holder<T>> holders = keys.stream()
+                .map(id -> Holder.direct(registry.getOptional(NmsUtils.toNmsIdentifier(id)).orElseThrow())).toList();
+//        List<Holder.Reference<T>> holders = keys.stream()
+//                .map(id -> Holder.Reference.createStandAlone(
+//                        registry, ResourceKey.create(registryKey, NmsUtils.toNmsIdentifier(id)))).toList();
 
         return HolderSet.direct(holders);
     }

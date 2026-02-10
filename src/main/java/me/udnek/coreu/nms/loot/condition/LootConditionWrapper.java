@@ -52,6 +52,7 @@ import java.util.Set;
                 BlockPos.ZERO
         ));
     }
+
     public static LootConditionWrapper biome(Set<Key> biomes){
         LocationPredicate.Builder location = LocationPredicate.Builder.location();
         location.setBiomes(NmsUtils.toNms(Registries.BIOME, biomes));

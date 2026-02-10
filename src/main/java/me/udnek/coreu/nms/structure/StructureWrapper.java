@@ -15,7 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-@org.jspecify.annotations.NullMarked public class StructureWrapper implements NmsWrapper<Structure>{
+@org.jspecify.annotations.NullMarked
+public class StructureWrapper implements NmsWrapper<Structure>{
 
     protected Structure structure;
 

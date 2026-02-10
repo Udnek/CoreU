@@ -8,7 +8,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
-@org.jspecify.annotations.NullMarked public class LootConditionPortrait{
+@org.jspecify.annotations.NullMarked
+public class LootConditionPortrait{
 
     public Set<Structure> structures = new HashSet<>();
     public Set<Biome> biomes = new HashSet<>();
