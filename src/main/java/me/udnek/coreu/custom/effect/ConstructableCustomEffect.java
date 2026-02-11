@@ -94,7 +94,7 @@ import java.lang.reflect.Constructor;
         addAttributes((attribute, key, amount, operation) ->
                         mobEffect.addAttributeModifier(
                                 NmsUtils.toNms(Registries.ATTRIBUTE, attribute),
-                                NmsUtils.toNmsIdentifier(key),
+                                NmsUtils.toNms(key),
                                 amount,
                                 NmsUtils.toNmsOperation(operation)
                         )

@@ -6,6 +6,7 @@ import me.udnek.coreu.util.Reflex;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.key.Keyed;
 import net.kyori.adventure.text.serializer.json.JSONComponentSerializer;
+import net.minecraft.advancements.criterion.LocationPredicate;
 import net.minecraft.core.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -28,7 +29,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.*;
@@ -82,12 +82,12 @@ public class NmsUtils{
         return MinecraftServer.getServer().registryAccess().lookup(registry).orElseThrow();
     }
 
-    public static Identifier toNmsIdentifier(Key key){
+    public static Identifier toNms(Key key){
         return Objects.requireNonNull(Identifier.tryBuild(key.namespace(), key.value()));
     }
 
     public static <T> ResourceKey<T> toNmsResourceKey(ResourceKey<Registry<T>> registry, Key key){
-        return ResourceKey.create(registry, toNmsIdentifier(key));
+        return ResourceKey.create(registry, toNms(key));
     }
 
     public static <T> Holder<T> toNms(ResourceKey<Registry<T>> registry, Keyed keyed){
@@ -95,13 +95,13 @@ public class NmsUtils{
     }
 
     public static <T> Holder<T> toNms(ResourceKey<Registry<T>> registry, Key key){
-        return getRegistry(registry).get(toNmsIdentifier(key)).get();
+        return getRegistry(registry).get(toNms(key)).orElseThrow();
     }
 
     public static <T> HolderSet<T> toNms(ResourceKey<Registry<T>> registryKey, Set<Key> keys){
-        Registry<T> registry = NmsUtils.getRegistry(registryKey);
-        List<Holder<T>> holders = keys.stream()
-                .map(id -> Holder.direct(registry.getOptional(NmsUtils.toNmsIdentifier(id)).orElseThrow())).toList();
+        Registry<T> registry = getRegistry(registryKey);
+        List<Holder.Reference<T>> holders = keys.stream()
+                .map(id -> registry.get(toNms(id)).orElseThrow()).toList();
 //        List<Holder.Reference<T>> holders = keys.stream()
 //                .map(id -> Holder.Reference.createStandAlone(
 //                        registry, ResourceKey.create(registryKey, NmsUtils.toNmsIdentifier(id)))).toList();
@@ -130,14 +130,8 @@ public class NmsUtils{
 
         // freezing
         registry.freeze();
-
-        // setting tags back
-        //Reflex.setFieldValue(registry, "frozenTags", frozenTags);
-        //Reflex.setFieldValue(registry, "allTags", allTags);
-        //Reflex.invokeMethod(registry, Reflex.getMethod(MappedRegistry.class, "refreshTagsInHolders"));
     }
 
-    @SuppressWarnings("unchecked")
     public static <T> void addValueToTag(ResourceKey<Registry<T>> registryKey,
                                          TagKey<T> tagKey,
                                          @NotNull T value)
@@ -161,7 +155,7 @@ public class NmsUtils{
         modifyRegistry(registryKey, (registry, tags) -> {
             // this shit makes me not able to register sometimes
             Reflex.setFieldValue(registry, "unregisteredIntrusiveHolders", new IdentityHashMap<T, Holder.Reference<T>>());
-            holder[0] = Registry.registerForHolder(registry, toNmsIdentifier(key), object);
+            holder[0] = Registry.registerForHolder(registry, toNms(key), object);
         });
         return holder[0];
     }
@@ -170,7 +164,7 @@ public class NmsUtils{
     public static <T> Holder<T> registerInRegistry(ResourceKey<Registry<T>> registryKey, @NotNull T object, Key key){
         final Holder<T>[] holder = new Holder[1];
         modifyRegistry(registryKey, (registry, allTags) -> {
-            holder[0] = Registry.registerForHolder(registry, toNmsIdentifier(key), object);
+            holder[0] = Registry.registerForHolder(registry, toNms(key), object);
         });
         return holder[0];
     }

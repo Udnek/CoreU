@@ -52,7 +52,7 @@ import java.util.List;
         };
         net.minecraft.world.entity.ai.attributes.Attribute attribute = NmsUtils.toNms(Registries.ATTRIBUTE, bukkitAttribute).value();
         EnchantmentAttributeEffect effect = new EnchantmentAttributeEffect(
-                NmsUtils.toNmsIdentifier(id),
+                NmsUtils.toNms(id),
                 NmsUtils.getRegistry(Registries.ATTRIBUTE).wrapAsHolder(attribute),
                 LevelBasedValue.perLevel(baseValue, valueAboveFirst),
                 operation

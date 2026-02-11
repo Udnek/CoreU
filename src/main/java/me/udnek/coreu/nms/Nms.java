@@ -304,7 +304,7 @@ public class Nms {
 
     public EnchantmentWrapper getEnchantmentWrapper(Enchantment bukkitEnchantment){
         Registry<net.minecraft.world.item.enchantment.Enchantment> registry = NmsUtils.getRegistry(Registries.ENCHANTMENT);
-        net.minecraft.world.item.enchantment.Enchantment enchantment = registry.getValue(NmsUtils.toNmsIdentifier(bukkitEnchantment.getKey()));
+        net.minecraft.world.item.enchantment.Enchantment enchantment = registry.getValue(NmsUtils.toNms(bukkitEnchantment.getKey()));
         assert enchantment != null;
         return new EnchantmentWrapper(enchantment);
     }
@@ -415,7 +415,7 @@ public class Nms {
     ///////////////////////////////////////////////////////////////////////////
 
     public @Nullable StructureWrapper getStructureWrapper(Key structureId){
-        Structure structure = NmsUtils.getRegistry(Registries.STRUCTURE).getOptional(NmsUtils.toNmsIdentifier(structureId)).orElse(null);
+        Structure structure = NmsUtils.getRegistry(Registries.STRUCTURE).getOptional(NmsUtils.toNms(structureId)).orElse(null);
         if (structure == null) return null;
         return new StructureWrapper(structure);
     }
@@ -516,7 +516,7 @@ public class Nms {
     }
 
     private void modifyStructure(Key structureId, Function<StructureTemplate.StructureBlockInfo, Boolean> takeAndContinue){
-        Structure structure = NmsUtils.getRegistry(Registries.STRUCTURE).getOptional(NmsUtils.toNmsIdentifier(structureId)).orElse(null);
+        Structure structure = NmsUtils.getRegistry(Registries.STRUCTURE).getOptional(NmsUtils.toNms(structureId)).orElse(null);
         Preconditions.checkArgument(structure != null, "Structure not found: " + structureId);
         NmsStructureProceeder proceeder = new NmsStructureProceeder(structureId, structure);
         proceeder.extractAllTemplates();
@@ -617,7 +617,7 @@ public class Nms {
     }
 
     public void sendCooldown(Player player, Key key, int duration){
-        NmsUtils.sendPacket(player, new ClientboundCooldownPacket(NmsUtils.toNmsIdentifier(key), duration));
+        NmsUtils.sendPacket(player, new ClientboundCooldownPacket(NmsUtils.toNms(key), duration));
     }
 
     public boolean mayBuild(Player player){
