@@ -11,7 +11,8 @@ import org.bukkit.craftbukkit.entity.CraftEntityType;
 import java.util.ArrayList;
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked public class StructureSpawnOverrideWrapper implements NmsWrapper<StructureSpawnOverride>{
+@org.jspecify.annotations.NullMarked
+public class StructureSpawnOverrideWrapper implements NmsWrapper<StructureSpawnOverride>{
 
     public static StructureSpawnOverrideWrapper of(BoundingBoxTypeWrapper box){
         return new StructureSpawnOverrideWrapper(new StructureSpawnOverride(box.getNms(), WeightedList.of()));

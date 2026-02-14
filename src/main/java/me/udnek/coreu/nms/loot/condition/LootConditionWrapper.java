@@ -44,6 +44,10 @@ import java.util.Set;
         );
     }
 
+    public static LootConditionWrapper structure(Key structure){
+        return structure(Set.of(structure));
+    }
+
     public static LootConditionWrapper structure(Set<Key> structures){
         LocationPredicate.Builder location = LocationPredicate.Builder.location();
         location.setStructures(NmsUtils.toNms(Registries.STRUCTURE, structures));
@@ -51,6 +55,10 @@ import java.util.Set;
                 Optional.of(location.build()),
                 BlockPos.ZERO
         ));
+    }
+
+    public static LootConditionWrapper biome(Key biome){
+        return biome(Set.of(biome));
     }
 
     public static LootConditionWrapper biome(Set<Key> biomes){

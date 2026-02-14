@@ -43,13 +43,13 @@ public class StructureWrapper implements NmsWrapper<Structure>{
     public HashMap<MobCategoryWrapper, StructureSpawnOverrideWrapper> getSpawnOverrides(){
         HashMap<MobCategoryWrapper, StructureSpawnOverrideWrapper> overrides = new HashMap<>();
         for (Map.Entry<MobCategory, StructureSpawnOverride> entry : structure.spawnOverrides().entrySet()) {
-            overrides.put(new MobCategoryWrapper(entry.getKey()), new StructureSpawnOverrideWrapper(entry.getValue()));
+            overrides.put(MobCategoryWrapper.fromNms(entry.getKey()), new StructureSpawnOverrideWrapper(entry.getValue()));
         }
         return overrides;
     }
 
     public void setSpawnOverrides(Map<MobCategoryWrapper, StructureSpawnOverrideWrapper> overrides){
-        Map<MobCategory, StructureSpawnOverride> nmsOverrides = new HashMap<>();
+        Map<MobCategory, StructureSpawnOverride> nmsOverrides = new HashMap<>(overrides.size(), 1);
         overrides.forEach((k, v) -> nmsOverrides.put(k.getNms(), v.getNms()));
         Reflex.setRecordFieldValue(getSettingsNms(), "spawnOverrides", nmsOverrides);
     }
