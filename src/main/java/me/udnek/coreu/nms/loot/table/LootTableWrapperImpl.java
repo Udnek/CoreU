@@ -1,7 +1,7 @@
 package me.udnek.coreu.nms.loot.table;
 
 import me.udnek.coreu.nms.loot.function.LootFunctionWrapper;
-import me.udnek.coreu.nms.loot.pool.DefaultPoolWrapper;
+import me.udnek.coreu.nms.loot.pool.PoolWrapperImpl;
 import me.udnek.coreu.nms.loot.pool.PoolWrapper;
 import me.udnek.coreu.nms.loot.util.LootInfo;
 import me.udnek.coreu.nms.loot.util.NmsFields;
@@ -17,16 +17,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-@org.jspecify.annotations.NullMarked public class DefaultLootTableWrapper implements LootTableWrapper{
+@org.jspecify.annotations.NullMarked
+public class LootTableWrapperImpl implements LootTableWrapper{
 
     protected final LootTable lootTable;
 
-    public DefaultLootTableWrapper(LootTable lootTable) {
+    public LootTableWrapperImpl(LootTable lootTable) {
         this.lootTable = lootTable;
     }
 
     @Override
-    public DefaultLootTableWrapper copy(){
+    public LootTableWrapperImpl copy(){
         LootTable newLootTable = Reflex.construct(
                 Reflex.getFirstConstructor(LootTable.class),
 
@@ -35,7 +36,7 @@ import java.util.function.Consumer;
                 new ArrayList<>(Reflex.<List<LootPool>>getFieldValue(lootTable, NmsFields.POOLS)),
                 new ArrayList<>(Reflex.<List<LootItemFunction>>getFieldValue(lootTable, NmsFields.FUNCTIONS))
         );
-        return new DefaultLootTableWrapper(newLootTable);
+        return new LootTableWrapperImpl(newLootTable);
     }
 
     @Override
@@ -54,13 +55,13 @@ import java.util.function.Consumer;
 
     @Override
     public PoolWrapper getPool(int n) {
-        return new DefaultPoolWrapper(Reflex.<List<LootPool>>getFieldValue(lootTable, NmsFields.POOLS).get(n));
+        return new PoolWrapperImpl(Reflex.<List<LootPool>>getFieldValue(lootTable, NmsFields.POOLS).get(n));
     }
 
     @Override
     public List<PoolWrapper> getPools() {
         return Reflex.<List<LootPool>>getFieldValue(lootTable, NmsFields.POOLS).stream()
-                .map(e -> (PoolWrapper) new DefaultPoolWrapper(e)).toList();
+                .map(e -> (PoolWrapper) new PoolWrapperImpl(e)).toList();
     }
 
     @Override

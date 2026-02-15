@@ -22,11 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-@org.jspecify.annotations.NullMarked public class DefaultPoolWrapper implements PoolWrapper{
+@org.jspecify.annotations.NullMarked
+public class PoolWrapperImpl implements PoolWrapper{
 
     protected final LootPool pool;
 
-    public DefaultPoolWrapper(LootPool pool) {
+    public PoolWrapperImpl(LootPool pool) {
         this.pool = pool;
     }
 
@@ -36,7 +37,7 @@ import java.util.function.Consumer;
 
     @Override
     public List<EntryWrapper> getEntries() {
-        return getEntriesNms().stream().map(EntryWrapper::fromNms).toList();
+        return getEntriesNms().stream().map(e -> EntryWrapper.fromNms(this, e)).toList();
     }
 
     @Override
@@ -53,9 +54,10 @@ import java.util.function.Consumer;
         Reflex.setFieldValue(pool, NmsFields.ENTRIES, newEntries);
     }
 
+
     @Override
     public EntryWrapper getEntry(int n) {
-        return EntryWrapper.fromNms(getEntriesNms().get(n));
+        return EntryWrapper.fromNms(this, getEntriesNms().get(n));
     }
 
     @Override

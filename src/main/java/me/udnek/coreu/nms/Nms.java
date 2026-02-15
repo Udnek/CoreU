@@ -8,10 +8,12 @@ import io.papermc.paper.dialog.Dialog;
 import io.papermc.paper.dialog.PaperDialog;
 import it.unimi.dsi.fastutil.ints.IntImmutableList;
 import me.udnek.coreu.nms.loot.LootContextBuilder;
+import me.udnek.coreu.nms.loot.entry.EntryWrapper;
 import me.udnek.coreu.nms.loot.entry.NmsCustomEntry;
-import me.udnek.coreu.nms.loot.table.DefaultLootTableWrapper;
+import me.udnek.coreu.nms.loot.pool.PoolWrapper;
+import me.udnek.coreu.nms.loot.table.LootTableWrapperImpl;
 import me.udnek.coreu.nms.loot.table.LootTableWrapper;
-import me.udnek.coreu.nms.loot.util.NmsFields;
+import me.udnek.coreu.nms.loot.util.LootInfo;
 import me.udnek.coreu.nms.structure.StructureWrapper;
 import me.udnek.coreu.util.LogUtils;
 import me.udnek.coreu.util.Reflex;
@@ -61,11 +63,7 @@ import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.entries.LootPoolEntry;
-import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
-import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -314,7 +312,7 @@ public class Nms {
     ///////////////////////////////////////////////////////////////////////////
 
     public LootTableWrapper getLootTableWrapper(org.bukkit.loot.LootTable lootTable){
-        return new DefaultLootTableWrapper(NmsUtils.toNmsLootTable(lootTable));
+        return new LootTableWrapperImpl(NmsUtils.toNmsLootTable(lootTable));
     }
 
     public void removeAllEntriesContains(org.bukkit.loot.LootTable bukkitLootTable, Predicate<ItemStack> predicate){
@@ -322,35 +320,56 @@ public class Nms {
     }
 
     public void replaceAllEntriesContains(org.bukkit.loot.LootTable bukkitLootTable, Predicate<ItemStack> predicate, @Nullable NmsCustomEntry.Builder newEntry){
-        LootTable lootTable = NmsUtils.toNmsLootTable(bukkitLootTable);
+        LootTableWrapper wrapper = getLootTableWrapper(bukkitLootTable);
+        for (PoolWrapper pool : wrapper.getPools()) {
+            for (EntryWrapper poolEntry : pool.getEntries()) {
+                poolEntry.extractAllSingleton(entry -> {
+                    PoolWrapper parent = entry.getPoolParent();
+                    if (parent == null) return;
 
-        List<LootPoolEntryContainer> toReplace = new ArrayList<>();
-        for (LootPoolSingletonContainer container : NmsUtils.getAllSingletonContainers(lootTable)) {
-            LootPoolEntry entry = NmsUtils.getEntry(container);
-            AtomicBoolean contains = new AtomicBoolean(false);
-            NmsUtils.getPossibleLoot(entry, itemStack -> {
-                if (predicate.test(NmsUtils.toBukkitItemStack(itemStack))) {
-                    contains.set(true);
-                }
-            });
-            if (contains.get()) toReplace.add(container);
-        }
-        for (LootPool pool : NmsUtils.getPools(lootTable)) {
-            List<LootPoolEntryContainer> newContainers = new ArrayList<>();
-            boolean changed = false;
-            for (LootPoolEntryContainer container : NmsUtils.getEntries(pool)) {
-                if (toReplace.contains(container)){
-                    changed = true;
-                    if (newEntry != null) newContainers.add(newEntry.build());
-                } else {
-                    newContainers.add(container);
-                }
-            }
-            if (changed){
-                LogUtils.pluginLog("Changed loot entry container from: " + lootTable.craftLootTable.getKey());
-                Reflex.setFieldValue(pool, NmsFields.ENTRIES, newContainers);
+                    AtomicBoolean containsItem = new AtomicBoolean(false);
+                    entry.extractItems(new LootInfo(1, List.of()), p -> {
+                        if (containsItem.get()) return;
+                        if (predicate.test(p.getLeft())){
+                            containsItem.set(true);
+                        }
+                    });
+                    if (!containsItem.get()) return;
+                    parent.removeEntry(entry.getIndexInParent());
+                    if (newEntry != null) {
+                        parent.addEntry(newEntry.buildAndWrap());
+                    }
+                });
             }
         }
+
+//        List<LootPoolEntryContainer> toReplace = new ArrayList<>();
+//        for (LootPoolSingletonContainer container : NmsUtils.getAllSingletonContainers(lootTable)) {
+//            LootPoolEntry entry = NmsUtils.getEntry(container);
+//            AtomicBoolean contains = new AtomicBoolean(false);
+//            NmsUtils.getPossibleLoot(entry, itemStack -> {
+//                if (predicate.test(NmsUtils.toBukkitItemStack(itemStack))) {
+//                    contains.set(true);
+//                }
+//            });
+//            if (contains.get()) toReplace.add(container);
+//        }
+//        for (LootPool pool : NmsUtils.getPools(lootTable)) {
+//            List<LootPoolEntryContainer> newContainers = new ArrayList<>();
+//            boolean changed = false;
+//            for (LootPoolEntryContainer container : NmsUtils.getEntries(pool)) {
+//                if (toReplace.contains(container)){
+//                    changed = true;
+//                    if (newEntry != null) newContainers.add(newEntry.build());
+//                } else {
+//                    newContainers.add(container);
+//                }
+//            }
+//            if (changed){
+//                //LogUtils.pluginLog("Changed loot entry container from: " + lootTable.craftLootTable.getKey());
+//                Reflex.setFieldValue(pool, NmsFields.ENTRIES, newContainers);
+//            }
+//        }
     }
 
     public List<String> getRegisteredLootTableIds(){
@@ -448,7 +467,6 @@ public class Nms {
             @Override
             public Boolean apply(StructureTemplate.StructureBlockInfo info) {
                 if (info.nbt() == null) return true;
-                System.out.println(info);
                 net.minecraft.world.level.block.Block blockType = info.state().getBlock();
                 if (!copperChests.contains(blockType)
                         && blockType != Blocks.CHEST

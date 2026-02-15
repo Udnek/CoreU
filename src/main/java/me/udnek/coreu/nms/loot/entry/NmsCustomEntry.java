@@ -126,7 +126,7 @@ public class NmsCustomEntry extends LootPoolSingletonContainer {
         }
 
         public EntryWrapper buildAndWrap(){
-            return EntryWrapper.fromNms(build());
+            return EntryWrapper.fromNms(null, build());
         }
     }
 }

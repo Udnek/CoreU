@@ -17,7 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@org.jspecify.annotations.NullMarked public class CustomAdvancementUtils{
+@org.jspecify.annotations.NullMarked
+public class CustomAdvancementUtils{
 
     private static final HashMap<CustomAdvancementContainer, CustomAdvancementContainer> realPoses = new HashMap<>();
 

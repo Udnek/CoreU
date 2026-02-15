@@ -69,11 +69,9 @@ import java.util.function.Predicate;
 
 
         protected @Nullable LootPool getPoolByPredicate(LootTable lootTable, Predicate<ItemStack> predicate){
-            LootPool found = NmsUtils.getLootPoolByPredicate(
+            return NmsUtils.getLootPoolByPredicate(
                     NmsUtils.toNmsLootTable(lootTable),
                     itemStack -> predicate.test(NmsUtils.toBukkitItemStack(itemStack)));
-
-            return found;
         }
 
         public Builder copyConditionsFrom(LootTable lootTable, Predicate<ItemStack> predicate){
@@ -121,7 +119,7 @@ import java.util.function.Predicate;
                 Reflex.setFieldValue(lootPool, NmsFields.COMPOSITE_FUNCTIONS, LootItemFunctions.compose(functions));
             }
             Reflex.setFieldValue(lootPool, "entries", new ArrayList<>(entries));
-            return new DefaultPoolWrapper(lootPool);
+            return new PoolWrapperImpl(lootPool);
         }
     }
 }

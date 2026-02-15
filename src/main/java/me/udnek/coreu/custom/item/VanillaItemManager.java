@@ -16,6 +16,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.VillagerAcquireTradeEvent;
 import org.bukkit.event.inventory.InventoryCreativeEvent;
@@ -29,9 +30,8 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-@org.jspecify.annotations.NullMarked public class VanillaItemManager extends SelfRegisteringListener{
-
-    private static final EquipmentSlot[] ENTITY_SLOTS = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET, EquipmentSlot.HAND, EquipmentSlot.OFF_HAND};
+@org.jspecify.annotations.NullMarked
+public class VanillaItemManager extends SelfRegisteringListener{
     private static @Nullable VanillaItemManager instance;
 
     public static VanillaItemManager getInstance() {
@@ -51,6 +51,7 @@ import java.util.function.Predicate;
         if (isReplaced(material)) throw new RuntimeException("Disabling material that was replaced: " + material);
         disabled.add(material);
     }
+
     public void replaceVanillaMaterial(Material material){
         if (isDisabled(material)) throw new RuntimeException("Replacing material that was disabled: " + material);
         if (isReplaced(material)) return;
@@ -116,7 +117,16 @@ import java.util.function.Predicate;
 
             // loot table replace
             for (LootTable lootTable : ItemUtils.getWhereItemOccurs(oldItem)) {
-                Predicate<ItemStack> predicate = itemStack -> CustomItem.get(itemStack) == newItem;
+                if (oldItem.getType() == Material.NETHERITE_CHESTPLATE){
+                    LogUtils.log(Component.text(lootTable.getKey().asString()).color(NamedTextColor.RED));
+                }
+                Predicate<ItemStack> predicate = itemStack -> {
+                    boolean b = CustomItem.get(itemStack) == newItem;
+                    if (itemStack.getType() == Material.NETHERITE_CHESTPLATE && b){
+                        LogUtils.log(Component.text(lootTable.getKey().asString()).color(NamedTextColor.GREEN));
+                    }
+                    return b;
+                };
                 Nms.get().replaceAllEntriesContains(
                         lootTable,
                         predicate,
@@ -159,11 +169,12 @@ import java.util.function.Predicate;
     }
 
     @EventHandler
-    public void onSpawn(EntitySpawnEvent event){
-        if (!(event.getEntity() instanceof LivingEntity livingEntity)) return;
-        EntityEquipment equipment = livingEntity.getEquipment();
+    public void onSpawn(CreatureSpawnEvent event){
+        LivingEntity entity = event.getEntity();
+        EntityEquipment equipment = entity.getEquipment();
         if (equipment == null) return;
-        for (EquipmentSlot slot : ENTITY_SLOTS) {
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
+            if (!entity.canUseEquipmentSlot(slot)) continue;
             ItemStack item = equipment.getItem(slot);
             if (isDisabled(item)) equipment.setItem(slot, null);
             else if (isReplaced(item)) equipment.setItem(slot, replace(item));

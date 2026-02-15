@@ -26,22 +26,25 @@ import java.util.function.Consumer;
 
     static @Nullable String getId(@Nullable ItemStack itemStack){
         if (itemStack == null) return null;
-        if (itemStack.hasItemMeta()){
-            String id = itemStack.getItemMeta().getPersistentDataContainer().get(PERSISTENT_DATA_CONTAINER_NAMESPACE, PersistentDataType.STRING);
-            if (id != null) return id;
-        }
+        String id = itemStack.getPersistentDataContainer().get(PERSISTENT_DATA_CONTAINER_NAMESPACE, PersistentDataType.STRING);
+        if (id != null) return id;
         VanillaBasedCustomItem replaced = VanillaItemManager.getReplaced(itemStack.getType());
-        return replaced == null ? null : replaced.getId();
+        if (replaced == null) return null;
+        return replaced.getId();
     }
     static @Nullable CustomItem get(@Nullable ItemStack itemStack){
         return get(getId(itemStack));
     }
-    static @Nullable CustomItem get(@Nullable String id){return CustomRegistries.ITEM.get(id);}
+    static @Nullable CustomItem get(@Nullable String id){
+        return CustomRegistries.ITEM.get(id);
+    }
     static void consumeIfCustom(@Nullable ItemStack itemStack, Consumer<CustomItem> consumer){
         CustomItem customItem = get(itemStack);
         if (customItem != null) consumer.accept(customItem);
     }
-    static boolean idExists(String id){return CustomRegistries.ITEM.get(id) != null;}
+    static boolean idExists(String id){
+        return CustomRegistries.ITEM.get(id) != null;
+    }
     static boolean isCustom(ItemStack itemStack) {
         if (itemStack.hasItemMeta()){
             if (itemStack.getItemMeta().getPersistentDataContainer().has(PERSISTENT_DATA_CONTAINER_NAMESPACE)) return true;

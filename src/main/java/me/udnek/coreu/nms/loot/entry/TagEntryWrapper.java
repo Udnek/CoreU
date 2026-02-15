@@ -1,25 +1,25 @@
 package me.udnek.coreu.nms.loot.entry;
 
+import me.udnek.coreu.nms.loot.pool.PoolWrapper;
 import me.udnek.coreu.nms.loot.util.LootInfo;
 import me.udnek.coreu.util.Reflex;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.entries.*;
+import net.minecraft.world.level.storage.loot.entries.TagEntry;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 @NullMarked
-public class TagEntryWrapper extends SingletonEntryWrapper{
+public class TagEntryWrapper extends SingletonEntryWrapperImpl {
 
-    public TagEntryWrapper(TagEntry container) {
-        super(container);
+    public TagEntryWrapper(@Nullable PoolWrapper parent, TagEntry container) {
+        super(parent, container);
     }
 
     public boolean expand(){
@@ -41,6 +41,5 @@ public class TagEntryWrapper extends SingletonEntryWrapper{
         } else {
             super.extractItems(baseInfo, consumer);
         }
-
     }
 }

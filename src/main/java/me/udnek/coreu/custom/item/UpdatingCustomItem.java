@@ -6,7 +6,8 @@ import org.jetbrains.annotations.NotNull;
 
 import static io.papermc.paper.datacomponent.DataComponentTypes.*;
 
-@org.jspecify.annotations.NullMarked public  interface UpdatingCustomItem extends CustomItem{
+@org.jspecify.annotations.NullMarked
+public interface UpdatingCustomItem extends CustomItem{
 
     default boolean isUpdateMaterial(){return true;}
 
@@ -32,7 +33,9 @@ import static io.papermc.paper.datacomponent.DataComponentTypes.*;
     @Override
     default ItemStack update(ItemStack itemStack) {
         ItemStack relevantItem = getItem();
-        if (isUpdateMaterial()) itemStack = itemStack.withType(relevantItem.getType());
+        if (isUpdateMaterial()) {
+            itemStack = itemStack.withType(relevantItem.getType());
+        }
         @NotNull ItemStack finalItemStack = itemStack;
         getComponentsToUpdate(new ComponentConsumer() {
             @Override

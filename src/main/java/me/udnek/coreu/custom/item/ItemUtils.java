@@ -100,7 +100,9 @@ import java.util.function.Predicate;
     public static boolean isSameIds(ItemStack itemA, ItemStack itemB){
         CustomItem customA = CustomItem.get(itemA);
         CustomItem customB = CustomItem.get(itemB);
-        if (customA == null && customB == null) return itemA.getType() == itemB.getType();
+        if (customA == null && customB == null) {
+            return itemA.getType() == itemB.getType();
+        }
         return customA == customB;
     }
 

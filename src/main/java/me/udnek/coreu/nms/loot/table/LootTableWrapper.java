@@ -11,7 +11,8 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 import java.util.function.Consumer;
 
-@org.jspecify.annotations.NullMarked public  interface LootTableWrapper extends NmsWrapper<LootTable>, NmsFunctioned{
+@org.jspecify.annotations.NullMarked
+public interface LootTableWrapper extends NmsWrapper<LootTable>, NmsFunctioned{
     void addPool(PoolWrapper container);
     PoolWrapper getPool(int n);
     void removePool(int n);
