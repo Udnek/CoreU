@@ -17,4 +17,6 @@ public class LootConditionPortrait{
     public @Nullable Float randomChance;
     public @Nullable Float unenchantedRandomChance;
     public Set<EntityType> attackers = new HashSet<>();
+    public @Nullable Boolean raiderInRaid;
+    public @Nullable Boolean raiderIsCaptain;
 }

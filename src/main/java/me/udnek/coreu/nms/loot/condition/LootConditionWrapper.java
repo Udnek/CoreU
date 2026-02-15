@@ -5,16 +5,14 @@ import me.udnek.coreu.nms.NmsWrapper;
 import net.kyori.adventure.key.Key;
 import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.advancements.criterion.LocationPredicate;
+import net.minecraft.advancements.criterion.RaiderPredicate;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.storage.loot.IntRange;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.*;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
-import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import org.apache.commons.lang3.Range;
-import org.bukkit.block.Biome;
 import org.bukkit.craftbukkit.block.CraftBiome;
 import org.bukkit.craftbukkit.entity.CraftEntityType;
 import org.bukkit.craftbukkit.generator.structure.CraftStructure;
@@ -112,8 +110,19 @@ import java.util.Set;
             }
 
             case LootItemEntityPropertyCondition entityCondition -> {
-                // vehicle
+
                 if (entityCondition.entityTarget() == LootContext.EntityTarget.THIS){
+                    // raider
+                    entityCondition.predicate()
+                            .flatMap(EntityPredicate::subPredicate)
+                            .ifPresent(p -> {
+                                if (p instanceof RaiderPredicate(boolean hasRaid, boolean isCaptain)){
+                                    portrait.raiderInRaid = hasRaid;
+                                    portrait.raiderIsCaptain = isCaptain;
+                                }
+                            });
+
+                    // vehicle
                     entityCondition.predicate()
                             .flatMap(EntityPredicate::vehicle)
                             .flatMap(EntityPredicate::entityType)
@@ -122,9 +131,8 @@ import java.util.Set;
                                             .forEach(type -> portrait.vehicles.add(CraftEntityType.minecraftToBukkit(type.value()))
                                             ));
                 }
-
                 // killer
-                if (entityCondition.entityTarget() == LootContext.EntityTarget.ATTACKER){
+                else if (entityCondition.entityTarget() == LootContext.EntityTarget.ATTACKER){
                     entityCondition.predicate()
                             .flatMap(EntityPredicate::entityType)
                             .ifPresent(
