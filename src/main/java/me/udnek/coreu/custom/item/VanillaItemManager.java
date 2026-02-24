@@ -117,16 +117,7 @@ public class VanillaItemManager extends SelfRegisteringListener{
 
             // loot table replace
             for (LootTable lootTable : ItemUtils.getWhereItemOccurs(oldItem)) {
-                if (oldItem.getType() == Material.NETHERITE_CHESTPLATE){
-                    LogUtils.log(Component.text(lootTable.getKey().asString()).color(NamedTextColor.RED));
-                }
-                Predicate<ItemStack> predicate = itemStack -> {
-                    boolean b = CustomItem.get(itemStack) == newItem;
-                    if (itemStack.getType() == Material.NETHERITE_CHESTPLATE && b){
-                        LogUtils.log(Component.text(lootTable.getKey().asString()).color(NamedTextColor.GREEN));
-                    }
-                    return b;
-                };
+                Predicate<ItemStack> predicate = itemStack -> CustomItem.get(itemStack) == newItem;
                 Nms.get().replaceAllEntriesContains(
                         lootTable,
                         predicate,

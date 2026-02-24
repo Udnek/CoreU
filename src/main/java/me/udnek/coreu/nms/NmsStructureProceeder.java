@@ -121,7 +121,7 @@ import java.util.*;
         extractTemplatesFromPool(structure.getStartPool().value(), JigsawStructure.MAX_DEPTH);
         Duration took = Duration.between(start, Instant.now());
 
-        LogUtils.pluginLog(String.format("Took (millis): %d (structure: %s)", took.toMillis(), structureId.asString()));
+        //LogUtils.pluginLog(String.format("Took (millis): %d (structure: %s)", took.toMillis(), structureId.asString()));
 
         extractLootTables();
     }
