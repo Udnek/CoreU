@@ -1,0 +1,17 @@
+{
+  "name": "CoreU",
+  "version": "1.0-SNAPSHOT",
+  "description": "CoreU",
+  "entrypoints": [
+  ],
+  "is_hybrid": true,
+  "transformers": [],
+  "authors": [],
+  "load_datapack_entry": false,
+  "mixins": [
+  ],
+  "wideners": [
+  ],
+  "dependencies": {
+  }
+}

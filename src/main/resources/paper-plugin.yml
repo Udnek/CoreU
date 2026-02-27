@@ -5,11 +5,6 @@ description: CoreU
 api-version: '1.21.11'
 bootstrapper: me.udnek.coreu.bootstrap.Bootstrap
 
-horizon:
-  mixins:
-    - "coreu.mixins.json"
-  load-datapack-entry: true
-
 dependencies:
   server:
     ProtocolLib:
