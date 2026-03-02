@@ -1,41 +1,43 @@
-package me.udnek.coreu.resourcepack.misc;
+package me.udnek.coreu.resourcepack.misc
 
-import me.udnek.coreu.serializabledata.SerializableData;
-import org.jetbrains.annotations.Nullable;
+import me.udnek.coreu.serializabledata.SerializableData
+import java.util.Map
 
-import java.util.Map;
 
-@org.jspecify.annotations.NullMarked
-public class RpInfo implements SerializableData{
+class RpInfo : SerializableData {
+    @JvmField
+    var extractDirectory: String? = null
+    @JvmField
+    var checksum_zip: String? = null
+    @JvmField
+    var checksum_folder: String? = null
+    @JvmField
+    var ip: String = "null"
+    @JvmField
+    var port: Int = 0
 
-    public @Nullable String extractDirectory;
-    public @Nullable String checksum_zip;
-    public @Nullable String checksum_folder;
-    public String ip = "null";
-    public int port;
-
-    public RpInfo(){}
-
-    @Override
-    public String serialize() {
-        return SerializableData.serializeMap(Map.of(
-                "extract_directory", extractDirectory == null ? "null": extractDirectory ,
-                "checksum_zip", checksum_zip == null ? "null": checksum_zip,
-                "checksum_folder", checksum_folder == null ? "null": checksum_folder,
+    override fun serialize(): String {
+        return SerializableData.serializeMap(
+            Map.of<String, Any>(
+                "extract_directory", if (extractDirectory == null) "null" else extractDirectory,
+                "checksum_zip", if (checksum_zip == null) "null" else checksum_zip,
+                "checksum_folder", if (checksum_folder == null) "null" else checksum_folder,
                 "ip", ip,
-                "port", port));
+                "port", port
+            )
+        )
     }
-    @Override
-    public void deserialize(@Nullable String data) {
-        Map<String, String> map = SerializableData.deserializeMap(data);
-        extractDirectory = map.getOrDefault("extract_directory", "");
-        checksum_zip = map.getOrDefault("checksum_zip", "");
-        checksum_folder = map.getOrDefault("checksum_folder", "");
-        ip = map.getOrDefault("ip", "127.0.0.1");
-        port = Integer.parseInt(map.getOrDefault("port", "25566"));
+
+    override fun deserialize(data: String?) {
+        val map = SerializableData.deserializeMap(data)
+        extractDirectory = map.getOrDefault("extract_directory", "")
+        checksum_zip = map.getOrDefault("checksum_zip", "")
+        checksum_folder = map.getOrDefault("checksum_folder", "")
+        ip = map.getOrDefault("ip", "127.0.0.1")
+        port = map.getOrDefault("port", "25566").toInt()
     }
-    @Override
-    public String getDataName() {
-        return "resourcepack_settings";
+
+    override fun getDataName(): String {
+        return "resourcepack_settings"
     }
 }

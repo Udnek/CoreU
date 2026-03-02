@@ -10,7 +10,9 @@ public interface ResourcePackablePlugin extends Plugin {
         return new VirtualResourcePack(this);
 
     }
+
     Priority getPriority();
+
     enum Priority {
         MAIN(2),
         BASE(1),

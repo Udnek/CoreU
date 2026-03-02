@@ -3,17 +3,14 @@ package me.udnek.coreu.resourcepack
 import io.papermc.paper.command.brigadier.BasicCommand
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import me.udnek.coreu.CoreU
-import me.udnek.coreu.resourcepack.legacy.host.RpHost
-import me.udnek.coreu.resourcepack.legacy.host.RpUtils
-import me.udnek.coreu.resourcepack.legacy.merger.RpMergerLeg
 import me.udnek.coreu.resourcepack.misc.RpInfo
 import me.udnek.coreu.resourcepack.misc.checkCorrectExtractDirectory
 import me.udnek.coreu.serializabledata.SerializableDataManager
 import me.udnek.coreu.util.LogUtils
-import org.apache.commons.io.FileUtils
 import org.bukkit.command.ConsoleCommandSender
-import java.io.IOException
-import java.nio.file.Files
+import java.time.Duration.*
+import java.time.Instant
+import kotlin.time.Duration
 
 class ResourcePackCommand : BasicCommand {
 
@@ -31,10 +28,10 @@ class ResourcePackCommand : BasicCommand {
             info.extractDirectory = args[0]
         } else {
             if (info.extractDirectory == null) {
-                LogUtils.pluginLog("Saved directory is null, specify it using argument!")
+                LogUtils.coreuLog("Saved directory is null, specify it using argument!")
                 return
             }
-            LogUtils.pluginLog("Loaded saved directory: " + info.extractDirectory)
+            LogUtils.coreuLog("Loaded saved directory: " + info.extractDirectory)
         }
 
         var (path, error) = checkCorrectExtractDirectory(info.extractDirectory)
@@ -43,6 +40,8 @@ class ResourcePackCommand : BasicCommand {
             return
         }
         path!!
+
+        val start = Instant.now()
 
         val merger = RpMerger()
         error = merger.collectFiles()
@@ -55,7 +54,8 @@ class ResourcePackCommand : BasicCommand {
             error.logError()
             return
         }
-        LogUtils.pluginLog("ResourcePack extracted!")
+
+        LogUtils.coreuLog("ResourcePack extracted! (${between(start, Instant.now()).toMillis()}ms)")
 
 //        try {
 //            val mergerHost = RpMergerLeg()

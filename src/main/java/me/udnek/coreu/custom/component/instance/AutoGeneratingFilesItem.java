@@ -8,7 +8,8 @@ import me.udnek.coreu.CoreU;
 import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.item.CustomItem;
-import me.udnek.coreu.resourcepack.legacy.path.VirtualRpJsonFile;
+import me.udnek.coreu.resourcepack.file.RpFile;
+import me.udnek.coreu.resourcepack.file.RpJsonFile;
 import net.kyori.adventure.key.Key;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.NamespacedKey;
@@ -16,7 +17,8 @@ import org.bukkit.NamespacedKey;
 import java.util.ArrayList;
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked public  interface AutoGeneratingFilesItem extends CustomComponent<CustomItem>{
+@org.jspecify.annotations.NullMarked
+public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem>{
 
     Generated GENERATED = new Generated();
     HandHeld HANDHELD = new HandHeld();
@@ -31,7 +33,7 @@ import java.util.List;
     Compass COMPASS_SINGLE_LAYER = new Compass(false);
     Compass COMPASS_TWO_LAYERS = new Compass(true);
 
-    List<VirtualRpJsonFile> getFiles(CustomItem customItem);
+    List<? extends RpFile> getFiles(CustomItem customItem);
 
     @Override
     default CustomComponentType<CustomItem, ? extends CustomComponent<CustomItem>> getType(){
@@ -45,14 +47,14 @@ import java.util.List;
         public float swapAnimationScale(){return 1.0f;}
 
         @Override
-        public List<VirtualRpJsonFile> getFiles(CustomItem customItem){
+        public List<? extends RpFile> getFiles(CustomItem customItem){
             Key itemModel = customItem.getItem().getData(DataComponentTypes.ITEM_MODEL);
             if (itemModel == null || itemModel.namespace().equals(Key.MINECRAFT_NAMESPACE)) return List.of();
             return getFiles(itemModel);
         }
 
-        public ArrayList<VirtualRpJsonFile> getFiles(Key itemModel){
-            ArrayList<VirtualRpJsonFile> files = new ArrayList<>();
+        public ArrayList<RpJsonFile> getFiles(Key itemModel){
+            ArrayList<RpJsonFile> files = new ArrayList<>();
             files.add(getDefinitionFile(itemModel));
             files.addAll(getModelsFiles(itemModel));
             return files;
@@ -64,15 +66,15 @@ import java.util.List;
         public String getDefinitionPath(Key itemModel){
             return "assets/" + itemModel.namespace() + "/items/" + itemModel.value() + ".json";
         }
-        public List<VirtualRpJsonFile> getModelsFiles(Key itemModel){
-            List<VirtualRpJsonFile> files = new ArrayList<>();
+        public List<RpJsonFile> getModelsFiles(Key itemModel){
+            List<RpJsonFile> files = new ArrayList<>();
             for (Pair<Key, JsonObject> keyAndModel : getModels(itemModel)) {
-                files.add(new VirtualRpJsonFile(keyAndModel.getRight(), getModelPath(keyAndModel.getLeft())));
+                files.add(new RpJsonFile(getModelPath(keyAndModel.getLeft()), keyAndModel.getRight()));
             }
             return files;
         }
-        public VirtualRpJsonFile getDefinitionFile(Key itemModel){
-            return new VirtualRpJsonFile(getDefinition(itemModel), getDefinitionPath(itemModel));
+        public RpJsonFile getDefinitionFile(Key itemModel){
+            return new RpJsonFile(getDefinitionPath(itemModel), getDefinition(itemModel));
         }
         public String replacePlaceHolders(String data, Key itemModel){
             return data

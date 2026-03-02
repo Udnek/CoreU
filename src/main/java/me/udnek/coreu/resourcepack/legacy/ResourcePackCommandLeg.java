@@ -3,8 +3,8 @@ package me.udnek.coreu.resourcepack.legacy;
 import io.papermc.paper.command.brigadier.BasicCommand;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import me.udnek.coreu.CoreU;
-import me.udnek.coreu.resourcepack.legacy.host.RpHost;
-import me.udnek.coreu.resourcepack.legacy.host.RpUtils;
+import me.udnek.coreu.resourcepack.host.RpHost;
+import me.udnek.coreu.resourcepack.host.RpHostUtils;
 import me.udnek.coreu.resourcepack.legacy.merger.RpMergerLeg;
 import me.udnek.coreu.resourcepack.misc.RpInfo;
 import me.udnek.coreu.serializabledata.SerializableDataManager;
@@ -38,16 +38,16 @@ public class ResourcePackCommandLeg implements BasicCommand{
         }
         else {
             if (info.extractDirectory == null){
-                LogUtils.pluginLog("Saved directory is null, specify it using argument!");
+                LogUtils.coreuLog("Saved directory is null, specify it using argument!");
                 return;
             }
-            LogUtils.pluginLog("Loaded saved directory: " + info.extractDirectory);
+            LogUtils.coreuLog("Loaded saved directory: " + info.extractDirectory);
         }
 
         RpMergerLeg merger = new RpMergerLeg();
         String error = merger.checkExtractDirectoryAndError(info.extractDirectory);
         if (error != null){
-            LogUtils.pluginLog(error);
+            LogUtils.coreuLog(error);
             return;
         }
 
@@ -61,11 +61,11 @@ public class ResourcePackCommandLeg implements BasicCommand{
             FileUtils.cleanDirectory(path.toFile());
             mergerHost.startMergeInto(path.toString());
 
-            String checksum = RpUtils.calculateFolderSHA(path);
+            String checksum = RpHostUtils.calculateFolderSHA(path);
             Path zipFilePath = RpHost.getZipFilePath();
             if (!checksum.equals(info.checksum_folder) || !RpHost.getZipFilePath().toFile().exists()){
-                RpUtils.zipFolder(RpHost.getFolderPath(), zipFilePath);
-                info.checksum_zip = RpUtils.calculateZipFolderSHA(zipFilePath.toFile());
+                RpHostUtils.zipFolder(RpHost.getFolderPath(), zipFilePath);
+                info.checksum_zip = RpHostUtils.calculateZipFolderSHA(zipFilePath.toFile());
             }
             info.checksum_folder = checksum;
         } catch (IOException e) {
@@ -73,9 +73,9 @@ public class ResourcePackCommandLeg implements BasicCommand{
         }
 
         SerializableDataManager.write(info, CoreU.getInstance());
-        RpUtils.updateServerProperties();
+        RpHostUtils.updateServerProperties();
 
-        LogUtils.pluginWarning("If your sound does not play, remove '<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>' in plugin's pom!");
+        LogUtils.coreuWarning("If your sound does not play, remove '<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>' in plugin's pom!");
     }
 
     @Override

@@ -21,7 +21,7 @@ import me.udnek.coreu.custom.registry.InitializationProcess;
 import me.udnek.coreu.mgu.MGUItems;
 import me.udnek.coreu.nms.PacketHandler;
 import me.udnek.coreu.resourcepack.ResourcePackablePlugin;
-import me.udnek.coreu.resourcepack.legacy.host.RpHost;
+import me.udnek.coreu.resourcepack.host.RpHost;
 import me.udnek.coreu.rpgu.attribute.RPGUAttributes;
 import me.udnek.coreu.rpgu.component.RPGUComponents;
 import me.udnek.coreu.rpgu.component.ability.property.type.AttributeBasedPropertyType;
@@ -89,7 +89,7 @@ public final class CoreU extends JavaPlugin implements ResourcePackablePlugin{
     public void onDisable() {
         PlayerEquipmentManager.getInstance().stop();
         rpHost.stop(0);
-        LogUtils.pluginLog("Resourcepack host stopped");
+        LogUtils.coreuLog("Resourcepack host stopped");
     }
 
     @Override

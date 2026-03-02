@@ -2,7 +2,6 @@ package me.udnek.coreu.resourcepack.legacy.path;
 
 import com.google.common.base.Preconditions;
 import me.udnek.coreu.resourcepack.legacy.FileManager;
-import me.udnek.coreu.resourcepack.misc.RpFileType;
 import me.udnek.coreu.resourcepack.ResourcePackablePlugin;
 import me.udnek.coreu.resourcepack.legacy.VirtualResourcePackLeg;
 import org.jetbrains.annotations.Nullable;

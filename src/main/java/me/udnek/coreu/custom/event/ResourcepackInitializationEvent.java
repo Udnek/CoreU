@@ -1,28 +1,33 @@
 package me.udnek.coreu.custom.event;
 
-import me.udnek.coreu.resourcepack.legacy.path.VirtualRpJsonFile;
+
+import me.udnek.coreu.resourcepack.file.RpJsonFile;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked public class ResourcepackInitializationEvent extends CustomEvent{
+@org.jspecify.annotations.NullMarked
+public class ResourcepackInitializationEvent extends CustomEvent{
 
-    protected List<VirtualRpJsonFile> files = new ArrayList<>();
-    protected List<VirtualRpJsonFile> forced = new ArrayList<>();
+    protected List<RpJsonFile> files = new ArrayList<>();
+    protected List<RpJsonFile> forced = new ArrayList<>();
 
     public ResourcepackInitializationEvent(){
     }
 
-    public void addFile(VirtualRpJsonFile file){
+    public void addFile(RpJsonFile file){
         files.add(file);
     }
-    public void forceAddFile(VirtualRpJsonFile file){
-        forced.add(file);
+    @Deprecated
+    public void forceAddFile(RpJsonFile file){
+        //forced.add(file);
+        files.add(file);
     }
 
-    public List<VirtualRpJsonFile> getFiles() {
+    public List<RpJsonFile> getFiles() {
         return files;
     }
 
-    public List<VirtualRpJsonFile> getForcedFiles() {return forced;}
+    @Deprecated
+    public List<RpJsonFile> getForcedFiles() {return forced;}
 }
