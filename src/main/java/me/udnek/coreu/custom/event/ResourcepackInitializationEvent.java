@@ -1,6 +1,6 @@
 package me.udnek.coreu.custom.event;
 
-import me.udnek.coreu.resourcepack.path.VirtualRpJsonFile;
+import me.udnek.coreu.resourcepack.legacy.path.VirtualRpJsonFile;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -3,7 +3,7 @@ package me.udnek.coreu.custom.component;
 import me.udnek.coreu.custom.component.instance.TranslatableThing;
 import me.udnek.coreu.custom.registry.AbstractRegistrableComponentable;
 import me.udnek.coreu.custom.registry.Registrable;
-import me.udnek.coreu.resourcepack.path.VirtualRpJsonFile;
+import me.udnek.coreu.resourcepack.legacy.path.VirtualRpJsonFile;
 import net.kyori.adventure.translation.Translatable;
 import org.jetbrains.annotations.NotNull;
 

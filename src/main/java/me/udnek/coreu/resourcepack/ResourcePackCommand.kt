@@ -1,89 +1,91 @@
-package me.udnek.coreu.resourcepack;
+package me.udnek.coreu.resourcepack
 
-import io.papermc.paper.command.brigadier.BasicCommand;
-import io.papermc.paper.command.brigadier.CommandSourceStack;
-import me.udnek.coreu.CoreU;
-import me.udnek.coreu.resourcepack.host.RpHost;
-import me.udnek.coreu.resourcepack.host.RpUtils;
-import me.udnek.coreu.resourcepack.merger.RpMerger;
-import me.udnek.coreu.serializabledata.SerializableDataManager;
-import me.udnek.coreu.util.LogUtils;
-import org.apache.commons.io.FileUtils;
-import org.bukkit.command.ConsoleCommandSender;
+import io.papermc.paper.command.brigadier.BasicCommand
+import io.papermc.paper.command.brigadier.CommandSourceStack
+import me.udnek.coreu.CoreU
+import me.udnek.coreu.resourcepack.legacy.host.RpHost
+import me.udnek.coreu.resourcepack.legacy.host.RpUtils
+import me.udnek.coreu.resourcepack.legacy.merger.RpMergerLeg
+import me.udnek.coreu.resourcepack.misc.RpInfo
+import me.udnek.coreu.resourcepack.misc.checkCorrectExtractDirectory
+import me.udnek.coreu.serializabledata.SerializableDataManager
+import me.udnek.coreu.util.LogUtils
+import org.apache.commons.io.FileUtils
+import org.bukkit.command.ConsoleCommandSender
+import java.io.IOException
+import java.nio.file.Files
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Collection;
-import java.util.List;
+class ResourcePackCommand : BasicCommand {
 
-@org.jspecify.annotations.NullMarked public class ResourcePackCommand implements BasicCommand{
-
-    @Override
-    public void execute(CommandSourceStack commandSourceStack, String[] args) {
-        if (!(commandSourceStack.getSender() instanceof ConsoleCommandSender)){
-            commandSourceStack.getSender().sendMessage("Command can be executed in console only!");
-            return;
+    override fun execute(commandSourceStack: CommandSourceStack, args: Array<String>) {
+        if (commandSourceStack.sender !is ConsoleCommandSender) {
+            commandSourceStack.sender.sendMessage("Command can be executed in console only!")
+            return
         }
 
-        if (args.length > 1) return;
+        if (args.size > 1) return
 
+        val info = SerializableDataManager.read(RpInfo(), CoreU.getInstance())
 
-        RPInfo info = SerializableDataManager.read(new RPInfo(), CoreU.getInstance());
-
-        if (args.length == 1) {
-            info.extractDirectory = args[0];
-        }
-        else {
-            if (info.extractDirectory == null){
-                LogUtils.pluginLog("Saved directory is null, specify it using argument!");
-                return;
+        if (args.size == 1) {
+            info.extractDirectory = args[0]
+        } else {
+            if (info.extractDirectory == null) {
+                LogUtils.pluginLog("Saved directory is null, specify it using argument!")
+                return
             }
-            LogUtils.pluginLog("Loaded saved directory: " + info.extractDirectory);
+            LogUtils.pluginLog("Loaded saved directory: " + info.extractDirectory)
         }
 
-        RpMerger merger = new RpMerger();
-        String error = merger.checkExtractDirectoryAndError(info.extractDirectory);
-        if (error != null){
-            LogUtils.pluginLog(error);
-            return;
+        var (path, error) = checkCorrectExtractDirectory(info.extractDirectory)
+        if (error != null) {
+            error.logError()
+            return
         }
+        path!!
 
-        assert info.extractDirectory != null;
-        merger.startMergeInto(info.extractDirectory);
-
-        try {
-            RpMerger mergerHost = new RpMerger();
-            Path path = RpHost.getFolderPath();
-            Files.createDirectories(path);
-            FileUtils.cleanDirectory(path.toFile());
-            mergerHost.startMergeInto(path.toString());
-
-            String checksum = RpUtils.calculateFolderSHA(path);
-            Path zipFilePath = RpHost.getZipFilePath();
-            if (!checksum.equals(info.checksum_folder) || !RpHost.getZipFilePath().toFile().exists()){
-                RpUtils.zipFolder(RpHost.getFolderPath(), zipFilePath);
-                info.checksum_zip = RpUtils.calculateZipFolderSHA(zipFilePath.toFile());
-            }
-            info.checksum_folder = checksum;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        val merger = RpMerger()
+        error = merger.collectFiles()
+        if (error != null) {
+            error.logError()
+            return
         }
+        error = merger.extractTo(path)
+        if (error != null) {
+            error.logError()
+            return
+        }
+        LogUtils.pluginLog("ResourcePack extracted!")
 
-        SerializableDataManager.write(info, CoreU.getInstance());
-        RpUtils.updateServerProperties();
-
-        LogUtils.pluginWarning("If your sound does not play, remove '<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>' in plugin's pom!");
+//        try {
+//            val mergerHost = RpMergerLeg()
+//            val path = RpHost.getFolderPath()
+//            Files.createDirectories(path)
+//            FileUtils.cleanDirectory(path.toFile())
+//            mergerHost.startMergeInto(path.toString())
+//
+//            val checksum = RpUtils.calculateFolderSHA(path)
+//            val zipFilePath = RpHost.getZipFilePath()
+//            if (checksum != info.checksum_folder || !RpHost.getZipFilePath().toFile().exists()) {
+//                RpUtils.zipFolder(RpHost.getFolderPath(), zipFilePath)
+//                info.checksum_zip = RpUtils.calculateZipFolderSHA(zipFilePath.toFile())
+//            }
+//            info.checksum_folder = checksum
+//        } catch (e: IOException) {
+//            throw RuntimeException(e)
+//        }
+//
+//        SerializableDataManager.write(info, CoreU.getInstance())
+//        RpUtils.updateServerProperties()
+//
+//        LogUtils.pluginWarning("If your sound does not play, remove '<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>' in plugin's pom!")
     }
 
-    @Override
-    public Collection<String> suggest(CommandSourceStack commandSourceStack, String[] args) {
-        return List.of();
+    override fun suggest(commandSourceStack: CommandSourceStack, args: Array<String>): MutableCollection<String> {
+        return mutableListOf<String>()
     }
 
-
-    @Override
-    public @org.jspecify.annotations.Nullable String permission() {
-        return "coreu.admin";
+    override fun permission(): String? {
+        return "coreu.admin"
     }
 }

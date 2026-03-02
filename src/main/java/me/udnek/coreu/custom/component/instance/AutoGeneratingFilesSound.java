@@ -5,7 +5,7 @@ import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.sound.ConstructableCustomSound;
 import me.udnek.coreu.custom.sound.CustomSound;
-import me.udnek.coreu.resourcepack.path.VirtualRpJsonFile;
+import me.udnek.coreu.resourcepack.legacy.path.VirtualRpJsonFile;
 
 import java.util.List;
 

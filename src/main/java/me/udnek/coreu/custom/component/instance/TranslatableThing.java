@@ -5,7 +5,7 @@ import com.google.gson.JsonPrimitive;
 import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.registry.Registrable;
-import me.udnek.coreu.resourcepack.path.VirtualRpJsonFile;
+import me.udnek.coreu.resourcepack.legacy.path.VirtualRpJsonFile;
 import net.kyori.adventure.translation.Translatable;
 import org.jetbrains.annotations.Nullable;
 

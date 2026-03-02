@@ -21,7 +21,7 @@ import me.udnek.coreu.custom.registry.InitializationProcess;
 import me.udnek.coreu.mgu.MGUItems;
 import me.udnek.coreu.nms.PacketHandler;
 import me.udnek.coreu.resourcepack.ResourcePackablePlugin;
-import me.udnek.coreu.resourcepack.host.RpHost;
+import me.udnek.coreu.resourcepack.legacy.host.RpHost;
 import me.udnek.coreu.rpgu.attribute.RPGUAttributes;
 import me.udnek.coreu.rpgu.component.RPGUComponents;
 import me.udnek.coreu.rpgu.component.ability.property.type.AttributeBasedPropertyType;

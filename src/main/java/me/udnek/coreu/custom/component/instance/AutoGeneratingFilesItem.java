@@ -8,7 +8,7 @@ import me.udnek.coreu.CoreU;
 import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.item.CustomItem;
-import me.udnek.coreu.resourcepack.path.VirtualRpJsonFile;
+import me.udnek.coreu.resourcepack.legacy.path.VirtualRpJsonFile;
 import net.kyori.adventure.key.Key;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.NamespacedKey;
