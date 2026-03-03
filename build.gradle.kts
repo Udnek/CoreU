@@ -2,6 +2,7 @@ plugins {
     `java-library`
     id("io.papermc.paperweight.userdev") version "2.0.0-beta.18"
     id("com.gradleup.shadow") version "9.3.0"
+    kotlin("jvm")
 }
 
 group = "me.udnek"
@@ -26,6 +27,7 @@ dependencies {
 
     compileOnly("net.fabricmc:sponge-mixin:0.15.2+mixin.0.8.7")
     compileOnly("io.github.llamalad7:mixinextras-common:0.4.1")
+    implementation(kotlin("stdlib-jdk8"))
 }
 
 
@@ -43,4 +45,7 @@ tasks {
     javadoc {
         options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
     }
+}
+kotlin {
+    jvmToolchain(21)
 }
