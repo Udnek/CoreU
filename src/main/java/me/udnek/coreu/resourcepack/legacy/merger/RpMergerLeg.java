@@ -15,7 +15,7 @@ import me.udnek.coreu.resourcepack.legacy.VirtualResourcePackLeg;
 import me.udnek.coreu.resourcepack.legacy.path.RpPath;
 import me.udnek.coreu.resourcepack.legacy.path.SamePathsContainer;
 import me.udnek.coreu.resourcepack.legacy.path.SortedPathsContainer;
-import me.udnek.coreu.resourcepack.legacy.path.RpJsonFile;
+import me.udnek.coreu.resourcepack.legacy.path.RpJsonFileLeg;
 import me.udnek.coreu.util.LogUtils;
 import net.kyori.adventure.translation.Translatable;
 import org.bukkit.Bukkit;
@@ -77,33 +77,33 @@ import java.util.List;
         }
 
         LogUtils.coreuLog("AutoAdding...");
-        List<RpJsonFile> toAdd = new ArrayList<>();
-        for (CustomItem item : CustomRegistries.ITEM.getAll()) {
-            toAdd.addAll(item.getComponents().getOrDefault(CustomComponentType.AUTO_GENERATING_FILES_ITEM).getFiles(item));
-        }
-        for (CustomSound sound : CustomRegistries.SOUND.getAll()) {
-            files.addAll(sound.getComponents().getOrDefault(CustomComponentType.AUTO_GENERATING_FILES_SOUND).getFiles(sound));
-        }
-        for (CustomRegistry<?> registry : CustomRegistries.REGISTRY.getAll()) {
-            for (Registrable registrable : registry.getAll()) {
-                if (!(registrable instanceof ComponentHolder<?> holder)) continue;
-                if (!(holder instanceof Translatable translatable)) continue;
-                for (RpJsonFile file : holder.getComponents().getOrDefault(CustomComponentType.TRANSLATABLE_THING).getFiles(translatable, registrable)) {
-                    LogUtils.coreuLog("TranslatableThing: " + file.getPath() + " " + file.get());
-                    files.add(file);
-                }
-            }
-        }
-        ResourcepackInitializationEvent event = new ResourcepackInitializationEvent();
-        event.callEvent();
-        toAdd.addAll(event.getFiles());
-        for (RpJsonFile file : toAdd) {
-            if (files.contains(file)) continue;
-            files.add(file);
-        }
-        for (RpJsonFile file : event.getForcedFiles()) {
-            files.add(file);
-        }
+        List<RpJsonFileLeg> toAdd = new ArrayList<>();
+//        for (CustomItem item : CustomRegistries.ITEM.getAll()) {
+//            toAdd.addAll(item.getComponents().getOrDefault(CustomComponentType.AUTO_GENERATING_FILES_ITEM).getFiles(item));
+//        }
+//        for (CustomSound sound : CustomRegistries.SOUND.getAll()) {
+//            files.addAll(sound.getComponents().getOrDefault(CustomComponentType.AUTO_GENERATING_FILES_SOUND).getFiles(sound));
+//        }
+//        for (CustomRegistry<?> registry : CustomRegistries.REGISTRY.getAll()) {
+//            for (Registrable registrable : registry.getAll()) {
+//                if (!(registrable instanceof ComponentHolder<?> holder)) continue;
+//                if (!(holder instanceof Translatable translatable)) continue;
+//                for (RpJsonFileLeg file : holder.getComponents().getOrDefault(CustomComponentType.TRANSLATABLE_THING).getFiles(translatable, registrable)) {
+//                    LogUtils.coreuLog("TranslatableThing: " + file.getPath() + " " + file.get());
+//                    files.add(file);
+//                }
+//            }
+//        }
+//        ResourcepackInitializationEvent event = new ResourcepackInitializationEvent();
+//        event.callEvent();
+//        toAdd.addAll(event.getFiles());
+//        for (RpJsonFileLeg file : toAdd) {
+//            if (files.contains(file)) continue;
+//            files.add(file);
+//        }
+//        for (RpJsonFileLeg file : event.getForcedFiles()) {
+//            files.add(file);
+//        }
         LogUtils.coreuLog("Finished AutoAdding");
 
         files.forEach(container::add);

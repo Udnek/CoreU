@@ -9,15 +9,16 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 @Deprecated
-@org.jspecify.annotations.NullMarked public class RpJsonFile extends RpPath{
+@org.jspecify.annotations.NullMarked
+public class RpJsonFileLeg extends RpPath{
 
     protected JsonElement data;
 
-    public RpJsonFile(@Nullable VirtualResourcePackLeg resourcePack, JsonElement data, String path) {
+    public RpJsonFileLeg(@Nullable VirtualResourcePackLeg resourcePack, JsonElement data, String path) {
         super(resourcePack, path);
         this.data = data;
     }
-    public RpJsonFile(JsonElement data, String path){
+    public RpJsonFileLeg(JsonElement data, String path){
         this(null, data, path);
     }
 

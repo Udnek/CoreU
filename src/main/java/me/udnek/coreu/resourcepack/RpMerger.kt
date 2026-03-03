@@ -8,8 +8,8 @@ import me.udnek.coreu.custom.registry.CustomRegistries
 import me.udnek.coreu.resourcepack.file.RpFile
 import me.udnek.coreu.resourcepack.file.RpJsonFile
 import me.udnek.coreu.resourcepack.misc.Error
+import me.udnek.coreu.resourcepack.misc.RpUtils
 import me.udnek.coreu.resourcepack.misc.ValueOrError
-import me.udnek.coreu.resourcepack.misc.mergeJsons
 import me.udnek.coreu.util.LogUtils
 import net.kyori.adventure.translation.Translatable
 import org.bukkit.Bukkit
@@ -32,36 +32,36 @@ class RpMerger {
             }
         }
 
-        for (item in CustomRegistries.ITEM.getAll()) {
-            addFiles(
-                item.getComponents()
-                    .getOrDefault(CustomComponentType.AUTO_GENERATING_FILES_ITEM)
-                    .getFiles(item)
-            )
-        }
-        for (sound in CustomRegistries.SOUND.getAll()) {
-            addFiles(
-                sound.getComponents()
-                    .getOrDefault(CustomComponentType.AUTO_GENERATING_FILES_SOUND)
-                    .getFiles(sound)
-            )
-        }
-        for (registry in CustomRegistries.REGISTRY.getAll()) {
-            for (registrable in registry.getAll()) {
-                if (registrable !is ComponentHolder<*>) continue
-                if (registrable !is Translatable) continue
-                for (file in registrable.getComponents()
-                    .getOrDefault(CustomComponentType.TRANSLATABLE_THING)
-                    .getFiles(registrable, registrable)) {
-                    addFile(file)
-                }
-            }
-        }
-        val event = ResourcepackInitializationEvent()
-        event.callEvent()
-        addFiles(event.files)
+//        for (item in CustomRegistries.ITEM.getAll()) {
+//            addFiles(
+//                item.getComponents()
+//                    .getOrDefault(CustomComponentType.AUTO_GENERATING_FILES_ITEM)
+//                    .getFiles(item)
+//            )
+//        }
+//        for (sound in CustomRegistries.SOUND.getAll()) {
+//            addFiles(
+//                sound.getComponents()
+//                    .getOrDefault(CustomComponentType.AUTO_GENERATING_FILES_SOUND)
+//                    .getFiles(sound)
+//            )
+//        }
+//        for (registry in CustomRegistries.REGISTRY.getAll()) {
+//            for (registrable in registry.getAll()) {
+//                if (registrable !is ComponentHolder<*>) continue
+//                if (registrable !is Translatable) continue
+//                for (file in registrable.getComponents()
+//                    .getOrDefault(CustomComponentType.TRANSLATABLE_THING)
+//                    .getFiles(registrable, registrable)) {
+//                    addFile(file)
+//                }
+//            }
+//        }
+//        val event = ResourcepackInitializationEvent()
+//        event.callEvent()
+//        addFiles(event.files)
 
-        LogUtils.coreuLog("collected files: $allFiles")
+        LogUtils.coreuLog("collected files: ${allFiles.size}")
         return null
     }
 
@@ -93,8 +93,8 @@ class RpMerger {
         // more than one
 
         // lang
-        LogUtils.coreuLog("Merge: ${path}")
         if (path.matches("assets/*/lang")){
+            LogUtils.coreuLog("Merge: ${path}")
             val jsons = ArrayList<JsonObject>()
             for (file in files) {
                 val (jsonFile, error) = file.asJson()
@@ -103,7 +103,7 @@ class RpMerger {
                 LogUtils.coreuLog("\t${file}")
                 jsons.add(jsonFile.json)
             }
-            val mergedJson = mergeJsons(jsons)
+            val mergedJson = RpUtils.mergeJsons(jsons)
             return ValueOrError.success(RpJsonFile(files[0].plugin(), path, mergedJson))
         }
 

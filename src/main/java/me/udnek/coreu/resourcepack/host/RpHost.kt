@@ -4,12 +4,11 @@ import com.sun.net.httpserver.HttpExchange
 import com.sun.net.httpserver.HttpHandler
 import com.sun.net.httpserver.HttpServer
 import me.udnek.coreu.CoreU
+import me.udnek.coreu.resourcepack.misc.Error
 import me.udnek.coreu.resourcepack.misc.RpInfo
 import me.udnek.coreu.resourcepack.misc.RpUtils
-import me.udnek.coreu.resourcepack.misc.ValueOrError
+import me.udnek.coreu.resourcepack.misc.at
 import me.udnek.coreu.serializabledata.SerializableDataManager
-import me.udnek.coreu.util.LogUtils
-import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -18,6 +17,9 @@ import java.nio.file.Path
 
 
 class RpHost : HttpHandler {
+
+    private var server: HttpServer? = null
+
     companion object {
         private const val RP_ROOT_AND_NAME = "generated_resourcepack"
 
@@ -34,29 +36,34 @@ class RpHost : HttpHandler {
     }
 
 
-    fun start(): ValueOrError<HttpServer> {
+    fun start(): Error? {
         if (!Files.exists(zipFilePath)){
-            return ValueOrError.failure("resourcepack was not generated! Use /resourcepack")
+            return Error("resourcepack was not generated! Use /resourcepack")
         }
         RpHostUtils.updateServerProperties()
 
         val rpInfo = SerializableDataManager.read(RpInfo(), CoreU.getInstance())
         val (server, error) = RpUtils.wrapThrowable { HttpServer.create(InetSocketAddress("0.0.0.0", rpInfo.port), 0) }
-        if (error != null) return ValueOrError.failure(error)
-        try {
-
-
-            server.createContext("/", this)
-            server.start()
-            return server
-        } catch (e: IOException) {
-            throw RuntimeException(e)
-        }
+        if (error != null) return error
+        server!!
+        server.createContext("/", this)
+        this.server = server
+        server.start()
+        return null
     }
 
-    @Throws(IOException::class)
+    fun stop(){
+        server?.stop(0)
+    }
+
     override fun handle(exchange: HttpExchange) {
-        val fileBytes = Files.readAllBytes(zipFilePath)
+        val (fileBytes, error) = RpUtils.wrapThrowable { Files.readAllBytes(zipFilePath) }
+        if (error != null){
+            ("http handle error" at error).logError()
+            return
+        }
+        fileBytes!!
+
         exchange.getResponseHeaders().set("Content-Type", "application/zip")
         exchange.getResponseHeaders().set(
             "Content-Disposition",
@@ -66,8 +73,8 @@ class RpHost : HttpHandler {
             )
         )
         exchange.sendResponseHeaders(200, fileBytes.size.toLong())
-        val stream = exchange.getResponseBody()
-        stream.write(fileBytes)
-        stream.close()
+        exchange.getResponseBody().use { s ->
+            s.write(fileBytes)
+        }
     }
 }

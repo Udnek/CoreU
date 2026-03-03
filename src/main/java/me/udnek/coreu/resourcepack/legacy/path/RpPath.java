@@ -10,7 +10,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked public class RpPath{
+@org.jspecify.annotations.NullMarked
+public class RpPath{
 
     protected final @Nullable VirtualResourcePackLeg resourcePack;
     protected final String path;

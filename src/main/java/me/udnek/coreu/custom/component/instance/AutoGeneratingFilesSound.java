@@ -14,7 +14,7 @@ import java.util.List;
 
     public static final AutoGeneratingFilesSound DEFAULT = new AutoGeneratingFilesSound();
 
-    public List<RpFile> getFiles(CustomSound unknowSound){
+    public List<? extends RpFile> getFiles(CustomSound unknowSound){
         if (!(unknowSound instanceof ConstructableCustomSound sound)) return List.of();
         RpJsonFile file = new RpJsonFile("assets/" + sound.key().namespace() + "/sounds.json",
                 JsonParser.parseString("""

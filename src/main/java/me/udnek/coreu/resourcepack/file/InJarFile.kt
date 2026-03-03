@@ -6,9 +6,9 @@ import com.google.gson.JsonParser
 import me.udnek.coreu.resourcepack.ResourcePackablePlugin
 import me.udnek.coreu.resourcepack.RpPath
 import me.udnek.coreu.resourcepack.misc.Error
+import me.udnek.coreu.resourcepack.misc.RpUtils
 import me.udnek.coreu.resourcepack.misc.ValueOrError
 import me.udnek.coreu.resourcepack.misc.at
-import me.udnek.coreu.resourcepack.misc.wrapThrowable
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.nio.file.Files
@@ -28,7 +28,7 @@ class InJarFile(val plugin: ResourcePackablePlugin, val path: RpPath) : RpFile {
     private fun stream(consumer: (InputStream) -> Unit): Error? {
         val stream = plugin.javaClass.classLoader.getResourceAsStream(path.resourcesRelative())
             ?: return Error("can not get stream: ${path.resourcesRelative()} (${plugin.name})")
-        return wrapThrowable {
+        return RpUtils.wrapThrowable {
             stream.use { inputStream -> consumer(inputStream) }
         }.error
     }

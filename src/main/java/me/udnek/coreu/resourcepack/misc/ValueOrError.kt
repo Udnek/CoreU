@@ -23,9 +23,9 @@ class ValueOrError<out T>{
             return failure(Error(error))
         }
 
-        fun <T> failure(parent: String, sub: Error): ValueOrError<T>{
-            return failure(parent at sub)
-        }
+//        fun <T> failure(parent: String, sub: Error): ValueOrError<T>{
+//            return failure(parent at sub)
+//        }
 
 
         fun <T> success(value: T): ValueOrError<T> {

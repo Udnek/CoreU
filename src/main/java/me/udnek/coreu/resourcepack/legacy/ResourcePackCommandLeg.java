@@ -61,13 +61,13 @@ public class ResourcePackCommandLeg implements BasicCommand{
             FileUtils.cleanDirectory(path.toFile());
             mergerHost.startMergeInto(path.toString());
 
-            String checksum = RpHostUtils.calculateFolderSHA(path);
-            Path zipFilePath = RpHost.getZipFilePath();
-            if (!checksum.equals(info.checksum_folder) || !RpHost.getZipFilePath().toFile().exists()){
-                RpHostUtils.zipFolder(RpHost.getFolderPath(), zipFilePath);
-                info.checksum_zip = RpHostUtils.calculateZipFolderSHA(zipFilePath.toFile());
-            }
-            info.checksum_folder = checksum;
+////            String checksum = RpHostUtils.calculateFolderSHA(path);
+////            Path zipFilePath = RpHost.getZipFilePath();
+////            if (!checksum.equals(info.checksum_folder) || !RpHost.getZipFilePath().toFile().exists()){
+////                //RpHostUtils.zipFolder(RpHost.getFolderPath(), zipFilePath);
+////                info.checksum_zip = RpHostUtils.calculateZipFolderSHA(zipFilePath.toFile());
+////            }
+//            info.checksum_folder = checksum;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

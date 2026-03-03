@@ -20,6 +20,7 @@ import java.util.zip.ZipOutputStream
 
 object RpHostUtils {
 
+    @JvmStatic
     fun zipFolder(sourcePath: Path, zipFilePath: Path): Error? {
          ZipOutputStream(Files.newOutputStream(zipFilePath)).use { zipOut ->
             Files.walk(sourcePath).use { walk ->
@@ -60,6 +61,7 @@ object RpHostUtils {
         return null
     }
 
+    @JvmStatic
     private fun calculateCrc32(file: Path): ValueOrError<Long> {
         val (data, error) = RpUtils.wrapThrowable { Files.readAllBytes(file) }
         if (error != null) return ValueOrError.failure("can not calc crc32" at error)
@@ -69,28 +71,29 @@ object RpHostUtils {
     }
 
     @JvmStatic
-    fun calculateFolderSHA(folderPath: Path): String {
-        try {
-            val digest = MessageDigest.getInstance("SHA-1")
-            val filePaths: MutableList<Path> = ArrayList<Path>()
-            Files.walk(Paths.get(folderPath.toUri())).use { walk ->
-                walk.filter { path: Path? -> Files.isRegularFile(path) }.sorted()
-                    .forEach { e: Path? -> filePaths.add(e!!) }
-            }
-            for (filePath in filePaths) updateDigest(digest, filePath, folderPath)
-            return bytesToHex(digest.digest())
-        } catch (e: NoSuchAlgorithmException) {
-            throw RuntimeException(e)
-        } catch (e: IOException) {
-            throw RuntimeException(e)
+    fun calculateFolderSHA(folderPath: Path): ValueOrError<String> {
+        val (digest, error) = RpUtils.wrapThrowable{MessageDigest.getInstance("SHA-1")}
+        if (error != null) return ValueOrError.failure("can not calculate folder SHA-1" at error)
+        digest!!
+
+        val filePaths: MutableList<Path> = ArrayList<Path>()
+        Files.walk(Paths.get(folderPath.toUri())).use { walk ->
+            walk.filter { path: Path -> Files.isRegularFile(path) }
+                .sorted()
+                .forEach { e: Path -> filePaths.add(e) }
         }
+        for (filePath in filePaths) {
+            val digError = updateDigest(digest, filePath, folderPath)
+            if (digError != null) return ValueOrError.failure(digError)
+        }
+        return ValueOrError.success(bytesToHex(digest.digest()))
     }
 
-    private fun updateDigest(digest: MessageDigest, filePath: Path, basePath: Path) {
+    @JvmStatic
+    private fun updateDigest(digest: MessageDigest, filePath: Path, basePath: Path): Error? {
         val relativePath = Paths.get(basePath.toUri()).relativize(filePath).toString()
         digest.update(relativePath.toByteArray())
-
-        try {
+        return RpUtils.wrapThrowable {
             Files.newInputStream(filePath).use { inputStream ->
                 BufferedInputStream(inputStream).use { buffInputStream ->
                     val buffer = ByteArray(8192)
@@ -100,14 +103,12 @@ object RpHostUtils {
                     }
                 }
             }
-        } catch (e: IOException) {
-            throw RuntimeException(e)
-        }
+        }.error
     }
 
     @JvmStatic
-    fun calculateZipFolderSHA(file: File): String {
-        try {
+    fun calculateZipFolderSHA(file: File): ValueOrError<String> {
+        return RpUtils.wrapThrowable {
             FileInputStream(file).use { fis ->
                 val digest = MessageDigest.getInstance("SHA-1")
                 val buffer = ByteArray(8192)
@@ -115,15 +116,12 @@ object RpHostUtils {
                 while ((fis.read(buffer).also { bytesRead = it }) != -1) {
                     digest.update(buffer, 0, bytesRead)
                 }
-                return bytesToHex(digest.digest())
+                return@wrapThrowable bytesToHex(digest.digest())
             }
-        } catch (e: NoSuchAlgorithmException) {
-            throw RuntimeException(e)
-        } catch (e: IOException) {
-            throw RuntimeException(e)
         }
     }
 
+    @JvmStatic
     private fun bytesToHex(bytes: ByteArray): String {
         val hexString = StringBuilder()
         for (b in bytes) hexString.append(String.format("%02x", b))
@@ -132,22 +130,18 @@ object RpHostUtils {
 
     @JvmStatic
     fun updateServerProperties() {
-        try {
-            val rpInfo = SerializableDataManager.read(RpInfo(), CoreU.getInstance())
+        val rpInfo = SerializableDataManager.read(RpInfo(), CoreU.getInstance())
 
-            val properties = Properties()
-            val inStream = FileInputStream("server.properties")
-            properties.load(inStream)
-            inStream.close()
+        val properties = Properties()
+        FileInputStream("server.properties").use { stream ->
+            properties.load(stream)
+        }
 
-            properties.setProperty("resource-pack", "http://" + rpInfo.ip + ":" + rpInfo.port + "/1")
-            properties.setProperty("resource-pack-sha1", rpInfo.checksum_zip)
+        properties.setProperty("resource-pack", "http://" + rpInfo.ip + ":" + rpInfo.port + "/1")
+        properties.setProperty("resource-pack-sha1", rpInfo.checksum_zip)
 
-            val fos = FileOutputStream("server.properties")
-            properties.store(fos, "")
-            fos.close()
-        } catch (e: Exception) {
-            throw RuntimeException(e)
+        FileOutputStream("server.properties").use { stream ->
+            properties.store(stream, "")
         }
     }
 }

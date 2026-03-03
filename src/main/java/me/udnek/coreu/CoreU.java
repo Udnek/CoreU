@@ -1,6 +1,5 @@
 package me.udnek.coreu;
 
-import com.sun.net.httpserver.HttpServer;
 import me.udnek.coreu.custom.attribute.CustomAttribute;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockManager;
 import me.udnek.coreu.custom.entitylike.entity.CustomEntityManager;
@@ -22,6 +21,7 @@ import me.udnek.coreu.mgu.MGUItems;
 import me.udnek.coreu.nms.PacketHandler;
 import me.udnek.coreu.resourcepack.ResourcePackablePlugin;
 import me.udnek.coreu.resourcepack.host.RpHost;
+import me.udnek.coreu.resourcepack.misc.Error;
 import me.udnek.coreu.rpgu.attribute.RPGUAttributes;
 import me.udnek.coreu.rpgu.component.RPGUComponents;
 import me.udnek.coreu.rpgu.component.ability.property.type.AttributeBasedPropertyType;
@@ -38,7 +38,7 @@ import org.jetbrains.annotations.UnknownNullability;
 public final class CoreU extends JavaPlugin implements ResourcePackablePlugin{
 
     private static @UnknownNullability Plugin instance;
-    private static @UnknownNullability HttpServer rpHost;
+    private static @UnknownNullability RpHost rpHost;
 
     public static Plugin getInstance() {
         return instance;
@@ -82,13 +82,17 @@ public final class CoreU extends JavaPlugin implements ResourcePackablePlugin{
             }
         });
 
-        rpHost = new RpHost().start();
+        rpHost = new RpHost();
+        Error error = rpHost.start();
+        if (error != null) {
+            new Error("can not start server").at(error).logError();
+        }
     }
 
     @Override
     public void onDisable() {
         PlayerEquipmentManager.getInstance().stop();
-        rpHost.stop(0);
+        rpHost.stop();
         LogUtils.coreuLog("Resourcepack host stopped");
     }
 

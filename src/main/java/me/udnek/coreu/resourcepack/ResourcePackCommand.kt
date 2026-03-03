@@ -4,13 +4,12 @@ import io.papermc.paper.command.brigadier.BasicCommand
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import me.udnek.coreu.CoreU
 import me.udnek.coreu.resourcepack.misc.RpInfo
-import me.udnek.coreu.resourcepack.misc.checkCorrectExtractDirectory
+import me.udnek.coreu.resourcepack.misc.RpUtils
 import me.udnek.coreu.serializabledata.SerializableDataManager
 import me.udnek.coreu.util.LogUtils
 import org.bukkit.command.ConsoleCommandSender
-import java.time.Duration.*
+import java.time.Duration.between
 import java.time.Instant
-import kotlin.time.Duration
 
 class ResourcePackCommand : BasicCommand {
 
@@ -34,12 +33,15 @@ class ResourcePackCommand : BasicCommand {
             LogUtils.coreuLog("Loaded saved directory: " + info.extractDirectory)
         }
 
-        var (path, error) = checkCorrectExtractDirectory(info.extractDirectory)
+        var (path, error) = RpUtils.checkCorrectExtractDirectory(info.extractDirectory)
         if (error != null) {
             error.logError()
             return
         }
         path!!
+
+        // saves new path
+        SerializableDataManager.write(info, CoreU.getInstance())
 
         val start = Instant.now()
 
