@@ -8,9 +8,9 @@ class RpInfo : SerializableData {
     @JvmField
     var extractDirectory: String? = null
     @JvmField
-    var checksum_zip: String? = null
+    var checksumZip: String? = null
     @JvmField
-    var checksum_folder: String? = null
+    var checksumFolder: String? = null
     @JvmField
     var ip: String = "null"
     @JvmField
@@ -20,8 +20,8 @@ class RpInfo : SerializableData {
         return SerializableData.serializeMap(
             Map.of<String, Any>(
                 "extract_directory", if (extractDirectory == null) "null" else extractDirectory,
-                "checksum_zip", if (checksum_zip == null) "null" else checksum_zip,
-                "checksum_folder", if (checksum_folder == null) "null" else checksum_folder,
+                "checksum_zip", if (checksumZip == null) "null" else checksumZip,
+                "checksum_folder", if (checksumFolder == null) "null" else checksumFolder,
                 "ip", ip,
                 "port", port
             )
@@ -31,8 +31,8 @@ class RpInfo : SerializableData {
     override fun deserialize(data: String?) {
         val map = SerializableData.deserializeMap(data)
         extractDirectory = map.getOrDefault("extract_directory", "")
-        checksum_zip = map.getOrDefault("checksum_zip", "")
-        checksum_folder = map.getOrDefault("checksum_folder", "")
+        checksumZip = map.getOrDefault("checksum_zip", "")
+        checksumFolder = map.getOrDefault("checksum_folder", "")
         ip = map.getOrDefault("ip", "127.0.0.1")
         port = map.getOrDefault("port", "25566").toInt()
     }

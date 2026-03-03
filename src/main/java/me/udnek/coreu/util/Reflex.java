@@ -6,7 +6,9 @@ import sun.misc.Unsafe;
 
 import java.lang.reflect.*;
 
-@org.jspecify.annotations.NullMarked public class Reflex{
+@org.jspecify.annotations.NullMarked
+public class Reflex{
+
     public static Field getField(Class<?> source, String name) {
         try {
             return source.getDeclaredField(name);

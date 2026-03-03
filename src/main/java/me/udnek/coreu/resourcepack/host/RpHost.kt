@@ -4,11 +4,13 @@ import com.sun.net.httpserver.HttpExchange
 import com.sun.net.httpserver.HttpHandler
 import com.sun.net.httpserver.HttpServer
 import me.udnek.coreu.CoreU
+import me.udnek.coreu.resourcepack.RpMerger
 import me.udnek.coreu.resourcepack.misc.Error
 import me.udnek.coreu.resourcepack.misc.RpInfo
 import me.udnek.coreu.resourcepack.misc.RpUtils
 import me.udnek.coreu.resourcepack.misc.at
 import me.udnek.coreu.serializabledata.SerializableDataManager
+import org.apache.commons.io.FileUtils
 import java.net.InetSocketAddress
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -24,21 +26,46 @@ class RpHost : HttpHandler {
         private const val RP_ROOT_AND_NAME = "generated_resourcepack"
 
         @JvmStatic
-        val folderPath: Path
-            get() {
-                val path: Path = CoreU.getInstance().getDataPath().toAbsolutePath().resolve(RP_ROOT_AND_NAME)
-                return path
-            }
+        fun getFolderPath(): Path {
+            val path: Path = CoreU.getInstance().getDataPath().toAbsolutePath().resolve(RP_ROOT_AND_NAME)
+            return path
+        }
 
         @JvmStatic
-        val zipFilePath: Path
-            get() = CoreU.getInstance().getDataPath().resolve("$RP_ROOT_AND_NAME.zip")
+        fun getZipFilePath(): Path = CoreU.getInstance().getDataPath().resolve("$RP_ROOT_AND_NAME.zip")
     }
 
+    fun compileResourcepack(): Error? {
+
+        val folderPath = getFolderPath()
+        Files.createDirectories(folderPath)
+        FileUtils.cleanDirectory(folderPath.toFile())
+
+        val merger = RpMerger()
+        merger.collectFiles()
+        merger.extractTo(folderPath)
+
+        val (checksum, error) = RpHostUtils.calculateFolderSHA(folderPath)
+        if (error != null) return error
+
+        val zipFilePath = getZipFilePath()
+        val info = SerializableDataManager.read(RpInfo(), CoreU.getInstance())
+        if (checksum != info.checksumFolder || !zipFilePath.toFile().exists()) {
+            RpHostUtils.zipFolder(folderPath, zipFilePath)
+            val (zipSha, error) = RpHostUtils.calculateZipFolderSHA(zipFilePath.toFile())
+            if (error != null) return error
+            info.checksumZip = zipSha!!
+        }
+        info.checksumFolder = checksum
+
+        SerializableDataManager.write(info, CoreU.getInstance())
+        RpHostUtils.updateServerProperties()
+        return null
+    }
 
     fun start(): Error? {
-        if (!Files.exists(zipFilePath)){
-            return Error("resourcepack was not generated! Use /resourcepack")
+        if (!Files.exists(getZipFilePath())){
+            return Error("resourcepack was not generated")
         }
         RpHostUtils.updateServerProperties()
 
@@ -57,7 +84,7 @@ class RpHost : HttpHandler {
     }
 
     override fun handle(exchange: HttpExchange) {
-        val (fileBytes, error) = RpUtils.wrapThrowable { Files.readAllBytes(zipFilePath) }
+        val (fileBytes, error) = RpUtils.wrapThrowable { Files.readAllBytes(getZipFilePath()) }
         if (error != null){
             ("http handle error" at error).logError()
             return
@@ -68,7 +95,7 @@ class RpHost : HttpHandler {
         exchange.getResponseHeaders().set(
             "Content-Disposition",
             "attachment; filename*=UTF-8''" + URLEncoder.encode(
-                zipFilePath.getFileName().toString(),
+                getZipFilePath().getFileName().toString(),
                 StandardCharsets.UTF_8
             )
         )

@@ -38,7 +38,7 @@ import org.jetbrains.annotations.UnknownNullability;
 public final class CoreU extends JavaPlugin implements ResourcePackablePlugin{
 
     private static @UnknownNullability Plugin instance;
-    private static @UnknownNullability RpHost rpHost;
+    private static final RpHost rpHost = new RpHost();
 
     public static Plugin getInstance() {
         return instance;
@@ -76,17 +76,20 @@ public final class CoreU extends JavaPlugin implements ResourcePackablePlugin{
         PacketHandler.initialize();
 
         SerializableDataManager.loadConfig();
-        this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
-            public void run() {
-                InitializationProcess.start();
+        this.getServer().getScheduler().scheduleSyncDelayedTask(this, () -> {
+            InitializationProcess.start();
+
+            Error rpError = rpHost.compileResourcepack();
+            if (rpError != null){
+                new Error("can not compile rp").at(rpError).logError();
+                return;
+            }
+
+            Error startError = rpHost.start();
+            if (startError != null) {
+                new Error("can not start server").at(startError).logError();
             }
         });
-
-        rpHost = new RpHost();
-        Error error = rpHost.start();
-        if (error != null) {
-            new Error("can not start server").at(error).logError();
-        }
     }
 
     @Override

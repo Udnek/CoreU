@@ -18,6 +18,7 @@ import java.nio.file.Path
 class RpMerger {
 
     private val allFiles: MutableMap<RpPath, MutableList<RpFile>> = HashMap()
+    private val mergedFiles: MutableList<RpFile> = ArrayList()
 
 
     fun collectFiles(): Error? {
@@ -62,6 +63,17 @@ class RpMerger {
 //        addFiles(event.files)
 
         LogUtils.coreuLog("collected files: ${allFiles.size}")
+        mergeFiles()
+        LogUtils.coreuLog("files after merging: ${mergedFiles.size}")
+        return null
+    }
+
+    private fun mergeFiles(): Error? {
+        for ((path, files) in allFiles) {
+            val (chosen, error) = chooseFile(path, files)
+            if (error != null) return error
+            mergedFiles.add(chosen!!)
+        }
         return null
     }
 
@@ -78,10 +90,8 @@ class RpMerger {
     }
 
     fun extractTo(extractPath: Path): Error? {
-        for ((path, files) in allFiles) {
-            val (file, error) = chooseFile(path, files)
-            if (error != null) return error
-            val extractError = file!!.extractTo(extractPath)
+        for (file in mergedFiles) {
+            val extractError = file.extractTo(extractPath)
             if (extractError != null) return extractError
         }
         return null

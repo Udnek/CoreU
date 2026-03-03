@@ -12,7 +12,6 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
 import java.util.*
 import java.util.zip.CRC32
 import java.util.zip.ZipEntry
@@ -138,7 +137,7 @@ object RpHostUtils {
         }
 
         properties.setProperty("resource-pack", "http://" + rpInfo.ip + ":" + rpInfo.port + "/1")
-        properties.setProperty("resource-pack-sha1", rpInfo.checksum_zip)
+        properties.setProperty("resource-pack-sha1", rpInfo.checksumZip)
 
         FileOutputStream("server.properties").use { stream ->
             properties.store(stream, "")

@@ -37,16 +37,15 @@ object RpUtils {
         val uri = clazz.classLoader.getResource(dir)?.toURI()
             ?: return Error("uri from path is null: $dir")
 
-        return wrapThrowable {
-            FileSystems.newFileSystem(uri, emptyMap<String, Any>()).use { fs ->
-                val jarPath = fs.getPath(dir)
-                Files.walk(jarPath).use { stream ->
-                    stream
-                        .filter { p -> p.isRegularFile() }
-                        .forEach { p -> consumer.accept(p) }
-                }
+        FileSystems.newFileSystem(uri, emptyMap<String, Any>()).use { fs ->
+            val jarPath = fs.getPath(dir)
+            Files.walk(jarPath).use { stream ->
+                stream
+                    .filter { p -> p.isRegularFile() }
+                    .forEach { p -> consumer.accept(p) }
             }
-        }.error
+        }
+        return null
     }
 
     fun mergeJsons(jsons: List<JsonObject>): JsonObject {
