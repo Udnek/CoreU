@@ -9,13 +9,13 @@ import me.udnek.coreu.custom.registry.CustomRegistries;
 import me.udnek.coreu.custom.registry.CustomRegistry;
 import me.udnek.coreu.custom.registry.Registrable;
 import me.udnek.coreu.custom.sound.CustomSound;
-import me.udnek.coreu.resourcepack.misc.RpFileType;
+import me.udnek.coreu.resourcepack.legacy.path.RpFileType;
 import me.udnek.coreu.resourcepack.ResourcePackablePlugin;
 import me.udnek.coreu.resourcepack.legacy.VirtualResourcePackLeg;
 import me.udnek.coreu.resourcepack.legacy.path.RpPath;
 import me.udnek.coreu.resourcepack.legacy.path.SamePathsContainer;
 import me.udnek.coreu.resourcepack.legacy.path.SortedPathsContainer;
-import me.udnek.coreu.resourcepack.legacy.path.VirtualRpJsonFile;
+import me.udnek.coreu.resourcepack.legacy.path.RpJsonFile;
 import me.udnek.coreu.util.LogUtils;
 import net.kyori.adventure.translation.Translatable;
 import org.bukkit.Bukkit;
@@ -61,11 +61,11 @@ import java.util.List;
         this.extractDirectory = extractDirectory;
         String error = checkExtractDirectoryAndError(extractDirectory);
         Preconditions.checkArgument(error == null, error);
-        LogUtils.pluginLog("ResourcePack merging started");
+        LogUtils.coreuLog("ResourcePack merging started");
         List<VirtualResourcePackLeg> resourcePacks = new ArrayList<>();
         for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
             if (!(plugin instanceof ResourcePackablePlugin resourcePackable)) continue;
-            LogUtils.pluginLog("Found resourcePackable plugin: " + plugin.getName());
+            LogUtils.coreuLog("Found resourcePackable plugin: " + plugin.getName());
             //resourcePacks.add(resourcePackable.getResourcePack());
         }
         resourcePacks.forEach(VirtualResourcePackLeg::initialize);
@@ -76,8 +76,8 @@ import java.util.List;
             files.addAll(resourcePack.getAllFoundFiles());
         }
 
-        LogUtils.pluginLog("AutoAdding...");
-        List<VirtualRpJsonFile> toAdd = new ArrayList<>();
+        LogUtils.coreuLog("AutoAdding...");
+        List<RpJsonFile> toAdd = new ArrayList<>();
         for (CustomItem item : CustomRegistries.ITEM.getAll()) {
             toAdd.addAll(item.getComponents().getOrDefault(CustomComponentType.AUTO_GENERATING_FILES_ITEM).getFiles(item));
         }
@@ -88,8 +88,8 @@ import java.util.List;
             for (Registrable registrable : registry.getAll()) {
                 if (!(registrable instanceof ComponentHolder<?> holder)) continue;
                 if (!(holder instanceof Translatable translatable)) continue;
-                for (VirtualRpJsonFile file : holder.getComponents().getOrDefault(CustomComponentType.TRANSLATABLE_THING).getFiles(translatable, registrable)) {
-                    LogUtils.pluginLog("TranslatableThing: " + file.getPath() + " " + file.getData());
+                for (RpJsonFile file : holder.getComponents().getOrDefault(CustomComponentType.TRANSLATABLE_THING).getFiles(translatable, registrable)) {
+                    LogUtils.coreuLog("TranslatableThing: " + file.getPath() + " " + file.get());
                     files.add(file);
                 }
             }
@@ -97,14 +97,14 @@ import java.util.List;
         ResourcepackInitializationEvent event = new ResourcepackInitializationEvent();
         event.callEvent();
         toAdd.addAll(event.getFiles());
-        for (VirtualRpJsonFile file : toAdd) {
+        for (RpJsonFile file : toAdd) {
             if (files.contains(file)) continue;
             files.add(file);
         }
-        for (VirtualRpJsonFile file : event.getForcedFiles()) {
+        for (RpJsonFile file : event.getForcedFiles()) {
             files.add(file);
         }
-        LogUtils.pluginLog("Finished AutoAdding");
+        LogUtils.coreuLog("Finished AutoAdding");
 
         files.forEach(container::add);
 
@@ -122,7 +122,7 @@ import java.util.List;
             copyFile(rpPath, rpPath);
         }
 
-        LogUtils.pluginLog("DONE!");
+        LogUtils.coreuLog("DONE!");
 
     }
 
@@ -135,7 +135,7 @@ import java.util.List;
         }
         for (RpPath rpPath : container.getAll()) {
             merger.add(newBufferedReader(rpPath));
-            LogUtils.pluginLog("Auto merging: " + rpPath);
+            LogUtils.coreuLog("Auto merging: " + rpPath);
         }
         merger.merge();
         RpPath rpPath = container.getExample();
@@ -145,13 +145,13 @@ import java.util.List;
     // TODO COMPLETELY REMOVE ???
     public void manualMergeCopy(SamePathsContainer container){
         if (extractFileExists(container.getExample())){
-            LogUtils.pluginLog("Manual file already exists: " + container.getExample());
+            LogUtils.coreuLog("Manual file already exists: " + container.getExample());
             return;
         }
         int mergeId = 0;
         for (RpPath rpPath : container.getAll()) {
             copyFile(rpPath, rpPath.withMergeId(mergeId));
-            LogUtils.pluginWarning("Should be manually merged: " + rpPath.withMergeId(mergeId));
+            LogUtils.coreuWarning("Should be manually merged: " + rpPath.withMergeId(mergeId));
             mergeId++;
         }
     }

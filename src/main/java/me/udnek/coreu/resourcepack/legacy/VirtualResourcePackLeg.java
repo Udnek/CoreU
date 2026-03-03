@@ -21,10 +21,10 @@ public class VirtualResourcePackLeg {
     }
 
     public void initialize(){
-        LogUtils.pluginLog("ResourcePack "+ plugin.getName() +" initialization started");
+        LogUtils.coreuLog("ResourcePack "+ plugin.getName() +" initialization started");
         RpPath rootPath = new RpPath(this, "");
         files = rootPath.findFiles();
-        LogUtils.pluginLog("ResourcePack "+ plugin.getName() +" initialization ended");
+        LogUtils.coreuLog("ResourcePack "+ plugin.getName() +" initialization ended");
     }
 
     public ResourcePackablePlugin getPlugin() {

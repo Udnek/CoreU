@@ -39,14 +39,14 @@ import java.util.List;
     }
 
     public void debug(){
-        LogUtils.pluginLog("Paths container:");
-        LogUtils.pluginLog("Total: " + all.size());
-        LogUtils.pluginLog("Same:");
+        LogUtils.coreuLog("Paths container:");
+        LogUtils.coreuLog("Total: " + all.size());
+        LogUtils.coreuLog("Same:");
         for (SamePathsContainer samePathsContainer : sames) {
             for (RpPath path : samePathsContainer.getAll()) {
-                LogUtils.pluginLog(path);
+                LogUtils.coreuLog(path);
             }
-            LogUtils.pluginLog("----------");
+            LogUtils.coreuLog("----------");
         }
     }
 

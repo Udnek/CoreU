@@ -2,7 +2,7 @@ plugins {
     `java-library`
     id("io.papermc.paperweight.userdev") version "2.0.0-beta.18"
     id("com.gradleup.shadow") version "9.3.0"
-    kotlin("jvm")
+    kotlin("jvm") version "2.2.0"
 }
 
 group = "me.udnek"

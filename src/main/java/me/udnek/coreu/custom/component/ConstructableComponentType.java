@@ -3,7 +3,7 @@ package me.udnek.coreu.custom.component;
 import me.udnek.coreu.custom.component.instance.TranslatableThing;
 import me.udnek.coreu.custom.registry.AbstractRegistrableComponentable;
 import me.udnek.coreu.custom.registry.Registrable;
-import me.udnek.coreu.resourcepack.legacy.path.VirtualRpJsonFile;
+import me.udnek.coreu.resourcepack.file.RpFile;
 import net.kyori.adventure.translation.Translatable;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +15,7 @@ import java.util.function.Supplier;
     // TRIES TO TRANSLATE DEFAULT COMPONENT
     public static final TranslatableThing DEFAULT_COMPONENT_TRANSLATOR = new TranslatableThing(null){
         @Override
-        public List<VirtualRpJsonFile> getFiles(Translatable translatable, Registrable registrable) {
+        public List<? extends RpFile> getFiles(Translatable translatable, Registrable registrable) {
             if (registrable instanceof CustomComponentType<?,?> componentType){
                 if (componentType.getDefault() instanceof Translatable defaultComponent){
                     if (defaultComponent instanceof ComponentHolder<?> defaultComponent_holder){

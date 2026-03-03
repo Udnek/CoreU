@@ -9,7 +9,8 @@ import me.udnek.coreu.custom.registry.Registrable;
 import me.udnek.coreu.custom.sound.CustomSound;
 import org.jetbrains.annotations.NotNull;
 
-@org.jspecify.annotations.NullMarked public  interface CustomComponentType<HolderType, Component extends CustomComponent<HolderType>> extends Registrable{
+@org.jspecify.annotations.NullMarked
+public interface CustomComponentType<HolderType, Component extends CustomComponent<HolderType>> extends Registrable{
 
     CustomComponentType<Object, TranslatableThing>
             TRANSLATABLE_THING = register(new ConstructableComponentType<>("translatable_thing", TranslatableThing.DEFAULT));

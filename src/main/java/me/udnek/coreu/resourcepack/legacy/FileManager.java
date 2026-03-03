@@ -1,7 +1,7 @@
 package me.udnek.coreu.resourcepack.legacy;
 
 import com.google.common.base.Preconditions;
-import me.udnek.coreu.resourcepack.misc.RpFileType;
+import me.udnek.coreu.resourcepack.legacy.path.RpFileType;
 import org.jspecify.annotations.Nullable;
 
 import java.io.File;

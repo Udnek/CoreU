@@ -8,15 +8,16 @@ import org.jetbrains.annotations.Nullable;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-@org.jspecify.annotations.NullMarked public class VirtualRpJsonFile extends RpPath{
+@Deprecated
+@org.jspecify.annotations.NullMarked public class RpJsonFile extends RpPath{
 
     protected JsonElement data;
 
-    public VirtualRpJsonFile(@Nullable VirtualResourcePackLeg resourcePack, JsonElement data, String path) {
+    public RpJsonFile(@Nullable VirtualResourcePackLeg resourcePack, JsonElement data, String path) {
         super(resourcePack, path);
         this.data = data;
     }
-    public VirtualRpJsonFile(JsonElement data, String path){
+    public RpJsonFile(JsonElement data, String path){
         this(null, data, path);
     }
 
