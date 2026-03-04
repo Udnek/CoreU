@@ -62,9 +62,12 @@ class RpMerger {
 //        event.callEvent()
 //        addFiles(event.files)
 
-        LogUtils.coreuLog("collected files: ${allFiles.size}")
+        var collectedFiles = 0
+        allFiles.forEach { (_, files) -> collectedFiles += files.size }
+
+        LogUtils.coreuLog("Collected files: $collectedFiles")
         mergeFiles()
-        LogUtils.coreuLog("files after merging: ${mergedFiles.size}")
+        LogUtils.coreuLog("Files after merging: ${mergedFiles.size}")
         return null
     }
 

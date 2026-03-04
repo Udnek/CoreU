@@ -22,12 +22,16 @@ import me.udnek.coreu.nms.PacketHandler;
 import me.udnek.coreu.resourcepack.ResourcePackablePlugin;
 import me.udnek.coreu.resourcepack.host.RpHost;
 import me.udnek.coreu.resourcepack.misc.Error;
+import me.udnek.coreu.resourcepack.misc.RpUtils;
 import me.udnek.coreu.rpgu.attribute.RPGUAttributes;
 import me.udnek.coreu.rpgu.component.RPGUComponents;
 import me.udnek.coreu.rpgu.component.ability.property.type.AttributeBasedPropertyType;
 import me.udnek.coreu.serializabledata.SerializableDataManager;
 import me.udnek.coreu.util.LogUtils;
 import net.kyori.adventure.key.Key;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -79,7 +83,7 @@ public final class CoreU extends JavaPlugin implements ResourcePackablePlugin{
         this.getServer().getScheduler().scheduleSyncDelayedTask(this, () -> {
             InitializationProcess.start();
 
-            Error rpError = rpHost.compileResourcepack();
+            Error rpError = RpUtils.compileResourcepack(true, true);
             if (rpError != null){
                 new Error("can not compile rp").at(rpError).logError();
                 return;

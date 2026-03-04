@@ -73,7 +73,7 @@ public class ResourcePackCommandLeg implements BasicCommand{
         }
 
         SerializableDataManager.write(info, CoreU.getInstance());
-        RpHostUtils.updateServerProperties();
+//        RpHostUtils.updateServerProperties();
 
         LogUtils.coreuWarning("If your sound does not play, remove '<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>' in plugin's pom!");
     }

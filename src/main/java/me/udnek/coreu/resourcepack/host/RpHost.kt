@@ -36,40 +36,11 @@ class RpHost : HttpHandler {
         fun getZipFilePath(): Path = CoreU.getInstance().getDataPath().resolve("$RP_ROOT_AND_NAME.zip")
     }
 
-    fun compileResourcepack(): Error? {
-        val folderPath = getFolderPath()
-        Files.createDirectories(folderPath)
-        FileUtils.cleanDirectory(folderPath.toFile())
-
-        val merger = RpMerger()
-        merger.collectFiles()
-        merger.extractTo(folderPath)
-
-        val (checksum, error) = RpHostUtils.calculateFolderSHA(folderPath)
-        if (error != null) return error
-
-        val zipFilePath = getZipFilePath()
-        val info = SerializableDataManager.read(RpInfo(), CoreU.getInstance())
-        if (checksum != info.checksumFolder || !zipFilePath.exists()) {
-            val zipError = RpHostUtils.zipFolder(folderPath, zipFilePath)
-            if (zipError != null) return zipError;
-            val (zipSha, error) = RpHostUtils.calculateZipFolderSHA(zipFilePath.toFile())
-            if (error != null) return error
-            info.checksumZip = zipSha!!
-        }
-        info.checksumFolder = checksum
-
-        RpHostUtils.updateServerProperties(info)
-        SerializableDataManager.write(info, CoreU.getInstance())
-        return null
-    }
-
     fun start(): Error? {
         if (!Files.exists(getZipFilePath())){
             return Error("resourcepack was not generated")
         }
         val rpInfo = SerializableDataManager.read(RpInfo(), CoreU.getInstance())
-        RpHostUtils.updateServerProperties(rpInfo)
 
         val (server, error) = RpUtils.wrapThrowable { HttpServer.create(InetSocketAddress("0.0.0.0", rpInfo.port), 0) }
         if (error != null) return error

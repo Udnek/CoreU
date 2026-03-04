@@ -7,6 +7,12 @@ import me.udnek.coreu.resourcepack.misc.RpUtils
 import me.udnek.coreu.resourcepack.misc.ValueOrError
 import me.udnek.coreu.resourcepack.misc.at
 import me.udnek.coreu.serializabledata.SerializableDataManager
+import me.udnek.coreu.util.LogUtils
+import me.udnek.coreu.util.Reflex
+import net.minecraft.server.MinecraftServer
+import net.minecraft.server.dedicated.DedicatedServerProperties
+import org.bukkit.Bukkit
+import org.bukkit.craftbukkit.CraftServer
 import java.io.*
 import java.nio.file.Files
 import java.nio.file.Path
@@ -16,6 +22,7 @@ import java.util.*
 import java.util.zip.CRC32
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
+import kotlin.jvm.optionals.getOrNull
 
 object RpHostUtils {
 
@@ -134,11 +141,22 @@ object RpHostUtils {
             properties.load(stream)
         }
 
-        properties.setProperty("resource-pack", "http://" + rpInfo.ip + ":" + rpInfo.port + "/1")
-        properties.setProperty("resource-pack-sha1", rpInfo.checksumZip)
+        val url = "http://" + rpInfo.ip + ":" + rpInfo.port + "/1"
+        val sha1 = rpInfo.checksumZip
+
+        properties.setProperty("resource-pack", url)
+        properties.setProperty("resource-pack-sha1", sha1)
 
         FileOutputStream("server.properties").use { stream ->
             properties.store(stream, "")
         }
+
+        // NMS
+        val serverProperties: DedicatedServerProperties = (Bukkit.getServer() as CraftServer).server.properties
+        val nmsRpInfo: MinecraftServer.ServerResourcePackInfo = serverProperties.serverResourcePackInfo.getOrNull() ?: return
+        Reflex.setRecordFieldValue(nmsRpInfo, "url", url)
+        Reflex.setRecordFieldValue(nmsRpInfo, "hash", sha1)
+        // END OF NMS
+        LogUtils.coreuLog("Successfully modified loaded server properties")
     }
 }

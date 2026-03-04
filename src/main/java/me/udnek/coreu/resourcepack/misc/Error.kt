@@ -14,7 +14,7 @@ class Error(val message: String) {
     }
 
     override fun toString(): String {
-        return "error: $message"
+        return "Error: $message"
     }
 
     fun logError(){

@@ -1,10 +1,20 @@
 package me.udnek.coreu.resourcepack.misc
 
 import com.google.gson.JsonObject
+import me.udnek.coreu.CoreU
+import me.udnek.coreu.resourcepack.RpMerger
+import me.udnek.coreu.resourcepack.host.RpHost
+import me.udnek.coreu.resourcepack.host.RpHostUtils
+import me.udnek.coreu.serializabledata.SerializableDataManager
+import me.udnek.coreu.util.LogUtils
+import org.apache.commons.io.FileUtils
 import java.nio.file.FileSystems
 import java.nio.file.Files
 import java.nio.file.Path
+import java.time.Duration.between
+import java.time.Instant
 import java.util.function.Consumer
+import kotlin.io.path.createDirectories
 import kotlin.io.path.exists
 import kotlin.io.path.isDirectory
 import kotlin.io.path.isRegularFile
@@ -21,6 +31,59 @@ object RpUtils {
         } catch(e: Exception){
             return onError(e)
         }
+    }
+
+    @JvmStatic
+    fun compileResourcepack(compileServerRp: Boolean, compileLocalAdminRp: Boolean): Error?{
+        if (!compileServerRp && !compileLocalAdminRp) return null
+        val start = Instant.now()
+
+        val info = SerializableDataManager.read(RpInfo(), CoreU.getInstance())
+        val extractPaths = ArrayList<Path>(2)
+        if (compileLocalAdminRp){
+            val (adminPath, error) = checkCorrectExtractDirectory(info.extractDirectory)
+            if (error != null) return Error("can not compile admin rp").at(error)
+
+            extractPaths.add(adminPath!!)
+        }
+
+        if (compileServerRp){
+            val serverRpPath = RpHost.getFolderPath()
+            serverRpPath.createDirectories() // so cleanDirectories won't error
+            FileUtils.cleanDirectory(serverRpPath.toFile())
+
+            extractPaths.add(serverRpPath)
+        }
+
+        val merger = RpMerger()
+        merger.collectFiles()
+        for (path in extractPaths) {
+            val mergeError = merger.extractTo(path)
+            if (mergeError != null) return mergeError
+        }
+
+        if (compileServerRp) {
+            val serverRpPath = RpHost.getFolderPath()
+            val (checksum, checksumError) = RpHostUtils.calculateFolderSHA(serverRpPath)
+            if (checksumError != null) return checksumError
+
+            val zipFilePath = RpHost.getZipFilePath()
+            if (checksum != info.checksumFolder || !zipFilePath.exists()) {
+                val zipError = RpHostUtils.zipFolder(serverRpPath, zipFilePath)
+                if (zipError != null) return zipError
+                val (zipSha, zipShaError) = RpHostUtils.calculateZipFolderSHA(zipFilePath.toFile())
+                if (zipShaError != null) return zipShaError
+                info.checksumZip = zipSha!!
+            }
+            info.checksumFolder = checksum
+
+            RpHostUtils.updateServerProperties(info)
+        }
+
+        SerializableDataManager.write(info, CoreU.getInstance())
+
+        LogUtils.coreuLog("ResourcePack extracted! (${between(start, Instant.now()).toMillis()}ms)")
+        return null
     }
 
     fun checkCorrectExtractDirectory(dir: String?): ValueOrError<Path> {
