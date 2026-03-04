@@ -16,6 +16,7 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
+import kotlin.io.path.exists
 
 
 class RpHost : HttpHandler {
@@ -36,7 +37,6 @@ class RpHost : HttpHandler {
     }
 
     fun compileResourcepack(): Error? {
-
         val folderPath = getFolderPath()
         Files.createDirectories(folderPath)
         FileUtils.cleanDirectory(folderPath.toFile())
@@ -50,16 +50,17 @@ class RpHost : HttpHandler {
 
         val zipFilePath = getZipFilePath()
         val info = SerializableDataManager.read(RpInfo(), CoreU.getInstance())
-        if (checksum != info.checksumFolder || !zipFilePath.toFile().exists()) {
-            RpHostUtils.zipFolder(folderPath, zipFilePath)
+        if (checksum != info.checksumFolder || !zipFilePath.exists()) {
+            val zipError = RpHostUtils.zipFolder(folderPath, zipFilePath)
+            if (zipError != null) return zipError;
             val (zipSha, error) = RpHostUtils.calculateZipFolderSHA(zipFilePath.toFile())
             if (error != null) return error
             info.checksumZip = zipSha!!
         }
         info.checksumFolder = checksum
 
+        RpHostUtils.updateServerProperties(info)
         SerializableDataManager.write(info, CoreU.getInstance())
-        RpHostUtils.updateServerProperties()
         return null
     }
 
@@ -67,9 +68,9 @@ class RpHost : HttpHandler {
         if (!Files.exists(getZipFilePath())){
             return Error("resourcepack was not generated")
         }
-        RpHostUtils.updateServerProperties()
-
         val rpInfo = SerializableDataManager.read(RpInfo(), CoreU.getInstance())
+        RpHostUtils.updateServerProperties(rpInfo)
+
         val (server, error) = RpUtils.wrapThrowable { HttpServer.create(InetSocketAddress("0.0.0.0", rpInfo.port), 0) }
         if (error != null) return error
         server!!

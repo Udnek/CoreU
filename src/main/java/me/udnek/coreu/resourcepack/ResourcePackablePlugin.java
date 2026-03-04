@@ -8,7 +8,6 @@ public interface ResourcePackablePlugin extends Plugin {
     @Deprecated
     default VirtualResourcePack getResourcePack(){
         return new VirtualResourcePack(this);
-
     }
 
     Priority getPriority();

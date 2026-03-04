@@ -128,9 +128,7 @@ object RpHostUtils {
     }
 
     @JvmStatic
-    fun updateServerProperties() {
-        val rpInfo = SerializableDataManager.read(RpInfo(), CoreU.getInstance())
-
+    fun updateServerProperties(rpInfo: RpInfo) {
         val properties = Properties()
         FileInputStream("server.properties").use { stream ->
             properties.load(stream)
