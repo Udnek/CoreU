@@ -11,7 +11,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked public class LogUtils{
+@org.jspecify.annotations.NullMarked
+public class LogUtils{
     public static void log(@Nullable Object message) {log(Component.text(String.valueOf(message)));}
     public static void log(@Nullable Object message, @Nullable TextColor color){ log(Component.text(String.valueOf(message)).color(color));}
     public static void log(@Nullable Component message){ Bukkit.getConsoleSender().sendMessage(message);}
