@@ -13,10 +13,7 @@ import java.nio.file.StandardCopyOption
 class RpJsonFile(val plugin: ResourcePackablePlugin?, val path: RpPath, val json: JsonObject) : RpFile {
 
     constructor(path: RpPath, json: JsonObject): this(null, path, json)
-    constructor(path: String, json: JsonObject): this(null, RpPath.fromRpRelative(path), json)
-
-    @Deprecated("old manner")
-    constructor(json: JsonObject, path: RpPath): this(null, path, json)
+    constructor(path: String, json: JsonObject): this(RpPath.fromRpRelative(path), json)
 
     override fun extractTo(extractPath: Path): Error? {
         return RpUtils.wrapThrowable {
