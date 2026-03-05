@@ -674,7 +674,7 @@ public class Nms {
         NmsUtils.sendPacket(observer, new ClientboundRemoveEntitiesPacket(new IntImmutableList(idNmsEntities)));
     }
 
-    public String (Entity entity) {
+    public String serializeEntity(Entity entity) {
         net.minecraft.world.entity.Entity nmsEntity = NmsUtils.toNmsEntity(entity);
         TagValueOutput tagValueOutput = TagValueOutput.createWithoutContext(ProblemReporter.DISCARDING);
         nmsEntity.save(tagValueOutput);
