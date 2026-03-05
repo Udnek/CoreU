@@ -12,15 +12,17 @@ import me.udnek.coreu.nms.loot.LootContextBuilder;
 import me.udnek.coreu.nms.loot.entry.EntryWrapper;
 import me.udnek.coreu.nms.loot.entry.NmsCustomEntry;
 import me.udnek.coreu.nms.loot.pool.PoolWrapper;
-import me.udnek.coreu.nms.loot.table.LootTableWrapperImpl;
 import me.udnek.coreu.nms.loot.table.LootTableWrapper;
+import me.udnek.coreu.nms.loot.table.LootTableWrapperImpl;
 import me.udnek.coreu.nms.loot.util.LootInfo;
 import me.udnek.coreu.nms.structure.StructureWrapper;
 import me.udnek.coreu.util.LogUtils;
 import me.udnek.coreu.util.Reflex;
 import net.kyori.adventure.key.Key;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.core.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
@@ -88,7 +90,6 @@ import org.bukkit.craftbukkit.entity.CraftMob;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.map.CraftMapCursor;
 import org.bukkit.craftbukkit.util.CraftLocation;
-import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.craftbukkit.util.CraftVector;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -111,6 +112,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+@SuppressWarnings("unused")
 @NullMarked
 public class Nms {
 
@@ -144,7 +146,7 @@ public class Nms {
     // DIALOGS
     ///////////////////////////////////////////////////////////////////////////
 
-    public void addDialogToQuickActions(NamespacedKey key, Dialog dialog){
+    public void addDialogToQuickActions(Key key, Dialog dialog){
         net.minecraft.server.dialog.Dialog nmsDialog = PaperDialog.bukkitToMinecraftHolder(dialog).value();
         NmsUtils.registerInRegistry(Registries.DIALOG, nmsDialog, key);
         NmsUtils.addValueToTag(Registries.DIALOG, DialogTags.QUICK_ACTIONS, nmsDialog);
@@ -347,34 +349,6 @@ public class Nms {
                 });
             }
         }
-
-//        List<LootPoolEntryContainer> toReplace = new ArrayList<>();
-//        for (LootPoolSingletonContainer container : NmsUtils.getAllSingletonContainers(lootTable)) {
-//            LootPoolEntry entry = NmsUtils.getEntry(container);
-//            AtomicBoolean contains = new AtomicBoolean(false);
-//            NmsUtils.getPossibleLoot(entry, itemStack -> {
-//                if (predicate.test(NmsUtils.toBukkitItemStack(itemStack))) {
-//                    contains.set(true);
-//                }
-//            });
-//            if (contains.get()) toReplace.add(container);
-//        }
-//        for (LootPool pool : NmsUtils.getPools(lootTable)) {
-//            List<LootPoolEntryContainer> newContainers = new ArrayList<>();
-//            boolean changed = false;
-//            for (LootPoolEntryContainer container : NmsUtils.getEntries(pool)) {
-//                if (toReplace.contains(container)){
-//                    changed = true;
-//                    if (newEntry != null) newContainers.add(newEntry.build());
-//                } else {
-//                    newContainers.add(container);
-//                }
-//            }
-//            if (changed){
-//                //LogUtils.pluginLog("Changed loot entry container from: " + lootTable.craftLootTable.getKey());
-//                Reflex.setFieldValue(pool, NmsFields.ENTRIES, newContainers);
-//            }
-//        }
     }
 
     public List<String> getRegisteredLootTableIds(){
@@ -394,8 +368,8 @@ public class Nms {
         return lootTables;
     }
 
-    public @Nullable org.bukkit.loot.LootTable getLootTable(NamespacedKey id){
-        Identifier resourceLocation = CraftNamespacedKey.toMinecraft(id);
+    public @Nullable org.bukkit.loot.LootTable getLootTable(Key id){
+        Identifier resourceLocation = NmsUtils.toNms(id);
         ResourceKey<LootTable> key = ResourceKey.create(Registries.LOOT_TABLE, resourceLocation);
         LootTable lootTable = NmsUtils.getLootTable(key);
         if (lootTable == null) return null;
@@ -445,8 +419,8 @@ public class Nms {
     }
 
     @SuppressWarnings("ConstantValue")
-    public void getAllPossibleLootTablesInStructure(NamespacedKey structureId, Consumer<org.bukkit.loot.LootTable> bukkitLootTables){
-        Structure structure = NmsUtils.getRegistry(Registries.STRUCTURE).getOptional(CraftNamespacedKey.toMinecraft(structureId)).orElse(null);
+    public void getAllPossibleLootTablesInStructure(Key structureId, Consumer<org.bukkit.loot.LootTable> bukkitLootTables){
+        Structure structure = NmsUtils.getRegistry(Registries.STRUCTURE).getOptional(NmsUtils.toNms(structureId)).orElse(null);
         if (structure == null) return;
         NmsStructureProceeder proceeder = new NmsStructureProceeder(structureId, structure);
         proceeder.extractAllTemplates();

@@ -36,6 +36,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Stream;
 
+@SuppressWarnings("CallToPrintStackTrace")
 @org.jspecify.annotations.NullMarked
 public class Bootstrap implements PluginBootstrap{
 
@@ -68,6 +69,7 @@ public class Bootstrap implements PluginBootstrap{
             Path pluginsPath = PluginInitializerManager.instance().pluginDirectoryPath().toAbsolutePath();
             Path extractPath = pluginsPath.resolve("CoreU/extracted_datapacks");
 
+            //noinspection ConstantValue
             if (Bukkit.getServer() == null){
                 // EXTRACTING
                 try {
