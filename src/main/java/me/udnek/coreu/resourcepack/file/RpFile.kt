@@ -12,7 +12,7 @@ interface RpFile {
 
     fun path(): RpPath
 
-    fun plugin(): ResourcePackablePlugin?
+    fun priority(): ResourcePackablePlugin.Priority
 
     fun isSamePath(other: RpFile): Boolean {
         return path().isSame(other.path())

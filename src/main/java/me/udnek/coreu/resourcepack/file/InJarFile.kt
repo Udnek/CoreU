@@ -42,7 +42,7 @@ class InJarFile(val plugin: ResourcePackablePlugin, val path: RpPath) : RpFile {
         }
         if (error != null) return ValueOrError.failure("can not parse json" at error)
         val json = (jsonElement as? JsonObject) ?: return ValueOrError.failure("json is null: $path")
-        return ValueOrError.success(RpJsonFile(plugin(), path(), json))
+        return ValueOrError.success(RpJsonFile(priority(), path(), json))
     }
 
     override fun toString(): String {
@@ -50,5 +50,5 @@ class InJarFile(val plugin: ResourcePackablePlugin, val path: RpPath) : RpFile {
     }
 
     override fun path(): RpPath = path
-    override fun plugin(): ResourcePackablePlugin = plugin
+    override fun priority(): ResourcePackablePlugin.Priority = plugin.priority
 }

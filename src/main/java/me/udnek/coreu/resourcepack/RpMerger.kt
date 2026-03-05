@@ -117,16 +117,16 @@ class RpMerger {
                 jsons.add(jsonFile.json)
             }
             val mergedJson = RpUtils.mergeJsons(jsons)
-            return ValueOrError.success(RpJsonFile(files[0].plugin(), path, mergedJson))
+            return ValueOrError.success(RpJsonFile(this, path, mergedJson))
         }
 
         // by priority
         files.sortWith { a, b ->
-            Integer.compare(a.plugin()?.priority?.value ?: 99, b.plugin()?.priority?.value ?: 99)
+            (a.priority().value).compareTo(b.priority().value)
         }
         LogUtils.coreuLog("Sames: ${path}")
         for ((i, file) in files.withIndex()) {
-            var str = "\t${file}: (priority: ${file.plugin()?.priority ?: 99})"
+            var str = "\t${file}: (priority: ${file.priority()})"
             if (i == 0) str = "+ $str"
             LogUtils.coreuLog(str)
         }

@@ -69,12 +69,12 @@ public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem>{
         public List<RpJsonFile> getModelsFiles(Key itemModel){
             List<RpJsonFile> files = new ArrayList<>();
             for (Pair<Key, JsonObject> keyAndModel : getModels(itemModel)) {
-                files.add(new RpJsonFile(getModelPath(keyAndModel.getLeft()), keyAndModel.getRight()));
+                files.add(new RpJsonFile(this, getModelPath(keyAndModel.getLeft()), keyAndModel.getRight()));
             }
             return files;
         }
         public RpJsonFile getDefinitionFile(Key itemModel){
-            return new RpJsonFile(getDefinitionPath(itemModel), getDefinition(itemModel));
+            return new RpJsonFile(this, getDefinitionPath(itemModel), getDefinition(itemModel));
         }
         public String replacePlaceHolders(String data, Key itemModel){
             return data

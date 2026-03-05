@@ -5,17 +5,13 @@ import org.bukkit.plugin.Plugin;
 @org.jspecify.annotations.NullMarked
 public interface ResourcePackablePlugin extends Plugin {
 
-    @Deprecated
-    default VirtualResourcePack getResourcePack(){
-        return new VirtualResourcePack(this);
-    }
-
     Priority getPriority();
 
     enum Priority {
-        MAIN(2),
+        MAIN(0),
         BASE(1),
-        TECHNICAL(0);
+        TECHNICAL(2),
+        RUNTIME(3);
 
         public final int value;
 

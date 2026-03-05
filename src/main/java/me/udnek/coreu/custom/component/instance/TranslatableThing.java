@@ -62,7 +62,7 @@ import java.util.*;
                 if (trans == null) continue;
                 json.add(translatable.translationKey() + "." + entry.getKey(), new JsonPrimitive(trans));
             }
-            files.add(new RpJsonFile("assets/"+registrable.key().namespace()+"/lang/"+lang+".json", json));
+            files.add(new RpJsonFile(this, "assets/"+registrable.key().namespace()+"/lang/"+lang+".json", json));
         }
         return files;
     }

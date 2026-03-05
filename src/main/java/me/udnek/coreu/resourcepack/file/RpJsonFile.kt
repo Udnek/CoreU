@@ -10,10 +10,15 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
 
-class RpJsonFile(val plugin: ResourcePackablePlugin?, val path: RpPath, val json: JsonObject) : RpFile {
+class RpJsonFile private constructor(val sourceObject: Any, val priority: ResourcePackablePlugin.Priority, val path: RpPath, val json: JsonObject) : RpFile {
 
-    constructor(path: RpPath, json: JsonObject): this(null, path, json)
-    constructor(path: String, json: JsonObject): this(RpPath.fromRpRelative(path), json)
+    constructor(sourceObject: Any, path: RpPath, json: JsonObject):
+            this(sourceObject,
+        (sourceObject as? ResourcePackablePlugin)?.priority ?: ResourcePackablePlugin.Priority.RUNTIME,
+        path, json){
+
+    }
+    constructor(sourceObject: Any, path: String, json: JsonObject): this(sourceObject, RpPath.fromRpRelative(path), json)
 
     override fun extractTo(extractPath: Path): Error? {
         return RpUtils.wrapThrowable {
@@ -25,7 +30,11 @@ class RpJsonFile(val plugin: ResourcePackablePlugin?, val path: RpPath, val json
         }.error
     }
 
+    override fun toString(): String {
+        return "RpJsonFile(source=${sourceObject}, path='$path')"
+    }
+
     override fun path(): RpPath = path
-    override fun plugin(): ResourcePackablePlugin? = plugin
+    override fun priority(): ResourcePackablePlugin.Priority = priority
     override fun asJson(): ValueOrError<RpJsonFile> = ValueOrError.success(this)
 }

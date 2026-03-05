@@ -422,7 +422,7 @@ public class Nms {
         for (ResourceKey<LootTable> lootTableKey : proceeder.extractLootTables()) {
             LootTable lootTable = NmsUtils.getLootTable(lootTableKey);
             if (lootTable == null || lootTable.craftLootTable == null){
-                LogUtils.coreuWarning("null lootTable: " + lootTableKey);
+                LogUtils.coreuWarning("Null lootTable during extraction: " + lootTableKey);
                 continue;
             }
             bukkitLootTables.accept(lootTable.craftLootTable);

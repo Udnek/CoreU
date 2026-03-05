@@ -16,7 +16,7 @@ import java.util.List;
 
     public List<? extends RpFile> getFiles(CustomSound unknowSound){
         if (!(unknowSound instanceof ConstructableCustomSound sound)) return List.of();
-        RpJsonFile file = new RpJsonFile("assets/" + sound.key().namespace() + "/sounds.json",
+        RpJsonFile file = new RpJsonFile(this,"assets/" + sound.key().namespace() + "/sounds.json",
                 JsonParser.parseString("""
                     {
                         "%id%": {
