@@ -33,34 +33,34 @@ class RpMerger {
             }
         }
 
-//        for (item in CustomRegistries.ITEM.getAll()) {
-//            addFiles(
-//                item.getComponents()
-//                    .getOrDefault(CustomComponentType.AUTO_GENERATING_FILES_ITEM)
-//                    .getFiles(item)
-//            )
-//        }
-//        for (sound in CustomRegistries.SOUND.getAll()) {
-//            addFiles(
-//                sound.getComponents()
-//                    .getOrDefault(CustomComponentType.AUTO_GENERATING_FILES_SOUND)
-//                    .getFiles(sound)
-//            )
-//        }
-//        for (registry in CustomRegistries.REGISTRY.getAll()) {
-//            for (registrable in registry.getAll()) {
-//                if (registrable !is ComponentHolder<*>) continue
-//                if (registrable !is Translatable) continue
-//                for (file in registrable.getComponents()
-//                    .getOrDefault(CustomComponentType.TRANSLATABLE_THING)
-//                    .getFiles(registrable, registrable)) {
-//                    addFile(file)
-//                }
-//            }
-//        }
-//        val event = ResourcepackInitializationEvent()
-//        event.callEvent()
-//        addFiles(event.files)
+        for (item in CustomRegistries.ITEM.getAll()) {
+            addFiles(
+                item.getComponents()
+                    .getOrDefault(CustomComponentType.AUTO_GENERATING_FILES_ITEM)
+                    .getFiles(item)
+            )
+        }
+        for (sound in CustomRegistries.SOUND.getAll()) {
+            addFiles(
+                sound.getComponents()
+                    .getOrDefault(CustomComponentType.AUTO_GENERATING_FILES_SOUND)
+                    .getFiles(sound)
+            )
+        }
+        for (registry in CustomRegistries.REGISTRY.getAll()) {
+            for (registrable in registry.getAll()) {
+                if (registrable !is ComponentHolder<*>) continue
+                if (registrable !is Translatable) continue
+                for (file in registrable.getComponents()
+                    .getOrDefault(CustomComponentType.TRANSLATABLE_THING)
+                    .getFiles(registrable, registrable)) {
+                    addFile(file)
+                }
+            }
+        }
+        val event = ResourcepackInitializationEvent()
+        event.callEvent()
+        addFiles(event.files)
 
         var collectedFiles = 0
         allFiles.forEach { (_, files) -> collectedFiles += files.size }
