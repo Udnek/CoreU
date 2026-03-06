@@ -2,7 +2,8 @@ package me.udnek.coreu.nms;
 
 import net.minecraft.world.level.biome.Biome;
 
-@org.jspecify.annotations.NullMarked public enum DownfallType{
+@org.jspecify.annotations.NullMarked
+public enum DownfallType{
     NONE,
     RAIN,
     SNOW;
