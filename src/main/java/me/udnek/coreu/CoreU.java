@@ -1,5 +1,7 @@
 package me.udnek.coreu;
 
+import io.papermc.paper.datacomponent.item.MapId;
+import io.papermc.paper.datacomponent.item.PaperMapItemColor;
 import me.udnek.coreu.custom.attribute.CustomAttribute;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockManager;
 import me.udnek.coreu.custom.entitylike.entity.CustomEntityManager;
@@ -31,8 +33,10 @@ import me.udnek.coreu.util.LogUtils;
 import net.kyori.adventure.key.Key;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.component.MapPostProcessing;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.map.MapRenderer;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.UnknownNullability;
