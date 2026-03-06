@@ -672,7 +672,8 @@ public class Nms {
             net.minecraft.world.entity.Entity entity = optionalEntity.get();
             return entity.getBukkitEntity();
         } catch (CommandSyntaxException e) {
-            throw new RuntimeException(e);
+            LogUtils.coreuError(e);
+            return null;
         }
     }
 
