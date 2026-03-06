@@ -17,7 +17,8 @@ import org.bukkit.NamespacedKey;
 import java.util.ArrayList;
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked public  interface AutoGeneratingFilesItem extends CustomComponent<CustomItem>{
+@org.jspecify.annotations.NullMarked
+public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem>{
 
     Generated GENERATED = new Generated();
     HandHeld HANDHELD = new HandHeld();

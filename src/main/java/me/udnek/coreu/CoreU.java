@@ -1,6 +1,7 @@
 package me.udnek.coreu;
 
-import com.sun.net.httpserver.HttpServer;
+import io.papermc.paper.datacomponent.item.MapId;
+import io.papermc.paper.datacomponent.item.PaperMapItemColor;
 import me.udnek.coreu.custom.attribute.CustomAttribute;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockManager;
 import me.udnek.coreu.custom.entitylike.entity.CustomEntityManager;
@@ -22,13 +23,20 @@ import me.udnek.coreu.mgu.MGUItems;
 import me.udnek.coreu.nms.PacketHandler;
 import me.udnek.coreu.resourcepack.ResourcePackablePlugin;
 import me.udnek.coreu.resourcepack.host.RpHost;
+import me.udnek.coreu.resourcepack.misc.Error;
+import me.udnek.coreu.resourcepack.misc.RpUtils;
 import me.udnek.coreu.rpgu.attribute.RPGUAttributes;
 import me.udnek.coreu.rpgu.component.RPGUComponents;
 import me.udnek.coreu.rpgu.component.ability.property.type.AttributeBasedPropertyType;
 import me.udnek.coreu.serializabledata.SerializableDataManager;
 import me.udnek.coreu.util.LogUtils;
 import net.kyori.adventure.key.Key;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.component.MapPostProcessing;
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.map.MapRenderer;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.UnknownNullability;
@@ -38,7 +46,7 @@ import org.jetbrains.annotations.UnknownNullability;
 public final class CoreU extends JavaPlugin implements ResourcePackablePlugin{
 
     private static @UnknownNullability Plugin instance;
-    private static @UnknownNullability HttpServer rpHost;
+    private static final RpHost rpHost = new RpHost();
 
     public static Plugin getInstance() {
         return instance;
@@ -76,20 +84,27 @@ public final class CoreU extends JavaPlugin implements ResourcePackablePlugin{
         PacketHandler.initialize();
 
         SerializableDataManager.loadConfig();
-        this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
-            public void run() {
-                InitializationProcess.start();
+        this.getServer().getScheduler().scheduleSyncDelayedTask(this, () -> {
+            InitializationProcess.start();
+
+            Error rpError = RpUtils.compileResourcepack(true, true);
+            if (rpError != null){
+                new Error("can not compile rp").at(rpError).logError();
+                return;
+            }
+
+            Error startError = rpHost.start();
+            if (startError != null) {
+                new Error("can not start server").at(startError).logError();
             }
         });
-
-        rpHost = new RpHost().start();
     }
 
     @Override
     public void onDisable() {
         PlayerEquipmentManager.getInstance().stop();
-        rpHost.stop(0);
-        LogUtils.pluginLog("Resourcepack host stopped");
+        rpHost.stop();
+        LogUtils.coreuLog("Resourcepack host stopped");
     }
 
     @Override

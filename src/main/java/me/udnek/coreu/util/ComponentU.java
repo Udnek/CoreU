@@ -7,11 +7,10 @@ import org.bukkit.NamespacedKey;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @org.jspecify.annotations.NullMarked public class ComponentU{
 
-    @Deprecated
-    public static final TextColor NO_SHADOW_COLOR = TextColor.fromHexString("#4e5c24");
     public static final Key SPACE_FONT = new NamespacedKey("space", "default");
 
     public static Component translatableWithInsertion(String key, Component ...insertion){

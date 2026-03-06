@@ -6,7 +6,9 @@ import sun.misc.Unsafe;
 
 import java.lang.reflect.*;
 
-@org.jspecify.annotations.NullMarked public class Reflex{
+@org.jspecify.annotations.NullMarked
+public class Reflex{
+
     public static Field getField(Class<?> source, String name) {
         try {
             return source.getDeclaredField(name);
@@ -15,11 +17,11 @@ import java.lang.reflect.*;
             Class<?> superClass = source.getSuperclass();
             if (superClass == null) {
                 if (source.getFields().length == 0){
-                    LogUtils.pluginLog("No fields found in class " + source.getName());
+                    LogUtils.coreuLog("No fields found in class " + source.getName());
                 } else {
-                    LogUtils.pluginLog("Available fields in class " + source.getName() + ":");
+                    LogUtils.coreuLog("Available fields in class " + source.getName() + ":");
                     for (Field field : source.getFields()) {
-                        LogUtils.pluginLog(field);
+                        LogUtils.coreuLog(field);
                     }
                 }
 
