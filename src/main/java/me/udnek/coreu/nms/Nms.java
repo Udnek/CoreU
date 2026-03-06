@@ -76,7 +76,9 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
 import org.bukkit.craftbukkit.CraftEquipmentSlot;
 import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.block.CraftBiome;
 import org.bukkit.craftbukkit.block.CraftBlock;
+import org.bukkit.craftbukkit.block.CraftBlockType;
 import org.bukkit.craftbukkit.block.data.CraftBlockData;
 import org.bukkit.craftbukkit.block.impl.CraftVault;
 import org.bukkit.craftbukkit.entity.CraftEntity;
@@ -232,7 +234,12 @@ public class Nms {
         );
         return standUpPosition.map(vec3 -> new Location(anchorLocation.getWorld(), vec3.x, vec3.y, vec3.z)).orElse(null);
     }
-    
+
+    public int getMapColor(Material block){
+        net.minecraft.world.level.block.Block nmsBlock = CraftBlockType.bukkitToMinecraft(block);
+        return nmsBlock.defaultMapColor().col;
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // USAGES
     ///////////////////////////////////////////////////////////////////////////
@@ -247,11 +254,11 @@ public class Nms {
     public record BlockPlaceResult(boolean isSuccess, @Nullable ItemStack resultingItem){
     }
 
-    public Nms.BlockPlaceResult placeBlockFromItem(Player player, @Nullable ItemStack itemStack, EquipmentSlot hand, Location hitPos, BlockFace blockFace, Block clicked){
+    public BlockPlaceResult placeBlockFromItem(Player player, @Nullable ItemStack itemStack, EquipmentSlot hand, Location hitPos, BlockFace blockFace, Block clicked){
         return placeBlockFromItem(player, itemStack, hand, hitPos, blockFace, clicked, false);
     }
 
-    public Nms.BlockPlaceResult placeBlockFromItem(Player player, @Nullable ItemStack itemStack, EquipmentSlot hand, Location hitPos, BlockFace blockFace, Block clicked, boolean isInside){
+    public BlockPlaceResult placeBlockFromItem(Player player, @Nullable ItemStack itemStack, EquipmentSlot hand, Location hitPos, BlockFace blockFace, Block clicked, boolean isInside){
         net.minecraft.world.item.ItemStack stack = NmsUtils.toNmsItemStack(itemStack);
         if (!(stack.getItem() instanceof BlockItem blockItem)) return new BlockPlaceResult(false, itemStack);
         InteractionHand interactionHand = switch (hand){
@@ -646,6 +653,10 @@ public class Nms {
     ///////////////////////////////////////////////////////////////////////////
     // BIOME
     ///////////////////////////////////////////////////////////////////////////
+
+    public BiomeWrapper getBiomeWrapper(org.bukkit.block.Biome biome) {
+        return new BiomeWrapper(((CraftBiome) biome).getHandle());
+    }
 
     public DownfallType getDownfallType(Location location){
         BlockPos blockPosition = CraftLocation.toBlockPosition(location);
