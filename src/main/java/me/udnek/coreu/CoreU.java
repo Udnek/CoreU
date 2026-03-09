@@ -19,6 +19,7 @@ import me.udnek.coreu.custom.registry.CustomRegistries;
 import me.udnek.coreu.custom.registry.CustomRegistry;
 import me.udnek.coreu.custom.registry.InitializationProcess;
 import me.udnek.coreu.mgu.MGUItems;
+import me.udnek.coreu.nms.Nms;
 import me.udnek.coreu.nms.PacketHandler;
 import me.udnek.coreu.resourcepack.ResourcePackablePlugin;
 import me.udnek.coreu.resourcepack.host.RpHost;
@@ -30,24 +31,30 @@ import me.udnek.coreu.rpgu.component.ability.property.type.AttributeBasedPropert
 import me.udnek.coreu.serializabledata.SerializableDataManager;
 import me.udnek.coreu.util.LogUtils;
 import net.kyori.adventure.key.Key;
+import net.kyori.adventure.text.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ItemFrameItem;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.item.component.MapPostProcessing;
+import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.saveddata.maps.MapId;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.block.Biome;
+import org.bukkit.craftbukkit.block.CraftBiome;
 import org.bukkit.map.MapCanvas;
 import org.bukkit.map.MapRenderer;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.UnknownNullability;
+import org.jspecify.annotations.NullMarked;
 
 @SuppressWarnings("unused")
-@org.jspecify.annotations.NullMarked
+@NullMarked
 public final class CoreU extends JavaPlugin implements ResourcePackablePlugin{
 
     private static @UnknownNullability Plugin instance;
@@ -103,6 +110,12 @@ public final class CoreU extends JavaPlugin implements ResourcePackablePlugin{
                 new Error("can not start server").at(startError).logError();
             }
         });
+
+        LogUtils.coreuLog("Started loading colormaps (fixes Mojang's empty colormaps)");
+        Nms.get().loadGrassColormap(this, "colormap/grass.png");
+        Nms.get().loadFoliageColormap(this, "colormap/foliage.png");
+        Nms.get().loadDryFoliageColormap(this, "colormap/dry_foliage.png");
+        LogUtils.coreuLog("Finished loading colormaps");
     }
 
     @Override

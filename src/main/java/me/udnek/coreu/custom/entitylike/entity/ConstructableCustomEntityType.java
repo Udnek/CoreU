@@ -1,29 +1,32 @@
 package me.udnek.coreu.custom.entitylike.entity;
 
-import me.udnek.coreu.custom.component.CustomComponentMap;
-import me.udnek.coreu.custom.registry.AbstractRegistrable;
+import me.udnek.coreu.custom.component.instance.MiddleClickableEntity;
+import me.udnek.coreu.custom.item.CustomItem;
+import me.udnek.coreu.custom.registry.AbstractRegistrableComponentable;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-@org.jspecify.annotations.NullMarked public abstract class ConstructableCustomEntityType<T extends Entity> extends AbstractRegistrable implements CustomEntityType{
-
-    private CustomComponentMap<CustomEntityType> components = null;
-
-    @Override
-    public CustomComponentMap<CustomEntityType> getComponents() {
-        if (components == null) components = new CustomComponentMap<>();
-        return components;
-    }
+@org.jspecify.annotations.NullMarked
+public abstract class ConstructableCustomEntityType<T extends Entity> extends AbstractRegistrableComponentable<CustomEntityType> implements CustomEntityType{
 
     public abstract EntityType getVanillaType();
 
+    @Override
+    public void initialize(Plugin plugin) {
+        super.initialize(plugin);
+        if (getSpawnEgg() != null) getComponents().set(new MiddleClickableEntity(getSpawnEgg()));
+    }
+
     @MustBeInvokedByOverriders
     protected @NotNull T spawnNewEntity(Location location){
+        //noinspection unchecked
         return (T) location.getWorld().spawnEntity(location, getVanillaType());
     }
 
@@ -35,4 +38,6 @@ import org.jetbrains.annotations.NotNull;
         CustomEntityManager.getInstance().loadAny(this, entity);
         return entity;
     }
+
+    abstract @Nullable CustomItem getSpawnEgg();
 }

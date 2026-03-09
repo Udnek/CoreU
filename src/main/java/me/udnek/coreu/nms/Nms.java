@@ -51,6 +51,9 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.DryFoliageColor;
+import net.minecraft.world.level.FoliageColor;
+import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
@@ -101,12 +104,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapCursor;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -680,6 +687,29 @@ public class Nms {
     ///////////////////////////////////////////////////////////////////////////
     // BIOME
     ///////////////////////////////////////////////////////////////////////////
+
+    // fixes mojang empty colormaps
+    public void loadGrassColormap(Plugin source, String path){
+        GrassColor.init(readColormap(source, path));
+    }
+    public void loadFoliageColormap(Plugin source, String path){
+        FoliageColor.init(readColormap(source, path));
+    }
+    public void loadDryFoliageColormap(Plugin source, String path){
+        DryFoliageColor.init(readColormap(source, path));
+    }
+
+    private int[] readColormap(Plugin source, String path){
+        try (var s = source.getClass().getClassLoader().getResourceAsStream(path)){
+            if (s == null) throw new RuntimeException("Can not load colormap: " +path + " (source: " + source +")");
+            BufferedImage image = ImageIO.read(s);
+            int[] rgb = new int[256*256];
+            image.getRGB(0, 0, image.getWidth(), image.getHeight(), rgb, 0, image.getWidth());
+            return rgb;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public BiomeWrapper getBiomeWrapper(org.bukkit.block.Biome biome) {
         return new BiomeWrapper(((CraftBiome) biome).getHandle());
