@@ -10,7 +10,6 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @org.jspecify.annotations.NullMarked
@@ -25,12 +24,12 @@ public abstract class ConstructableCustomEntityType<T extends Entity> extends Ab
     }
 
     @MustBeInvokedByOverriders
-    protected @NotNull T spawnNewEntity(Location location){
+    protected T spawnNewEntity(Location location){
         //noinspection unchecked
         return (T) location.getWorld().spawnEntity(location, getVanillaType());
     }
 
-    public final @NotNull T spawn(Location location) {
+    public final T spawn(Location location) {
         T entity = spawnNewEntity(location);
         PersistentDataContainer persistentDataContainer = entity.getPersistentDataContainer();
         persistentDataContainer.set(PDC_NAMESPACE, PersistentDataType.STRING, getId());
@@ -39,5 +38,5 @@ public abstract class ConstructableCustomEntityType<T extends Entity> extends Ab
         return entity;
     }
 
-    abstract @Nullable CustomItem getSpawnEgg();
+    protected abstract @Nullable CustomItem getSpawnEgg();
 }
