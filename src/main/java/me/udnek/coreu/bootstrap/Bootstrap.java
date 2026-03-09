@@ -84,15 +84,13 @@ public class Bootstrap implements PluginBootstrap{
                             File file = path.toFile();
                             if (!file.isFile()) continue;
                             if (!file.getName().endsWith(".jar")) continue;
-                            JarFile jarFile = new JarFile(file);
-                            if (jarFile.getEntry("datapacks") == null) continue;
-                            context.getLogger().info("found jar with datapacks: " + path);
-                            Path localExtractPath = extractPath.resolve(file.getName().replace(".jar", "/"));
-                            // System.out.println("localExtr: " + localExtractPath);
-                            try {
+                            try (JarFile jarFile = new JarFile(file)){
+                                if (jarFile.getEntry("datapacks") == null) continue;
+                                context.getLogger().info("found jar with datapacks: " + path);
+                                Path localExtractPath = extractPath.resolve(file.getName().replace(".jar", "/"));
                                 extractDatapack(localExtractPath, jarFile);
-                            } finally {
-                                jarFile.close();
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
                             }
                         }
                     }

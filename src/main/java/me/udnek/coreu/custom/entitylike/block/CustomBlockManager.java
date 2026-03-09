@@ -183,9 +183,9 @@ import java.util.Map;
 
     @EventHandler
     public void onMiddleClick(PlayerPickBlockEvent event){
-        CustomBlockType.consumeIfCustom(event.getBlock(),
-                type -> type.getComponents().getOrDefault(CustomComponentType.MIDDLE_CLICKABLE_BLOCK)
-                        .onMiddleClick(type, event));
+        CustomBlockType.consumeIfCustom(event.getBlock(), block -> {
+            block.getComponents().getOrDefault(CustomComponentType.MIDDLE_CLICKABLE_BLOCK).onMiddleClick(block, event);
+        });
     }
 
     @EventHandler

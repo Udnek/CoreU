@@ -3,6 +3,7 @@ package me.udnek.coreu.custom.component;
 import me.udnek.coreu.CoreU;
 import me.udnek.coreu.custom.component.instance.*;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockType;
+import me.udnek.coreu.custom.entitylike.entity.CustomEntityType;
 import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.custom.registry.CustomRegistries;
 import me.udnek.coreu.custom.registry.Registrable;
@@ -12,9 +13,15 @@ import org.jetbrains.annotations.NotNull;
 @org.jspecify.annotations.NullMarked
 public interface CustomComponentType<HolderType, Component extends CustomComponent<HolderType>> extends Registrable{
 
+    // OBJECT
     CustomComponentType<Object, TranslatableThing>
             TRANSLATABLE_THING = register(new ConstructableComponentType<>("translatable_thing", TranslatableThing.DEFAULT));
 
+    // ENTITY
+    CustomComponentType<CustomEntityType, MiddleClickableEntity>
+            MIDDLE_CLICKABLE_ENTITY = register(new ConstructableComponentType<>("middle_clickable_entity", MiddleClickableEntity.DEFAULT));
+
+    // ITEM
     CustomComponentType<CustomItem, CustomAttributedItem>
             CUSTOM_ATTRIBUTED_ITEM = register(new ConstructableComponentType<>("custom_attributed_item", CustomAttributedItem.EMPTY, CustomAttributedItem::new));
 
@@ -39,6 +46,7 @@ public interface CustomComponentType<HolderType, Component extends CustomCompone
     CustomComponentType<CustomItem, DispensableItem>
             DISPENSABLE_ITEM = register(new ConstructableComponentType<>("dispensable_item", DispensableItem.DEFAULT));
 
+    // BLOCK
     CustomComponentType<CustomBlockType, RightClickableBlock>
             RIGHT_CLICKABLE_BLOCK = register(new ConstructableComponentType<>("right_clickable_block", RightClickableBlock.EMPTY));
 
@@ -48,12 +56,12 @@ public interface CustomComponentType<HolderType, Component extends CustomCompone
     CustomComponentType<CustomBlockType, HopperInteractingBlock>
             HOPPER_INTERACTING_BLOCK = register(new ConstructableComponentType<>("hopper_interacting_block", HopperInteractingBlock.DENY));
 
+    // SOUND
     CustomComponentType<CustomSound, AutoGeneratingFilesSound>
             AUTO_GENERATING_FILES_SOUND = register(new ConstructableComponentType<>("auto_generating_files_sound", AutoGeneratingFilesSound.DEFAULT));
 
-
-    @NotNull Component getDefault();
-    @NotNull Component createNewDefault();
+    Component getDefault();
+    Component createNewDefault();
 
     private static <T extends CustomComponentType<?, ?>> T register(T type){
         return CustomRegistries.COMPONENT_TYPE.register(CoreU.getInstance(), type);
