@@ -2,6 +2,7 @@ package me.udnek.coreu.nms;
 
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import io.papermc.paper.dialog.Dialog;
@@ -26,6 +27,8 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.TagParser;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundCooldownPacket;
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
@@ -36,13 +39,12 @@ import net.minecraft.server.ReloadableServerRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.DialogTags;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.util.context.ContextKeySet;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.*;
@@ -66,6 +68,9 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -655,6 +660,28 @@ public class Nms {
         var idNmsEntities = new ArrayList<Integer>();
         entities.forEach(entity ->  idNmsEntities.add(NmsUtils.toNmsEntity(entity).getId()));
         NmsUtils.sendPacket(observer, new ClientboundRemoveEntitiesPacket(new IntImmutableList(idNmsEntities)));
+    }
+
+    public String serializeEntity(Entity entity) {
+        net.minecraft.world.entity.Entity nmsEntity = NmsUtils.toNmsEntity(entity);
+        TagValueOutput tagValueOutput = TagValueOutput.createWithoutContext(ProblemReporter.DISCARDING);
+        nmsEntity.save(tagValueOutput);
+        return tagValueOutput.buildResult().toString();
+    }
+
+    public @Nullable Entity deserializeEntity(String nbtString, World world) {
+        ServerLevel nmsWorld = NmsUtils.toNmsWorld(world);
+        try {
+            CompoundTag compoundTag = TagParser.parseCompoundFully(nbtString);
+            ValueInput valueInput = TagValueInput.createGlobal(ProblemReporter.DISCARDING, compoundTag);
+            Optional<net.minecraft.world.entity.Entity> optionalEntity = net.minecraft.world.entity.EntityType.create(valueInput, nmsWorld, EntitySpawnReason.COMMAND);
+            if (optionalEntity.isEmpty()) return null;
+            net.minecraft.world.entity.Entity entity = optionalEntity.get();
+            return entity.getBukkitEntity();
+        } catch (CommandSyntaxException e) {
+            LogUtils.coreuError(e);
+            return null;
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////

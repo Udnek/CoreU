@@ -71,5 +71,6 @@ public class LogUtils {
                 log(CoreU.getInstance(), message);
             }
         }
+
     }
 }
