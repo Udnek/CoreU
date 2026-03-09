@@ -74,6 +74,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.util.TriConsumer;
 import org.bukkit.*;
+import org.bukkit.Color;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
@@ -88,7 +89,9 @@ import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftEntityType;
 import org.bukkit.craftbukkit.entity.CraftMob;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.map.CraftMapCanvas;
 import org.bukkit.craftbukkit.map.CraftMapCursor;
+import org.bukkit.craftbukkit.map.CraftMapView;
 import org.bukkit.craftbukkit.util.CraftLocation;
 import org.bukkit.craftbukkit.util.CraftVector;
 import org.bukkit.enchantments.Enchantment;
@@ -99,6 +102,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapCursor;
+import org.bukkit.map.MapView;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
@@ -107,10 +111,12 @@ import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -576,6 +582,12 @@ public class Nms {
     ///////////////////////////////////////////////////////////////////////////
     // MISC
     ///////////////////////////////////////////////////////////////////////////
+
+    public void markCanvasToSave(MapView mapView){
+        CraftMapView craftMapView = (CraftMapView) mapView;
+        MapItemSavedData worldMap = Reflex.getFieldValue(craftMapView, "worldMap");
+        worldMap.setDirty(true);
+    }
 
     // TODO IMPLEMENT SHOW BLOCK
 //    public void showDebugBlock(@NotNull Location location, int color, int time, @NotNull String name){
