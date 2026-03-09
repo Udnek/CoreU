@@ -94,9 +94,7 @@ import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftEntityType;
 import org.bukkit.craftbukkit.entity.CraftMob;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.map.CraftMapCanvas;
 import org.bukkit.craftbukkit.map.CraftMapCursor;
-import org.bukkit.craftbukkit.map.CraftMapView;
 import org.bukkit.craftbukkit.util.CraftLocation;
 import org.bukkit.craftbukkit.util.CraftVector;
 import org.bukkit.enchantments.Enchantment;
@@ -107,6 +105,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapCursor;
+import org.bukkit.map.MapPalette;
 import org.bukkit.map.MapView;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
@@ -116,7 +115,6 @@ import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -588,10 +586,16 @@ public class Nms {
     // MISC
     ///////////////////////////////////////////////////////////////////////////
 
-    public void markCanvasToSave(MapView mapView){
-        CraftMapView craftMapView = (CraftMapView) mapView;
-        MapItemSavedData worldMap = Reflex.getFieldValue(craftMapView, "worldMap");
-        worldMap.setDirty(true);
+    public void setMapColorsWithSave(MapView map, byte[] colors){
+        MapItemSavedData worldMap = NmsUtils.toNms(map);
+        worldMap.colors = colors;
+        worldMap.setDirty();
+    }
+
+    public void setMapColorWithSave(MapView map, int x, int y, java.awt.Color color){
+        MapItemSavedData worldMap = NmsUtils.toNms(map);
+        //noinspection removal
+        worldMap.setColor(x, y, MapPalette.matchColor(color));
     }
 
     // TODO IMPLEMENT SHOW BLOCK

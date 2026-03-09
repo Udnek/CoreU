@@ -30,6 +30,7 @@ import me.udnek.coreu.rpgu.component.ability.property.type.AttributeBasedPropert
 import me.udnek.coreu.serializabledata.SerializableDataManager;
 import me.udnek.coreu.util.LogUtils;
 import net.kyori.adventure.key.Key;
+import net.minecraft.world.item.SpyglassItem;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
