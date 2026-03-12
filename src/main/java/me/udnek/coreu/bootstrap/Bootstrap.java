@@ -17,10 +17,10 @@ import me.udnek.coreu.custom.equipment.CurrentEquipmentCommand;
 import me.udnek.coreu.custom.help.CustomHelpCommand;
 import me.udnek.coreu.custom.inventory.InventoryInspectionCommand;
 import me.udnek.coreu.custom.item.CustomItemGiveCommand;
+import me.udnek.coreu.custom.item.ResetCooldownCommand;
 import me.udnek.coreu.custom.sound.CustomSoundCommand;
 import me.udnek.coreu.mgu.command.MGUCommand;
 import me.udnek.coreu.resourcepack.ResourcePackCommand;
-import me.udnek.coreu.custom.item.ResetCooldownCommand;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 

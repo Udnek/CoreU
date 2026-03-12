@@ -1,7 +1,6 @@
 package me.udnek.coreu.nms.loot.entry;
 
 import com.google.common.base.Preconditions;
-import me.udnek.coreu.nms.NmsWrapper;
 import me.udnek.coreu.nms.loot.pool.PoolWrapper;
 import me.udnek.coreu.nms.loot.util.NmsConditioned;
 import net.minecraft.world.level.storage.loot.entries.*;

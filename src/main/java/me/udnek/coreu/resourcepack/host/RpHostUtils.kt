@@ -1,19 +1,16 @@
 package me.udnek.coreu.resourcepack.host
 
-import me.udnek.coreu.CoreU
-import me.udnek.coreu.resourcepack.misc.Error
-import me.udnek.coreu.resourcepack.misc.RpInfo
-import me.udnek.coreu.resourcepack.misc.RpUtils
-import me.udnek.coreu.resourcepack.misc.ValueOrError
-import me.udnek.coreu.resourcepack.misc.at
-import me.udnek.coreu.serializabledata.SerializableDataManager
+import me.udnek.coreu.resourcepack.misc.*
 import me.udnek.coreu.util.LogUtils
 import me.udnek.coreu.util.Reflex
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.dedicated.DedicatedServerProperties
 import org.bukkit.Bukkit
 import org.bukkit.craftbukkit.CraftServer
-import java.io.*
+import java.io.BufferedInputStream
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths

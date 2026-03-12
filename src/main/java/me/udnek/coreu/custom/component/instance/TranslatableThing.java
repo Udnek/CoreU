@@ -5,13 +5,13 @@ import com.google.gson.JsonPrimitive;
 import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.registry.Registrable;
-import me.udnek.coreu.resourcepack.file.RpFile;
 import me.udnek.coreu.resourcepack.file.RpJsonFile;
 import net.kyori.adventure.translation.Translatable;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+@SuppressWarnings({"unused", "UnusedReturnValue"})
 @org.jspecify.annotations.NullMarked public class TranslatableThing implements CustomComponent<Object>{
 
     public static final TranslatableThing DEFAULT = new TranslatableThing(null)

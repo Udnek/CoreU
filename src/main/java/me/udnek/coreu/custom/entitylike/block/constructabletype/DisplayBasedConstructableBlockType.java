@@ -134,8 +134,8 @@ import java.util.Collection;
         }
 
         @Override
-        protected @Nullable CustomItem getSpawnEgg() {
-            return null;
+        protected @Nullable ItemStack getSpawnEgg() {
+            return new ItemStack(Material.AIR);
         }
 
         @Override

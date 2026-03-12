@@ -57,7 +57,7 @@ import org.bukkit.scheduler.BukkitRunnable;
         if (action.isRightClick()) {
             CustomComponentMap<CustomItem> components = customItem.getComponents();
             components.getOrDefault(CustomComponentType.RIGHT_CLICKABLE_ITEM).onRightClick(customItem, event);
-            components.getOrDefault(CustomComponentType.ENTITY_PLACING_ITEM).onPlace(event);
+            components.getOrDefault(CustomComponentType.SPAWN_EGG_ITEM).onPlace(event);
         }
         if (action.isLeftClick()) customItem.getComponents().getOrDefault(CustomComponentType.LEFT_CLICKABLE_ITEM).onLeftClick(customItem, event);
     }

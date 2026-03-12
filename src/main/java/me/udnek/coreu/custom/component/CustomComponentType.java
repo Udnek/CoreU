@@ -39,8 +39,8 @@ public interface CustomComponentType<HolderType, Component extends CustomCompone
     CustomComponentType<CustomItem, BlockPlacingItem>
             BLOCK_PLACING_ITEM = register(new ConstructableComponentType<>("block_placing_item", BlockPlacingItem.EMPTY));
 
-    CustomComponentType<CustomItem, EntityPlacingItem>
-            ENTITY_PLACING_ITEM = register(new ConstructableComponentType<>("entity_placing_item", EntityPlacingItem.EMPTY));
+    CustomComponentType<CustomItem, SpawnEggItem>
+            SPAWN_EGG_ITEM = register(new ConstructableComponentType<>("entity_placing_item", SpawnEggItem.EMPTY));
 
     CustomComponentType<CustomItem, AutoGeneratingFilesItem>
             AUTO_GENERATING_FILES_ITEM = register(new ConstructableComponentType<>("auto_generating_files_item", AutoGeneratingFilesItem.GENERATED));

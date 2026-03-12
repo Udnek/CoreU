@@ -1,8 +1,8 @@
 package me.udnek.coreu.nms.loot.table;
 
 import me.udnek.coreu.nms.loot.function.LootFunctionWrapper;
-import me.udnek.coreu.nms.loot.pool.PoolWrapperImpl;
 import me.udnek.coreu.nms.loot.pool.PoolWrapper;
+import me.udnek.coreu.nms.loot.pool.PoolWrapperImpl;
 import me.udnek.coreu.nms.loot.util.LootInfo;
 import me.udnek.coreu.nms.loot.util.NmsFields;
 import me.udnek.coreu.util.Reflex;

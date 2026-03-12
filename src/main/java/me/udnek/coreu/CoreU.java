@@ -13,6 +13,7 @@ import me.udnek.coreu.custom.item.CraftListener;
 import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.custom.item.CustomItemListener;
 import me.udnek.coreu.custom.item.VanillaItemManager;
+import me.udnek.coreu.custom.item.instace.Items;
 import me.udnek.coreu.custom.recipe.RecipeManager;
 import me.udnek.coreu.custom.registry.CustomRegistries;
 import me.udnek.coreu.custom.registry.CustomRegistry;
@@ -30,7 +31,6 @@ import me.udnek.coreu.rpgu.component.ability.property.type.AttributeBasedPropert
 import me.udnek.coreu.serializabledata.SerializableDataManager;
 import me.udnek.coreu.util.LogUtils;
 import net.kyori.adventure.key.Key;
-import net.minecraft.world.item.SpyglassItem;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -57,7 +57,8 @@ public final class CoreU extends JavaPlugin implements ResourcePackablePlugin{
         instance = this;
 
         CustomRegistry<CustomRegistry<?>> registry = CustomRegistries.REGISTRY;
-        CustomItem item = MGUItems.COORDINATE_WAND;
+        CustomItem mguItem = MGUItems.COORDINATE_WAND;
+        CustomItem item = Items.ABSTRACT_SPAWN_EGG;
         CustomEntityType entityType = CustomEntityType.BLOCK_DISPLAY;
         CustomEquipmentSlot.Single slot = CustomEquipmentSlot.SADDLE;
         CustomAttribute abilityDuration = RPGUAttributes.ABILITY_DURATION;

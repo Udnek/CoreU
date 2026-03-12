@@ -5,28 +5,38 @@ import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.entitylike.entity.CustomEntityType;
 import me.udnek.coreu.custom.item.CustomItem;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
-@org.jspecify.annotations.NullMarked public class EntityPlacingItem implements CustomComponent<CustomItem>{
+@SuppressWarnings({"unused", "UnusedReturnValue"})
+@org.jspecify.annotations.NullMarked
+public class SpawnEggItem implements CustomComponent<CustomItem>{
 
-    public static final EntityPlacingItem EMPTY = new EntityPlacingItem(){
+    public static final SpawnEggItem EMPTY = new SpawnEggItem(){
         @Override
-        public void onPlace(PlayerInteractEvent event) {}
+        public @Nullable Entity onPlace(PlayerInteractEvent event) {return null;}
     };
 
-    protected CustomEntityType entity;
+    protected final @Nullable CustomEntityType entity;
 
-    private EntityPlacingItem(){
+    protected SpawnEggItem(){
         entity = null;
     }
 
-    public EntityPlacingItem(CustomEntityType entityType){
+    public SpawnEggItem(CustomEntityType entityType) {
         this.entity = entityType;
     }
 
-    public void onPlace(PlayerInteractEvent event){
-        if (!event.hasBlock()) return;
+    protected @Nullable CustomEntityType getEntityType(PlayerInteractEvent event){
+        return entity;
+    }
+
+    public @Nullable Entity onPlace(PlayerInteractEvent event){
+        CustomEntityType entityType = getEntityType(event);
+        if (entityType == null) return null;
+        if (!event.hasBlock()) return null;
         if (!event.getPlayer().getGameMode().isInvulnerable()) {
             ItemStack item = event.getItem();
             assert item != null;
@@ -40,11 +50,11 @@ import org.bukkit.inventory.ItemStack;
         assert clickedBlock != null;
         Block relative = clickedBlock.getRelative(event.getBlockFace());
 
-        entity.spawn(relative.getLocation());
+        return entityType.spawn(relative.getLocation());
     }
 
     @Override
     public CustomComponentType<CustomItem, ? extends CustomComponent<CustomItem>> getType() {
-        return CustomComponentType.ENTITY_PLACING_ITEM;
+        return CustomComponentType.SPAWN_EGG_ITEM;
     }
 }

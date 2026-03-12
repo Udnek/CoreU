@@ -25,14 +25,11 @@ import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.loot.LootTable;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 @NullMarked
 public class SingletonEntryWrapperImpl implements SingletonEntryWrapper {

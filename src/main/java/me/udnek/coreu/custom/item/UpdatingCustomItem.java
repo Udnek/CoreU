@@ -1,10 +1,9 @@
 package me.udnek.coreu.custom.item;
 
 import io.papermc.paper.datacomponent.DataComponentType;
-import io.papermc.paper.datacomponent.DataComponentTypes;import org.bukkit.inventory.ItemStack;
+import io.papermc.paper.datacomponent.DataComponentTypes;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-
-import static io.papermc.paper.datacomponent.DataComponentTypes.*;
 
 @org.jspecify.annotations.NullMarked
 public interface UpdatingCustomItem extends CustomItem{

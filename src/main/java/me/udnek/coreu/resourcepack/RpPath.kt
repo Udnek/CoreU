@@ -1,8 +1,6 @@
 package me.udnek.coreu.resourcepack
 
-import java.nio.file.FileSystems
 import java.nio.file.Path
-import java.nio.file.PathMatcher
 import java.nio.file.Paths
 
 class RpPath private constructor(private val relative: Path) {
