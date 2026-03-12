@@ -79,6 +79,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.util.TriConsumer;
 import org.bukkit.*;
+import org.bukkit.Color;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
@@ -104,6 +105,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapCursor;
+import org.bukkit.map.MapPalette;
+import org.bukkit.map.MapView;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
@@ -116,6 +119,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -581,6 +585,18 @@ public class Nms {
     ///////////////////////////////////////////////////////////////////////////
     // MISC
     ///////////////////////////////////////////////////////////////////////////
+
+    public void setMapColorsWithSave(MapView map, byte[] colors){
+        MapItemSavedData worldMap = NmsUtils.toNms(map);
+        worldMap.colors = colors;
+        worldMap.setDirty();
+    }
+
+    public void setMapColorWithSave(MapView map, int x, int y, java.awt.Color color){
+        MapItemSavedData worldMap = NmsUtils.toNms(map);
+        //noinspection removal
+        worldMap.setColor(x, y, MapPalette.matchColor(color));
+    }
 
     // TODO IMPLEMENT SHOW BLOCK
 //    public void showDebugBlock(@NotNull Location location, int color, int time, @NotNull String name){

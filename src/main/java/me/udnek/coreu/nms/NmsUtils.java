@@ -29,6 +29,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.*;
@@ -52,10 +53,12 @@ import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.map.CraftMapView;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.map.MapView;
 import org.bukkit.potion.PotionEffect;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -190,6 +193,10 @@ public class NmsUtils{
     }
     public static ItemStack toBukkitItemStack(net.minecraft.world.item.ItemStack itemStack){
         return CraftItemStack.asBukkitCopy(itemStack);
+    }
+    public static MapItemSavedData toNms(MapView map){
+        CraftMapView craftMapView = (CraftMapView) map;
+        return Reflex.getFieldValue(craftMapView, "worldMap");
     }
     // ENTITY
     public static Entity toNmsEntity(org.bukkit.entity.Entity entity){
@@ -347,6 +354,7 @@ public class NmsUtils{
         }, Nms.get().getGenericLootContext());
     }
     // misc
+
     public static @Nullable LootPool getLootPoolByPredicate(LootTable lootTable, Predicate<net.minecraft.world.item.ItemStack> predicate){
         List<LootPool> pools = getPools(lootTable);
         AtomicBoolean found = new AtomicBoolean(false);

@@ -17,9 +17,9 @@ public class Reflex{
             Class<?> superClass = source.getSuperclass();
             if (superClass == null) {
                 if (source.getFields().length == 0){
-                    LogUtils.coreuLog("No fields found in class " + source.getName());
+                    LogUtils.coreuError("No fields found in class " + source.getName());
                 } else {
-                    LogUtils.coreuLog("Available fields in class " + source.getName() + ":");
+                    LogUtils.coreuError("Available fields in class " + source.getName() + ":");
                     for (Field field : source.getFields()) {
                         LogUtils.coreuLog(field);
                     }
@@ -40,6 +40,7 @@ public class Reflex{
 
         field.setAccessible(true);
         try {
+            //noinspection unchecked
             return (T) field.get(source);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
@@ -120,6 +121,7 @@ public class Reflex{
 
     public static <T> @UnknownNullability T invokeMethod(@Nullable Object object, Method method, @Nullable Object ...args){
         try {
+            //noinspection unchecked
             return (T) method.invoke(object, args);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
@@ -129,6 +131,7 @@ public class Reflex{
     public static <T> Constructor<T> getFirstConstructor(Class<T> clazz){
         Constructor<?>[] constructor = clazz.getDeclaredConstructors();
         constructor[0].setAccessible(true);
+        //noinspection unchecked
         return (Constructor<T>) constructor[0];
     }
 
