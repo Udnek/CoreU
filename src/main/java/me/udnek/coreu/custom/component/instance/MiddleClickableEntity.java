@@ -4,7 +4,7 @@ import io.papermc.paper.event.player.PlayerPickEntityEvent;
 import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.entitylike.entity.CustomEntityType;
-import me.udnek.coreu.custom.item.CustomItem;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
 
@@ -13,9 +13,9 @@ public class MiddleClickableEntity extends MiddleClickable implements CustomComp
 
     public static final MiddleClickableEntity DEFAULT = new  MiddleClickableEntity(null);
 
-    private final @Nullable CustomItem item;
+    private final @Nullable ItemStack item;
 
-    public MiddleClickableEntity(@Nullable CustomItem item){
+    public MiddleClickableEntity(@Nullable ItemStack item){
         this.item = item;
     }
 

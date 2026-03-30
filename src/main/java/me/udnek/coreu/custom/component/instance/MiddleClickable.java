@@ -13,20 +13,20 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public abstract class MiddleClickable {
 
-    protected void onMiddleClick(CustomItem itemToFindOrGiveIfNotInInventory, PlayerPickItemEvent event) {
+    protected void onMiddleClick(ItemStack itemToFindOrGiveIfNotInInventory, PlayerPickItemEvent event) {
         event.setCancelled(true);
         final @Nullable BaseUniversalSlot[] sourceSlotL = {null};
         Player player = event.getPlayer();
         UniversalInventorySlot.iterateThroughNotEmpty(
                 (baseUniversalSlot, stack) -> {
                     if (sourceSlotL[0] != null) return;
-                    if (CustomItem.get(stack) == itemToFindOrGiveIfNotInInventory) sourceSlotL[0] = baseUniversalSlot;
+                    if (CustomItem.get(stack) == CustomItem.get(itemToFindOrGiveIfNotInInventory)) sourceSlotL[0] = baseUniversalSlot;
                 }, player
         );
         BaseUniversalSlot sourceSlot = sourceSlotL[0];
         if (sourceSlot == null){
             if (player.getGameMode() != GameMode.CREATIVE) return;
-            player.getInventory().setItem(event.getTargetSlot(), itemToFindOrGiveIfNotInInventory.getItem());
+            player.getInventory().setItem(event.getTargetSlot(), itemToFindOrGiveIfNotInInventory);
             player.getInventory().setHeldItemSlot(event.getTargetSlot());
         } else {
             if (sourceSlot.slot == null) return;

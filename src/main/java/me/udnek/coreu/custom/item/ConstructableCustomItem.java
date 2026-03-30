@@ -2,7 +2,8 @@ package me.udnek.coreu.custom.item;
 
 import com.google.errorprone.annotations.ForOverride;
 import io.papermc.paper.datacomponent.DataComponentType;
-import io.papermc.paper.datacomponent.DataComponentTypes;import io.papermc.paper.datacomponent.item.*;
+import io.papermc.paper.datacomponent.DataComponentTypes;
+import io.papermc.paper.datacomponent.item.*;
 import me.udnek.coreu.custom.component.instance.TranslatableThing;
 import me.udnek.coreu.custom.event.CustomItemGeneratedEvent;
 import me.udnek.coreu.custom.recipe.RecipeManager;
@@ -29,15 +30,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-import static io.papermc.paper.datacomponent.DataComponentTypes.*;
 
-
+@SuppressWarnings("unused")
 @org.jspecify.annotations.NullMarked public abstract class ConstructableCustomItem extends AbstractRegistrableComponentable<CustomItem>implements CustomItemProperties, UpdatingCustomItem{
     public static final Material DEFAULT_MATERIAL = Material.GUNPOWDER;
     public static final Material DEFAULT_MATERIAL_FOR_BLOCK_PLACEABLE = Material.BARRIER;
 
-    protected ItemStack itemStack = null;
-    protected RepairData repairData = null;
+    protected @Nullable ItemStack itemStack = null;
+    protected @Nullable RepairData repairData = null;
     protected int recipeNumber = 0;
     ///////////////////////////////////////////////////////////////////////////
 
@@ -143,15 +143,18 @@ import static io.papermc.paper.datacomponent.DataComponentTypes.*;
     protected <T> void setData(DataComponentType.Valued<T> type, @Nullable DataSupplier<T> supplier){
         if (supplier == null) return;
         T value = supplier.get();
+        assert itemStack != null;
         if (value == null) itemStack.unsetData(type);
         else itemStack.setData(type, value);
     }
     protected void setData(DataComponentType.NonValued type, @Nullable Boolean value){
         if (value == null) return;
+        assert itemStack != null;
         if (value) itemStack.setData(type);
         else itemStack.resetData(type);
     }
     protected void hideSpecificComponent(DataComponentType type){
+        assert itemStack != null;
         TooltipDisplay oldDisplay = itemStack.getDataOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplay.tooltipDisplay().build());
         TooltipDisplay.Builder builder = TooltipDisplay.tooltipDisplay().hideTooltip(oldDisplay.hideTooltip());
         for (DataComponentType oldComponent : oldDisplay.hiddenComponents()) {

@@ -6,7 +6,6 @@ import me.udnek.coreu.util.Reflex;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.key.Keyed;
 import net.kyori.adventure.text.serializer.json.JSONComponentSerializer;
-import net.minecraft.advancements.criterion.LocationPredicate;
 import net.minecraft.core.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;

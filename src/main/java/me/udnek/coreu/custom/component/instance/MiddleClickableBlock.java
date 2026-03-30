@@ -15,7 +15,7 @@ public class MiddleClickableBlock extends MiddleClickable implements CustomCompo
     public void onMiddleClick(CustomBlockType block, PlayerPickBlockEvent event){
         CustomItem item = block.getItem();
         if (item == null) return;
-        onMiddleClick(item, event);
+        onMiddleClick(item.getItem(), event);
     }
 
     @Override

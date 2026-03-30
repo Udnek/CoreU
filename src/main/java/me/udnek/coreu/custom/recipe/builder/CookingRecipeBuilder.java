@@ -8,8 +8,11 @@ import org.bukkit.inventory.*;
 import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.NullMarked;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
+@SuppressWarnings("unused")
 @NullMarked
 public class CookingRecipeBuilder extends RecipeBuilder<CookingRecipeBuilder>{
 

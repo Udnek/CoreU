@@ -3,8 +3,8 @@ package me.udnek.coreu.nms.loot.entry;
 import com.mojang.datafixers.util.Either;
 import me.udnek.coreu.nms.NmsUtils;
 import me.udnek.coreu.nms.loot.pool.PoolWrapper;
-import me.udnek.coreu.nms.loot.table.LootTableWrapperImpl;
 import me.udnek.coreu.nms.loot.table.LootTableWrapper;
+import me.udnek.coreu.nms.loot.table.LootTableWrapperImpl;
 import me.udnek.coreu.nms.loot.util.LootInfo;
 import me.udnek.coreu.nms.loot.util.NmsFields;
 import me.udnek.coreu.util.Reflex;
@@ -20,6 +20,7 @@ import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.function.Consumer;
 
+@SuppressWarnings("unused")
 @org.jspecify.annotations.NullMarked
 public class NestedEntryWrapper extends SingletonEntryWrapperImpl {
 

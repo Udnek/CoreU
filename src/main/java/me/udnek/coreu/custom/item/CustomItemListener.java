@@ -4,6 +4,7 @@ import io.papermc.paper.datacomponent.DataComponentType;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.TooltipDisplay;
 import me.udnek.coreu.CoreU;
+import me.udnek.coreu.custom.component.CustomComponentMap;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.event.CustomItemGeneratedEvent;
 import me.udnek.coreu.custom.inventory.CustomInventory;
@@ -31,8 +32,6 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import static io.papermc.paper.datacomponent.DataComponentTypes.TOOLTIP_DISPLAY;
-
 @org.jspecify.annotations.NullMarked public class CustomItemListener extends SelfRegisteringListener{
     public CustomItemListener(Plugin plugin) {
         super(plugin);
@@ -55,7 +54,11 @@ import static io.papermc.paper.datacomponent.DataComponentTypes.TOOLTIP_DISPLAY;
         CustomItem customItem = CustomItem.get(event.getItem());
         if (customItem == null) return;
         Action action = event.getAction();
-        if (action.isRightClick()) customItem.getComponents().getOrDefault(CustomComponentType.RIGHT_CLICKABLE_ITEM).onRightClick(customItem, event);
+        if (action.isRightClick()) {
+            CustomComponentMap<CustomItem> components = customItem.getComponents();
+            components.getOrDefault(CustomComponentType.RIGHT_CLICKABLE_ITEM).onRightClick(customItem, event);
+            components.getOrDefault(CustomComponentType.SPAWN_EGG_ITEM).onPlace(event);
+        }
         if (action.isLeftClick()) customItem.getComponents().getOrDefault(CustomComponentType.LEFT_CLICKABLE_ITEM).onLeftClick(customItem, event);
     }
 

@@ -4,19 +4,16 @@ import com.sun.net.httpserver.HttpExchange
 import com.sun.net.httpserver.HttpHandler
 import com.sun.net.httpserver.HttpServer
 import me.udnek.coreu.CoreU
-import me.udnek.coreu.resourcepack.RpMerger
 import me.udnek.coreu.resourcepack.misc.Error
 import me.udnek.coreu.resourcepack.misc.RpInfo
 import me.udnek.coreu.resourcepack.misc.RpUtils
 import me.udnek.coreu.resourcepack.misc.at
 import me.udnek.coreu.serializabledata.SerializableDataManager
-import org.apache.commons.io.FileUtils
 import java.net.InetSocketAddress
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
-import kotlin.io.path.exists
 
 
 class RpHost : HttpHandler {

@@ -8,7 +8,6 @@ import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.custom.registry.CustomRegistries;
 import me.udnek.coreu.custom.registry.Registrable;
 import me.udnek.coreu.custom.sound.CustomSound;
-import org.jetbrains.annotations.NotNull;
 
 @org.jspecify.annotations.NullMarked
 public interface CustomComponentType<HolderType, Component extends CustomComponent<HolderType>> extends Registrable{
@@ -39,6 +38,9 @@ public interface CustomComponentType<HolderType, Component extends CustomCompone
 
     CustomComponentType<CustomItem, BlockPlacingItem>
             BLOCK_PLACING_ITEM = register(new ConstructableComponentType<>("block_placing_item", BlockPlacingItem.EMPTY));
+
+    CustomComponentType<CustomItem, SpawnEggItem>
+            SPAWN_EGG_ITEM = register(new ConstructableComponentType<>("entity_placing_item", SpawnEggItem.EMPTY));
 
     CustomComponentType<CustomItem, AutoGeneratingFilesItem>
             AUTO_GENERATING_FILES_ITEM = register(new ConstructableComponentType<>("auto_generating_files_item", AutoGeneratingFilesItem.GENERATED));
