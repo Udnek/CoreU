@@ -7,12 +7,15 @@ import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.function.Consumer;
 
-@org.jspecify.annotations.NullMarked public class Either<Left, Right>{
+@org.jspecify.annotations.NullMarked
+public final class Either<Left, Right>{
 
-    protected Left left;
-    protected Right right;
+    @UnknownNullability
+    private final Left left;
+    @UnknownNullability
+    private final Right right;
 
-    public Either(@UnknownNullability @NotNull Left left, @UnknownNullability @NotNull Right right){
+    public Either(@UnknownNullability Left left, @UnknownNullability Right right){
         Preconditions.checkArgument(!(left == null && right == null), "Either can no be both null");
         Preconditions.checkArgument(left == null || right == null, "Either can no be both not null");
         this.left = left;

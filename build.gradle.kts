@@ -1,10 +1,9 @@
 plugins {
     `java-library`
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.18"
     id("com.gradleup.shadow") version "9.3.0"
 
-    id("io.canvasmc.weaver.userdev") version "2.3.12"
-    id("io.canvasmc.horizon") version "1.0.0"
+    id("io.canvasmc.weaver.userdev") version "2.4.5"
+    id("io.canvasmc.horizon") version "1.0.2"
 }
 
 group = "me.udnek"
@@ -13,9 +12,11 @@ version = "1.0-SNAPSHOT"
 repositories {
     mavenCentral()
     maven("https://maven.canvasmc.io/releases")
+    maven("https://maven.canvasmc.io/public")
     maven("https://maven.canvasmc.io/snapshots")
-    maven ("https://repo.papermc.io/repository/maven-public/")
-    maven ("https://maven.fabricmc.net/")
+
+    maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://maven.fabricmc.net/")
 }
 
 java {
@@ -24,7 +25,7 @@ java {
 }
 
 dependencies {
-    horizon.horizonApi("1.0.0-build.11")
+    horizon.horizonApi("1.0.0.+")
     paperweight.paperDevBundle("1.21.11-R0.1-SNAPSHOT")
     compileOnly("net.dmulloy2:ProtocolLib:5.4.0")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.18.3")
@@ -33,16 +34,28 @@ dependencies {
     compileOnly("io.github.llamalad7:mixinextras-common:0.4.1")
 }
 
+sourceSets {
+
+    create("horizon") {
+        java {
+            srcDir("src/horizon/java")
+        }
+        resources {
+            setSrcDirs(srcDir("src/horizon/resources"))
+        }
+    }
+}
+
 horizon {
-    splitPluginSourceSets()
     accessTransformerFiles.from(
-        file("src/main/resources/wideners.at"),
-        file("src/main/resources/additional_wideners.at"),
+        file("src/horizon/resources/wideners.at"),
+        file("src/horizon/resources/additional_wideners.at"),
     )
 }
 
 tasks {
     shadowJar{
+        from(sourceSets["horizon"].output)
         archiveBaseName.set("CoreU")
         archiveClassifier.set("")
         archiveVersion.set(version.toString())
