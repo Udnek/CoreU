@@ -1,6 +1,8 @@
 plugins {
     `java-library`
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.18"
     id("com.gradleup.shadow") version "9.3.0"
+    kotlin("jvm") version "2.2.0"
 
     id("io.canvasmc.weaver.userdev") version "2.4.5"
     id("io.canvasmc.horizon") version "1.0.2"
@@ -11,16 +13,13 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
-    maven("https://maven.canvasmc.io/releases")
-    maven("https://maven.canvasmc.io/public")
-    maven("https://maven.canvasmc.io/snapshots")
-
-    maven("https://repo.papermc.io/repository/maven-public/")
-    maven("https://maven.fabricmc.net/")
+    maven ("https://repo.papermc.io/repository/maven-public/")
+    maven ("https://maven.fabricmc.net/")
+    //maven ("https://repo.dueris.org/repository/maven-public/")
 }
 
 java {
-    // Configure the java toolchain. This allows Gradle to auto-provision JDK 21 on systems that only have JDK 11 installed for example.
+    // Configure the java toolchain. This allows gradle to auto-provision JDK 21 on systems that only have JDK 11 installed for example.
     toolchain.languageVersion = JavaLanguageVersion.of(21)
 }
 
@@ -32,6 +31,7 @@ dependencies {
 
     compileOnly("net.fabricmc:sponge-mixin:0.15.2+mixin.0.8.7")
     compileOnly("io.github.llamalad7:mixinextras-common:0.4.1")
+    implementation(kotlin("stdlib-jdk8"))
 }
 
 sourceSets {
@@ -68,4 +68,7 @@ tasks {
     javadoc {
         options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
     }
+}
+kotlin {
+    jvmToolchain(21)
 }

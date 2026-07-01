@@ -19,14 +19,14 @@ import me.udnek.coreu.util.LogUtils;
         step = Step.GLOBAL_INITIALIZATION;
         new InitializationEvent(step).callEvent();
 
-        LogUtils.pluginLog("Registries after initialization started");
+        LogUtils.coreuLog("Registries after initialization started");
         for (CustomRegistry<?> registry : CustomRegistries.REGISTRY.getAll()) {
             for (Registrable registrable : registry.getAll()) {
                 registrable.globalInitialization();
             }
         }
 
-        LogUtils.pluginLog("VanillaManager started");
+        LogUtils.coreuLog("VanillaManager started");
         VanillaItemManager.getInstance().start();
 
         step = Step.AFTER_GLOBAL_INITIALIZATION;

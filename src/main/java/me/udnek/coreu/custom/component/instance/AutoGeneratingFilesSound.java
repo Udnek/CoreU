@@ -5,7 +5,8 @@ import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.sound.ConstructableCustomSound;
 import me.udnek.coreu.custom.sound.CustomSound;
-import me.udnek.coreu.resourcepack.path.VirtualRpJsonFile;
+import me.udnek.coreu.resourcepack.file.RpFile;
+import me.udnek.coreu.resourcepack.file.RpJsonFile;
 
 import java.util.List;
 
@@ -13,9 +14,10 @@ import java.util.List;
 
     public static final AutoGeneratingFilesSound DEFAULT = new AutoGeneratingFilesSound();
 
-    public List<VirtualRpJsonFile> getFiles(CustomSound unknowSound){
+    public List<? extends RpFile> getFiles(CustomSound unknowSound){
         if (!(unknowSound instanceof ConstructableCustomSound sound)) return List.of();
-        VirtualRpJsonFile file = new VirtualRpJsonFile(JsonParser.parseString("""
+        RpJsonFile file = new RpJsonFile(this,"assets/" + sound.key().namespace() + "/sounds.json",
+                JsonParser.parseString("""
                     {
                         "%id%": {
                             "subtitle": "%subtitle%",
@@ -27,7 +29,7 @@ import java.util.List;
                 .replace("%id%", sound.key().value())
                 .replace("%subtitle%", sound.translationKey())
                 .replace("%sounds%", String.join(", ", sound.getFilePaths().stream().map(s -> "\""+s+"\"").toList()))
-        ), "assets/" + sound.key().namespace() + "/sounds.json");
+        ).getAsJsonObject());
         return List.of(file);
     }
 

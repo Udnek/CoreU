@@ -2,6 +2,7 @@ package me.udnek.coreu.nms;
 
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import io.papermc.paper.dialog.Dialog;
@@ -11,19 +12,23 @@ import me.udnek.coreu.nms.loot.LootContextBuilder;
 import me.udnek.coreu.nms.loot.entry.EntryWrapper;
 import me.udnek.coreu.nms.loot.entry.NmsCustomEntry;
 import me.udnek.coreu.nms.loot.pool.PoolWrapper;
-import me.udnek.coreu.nms.loot.table.LootTableWrapperImpl;
 import me.udnek.coreu.nms.loot.table.LootTableWrapper;
+import me.udnek.coreu.nms.loot.table.LootTableWrapperImpl;
 import me.udnek.coreu.nms.loot.util.LootInfo;
 import me.udnek.coreu.nms.structure.StructureWrapper;
 import me.udnek.coreu.util.LogUtils;
 import me.udnek.coreu.util.Reflex;
 import net.kyori.adventure.key.Key;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.core.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.TagParser;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundCooldownPacket;
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
@@ -34,19 +39,21 @@ import net.minecraft.server.ReloadableServerRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.DialogTags;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.util.context.ContextKeySet;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.DryFoliageColor;
+import net.minecraft.world.level.FoliageColor;
+import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
@@ -61,6 +68,9 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -69,12 +79,15 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.util.TriConsumer;
 import org.bukkit.*;
+import org.bukkit.Color;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
 import org.bukkit.craftbukkit.CraftEquipmentSlot;
 import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.block.CraftBiome;
 import org.bukkit.craftbukkit.block.CraftBlock;
+import org.bukkit.craftbukkit.block.CraftBlockType;
 import org.bukkit.craftbukkit.block.data.CraftBlockData;
 import org.bukkit.craftbukkit.block.impl.CraftVault;
 import org.bukkit.craftbukkit.entity.CraftEntity;
@@ -83,7 +96,6 @@ import org.bukkit.craftbukkit.entity.CraftMob;
 import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.map.CraftMapCursor;
 import org.bukkit.craftbukkit.util.CraftLocation;
-import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.craftbukkit.util.CraftVector;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -93,19 +105,27 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapCursor;
+import org.bukkit.map.MapPalette;
+import org.bukkit.map.MapView;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+@SuppressWarnings("unused")
 @NullMarked
 public class Nms {
 
@@ -139,7 +159,7 @@ public class Nms {
     // DIALOGS
     ///////////////////////////////////////////////////////////////////////////
 
-    public void addDialogToQuickActions(NamespacedKey key, Dialog dialog){
+    public void addDialogToQuickActions(Key key, Dialog dialog){
         net.minecraft.server.dialog.Dialog nmsDialog = PaperDialog.bukkitToMinecraftHolder(dialog).value();
         NmsUtils.registerInRegistry(Registries.DIALOG, nmsDialog, key);
         NmsUtils.addValueToTag(Registries.DIALOG, DialogTags.QUICK_ACTIONS, nmsDialog);
@@ -230,7 +250,12 @@ public class Nms {
         );
         return standUpPosition.map(vec3 -> new Location(anchorLocation.getWorld(), vec3.x, vec3.y, vec3.z)).orElse(null);
     }
-    
+
+    public int getMapColor(Material block){
+        net.minecraft.world.level.block.Block nmsBlock = CraftBlockType.bukkitToMinecraft(block);
+        return nmsBlock.defaultMapColor().col;
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // USAGES
     ///////////////////////////////////////////////////////////////////////////
@@ -245,11 +270,11 @@ public class Nms {
     public record BlockPlaceResult(boolean isSuccess, @Nullable ItemStack resultingItem){
     }
 
-    public Nms.BlockPlaceResult placeBlockFromItem(Player player, @Nullable ItemStack itemStack, EquipmentSlot hand, Location hitPos, BlockFace blockFace, Block clicked){
+    public BlockPlaceResult placeBlockFromItem(Player player, @Nullable ItemStack itemStack, EquipmentSlot hand, Location hitPos, BlockFace blockFace, Block clicked){
         return placeBlockFromItem(player, itemStack, hand, hitPos, blockFace, clicked, false);
     }
 
-    public Nms.BlockPlaceResult placeBlockFromItem(Player player, @Nullable ItemStack itemStack, EquipmentSlot hand, Location hitPos, BlockFace blockFace, Block clicked, boolean isInside){
+    public BlockPlaceResult placeBlockFromItem(Player player, @Nullable ItemStack itemStack, EquipmentSlot hand, Location hitPos, BlockFace blockFace, Block clicked, boolean isInside){
         net.minecraft.world.item.ItemStack stack = NmsUtils.toNmsItemStack(itemStack);
         if (!(stack.getItem() instanceof BlockItem blockItem)) return new BlockPlaceResult(false, itemStack);
         InteractionHand interactionHand = switch (hand){
@@ -342,34 +367,6 @@ public class Nms {
                 });
             }
         }
-
-//        List<LootPoolEntryContainer> toReplace = new ArrayList<>();
-//        for (LootPoolSingletonContainer container : NmsUtils.getAllSingletonContainers(lootTable)) {
-//            LootPoolEntry entry = NmsUtils.getEntry(container);
-//            AtomicBoolean contains = new AtomicBoolean(false);
-//            NmsUtils.getPossibleLoot(entry, itemStack -> {
-//                if (predicate.test(NmsUtils.toBukkitItemStack(itemStack))) {
-//                    contains.set(true);
-//                }
-//            });
-//            if (contains.get()) toReplace.add(container);
-//        }
-//        for (LootPool pool : NmsUtils.getPools(lootTable)) {
-//            List<LootPoolEntryContainer> newContainers = new ArrayList<>();
-//            boolean changed = false;
-//            for (LootPoolEntryContainer container : NmsUtils.getEntries(pool)) {
-//                if (toReplace.contains(container)){
-//                    changed = true;
-//                    if (newEntry != null) newContainers.add(newEntry.build());
-//                } else {
-//                    newContainers.add(container);
-//                }
-//            }
-//            if (changed){
-//                //LogUtils.pluginLog("Changed loot entry container from: " + lootTable.craftLootTable.getKey());
-//                Reflex.setFieldValue(pool, NmsFields.ENTRIES, newContainers);
-//            }
-//        }
     }
 
     public List<String> getRegisteredLootTableIds(){
@@ -389,8 +386,8 @@ public class Nms {
         return lootTables;
     }
 
-    public @Nullable org.bukkit.loot.LootTable getLootTable(NamespacedKey id){
-        Identifier resourceLocation = CraftNamespacedKey.toMinecraft(id);
+    public @Nullable org.bukkit.loot.LootTable getLootTable(Key id){
+        Identifier resourceLocation = NmsUtils.toNms(id);
         ResourceKey<LootTable> key = ResourceKey.create(Registries.LOOT_TABLE, resourceLocation);
         LootTable lootTable = NmsUtils.getLootTable(key);
         if (lootTable == null) return null;
@@ -440,15 +437,15 @@ public class Nms {
     }
 
     @SuppressWarnings("ConstantValue")
-    public void getAllPossibleLootTablesInStructure(NamespacedKey structureId, Consumer<org.bukkit.loot.LootTable> bukkitLootTables){
-        Structure structure = NmsUtils.getRegistry(Registries.STRUCTURE).getOptional(CraftNamespacedKey.toMinecraft(structureId)).orElse(null);
+    public void getAllPossibleLootTablesInStructure(Key structureId, Consumer<org.bukkit.loot.LootTable> bukkitLootTables){
+        Structure structure = NmsUtils.getRegistry(Registries.STRUCTURE).getOptional(NmsUtils.toNms(structureId)).orElse(null);
         if (structure == null) return;
         NmsStructureProceeder proceeder = new NmsStructureProceeder(structureId, structure);
         proceeder.extractAllTemplates();
         for (ResourceKey<LootTable> lootTableKey : proceeder.extractLootTables()) {
             LootTable lootTable = NmsUtils.getLootTable(lootTableKey);
             if (lootTable == null || lootTable.craftLootTable == null){
-                LogUtils.pluginWarning("null lootTable: " + lootTableKey);
+                LogUtils.coreuWarning("Null lootTable during extraction: " + lootTableKey);
                 continue;
             }
             bukkitLootTables.accept(lootTable.craftLootTable);
@@ -589,6 +586,18 @@ public class Nms {
     // MISC
     ///////////////////////////////////////////////////////////////////////////
 
+    public void setMapColorsWithSave(MapView map, byte[] colors){
+        MapItemSavedData worldMap = NmsUtils.toNms(map);
+        worldMap.colors = colors;
+        worldMap.setDirty();
+    }
+
+    public void setMapColorWithSave(MapView map, int x, int y, java.awt.Color color){
+        MapItemSavedData worldMap = NmsUtils.toNms(map);
+        //noinspection removal
+        worldMap.setColor(x, y, MapPalette.matchColor(color));
+    }
+
     // TODO IMPLEMENT SHOW BLOCK
 //    public void showDebugBlock(@NotNull Location location, int color, int time, @NotNull String name){
 //        for (Player player : Bukkit.getOnlinePlayers()) {
@@ -669,9 +678,58 @@ public class Nms {
         NmsUtils.sendPacket(observer, new ClientboundRemoveEntitiesPacket(new IntImmutableList(idNmsEntities)));
     }
 
+    public String serializeEntity(Entity entity) {
+        net.minecraft.world.entity.Entity nmsEntity = NmsUtils.toNmsEntity(entity);
+        TagValueOutput tagValueOutput = TagValueOutput.createWithoutContext(ProblemReporter.DISCARDING);
+        nmsEntity.save(tagValueOutput);
+        return tagValueOutput.buildResult().toString();
+    }
+
+    public @Nullable Entity deserializeEntity(String nbtString, World world) {
+        ServerLevel nmsWorld = NmsUtils.toNmsWorld(world);
+        try {
+            CompoundTag compoundTag = TagParser.parseCompoundFully(nbtString);
+            ValueInput valueInput = TagValueInput.createGlobal(ProblemReporter.DISCARDING, compoundTag);
+            Optional<net.minecraft.world.entity.Entity> optionalEntity = net.minecraft.world.entity.EntityType.create(valueInput, nmsWorld, EntitySpawnReason.COMMAND);
+            if (optionalEntity.isEmpty()) return null;
+            net.minecraft.world.entity.Entity entity = optionalEntity.get();
+            return entity.getBukkitEntity();
+        } catch (CommandSyntaxException e) {
+            LogUtils.coreuError(e);
+            return null;
+        }
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // BIOME
     ///////////////////////////////////////////////////////////////////////////
+
+    // fixes mojang empty colormaps
+    public void loadGrassColormap(Plugin source, String path){
+        GrassColor.init(readColormap(source, path));
+    }
+    public void loadFoliageColormap(Plugin source, String path){
+        FoliageColor.init(readColormap(source, path));
+    }
+    public void loadDryFoliageColormap(Plugin source, String path){
+        DryFoliageColor.init(readColormap(source, path));
+    }
+
+    private int[] readColormap(Plugin source, String path){
+        try (var s = source.getClass().getClassLoader().getResourceAsStream(path)){
+            if (s == null) throw new RuntimeException("Can not load colormap: " +path + " (source: " + source +")");
+            BufferedImage image = ImageIO.read(s);
+            int[] rgb = new int[256*256];
+            image.getRGB(0, 0, image.getWidth(), image.getHeight(), rgb, 0, image.getWidth());
+            return rgb;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public BiomeWrapper getBiomeWrapper(org.bukkit.block.Biome biome) {
+        return new BiomeWrapper(((CraftBiome) biome).getHandle());
+    }
 
     public DownfallType getDownfallType(Location location){
         BlockPos blockPosition = CraftLocation.toBlockPosition(location);

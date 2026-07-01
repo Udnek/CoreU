@@ -1,6 +1,8 @@
 package me.udnek.coreu.custom.entitylike.entity;
 
+import io.papermc.paper.event.player.PlayerPickEntityEvent;
 import me.udnek.coreu.CoreU;
+import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.entitylike.EntityLikeManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -16,7 +18,7 @@ import org.jetbrains.annotations.UnknownNullability;
 import java.util.Arrays;
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked public class CustomEntityManager extends EntityLikeManager<Entity, CustomEntityType, CustomEntity>implements Listener{
+@org.jspecify.annotations.NullMarked public class CustomEntityManager extends EntityLikeManager<Entity, CustomEntityType, CustomEntity> implements Listener{
 
     private static @UnknownNullability CustomEntityManager instance;
 
@@ -68,6 +70,13 @@ import java.util.List;
                 loadEntities(Arrays.asList(loadedChunk.getEntities()));
             }
         }
+    }
+
+    @EventHandler
+    public void onMiddleClick(PlayerPickEntityEvent event){
+        CustomEntityType.consumeIfCustom(event.getEntity(), entity -> {
+            entity.getComponents().getOrDefault(CustomComponentType.MIDDLE_CLICKABLE_ENTITY).onMiddleClick(entity, event);
+        });
     }
 }
 

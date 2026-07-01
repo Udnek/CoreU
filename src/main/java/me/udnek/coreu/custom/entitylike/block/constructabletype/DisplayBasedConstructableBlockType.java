@@ -134,6 +134,11 @@ import java.util.Collection;
         }
 
         @Override
+        protected @Nullable CustomItem getSpawnEgg() {
+            return null;
+        }
+
+        @Override
         public void load(Entity entity) {
             if (CustomBlockType.get(entity.getLocation().getBlock()) != null) return;
             entity.remove();

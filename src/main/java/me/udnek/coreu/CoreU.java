@@ -1,6 +1,5 @@
 package me.udnek.coreu;
 
-import com.sun.net.httpserver.HttpServer;
 import me.udnek.coreu.custom.attribute.CustomAttribute;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockManager;
 import me.udnek.coreu.custom.entitylike.entity.CustomEntityManager;
@@ -19,26 +18,31 @@ import me.udnek.coreu.custom.registry.CustomRegistries;
 import me.udnek.coreu.custom.registry.CustomRegistry;
 import me.udnek.coreu.custom.registry.InitializationProcess;
 import me.udnek.coreu.mgu.MGUItems;
+import me.udnek.coreu.nms.Nms;
 import me.udnek.coreu.nms.PacketHandler;
 import me.udnek.coreu.resourcepack.ResourcePackablePlugin;
 import me.udnek.coreu.resourcepack.host.RpHost;
+import me.udnek.coreu.resourcepack.misc.Error;
+import me.udnek.coreu.resourcepack.misc.RpUtils;
 import me.udnek.coreu.rpgu.attribute.RPGUAttributes;
 import me.udnek.coreu.rpgu.component.RPGUComponents;
 import me.udnek.coreu.rpgu.component.ability.property.type.AttributeBasedPropertyType;
 import me.udnek.coreu.serializabledata.SerializableDataManager;
 import me.udnek.coreu.util.LogUtils;
 import net.kyori.adventure.key.Key;
+import net.minecraft.world.item.SpyglassItem;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.UnknownNullability;
+import org.jspecify.annotations.NullMarked;
 
 @SuppressWarnings("unused")
-@org.jspecify.annotations.NullMarked
+@NullMarked
 public final class CoreU extends JavaPlugin implements ResourcePackablePlugin{
 
     private static @UnknownNullability Plugin instance;
-    private static @UnknownNullability HttpServer rpHost;
+    private static final RpHost rpHost = new RpHost();
 
     public static Plugin getInstance() {
         return instance;
@@ -76,20 +80,33 @@ public final class CoreU extends JavaPlugin implements ResourcePackablePlugin{
         PacketHandler.initialize();
 
         SerializableDataManager.loadConfig();
-        this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
-            public void run() {
-                InitializationProcess.start();
+        this.getServer().getScheduler().scheduleSyncDelayedTask(this, () -> {
+            InitializationProcess.start();
+
+            Error rpError = RpUtils.compileResourcepack(true, true);
+            if (rpError != null){
+                new Error("can not compile rp").at(rpError).logError();
+                return;
+            }
+
+            Error startError = rpHost.start();
+            if (startError != null) {
+                new Error("can not start server").at(startError).logError();
             }
         });
 
-        rpHost = new RpHost().start();
+        LogUtils.coreuLog("Started loading colormaps (fixes Mojang's empty colormaps)");
+        Nms.get().loadGrassColormap(this, "colormap/grass.png");
+        Nms.get().loadFoliageColormap(this, "colormap/foliage.png");
+        Nms.get().loadDryFoliageColormap(this, "colormap/dry_foliage.png");
+        LogUtils.coreuLog("Finished loading colormaps");
     }
 
     @Override
     public void onDisable() {
         PlayerEquipmentManager.getInstance().stop();
-        rpHost.stop(0);
-        LogUtils.pluginLog("Resourcepack host stopped");
+        rpHost.stop();
+        LogUtils.coreuLog("Resourcepack host stopped");
     }
 
     @Override

@@ -17,7 +17,6 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.VillagerAcquireTradeEvent;
 import org.bukkit.event.inventory.InventoryCreativeEvent;
 import org.bukkit.inventory.*;
@@ -88,7 +87,7 @@ public class VanillaItemManager extends SelfRegisteringListener{
                 Nms.get().removeAllEntriesContains(lootTable, VanillaItemManager::isDisabled);
             }
 
-            LogUtils.pluginLog("Disabled: " + material);
+            LogUtils.coreuLog("Disabled: " + material);
         }
     }
 
@@ -125,7 +124,7 @@ public class VanillaItemManager extends SelfRegisteringListener{
                 );
             }
 
-            LogUtils.pluginLog("Replaced: " + oldMaterial);
+            LogUtils.coreuLog("Replaced: " + oldMaterial);
         }
     }
 
@@ -316,7 +315,7 @@ public class VanillaItemManager extends SelfRegisteringListener{
                     if (newStacks.isEmpty()) return null;
                     return new RecipeChoice.ExactChoice(newStacks);
                 }
-                LogUtils.pluginWarning("Recipe choice is not (Material or Exact): " + recipeChoice);
+                LogUtils.coreuWarning("Recipe choice is not (Material or Exact): " + recipeChoice);
                 return recipeChoice;
             }
         }));
@@ -346,7 +345,7 @@ public class VanillaItemManager extends SelfRegisteringListener{
                     if (newStacks.isEmpty()) return null;
                     return new RecipeChoice.ExactChoice(newStacks);
                 }
-                LogUtils.pluginWarning("Recipe choice is not Material or Exact or Empty: " + recipeChoice);
+                LogUtils.coreuWarning("Recipe choice is not Material or Exact or Empty: " + recipeChoice);
                 return recipeChoice;
             }
         });

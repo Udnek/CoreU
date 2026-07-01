@@ -44,6 +44,7 @@ import java.util.function.Function;
         return getState(location.getBlock());
     }
     public <T extends TileState> T getState(Block block){
+        //noinspection unchecked
         return (T) block.getState();
     }
 

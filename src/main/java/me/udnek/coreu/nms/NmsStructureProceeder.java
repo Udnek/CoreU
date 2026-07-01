@@ -29,7 +29,6 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.level.storage.loot.LootTable;
 import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
 
 import java.lang.reflect.Method;
 import java.time.Duration;
@@ -180,7 +179,7 @@ import java.util.*;
 
             StructureTemplatePool foundPool = poolRegistry.getOptional(foundPoolKey).orElse(null);
             if (foundPool == null){
-                LogUtils.pluginWarning("Unknown pool found during extraction: "+foundPoolKey);
+                LogUtils.coreuWarning("Unknown pool found during extraction: "+foundPoolKey);
                 continue;
             }
 

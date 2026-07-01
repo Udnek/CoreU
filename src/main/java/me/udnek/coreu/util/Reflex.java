@@ -6,7 +6,9 @@ import sun.misc.Unsafe;
 
 import java.lang.reflect.*;
 
-@org.jspecify.annotations.NullMarked public class Reflex{
+@org.jspecify.annotations.NullMarked
+public class Reflex{
+
     public static Field getField(Class<?> source, String name) {
         try {
             return source.getDeclaredField(name);
@@ -15,11 +17,11 @@ import java.lang.reflect.*;
             Class<?> superClass = source.getSuperclass();
             if (superClass == null) {
                 if (source.getFields().length == 0){
-                    LogUtils.pluginLog("No fields found in class " + source.getName());
+                    LogUtils.coreuError("No fields found in class " + source.getName());
                 } else {
-                    LogUtils.pluginLog("Available fields in class " + source.getName() + ":");
+                    LogUtils.coreuError("Available fields in class " + source.getName() + ":");
                     for (Field field : source.getFields()) {
-                        LogUtils.pluginLog(field);
+                        LogUtils.coreuLog(field);
                     }
                 }
 
@@ -38,6 +40,7 @@ import java.lang.reflect.*;
 
         field.setAccessible(true);
         try {
+            //noinspection unchecked
             return (T) field.get(source);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
@@ -118,6 +121,7 @@ import java.lang.reflect.*;
 
     public static <T> @UnknownNullability T invokeMethod(@Nullable Object object, Method method, @Nullable Object ...args){
         try {
+            //noinspection unchecked
             return (T) method.invoke(object, args);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
@@ -127,6 +131,7 @@ import java.lang.reflect.*;
     public static <T> Constructor<T> getFirstConstructor(Class<T> clazz){
         Constructor<?>[] constructor = clazz.getDeclaredConstructors();
         constructor[0].setAccessible(true);
+        //noinspection unchecked
         return (Constructor<T>) constructor[0];
     }
 

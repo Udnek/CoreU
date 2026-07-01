@@ -5,7 +5,8 @@ import com.google.gson.JsonPrimitive;
 import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.registry.Registrable;
-import me.udnek.coreu.resourcepack.path.VirtualRpJsonFile;
+import me.udnek.coreu.resourcepack.file.RpFile;
+import me.udnek.coreu.resourcepack.file.RpJsonFile;
 import net.kyori.adventure.translation.Translatable;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,7 +23,7 @@ import java.util.*;
             }
 
             @Override
-            public List<VirtualRpJsonFile> getFiles(Translatable translatable, Registrable registrable) {
+            public List<RpJsonFile> getFiles(Translatable translatable, Registrable registrable) {
                 return List.of();
             }
         };
@@ -46,10 +47,10 @@ import java.util.*;
         this.main = main;
     }
 
-    public List<VirtualRpJsonFile> getFiles(Translatable translatable, Registrable registrable){
+    public List<RpJsonFile> getFiles(Translatable translatable, Registrable registrable){
         Set<String> langs = new HashSet<>(main.langToTranslation.keySet());
         additionalSuffixesTranslations.forEach((string, translations) -> langs.addAll(translations.langToTranslation.keySet()));
-        List<VirtualRpJsonFile> files = new ArrayList<>();
+        List<RpJsonFile> files = new ArrayList<>();
         for (String lang : langs) {
             JsonObject json = new JsonObject();
             String mainTrans = main.getByLang(lang);
@@ -61,7 +62,7 @@ import java.util.*;
                 if (trans == null) continue;
                 json.add(translatable.translationKey() + "." + entry.getKey(), new JsonPrimitive(trans));
             }
-            files.add(new VirtualRpJsonFile(json, "assets/"+registrable.key().namespace()+"/lang/"+lang+".json"));
+            files.add(new RpJsonFile(this, "assets/"+registrable.key().namespace()+"/lang/"+lang+".json", json));
         }
         return files;
     }

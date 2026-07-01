@@ -1,4 +1,4 @@
-package me.udnek.coreu.util;
+package me.udnek.coreu.custom.item;
 
 import io.papermc.paper.command.brigadier.BasicCommand;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
@@ -8,7 +8,8 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jspecify.annotations.Nullable;
 
-@org.jspecify.annotations.NullMarked public class ResetCooldownCommand implements BasicCommand{
+@org.jspecify.annotations.NullMarked
+public class ResetCooldownCommand implements BasicCommand{
 
     @Override
     public void execute(CommandSourceStack commandSourceStack, String[] args) {

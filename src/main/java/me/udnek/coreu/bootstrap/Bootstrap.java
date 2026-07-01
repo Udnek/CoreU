@@ -20,7 +20,7 @@ import me.udnek.coreu.custom.item.CustomItemGiveCommand;
 import me.udnek.coreu.custom.sound.CustomSoundCommand;
 import me.udnek.coreu.mgu.command.MGUCommand;
 import me.udnek.coreu.resourcepack.ResourcePackCommand;
-import me.udnek.coreu.util.ResetCooldownCommand;
+import me.udnek.coreu.custom.item.ResetCooldownCommand;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 
@@ -36,6 +36,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Stream;
 
+@SuppressWarnings("CallToPrintStackTrace")
 @org.jspecify.annotations.NullMarked
 public class Bootstrap implements PluginBootstrap{
 
@@ -68,6 +69,7 @@ public class Bootstrap implements PluginBootstrap{
             Path pluginsPath = PluginInitializerManager.instance().pluginDirectoryPath().toAbsolutePath();
             Path extractPath = pluginsPath.resolve("CoreU/extracted_datapacks");
 
+            //noinspection ConstantValue
             if (Bukkit.getServer() == null){
                 // EXTRACTING
                 try {
@@ -82,15 +84,13 @@ public class Bootstrap implements PluginBootstrap{
                             File file = path.toFile();
                             if (!file.isFile()) continue;
                             if (!file.getName().endsWith(".jar")) continue;
-                            JarFile jarFile = new JarFile(file);
-                            if (jarFile.getEntry("datapacks") == null) continue;
-                            context.getLogger().info("found jar with datapacks: " + path);
-                            Path localExtractPath = extractPath.resolve(file.getName().replace(".jar", "/"));
-                            // System.out.println("localExtr: " + localExtractPath);
-                            try {
+                            try (JarFile jarFile = new JarFile(file)){
+                                if (jarFile.getEntry("datapacks") == null) continue;
+                                context.getLogger().info("found jar with datapacks: " + path);
+                                Path localExtractPath = extractPath.resolve(file.getName().replace(".jar", "/"));
                                 extractDatapack(localExtractPath, jarFile);
-                            } finally {
-                                jarFile.close();
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
                             }
                         }
                     }

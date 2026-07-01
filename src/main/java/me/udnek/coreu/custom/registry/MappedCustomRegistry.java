@@ -35,7 +35,7 @@ import java.util.function.Consumer;
         logRegistered(custom);
         if (custom instanceof Listener listener){
             Bukkit.getPluginManager().registerEvents(listener, plugin);
-            LogUtils.pluginLog("(EventListener) " + custom.getId() + " (" +listener.getClass().getName() + ")");
+            LogUtils.coreuLog("(EventListener) " + custom.getId() + " (" +listener.getClass().getName() + ")");
         }
         return custom;
     }
@@ -66,7 +66,7 @@ import java.util.function.Consumer;
     }
 
     protected void logRegistered(@NotNull T custom){
-        LogUtils.pluginLog("("+ getId() +") " + custom.getId());
+        LogUtils.coreuLog("("+ getId() +") " + custom.getId());
     }
 
     @Override
