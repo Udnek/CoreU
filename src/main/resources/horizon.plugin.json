@@ -1,0 +1,14 @@
+{
+  "name": "CoreU",
+  "version": "1.0-SNAPSHOT",
+  "authors": [
+    "Udnek"
+  ],
+  "load_datapack_entry": false,
+  "mixins": [
+    "coreu.mixins.json"
+  ],
+  "wideners": [
+    "coreu_at.cfg"
+  ]
+}
