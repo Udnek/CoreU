@@ -1,19 +1,30 @@
 package me.udnek.coreu.mixin;
 
+import me.udnek.coreu.custom.item.CustomItem;
+import me.udnek.coreu.nms.NmsUtils;
+import me.udnek.coreu.util.LogUtils;
 import net.minecraft.core.HolderSet;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackLinkedSet;
 import net.minecraft.world.item.crafting.Ingredient;
+import org.bukkit.inventory.CraftingRecipe;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.RecipeChoice;
+import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.logging.Logger;
 
 
+@NullMarked
 @Mixin(Ingredient.class)
 abstract class IngredientMixin{
 
@@ -23,19 +34,44 @@ abstract class IngredientMixin{
     @Shadow
     private @Nullable Set<ItemStack> itemStacks;
     @Unique
-    private final boolean coreu$doCustomItemCheck;
+    public @Nullable Set<CustomItem> coreu$customItems;
 
-    @Inject(method = "ofStacks", at = @At("RETURN"))
-    private static void onOfStacks(List<ItemStack> stacks, CallbackInfoReturnable<Ingredient> cir){
-          stacks.forEach(a);
+
+    /**
+     * @author Udnek
+     * @reason cause why not lol
+     */
+    @Overwrite
+    public static Ingredient ofStacks(List<ItemStack> stacks){
+        var customItems = new ArrayList<CustomItem>();
+        for (var stack : stacks) {
+            var customItem = CustomItem.get(NmsUtils.toBukkitItemStack(stack));
+            if (customItem != null)
+                customItems.add(customItem);
+        }
+
+        var result = Ingredient.of(stacks.stream().map(ItemStack::getItem));
+        var ingredientMixin = (IngredientMixin) (Object) result;
+        ingredientMixin.coreu$customItems = new HashSet<>(customItems);
+        ingredientMixin.itemStacks = ItemStackLinkedSet.createTypeAndComponentsSet();
+        ingredientMixin.itemStacks.addAll(stacks);
+        return result;
     }
 
     /**
      * @author Udnek
-     * @reason cause fuck it
+     * @reason cause why not lol
      */
     @Overwrite
     public boolean test(ItemStack stack){
-
+        var customItem = CustomItem.get(NmsUtils.toBukkitItemStack(stack));
+        if (customItem != null){ // custom item matching
+            if (coreu$customItems == null) return false;
+            return coreu$customItems.contains(customItem);
+        }
+//        if (itemStacks != null){ // exact matching
+//            return itemStacks.contains(stack);
+//        }
+        return stack.is(values); // material matching
     }
 }

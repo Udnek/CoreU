@@ -1,6 +1,6 @@
 name: CoreU
 version: '1.0-SNAPSHOT'
-main: me.udnek.coreu.CoreU
+main: me.udnek.coreu.CoreUPaper
 description: CoreU
 api-version: '1.21.11'
 bootstrapper: me.udnek.coreu.bootstrap.Bootstrap
