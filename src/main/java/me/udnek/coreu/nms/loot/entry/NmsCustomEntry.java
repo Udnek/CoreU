@@ -1,5 +1,6 @@
 package me.udnek.coreu.nms.loot.entry;
 
+import com.mojang.serialization.MapCodec;
 import me.udnek.coreu.nms.NmsUtils;
 import me.udnek.coreu.nms.loot.condition.LootConditionWrapper;
 import me.udnek.coreu.nms.loot.function.LootFunctionWrapper;
@@ -9,8 +10,7 @@ import me.udnek.coreu.util.Reflex;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootPool;
-import net.minecraft.world.level.storage.loot.entries.LootPoolEntries;
-import net.minecraft.world.level.storage.loot.entries.LootPoolEntryType;
+import net.minecraft.world.level.storage.loot.entries.EmptyLootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
@@ -33,18 +33,18 @@ public class NmsCustomEntry extends LootPoolSingletonContainer {
     }
 
     @Override
+    public MapCodec<? extends LootPoolSingletonContainer> codec() {
+        return EmptyLootItem.MAP_CODEC;
+    }
+
+    @Override
     protected void createItemStack(Consumer<ItemStack> consumer, LootContext lootContext) {
         org.bukkit.inventory.ItemStack itemStack = createItemStack(CraftLootTable.convertContext(lootContext));
-        consumer.accept(NmsUtils.toNmsItemStack(itemStack));
+        consumer.accept(NmsUtils.toNms(itemStack));
     }
 
     public org.bukkit.inventory.ItemStack createItemStack(org.bukkit.loot.LootContext lootContext){
         return creator.createItemStack(lootContext);
-    }
-
-    @Override
-    public LootPoolEntryType getType() {
-        return LootPoolEntries.ITEM;
     }
 
     public static class Builder {
@@ -66,10 +66,10 @@ public class NmsCustomEntry extends LootPoolSingletonContainer {
         public Builder copyConditionsFrom(LootTable lootTable, Predicate<org.bukkit.inventory.ItemStack> predicate){
             LootPoolSingletonContainer foundContainer = NmsUtils.getSingletonContainerByPredicate(
                     NmsUtils.toNmsLootTable(lootTable),
-                    itemStack -> predicate.test(NmsUtils.toBukkitItemStack(itemStack)));
+                    itemStack -> predicate.test(NmsUtils.toBukkit(itemStack)));
             LootPool foundPool = NmsUtils.getLootPoolByPredicate(
                     NmsUtils.toNmsLootTable(lootTable),
-                    itemStack -> predicate.test(NmsUtils.toBukkitItemStack(itemStack)));
+                    itemStack -> predicate.test(NmsUtils.toBukkit(itemStack)));
             if (foundContainer != null){
                 this.conditions = Reflex.getFieldValue(foundContainer, NmsFields.CONDITIONS);
             } else if (foundPool != null) {
@@ -80,10 +80,10 @@ public class NmsCustomEntry extends LootPoolSingletonContainer {
         public Builder copyFunctionsFrom(LootTable lootTable, Predicate<org.bukkit.inventory.ItemStack> predicate){
             LootPoolSingletonContainer foundContainer = NmsUtils.getSingletonContainerByPredicate(
                     NmsUtils.toNmsLootTable(lootTable),
-                    itemStack -> predicate.test(NmsUtils.toBukkitItemStack(itemStack)));
+                    itemStack -> predicate.test(NmsUtils.toBukkit(itemStack)));
             LootPool foundPool = NmsUtils.getLootPoolByPredicate(
                     NmsUtils.toNmsLootTable(lootTable),
-                    itemStack -> predicate.test(NmsUtils.toBukkitItemStack(itemStack)));
+                    itemStack -> predicate.test(NmsUtils.toBukkit(itemStack)));
             if (foundContainer != null){
                 this.functions = Reflex.getFieldValue(foundContainer, NmsFields.FUNCTIONS);
             } else if (foundPool != null) {

@@ -3,9 +3,9 @@ package me.udnek.coreu.custom.advancement;
 import com.google.common.base.Preconditions;
 import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.nms.NmsUtils;
-import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.criterion.*;
+import net.minecraft.advancements.predicates.DataComponentMatchers;
+import net.minecraft.advancements.predicates.ItemPredicate;
+import net.minecraft.advancements.triggers.*;
 import net.minecraft.core.component.DataComponentExactPredicate;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 @NullMarked
-public  interface AdvancementCriterion extends Supplier<Criterion<?>>{
+public interface AdvancementCriterion extends Supplier<Criterion<?>>{
 
     AdvancementCriterion TICK = () -> CriteriaTriggers.TICK.createCriterion(PlayerTrigger.TriggerInstance.tick().triggerInstance());
     AdvancementCriterion IMPOSSIBLE = () -> CriteriaTriggers.IMPOSSIBLE.createCriterion(new ImpossibleTrigger.TriggerInstance());
@@ -26,7 +26,7 @@ public  interface AdvancementCriterion extends Supplier<Criterion<?>>{
     EnterBlock ENTER_BLOCK = new EnterBlock(null);
 
 
-    class EnterBlock implements AdvancementCriterion {
+     class EnterBlock implements AdvancementCriterion {
         private final Material material;
 
         private EnterBlock(Material material) {
@@ -67,9 +67,9 @@ public  interface AdvancementCriterion extends Supplier<Criterion<?>>{
             ItemPredicate.Builder predicate;
             if (material != null) {
                 predicate = ItemPredicate.Builder.item()
-                        .of(NmsUtils.getRegistry(Registries.ITEM), NmsUtils.toNmsMaterial(material));
+                        .of(NmsUtils.getRegistry(Registries.ITEM), NmsUtils.toNms(material));
             } else {
-                net.minecraft.world.item.ItemStack nmsItemStack = NmsUtils.toNmsItemStack(itemStack);
+                net.minecraft.world.item.ItemStack nmsItemStack = NmsUtils.toNms(itemStack);
 
                 if (CustomItem.isCustom(itemStack)) {
                     predicate = ItemPredicate.Builder.item()

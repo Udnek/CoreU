@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
@@ -74,6 +75,12 @@ class Bootstrap implements PluginBootstrap{
             if (Bukkit.getServer() == null){ // happening during server start
                 // EXTRACTING
                 try {
+
+                    // clearing dir
+                    try (var path = Files.walk(extractPath)) {
+                        path.sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+                    }
+
                     Files.createDirectories(extractPath);
                     FileUtils.cleanDirectory(extractPath.toFile());
 
@@ -85,11 +92,11 @@ class Bootstrap implements PluginBootstrap{
                             File file = path.toFile();
                             if (!file.isFile()) continue;
                             if (!file.getName().endsWith(".jar")) continue;
-                            try (JarFile jarFile = new JarFile(file)){
-                                if (jarFile.getEntry("datapacks") == null) continue;
+                            try (JarFile pluginJar = new JarFile(file)){
+                                if (pluginJar.getEntry("datapacks") == null) continue;
                                 context.getLogger().info("found jar with datapacks: " + path);
                                 Path localExtractPath = extractPath.resolve(file.getName().replace(".jar", "/"));
-                                extractDatapack(localExtractPath, jarFile);
+                                extractDatapack(localExtractPath, pluginJar);
                             } catch (Exception e) {
                                 throw new RuntimeException(e);
                             }
@@ -107,7 +114,8 @@ class Bootstrap implements PluginBootstrap{
                         try (Stream<Path> entries = Files.list(datapacksPath)) {
                             entries.forEach(datapackPath -> {
                                 try {
-                                    event.registrar().discoverPack(datapackPath, datapackPath.getFileName().toString());
+                                    event.registrar().discoverPack(datapackPath,
+                                            datapackPath.getParent().getFileName().toString() + "/" + datapackPath.getFileName().toString()); // namespace/name
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }

@@ -63,7 +63,7 @@ import org.jspecify.annotations.Nullable;
                     supportedItems,               getWeight(), getMaxLevel(), getMinCost().toNms(), getMaxCost().toNms(), getAnvilCost(), slots);
         }
 
-        Component description = NmsUtils.toNmsComponent(getDescription());
+        Component description = NmsUtils.toNms(getDescription());
 
         Enchantment enchantment = new Enchantment(description, definition, exclusiveSet, effects);
 

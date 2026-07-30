@@ -1,16 +1,20 @@
+// Settings
+
+group = "me.udnek"
+version = "1.0-SNAPSHOT"
+var javaVersion = 25
+var minecraftVersion = "26.2"
+
+//////////
+
 plugins {
     `java-library`
-    kotlin("jvm") version "2.2.0"
+    kotlin("jvm") version "2.4.0"
     id("org.openrewrite.rewrite") version ("latest.release") // for annotation migration
-
-    //id("com.gradleup.shadow") version "9.3.0"
 
     id("io.canvasmc.weaver.userdev") version "2.4.5"
     id("io.canvasmc.horizon") version "1.0.2"
 }
-
-group = "me.udnek"
-version = "1.0-SNAPSHOT"
 
 horizon {
     splitPluginSourceSets()
@@ -26,17 +30,17 @@ rewrite {
 }
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(javaVersion)
 }
 
 java {
-    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    toolchain.languageVersion = JavaLanguageVersion.of(javaVersion)
 }
 
 
 dependencies {
     horizon.horizonApi("1.0.0.+")
-    paperweight.paperDevBundle("1.21.11-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("$minecraftVersion.build.+")
 
     includeLibrary("org.jspecify:jspecify:1.0.0")
 
@@ -52,7 +56,7 @@ dependencies {
 
 tasks {
     compileJava {
-        options.release = 21
+        options.release = javaVersion
     }
     javadoc {
         options.encoding = Charsets.UTF_8.name()

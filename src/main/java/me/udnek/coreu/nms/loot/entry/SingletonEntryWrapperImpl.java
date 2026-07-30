@@ -25,14 +25,11 @@ import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.loot.LootTable;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 @NullMarked
 public class SingletonEntryWrapperImpl implements SingletonEntryWrapper {
@@ -149,7 +146,7 @@ public class SingletonEntryWrapperImpl implements SingletonEntryWrapper {
         for (LootFunctionWrapper wrapped : getFunctions()) {
             LootItemFunction func = wrapped.getNms();
             if (func instanceof SetItemCountFunction countFunc) {
-                NumberProvider value = Reflex.getFieldValue(countFunc, "value");
+                NumberProvider value = countFunc.count;
                 float cdf = numberProviderCDF(value, 0, 0);
                 float notEmptyStackProbability = 1 - cdf;
                 baseInfo = baseInfo.copyAndMultiplyProbability(notEmptyStackProbability);
@@ -159,12 +156,12 @@ public class SingletonEntryWrapperImpl implements SingletonEntryWrapper {
 
         LootInfo lootInfo = baseInfo.withExtraConditions(getConditions());
         if (map != null){
-            consumer.accept(Pair.of(NmsUtils.toBukkitItemStack(map), lootInfo));
+            consumer.accept(Pair.of(NmsUtils.toBukkit(map), lootInfo));
         } else {
             LootPoolEntry entry = Reflex.getFieldValue(container, "entry");
             entry.createItemStack(stack -> {
                 if (stack.getCount() == 0) stack.setCount(1);
-                consumer.accept(Pair.of(NmsUtils.toBukkitItemStack(stack), lootInfo));
+                consumer.accept(Pair.of(NmsUtils.toBukkit(stack), lootInfo));
             }, Nms.get().getGenericLootContext());
         }
     }

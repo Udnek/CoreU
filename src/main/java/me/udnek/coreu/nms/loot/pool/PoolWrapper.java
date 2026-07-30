@@ -72,7 +72,7 @@ import java.util.function.Predicate;
         protected @Nullable LootPool getPoolByPredicate(LootTable lootTable, Predicate<ItemStack> predicate){
             return NmsUtils.getLootPoolByPredicate(
                     NmsUtils.toNmsLootTable(lootTable),
-                    itemStack -> predicate.test(NmsUtils.toBukkitItemStack(itemStack)));
+                    itemStack -> predicate.test(NmsUtils.toBukkit(itemStack)));
         }
 
         public Builder copyConditionsFrom(LootTable lootTable, Predicate<ItemStack> predicate){

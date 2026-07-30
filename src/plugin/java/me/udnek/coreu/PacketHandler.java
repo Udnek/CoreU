@@ -60,7 +60,7 @@ public class PacketHandler{
                 if (blockType == null) return;
                 BlockState fakeState = blockType.getFakeState();
                 if (fakeState == null) return;
-                Reflex.setFieldValue(handle, "blockState", NmsUtils.toNmsBlockState(fakeState));
+                Reflex.setFieldValue(handle, "blockState", NmsUtils.toNms(fakeState));
             }
         });
 

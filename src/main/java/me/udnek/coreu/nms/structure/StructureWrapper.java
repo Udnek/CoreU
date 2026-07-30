@@ -36,8 +36,8 @@ public class StructureWrapper implements NmsWrapper<Structure>{
     }
 
     public boolean isInBounds(Location location){
-        BlockPos blockPos = NmsUtils.toNmsBlockPos(location.getBlock());
-        ServerLevel level = NmsUtils.toNmsWorld(location.getWorld());
+        BlockPos blockPos = NmsUtils.toNms(location.getBlock());
+        ServerLevel level = NmsUtils.toNms(location.getWorld());
         return level.structureManager().getStructureWithPieceAt(blockPos, structure).isValid();
     }
 

@@ -39,7 +39,7 @@ import java.util.*;
     public void show(Player player){
         players.add(player);
         objective = new Scoreboard().addObjective(
-                id, ObjectiveCriteria.DUMMY, NmsUtils.toNmsComponent(title) , ObjectiveCriteria.RenderType.INTEGER, false, BlankFormat.INSTANCE);
+                id, ObjectiveCriteria.DUMMY, NmsUtils.toNms(title) , ObjectiveCriteria.RenderType.INTEGER, false, BlankFormat.INSTANCE);
         NmsUtils.sendPacket(player, new ClientboundSetObjectivePacket(objective, 0));
         NmsUtils.sendPacket(player, new ClientboundSetDisplayObjectivePacket(DisplaySlot.SIDEBAR, objective));
 
@@ -48,7 +48,7 @@ import java.util.*;
                     new ClientboundSetScorePacket(entry.getKey().toString(),
                             id,
                             entry.getKey(),
-                            Optional.of(NmsUtils.toNmsComponent(entry.getValue())),
+                            Optional.of(NmsUtils.toNms(entry.getValue())),
                             Optional.of(BlankFormat.INSTANCE)));
         }
     }
@@ -64,7 +64,7 @@ import java.util.*;
                     new ClientboundSetScorePacket(entry.getKey().toString(),
                             id,
                             entry.getKey(),
-                            Optional.of(NmsUtils.toNmsComponent(entry.getValue())),
+                            Optional.of(NmsUtils.toNms(entry.getValue())),
                             Optional.of(BlankFormat.INSTANCE)));
         }
     }

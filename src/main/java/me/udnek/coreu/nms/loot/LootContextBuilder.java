@@ -28,11 +28,11 @@ import java.util.Optional;
 
     public LootContextBuilder(LootTable lootTableFor, World world){
         keySet = ((CraftLootTable) lootTableFor).getHandle().getParamSet();
-        paramsBuilder = new LootParams.Builder(NmsUtils.toNmsWorld(world));
+        paramsBuilder = new LootParams.Builder(NmsUtils.toNms(world));
     }
 
     public LootContextBuilder thisEntity(Entity entity){
-        return tryPut(LootContextParams.THIS_ENTITY, NmsUtils.toNmsEntity(entity));
+        return tryPut(LootContextParams.THIS_ENTITY, NmsUtils.toNms(entity));
     }
     public LootContextBuilder lastDamagePlayer(Player player){
         return tryPut(LootContextParams.THIS_ENTITY, NmsUtils.toNmsPlayer(player));
@@ -41,20 +41,20 @@ import java.util.Optional;
         return tryPut(LootContextParams.DAMAGE_SOURCE, ((CraftDamageSource) damageSource).getHandle());
     }
     public LootContextBuilder attackingEntity(Entity entity){
-        return tryPut(LootContextParams.ATTACKING_ENTITY, NmsUtils.toNmsEntity(entity));
+        return tryPut(LootContextParams.ATTACKING_ENTITY, NmsUtils.toNms(entity));
     }
     public LootContextBuilder directAttackingEntity(Entity entity){
-        return tryPut(LootContextParams.DIRECT_ATTACKING_ENTITY, NmsUtils.toNmsEntity(entity));
+        return tryPut(LootContextParams.DIRECT_ATTACKING_ENTITY, NmsUtils.toNms(entity));
     }
     public LootContextBuilder origin(Location location){
         return tryPut(LootContextParams.ORIGIN, new Vec3(location.getX(), location.getY(), location.getZ()));
     }
     public LootContextBuilder blockState(BlockState blockState){
-        return tryPut(LootContextParams.BLOCK_STATE, NmsUtils.toNmsBlockState(blockState));
+        return tryPut(LootContextParams.BLOCK_STATE, NmsUtils.toNms(blockState));
     }
     // TODO BLOCK ENTITY
     public LootContextBuilder tool(ItemStack itemStack){
-        return tryPut(LootContextParams.TOOL, NmsUtils.toNmsItemStack(itemStack));
+        return tryPut(LootContextParams.TOOL, NmsUtils.toNms(itemStack));
     }
     public LootContextBuilder explosionRadius(float radius){
         return tryPut(LootContextParams.EXPLOSION_RADIUS, radius);

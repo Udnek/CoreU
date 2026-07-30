@@ -5,7 +5,7 @@ import net.kyori.adventure.key.Key;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementRequirements;
-import net.minecraft.advancements.Criterion;
+import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.resources.Identifier;
 import org.bukkit.NamespacedKey;
 import org.jspecify.annotations.NullMarked;

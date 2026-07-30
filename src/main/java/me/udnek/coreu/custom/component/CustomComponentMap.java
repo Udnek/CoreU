@@ -1,6 +1,5 @@
 package me.udnek.coreu.custom.component;
 
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -23,12 +22,12 @@ import java.util.*;
             CustomComponent<? super Holder>
             > map = null;
 
-    public @NonNull <SpecificComponent extends CustomComponent<? super Holder>> SpecificComponent getOrDefault(CustomComponentType<?, SpecificComponent> type) {
+    public <SpecificComponent extends CustomComponent<? super Holder>> SpecificComponent getOrDefault(CustomComponentType<?, SpecificComponent> type) {
         SpecificComponent component = get(type);
         return component == null ? type.getDefault() : component;
     }
 
-    public @NonNull <SpecificComponent extends CustomComponent<? super Holder>> SpecificComponent getOrCreateDefault(CustomComponentType<?, SpecificComponent> type) {
+    public <SpecificComponent extends CustomComponent<? super Holder>> SpecificComponent getOrCreateDefault(CustomComponentType<?, SpecificComponent> type) {
         SpecificComponent component = get(type);
         if (component == null) {
             SpecificComponent newDefault = type.createNewDefault();
@@ -38,7 +37,7 @@ import java.util.*;
         return component;
     }
 
-    public @NonNull <SpecificComponent extends CustomComponent<? super Holder>> SpecificComponent getOrException(CustomComponentType<?, SpecificComponent> type){
+    public <SpecificComponent extends CustomComponent<? super Holder>> SpecificComponent getOrException(CustomComponentType<?, SpecificComponent> type){
         return Objects.requireNonNull(get(type), "Component " + type.getKey().asString() + " is not present!");
     }
 

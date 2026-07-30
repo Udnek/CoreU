@@ -102,7 +102,7 @@ import java.util.Optional;
             default -> AdvancementType.TASK;
         };
         return new DisplayInfo(
-                NmsUtils.toNmsItemStack(icon),
+                NmsUtils.toNmsStackTemplate(icon),
                 title == null ? Component.empty() : CraftChatMessage.fromJSON(JSONComponentSerializer.json().serialize(title)),
                 description == null ? Component.empty() : CraftChatMessage.fromJSON(JSONComponentSerializer.json().serialize(description)),
                 Optional.ofNullable(background == null ? null : new ClientAsset.ResourceTexture(Identifier.parse(background))),

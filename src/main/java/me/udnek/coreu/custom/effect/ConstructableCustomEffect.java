@@ -25,14 +25,15 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionEffectTypeCategory;
+import org.jetbrains.annotations.UnknownNullability;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.lang.reflect.Constructor;
 
-@NullMarked public abstract class ConstructableCustomEffect extends AbstractRegistrableComponentable<CustomEffect>implements CustomEffect{
-    protected @Nullable Holder<MobEffect> nmsEffect;
+@NullMarked public abstract class ConstructableCustomEffect extends AbstractRegistrableComponentable<CustomEffect> implements CustomEffect {
+    private Holder<MobEffect> nmsEffect;
     protected @Nullable PotionEffectType bukkitEffect;
 
     public abstract PotionEffectTypeCategory getCategory();
@@ -112,7 +113,7 @@ import java.lang.reflect.Constructor;
 
     @Override
     public void apply(LivingEntity bukkit, int duration, int amplifier, boolean ambient, boolean showParticles, boolean showIcon) {
-        net.minecraft.world.entity.LivingEntity entity = NmsUtils.toNmsEntity(bukkit);
+        var entity = NmsUtils.toNms(bukkit);
         assert nmsEffect != null;
         entity.addEffect(new MobEffectInstance(nmsEffect, duration, amplifier, ambient, showParticles, showIcon));
     }

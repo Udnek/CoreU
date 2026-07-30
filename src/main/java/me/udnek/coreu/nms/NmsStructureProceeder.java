@@ -51,7 +51,7 @@ import java.util.*;
     NmsStructureProceeder(Key structureId, Structure structure){
         this.structure = structure;
         this.structureId = structureId;
-        structureManager = NmsUtils.toNmsWorld(Bukkit.getWorlds().getFirst()).getStructureManager();
+        structureManager = NmsUtils.toNms(Bukkit.getWorlds().getFirst()).getStructureManager();
         poolRegistry = NmsUtils.getRegistry(Registries.TEMPLATE_POOL);
         getTemplateMethod = Reflex.getMethod(SinglePoolElement.class, "getTemplate");
         templates = new ArrayList<>();

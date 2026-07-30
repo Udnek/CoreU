@@ -6,7 +6,6 @@ import me.udnek.coreu.util.Reflex;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.key.Keyed;
 import net.kyori.adventure.text.serializer.json.JSONComponentSerializer;
-import net.minecraft.advancements.criterion.LocationPredicate;
 import net.minecraft.core.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -25,6 +24,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
@@ -60,7 +60,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapView;
 import org.bukkit.potion.PotionEffect;
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -75,7 +74,7 @@ import java.util.function.Predicate;
 public class NmsUtils{
 
     // CHAT
-    public static Component toNmsComponent(net.kyori.adventure.text.@Nullable Component component){
+    public static Component toNms(net.kyori.adventure.text.@Nullable Component component){
         if (component == null) component = net.kyori.adventure.text.Component.empty();
         return CraftChatMessage.fromJSON(JSONComponentSerializer.json().serialize(component));
     }
@@ -105,10 +104,6 @@ public class NmsUtils{
         Registry<T> registry = getRegistry(registryKey);
         List<Holder.Reference<T>> holders = keys.stream()
                 .map(id -> registry.get(toNms(id)).orElseThrow()).toList();
-//        List<Holder.Reference<T>> holders = keys.stream()
-//                .map(id -> Holder.Reference.createStandAlone(
-//                        registry, ResourceKey.create(registryKey, NmsUtils.toNmsIdentifier(id)))).toList();
-
         return HolderSet.direct(holders);
     }
 
@@ -137,11 +132,11 @@ public class NmsUtils{
 
     public static <T> void addValueToTag(ResourceKey<Registry<T>> registryKey,
                                          TagKey<T> tagKey,
-                                         @NonNull T value)
+                                         T value)
     {
         modifyRegistry(registryKey, (registry, tags) -> {
             HolderSet.Named<T> holders = tags.get(tagKey);
-            @Nullable List<Holder<T>> contents = Reflex.getFieldValue(holders, "contents");
+            List<Holder<T>> contents = Reflex.getFieldValue(holders, "contents");
             if (contents == null){
                 contents = new ArrayList<>();
             } else {
@@ -153,7 +148,7 @@ public class NmsUtils{
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> Holder<T> registerInIntrusiveRegistry(ResourceKey<Registry<T>> registryKey, @NonNull T object, Key key){
+    public static <T> Holder<T> registerInIntrusiveRegistry(ResourceKey<Registry<T>> registryKey, T object, Key key){
         final Holder<T>[] holder = new Holder[1];
         modifyRegistry(registryKey, (registry, tags) -> {
             // this shit makes me not able to register sometimes
@@ -164,7 +159,7 @@ public class NmsUtils{
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> Holder<T> registerInRegistry(ResourceKey<Registry<T>> registryKey, @NonNull T object, Key key){
+    public static <T> Holder<T> registerInRegistry(ResourceKey<Registry<T>> registryKey, T object, Key key){
         final Holder<T>[] holder = new Holder[1];
         modifyRegistry(registryKey, (registry, allTags) -> {
             holder[0] = Registry.registerForHolder(registry, toNms(key), object);
@@ -182,27 +177,35 @@ public class NmsUtils{
     }
 
     // ITEM
-    public static net.minecraft.world.item.ItemStack toNmsItemStack(@Nullable ItemStack itemStack){
+    public static net.minecraft.world.item.ItemStack toNms(@Nullable ItemStack itemStack){
         return CraftItemStack.asNMSCopy(itemStack);
     }
-    public static Item toNmsMaterial(Material material){
+    public static ItemStackTemplate toNmsStackTemplate(@Nullable ItemStack itemStack){
+        return ItemStackTemplate.fromStack(NmsUtils.toNms(itemStack));
+    }
+
+    public static Item toNms(Material material){
         return CraftMagicNumbers.getItem(material);
     }
     public static Block toNmsBlock(Material material){
         return CraftMagicNumbers.getBlock(material);
     }
-    public static ItemStack toBukkitItemStack(net.minecraft.world.item.ItemStack itemStack){
+    public static ItemStack toBukkit(net.minecraft.world.item.ItemStack itemStack){
         return CraftItemStack.asBukkitCopy(itemStack);
     }
+    public static Material toBukkit(Item item){
+        return CraftMagicNumbers.getMaterial(item);
+    }
+
     public static MapItemSavedData toNms(MapView map){
         CraftMapView craftMapView = (CraftMapView) map;
-        return Reflex.getFieldValue(craftMapView, "worldMap");
+        return craftMapView.worldMap;
     }
     // ENTITY
-    public static Entity toNmsEntity(org.bukkit.entity.Entity entity){
+    public static Entity toNms(org.bukkit.entity.Entity entity){
         return ((CraftEntity) entity).getHandle();
     }
-    public static LivingEntity toNmsEntity(org.bukkit.entity.LivingEntity entity){
+    public static LivingEntity toNms(org.bukkit.entity.LivingEntity entity){
         return ((CraftLivingEntity) entity).getHandle();
     }
     public static ServerPlayer toNmsPlayer(Player player){
@@ -224,15 +227,15 @@ public class NmsUtils{
         };
     }
 
-    public static ServerLevel toNmsWorld(World world){
+    public static ServerLevel toNms(World world){
         return ((CraftWorld) world).getHandle();
     }
 
-    public static BlockPos toNmsBlockPos(org.bukkit.block.Block block){
+    public static BlockPos toNms(org.bukkit.block.Block block){
         return new BlockPos(block.getX(), block.getY(), block.getZ());
     }
 
-    public static BlockState toNmsBlockState(org.bukkit.block.BlockState blockState){
+    public static BlockState toNms(org.bukkit.block.BlockState blockState){
         return ((CraftBlockState) blockState).getHandle();
     }
 

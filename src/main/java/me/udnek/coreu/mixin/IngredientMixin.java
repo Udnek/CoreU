@@ -2,26 +2,16 @@ package me.udnek.coreu.mixin;
 
 import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.nms.NmsUtils;
-import me.udnek.coreu.util.LogUtils;
 import net.minecraft.core.HolderSet;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackLinkedSet;
 import net.minecraft.world.item.crafting.Ingredient;
-import org.bukkit.inventory.CraftingRecipe;
-import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.RecipeChoice;
-import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NullMarked;
 import org.spongepowered.asm.mixin.*;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.logging.Logger;
 
 
 @NullMarked
@@ -47,7 +37,7 @@ abstract class IngredientMixin{
     public static Ingredient ofStacks(List<ItemStack> stacks){
         var customItems = new ArrayList<CustomItem>();
         for (var stack : stacks) {
-            var customItem = CustomItem.get(NmsUtils.toBukkitItemStack(stack));
+            var customItem = CustomItem.get(NmsUtils.toBukkit(stack));
             if (customItem != null)
                 customItems.add(customItem);
         }
@@ -66,7 +56,7 @@ abstract class IngredientMixin{
      */
     @Overwrite
     public boolean test(ItemStack stack){
-        var customItem = CustomItem.get(NmsUtils.toBukkitItemStack(stack));
+        var customItem = CustomItem.get(NmsUtils.toBukkit(stack));
         if (customItem != null){ // custom item matching
             if (coreu$customItems == null) return false;
             return coreu$customItems.contains(customItem);

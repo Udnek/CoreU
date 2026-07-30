@@ -5,6 +5,7 @@ import com.google.common.base.Preconditions;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
+import io.papermc.paper.datacomponent.item.PaperBundleContents;
 import io.papermc.paper.dialog.Dialog;
 import io.papermc.paper.dialog.PaperDialog;
 import it.unimi.dsi.fastutil.ints.IntImmutableList;
@@ -19,7 +20,7 @@ import me.udnek.coreu.nms.structure.StructureWrapper;
 import me.udnek.coreu.util.LogUtils;
 import me.udnek.coreu.util.Reflex;
 import net.kyori.adventure.key.Key;
-import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.triggers.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -59,10 +60,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.RespawnAnchorBlock;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BlockEntityTypes;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.entity.vault.VaultConfig;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
@@ -79,7 +79,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.util.TriConsumer;
 import org.bukkit.*;
-import org.bukkit.Color;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
@@ -93,9 +92,7 @@ import org.bukkit.craftbukkit.block.impl.CraftVault;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftEntityType;
 import org.bukkit.craftbukkit.entity.CraftMob;
-import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.map.CraftMapCursor;
-import org.bukkit.craftbukkit.util.CraftLocation;
 import org.bukkit.craftbukkit.util.CraftVector;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -140,7 +137,7 @@ public class Nms {
 
     public LootContext getGenericLootContext(){
         if (genericLootContext == null){
-            ServerLevel serverLevel = NmsUtils.toNmsWorld(Objects.requireNonNull(Bukkit.getWorld("world")));
+            ServerLevel serverLevel = NmsUtils.toNms(Objects.requireNonNull(Bukkit.getWorld("world")));
 
             LootParams.Builder paramsBuilder = new LootParams.Builder(serverLevel);
             ContextKeySet.Builder keyBuilder = new ContextKeySet.Builder();
@@ -160,7 +157,7 @@ public class Nms {
     ///////////////////////////////////////////////////////////////////////////
 
     public void addDialogToQuickActions(Key key, Dialog dialog){
-        net.minecraft.server.dialog.Dialog nmsDialog = PaperDialog.bukkitToMinecraftHolder(dialog).value();
+        var nmsDialog = PaperDialog.bukkitToMinecraftHolder(dialog).value();
         NmsUtils.registerInRegistry(Registries.DIALOG, nmsDialog, key);
         NmsUtils.addValueToTag(Registries.DIALOG, DialogTags.QUICK_ACTIONS, nmsDialog);
     }
@@ -169,53 +166,29 @@ public class Nms {
     // ITEMS
     ///////////////////////////////////////////////////////////////////////////
 
-    public @Nullable DyeColor getColorByDye(Material dye){
-        if (!(NmsUtils.toNmsMaterial(dye) instanceof DyeItem dyeItem)) return null;
-        net.minecraft.world.item.DyeColor dyeColor = dyeItem.getDyeColor();
-        return new DyeColor(){
-            @Override
-            public String name() {return dyeColor.name();}
-            @Override
-            public Color textureDiffuseColor() {return Color.fromARGB(dyeColor.getTextureDiffuseColor());}
-            @Override
-            public Color fireworkColor() {return Color.fromRGB(dyeColor.getFireworkColor());}
-            @Override
-            public Color textColor() {return Color.fromRGB(dyeColor.getTextColor());}
-        };
-    }
-
     public boolean canAttackBlock(org.bukkit.block.BlockState blockState, Player player, ItemStack itemStack){
-        return NmsUtils.toNmsItemStack(itemStack).getItem().canDestroyBlock(
-                NmsUtils.toNmsItemStack(itemStack),
-                NmsUtils.toNmsBlockState(blockState),
-                NmsUtils.toNmsWorld(blockState.getWorld()),
-                NmsUtils.toNmsBlockPos(blockState.getBlock()),
+        return NmsUtils.toNms(itemStack).getItem().canDestroyBlock(
+                NmsUtils.toNms(itemStack),
+                NmsUtils.toNms(blockState),
+                NmsUtils.toNms(blockState.getWorld()),
+                NmsUtils.toNms(blockState.getBlock()),
                 NmsUtils.toNmsPlayer(player));
     }
 
     public int getMaxAmountCanFitInBundle(io.papermc.paper.datacomponent.item.BundleContents contents, ItemStack itemStack){
-        List<net.minecraft.world.item.ItemStack> nmsItems = new ArrayList<>();
-        contents.contents().forEach(item -> nmsItems.add(NmsUtils.toNmsItemStack(item)));
-        BundleContents.Mutable mutable = new BundleContents.Mutable(new BundleContents(nmsItems));
-        Method method = Reflex.getMethod(BundleContents.Mutable.class, "getMaxAmountToAdd", net.minecraft.world.item.ItemStack.class);
-        return Reflex.invokeMethod(mutable, method, NmsUtils.toNmsItemStack(itemStack));
+        return ((PaperBundleContents) contents).impl().getMaxAmountToAdd(NmsUtils.toNms(itemStack));
     }
 
     public void triggerEnchantedItem(Player player, ItemStack itemStack, int levels){
-        CriteriaTriggers.ENCHANTED_ITEM.trigger(NmsUtils.toNmsPlayer(player), NmsUtils.toNmsItemStack(itemStack), levels);
+        CriteriaTriggers.ENCHANTED_ITEM.trigger(NmsUtils.toNmsPlayer(player), NmsUtils.toNms(itemStack), levels);
     }
 
     ///////////////////////////////////////////////////////////////////////////
     // BLOCKS
     ///////////////////////////////////////////////////////////////////////////
 
-
-    private static final Method GET_LIGHT_BLOCK_METHOD = Objects.requireNonNull(Reflex.getMethod(BlockBehaviour.class, "getLightBlock"));
-
     public int getHowMuchLightBlockBlocks(Block bukkitBlock){
-        BlockBehaviour block = ((CraftBlock) bukkitBlock).getHandle().getBlockIfLoaded(NmsUtils.toNmsBlockPos(bukkitBlock));
-        BlockState blockState = NmsUtils.toNmsBlockState(bukkitBlock.getState());
-        return Reflex.invokeMethod(block, GET_LIGHT_BLOCK_METHOD, blockState);
+        return  ((CraftBlock) bukkitBlock).getBlockState().getLightDampening();
     }
 
     public Item simulateDropperDrop(ItemStack itemStack, Block block){
@@ -223,17 +196,17 @@ public class Nms {
     }
 
     public Item simulateDropperDrop(ItemStack itemStack, Block block, BlockFace face){
-        ServerLevel nmsWorld = NmsUtils.toNmsWorld(block.getWorld());
+        ServerLevel nmsWorld = NmsUtils.toNms(block.getWorld());
         BlockSource blockSource = new BlockSource(
                 nmsWorld,
-                NmsUtils.toNmsBlockPos(block),
-                NmsUtils.toNmsBlockState(block.getState()),
-                nmsWorld.getBlockEntity(NmsUtils.toNmsBlockPos(block), BlockEntityType.DISPENSER).orElseThrow()
+                NmsUtils.toNms(block),
+                NmsUtils.toNms(block.getState()),
+                nmsWorld.getBlockEntity(NmsUtils.toNms(block), BlockEntityTypes.DISPENSER).orElseThrow()
         );
 
         ItemEntity nmsItemEntity = Reflex.invokeMethod(null, Reflex.getMethod(DefaultDispenseItemBehavior.class, "prepareItem"),
                 nmsWorld,
-                NmsUtils.toNmsItemStack(itemStack),
+                NmsUtils.toNms(itemStack),
                 Reflex.getFieldValue(DefaultDispenseItemBehavior.class, "DEFAULT_ACCURACY"),
                 NmsUtils.toNmsDirection(face),
                 DispenserBlock.getDispensePosition(blockSource)
@@ -245,8 +218,8 @@ public class Nms {
     public @Nullable Location findAnchorStandUpLocation(EntityType entityType, Location anchorLocation){
         Optional<Vec3> standUpPosition = RespawnAnchorBlock.findStandUpPosition(
                 CraftEntityType.bukkitToMinecraft(entityType),
-                NmsUtils.toNmsWorld(anchorLocation.getWorld()),
-                NmsUtils.toNmsBlockPos(anchorLocation.getBlock())
+                NmsUtils.toNms(anchorLocation.getWorld()),
+                NmsUtils.toNms(anchorLocation.getBlock())
         );
         return standUpPosition.map(vec3 -> new Location(anchorLocation.getWorld(), vec3.x, vec3.y, vec3.z)).orElse(null);
     }
@@ -263,7 +236,7 @@ public class Nms {
     @ApiStatus.Experimental
     public void setProjectileItemsCanFire(Predicate<ItemStack> predicate){
         Predicate<net.minecraft.world.item.ItemStack> nmsPredicate =
-                itemStack -> predicate.test(NmsUtils.toBukkitItemStack(itemStack));
+                itemStack -> predicate.test(NmsUtils.toBukkit(itemStack));
         Reflex.setStaticFinalFieldValue(ProjectileWeaponItem.class, "ARROW_ONLY", nmsPredicate);
     }
 
@@ -275,7 +248,7 @@ public class Nms {
     }
 
     public BlockPlaceResult placeBlockFromItem(Player player, @Nullable ItemStack itemStack, EquipmentSlot hand, Location hitPos, BlockFace blockFace, Block clicked, boolean isInside){
-        net.minecraft.world.item.ItemStack stack = NmsUtils.toNmsItemStack(itemStack);
+        net.minecraft.world.item.ItemStack stack = NmsUtils.toNms(itemStack);
         if (!(stack.getItem() instanceof BlockItem blockItem)) return new BlockPlaceResult(false, itemStack);
         InteractionHand interactionHand = switch (hand){
             case HAND -> InteractionHand.MAIN_HAND;
@@ -290,18 +263,18 @@ public class Nms {
                         new BlockHitResult(
                                 new Vec3(hitPos.getX(), hitPos.getY(), hitPos.getZ()),
                                 direction,
-                                NmsUtils.toNmsBlockPos(clicked),
+                                NmsUtils.toNms(clicked),
                                 isInside)
                 )
         );
-        return new BlockPlaceResult(placed instanceof InteractionResult.Success, NmsUtils.toBukkitItemStack(stack));
+        return new BlockPlaceResult(placed instanceof InteractionResult.Success, NmsUtils.toBukkit(stack));
     }
 
-    public @Nullable ItemStack getSpawnEggByType(EntityType type){
-        net.minecraft.world.entity.EntityType<?> aClass = CraftEntityType.bukkitToMinecraft(type);
-        SpawnEggItem item = SpawnEggItem.byId(aClass);
+    public @Nullable Material getSpawnEggByType(EntityType type){
+        net.minecraft.world.entity.EntityType<?> nmsType = CraftEntityType.bukkitToMinecraft(type);
+        Holder<net.minecraft.world.item.Item> item = SpawnEggItem.byId(nmsType).orElse(null);
         if (item == null) return null;
-        return CraftItemStack.asNewCraftStack(item);
+        return NmsUtils.toBukkit(item.value());
     }
 
     public float getBreakProgressPerTick(Player player, Material material){
@@ -397,13 +370,13 @@ public class Nms {
     public List<ItemStack> getPossibleLoot(org.bukkit.loot.LootTable lootTable) {
         List<ItemStack> result = new ArrayList<>();
         LootTable nmsLootTable = NmsUtils.toNmsLootTable(lootTable);
-        NmsUtils.getPossibleLoot(nmsLootTable, itemStack -> result.add(NmsUtils.toBukkitItemStack(itemStack)));
+        NmsUtils.getPossibleLoot(nmsLootTable, itemStack -> result.add(NmsUtils.toBukkit(itemStack)));
         return result;
     }
 
     @SuppressWarnings("OptionalIsPresent")
     public org.bukkit.loot.@Nullable LootTable getDeathLootTable(org.bukkit.entity.LivingEntity bukkitEntity){
-        LivingEntity entity = NmsUtils.toNmsEntity(bukkitEntity);
+        LivingEntity entity = NmsUtils.toNms(bukkitEntity);
         Optional<ResourceKey<LootTable>> lootTable = entity.getLootTable();
         if (lootTable.isEmpty()) return null;
         return Objects.requireNonNull(NmsUtils.getLootTable(lootTable.get())).craftLootTable;
@@ -422,7 +395,7 @@ public class Nms {
         LootTable lootTable = NmsUtils.toNmsLootTable(bukkitTable);
         List<ItemStack> itemStacks = new ArrayList<>();
         lootTable.getRandomItems(contextBuilder.getNmsParams()).forEach(itemStack ->
-                itemStacks.add(NmsUtils.toBukkitItemStack(itemStack)));
+                itemStacks.add(NmsUtils.toBukkit(itemStack)));
         return itemStacks;
     }
 
@@ -483,7 +456,7 @@ public class Nms {
                 CraftVault vaultState = (CraftVault) Material.VAULT.createBlockData();
 
                 info.state().getOptionalValue(HorizontalDirectionalBlock.FACING).ifPresent(direction -> {
-                    vaultState.setFacing(CraftBlockData.toBukkit(direction, BlockFace.class));
+                    vaultState.setFacing(CraftBlockData.fromVanilla(direction, BlockFace.class));
                 });
 
                 Reflex.setRecordFieldValue(info, "state", vaultState.getState());
@@ -492,7 +465,7 @@ public class Nms {
                         lootTableKey,
                         DEFAULT_CONFIG.activationRange(),
                         DEFAULT_CONFIG.deactivationRange(),
-                        NmsUtils.toNmsItemStack(key),
+                        NmsUtils.toNms(key),
                         DEFAULT_CONFIG.overrideLootTableToDisplay(),
                         DEFAULT_CONFIG.playerDetector(),
                         DEFAULT_CONFIG.entitySelector()
@@ -512,7 +485,7 @@ public class Nms {
                 VaultConfig config = info.nbt().read("config", vaultCodec).orElse(null);
                 if (config == null) return true;
                 net.minecraft.world.item.ItemStack keyItem = config.keyItem();
-                ItemStack bukkitKey = NmsUtils.toBukkitItemStack(keyItem);
+                ItemStack bukkitKey = NmsUtils.toBukkit(keyItem);
                 ItemStack newBukkitKey = oldKeyToNew.apply(bukkitKey);
                 if (bukkitKey == newBukkitKey) return true;
 
@@ -520,7 +493,7 @@ public class Nms {
                         config.lootTable(),
                         config.activationRange(),
                         config.deactivationRange(),
-                        NmsUtils.toNmsItemStack(newBukkitKey),
+                        NmsUtils.toNms(newBukkitKey),
                         config.overrideLootTableToDisplay(),
                         config.playerDetector(),
                         config.entitySelector()
@@ -557,12 +530,12 @@ public class Nms {
                                                    boolean trackingPosition,
                                                    boolean unlimitedTracking)
     {
-        ServerLevel level = NmsUtils.toNmsWorld(location.getWorld());
+        ServerLevel level = NmsUtils.toNms(location.getWorld());
 
         @Nullable Pair<BlockPos, Holder<Structure>> result = level.getChunkSource().getGenerator().findNearestMapStructure(
                 level,
                 NmsUtils.toNms(Registries.STRUCTURE, structures),
-                NmsUtils.toNmsBlockPos(location.getBlock()),
+                NmsUtils.toNms(location.getBlock()),
                 chunkRadius,
                 skipKnownStructures
         );
@@ -574,12 +547,12 @@ public class Nms {
         MapItem.renderBiomePreviewMap(level, map);
         MapItemSavedData.addTargetDecoration(map, pos, "+", CraftMapCursor.CraftType.bukkitToMinecraftHolder(icon));
 
-        return NmsUtils.toBukkitItemStack(map);
+        return NmsUtils.toBukkit(map);
     }
 
     public void generateBiomePreviewMap(World world, ItemStack map){
-        ServerLevel serverLevel = NmsUtils.toNmsWorld(world);
-        MapItem.renderBiomePreviewMap(serverLevel, NmsUtils.toNmsItemStack(map));
+        ServerLevel serverLevel = NmsUtils.toNms(world);
+        MapItem.renderBiomePreviewMap(serverLevel, NmsUtils.toNms(map));
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -624,12 +597,12 @@ public class Nms {
     public void sendBlockUpdatePacket(Player player, org.bukkit.block.BlockState blockState){
         NmsUtils.sendPacket(player, new ClientboundBlockUpdatePacket(
                 new BlockPos(blockState.getX(), blockState.getY(), blockState.getZ()),
-                NmsUtils.toNmsBlockState(blockState))
+                NmsUtils.toNms(blockState))
         );
     }
 
     public void setSpinAttack(Player player, int ticks, float damage, @Nullable ItemStack itemStack){
-        NmsUtils.toNmsPlayer(player).startAutoSpinAttack(ticks, damage, NmsUtils.toNmsItemStack(itemStack));
+        NmsUtils.toNmsPlayer(player).startAutoSpinAttack(ticks, damage, NmsUtils.toNms(itemStack));
     }
 
     public void resetSpinAttack(Player player){
@@ -658,42 +631,42 @@ public class Nms {
     }
 
     public void moveNaturally(Entity entity, Vector velocity){
-        NmsUtils.toNmsEntity(entity).move(MoverType.SELF, CraftVector.toVec3(velocity));
+        NmsUtils.toNms(entity).move(MoverType.SELF, CraftVector.toVec3(velocity));
     }
 
     public void stopMovingWithPathfind(org.bukkit.entity.Mob mob) {
-        ((Mob) NmsUtils.toNmsEntity(mob)).getNavigation().moveTo((Path) null, 1D);
+        ((Mob) NmsUtils.toNms(mob)).getNavigation().moveTo((Path) null, 1D);
     }
 
     public void sendFakeEquipment(Player entity, Player observer, EquipmentSlot slot, @Nullable ItemStack item) {
         NmsUtils.sendPacket(observer, new ClientboundSetEquipmentPacket(
-                NmsUtils.toNmsEntity(entity).getId(),
-                List.of(Pair.of(CraftEquipmentSlot.getNMS(slot), NmsUtils.toNmsItemStack(item)))
+                NmsUtils.toNms(entity).getId(),
+                List.of(Pair.of(CraftEquipmentSlot.getNMS(slot), NmsUtils.toNms(item)))
                 ));
     }
 
     public void sendFakeDestroyEntities(List<Entity> entities, Player observer) {
         var idNmsEntities = new ArrayList<Integer>();
-        entities.forEach(entity ->  idNmsEntities.add(NmsUtils.toNmsEntity(entity).getId()));
+        entities.forEach(entity ->  idNmsEntities.add(NmsUtils.toNms(entity).getId()));
         NmsUtils.sendPacket(observer, new ClientboundRemoveEntitiesPacket(new IntImmutableList(idNmsEntities)));
     }
 
     public String serializeEntity(Entity entity) {
-        net.minecraft.world.entity.Entity nmsEntity = NmsUtils.toNmsEntity(entity);
+        net.minecraft.world.entity.Entity nmsEntity = NmsUtils.toNms(entity);
         TagValueOutput tagValueOutput = TagValueOutput.createWithoutContext(ProblemReporter.DISCARDING);
         nmsEntity.save(tagValueOutput);
         return tagValueOutput.buildResult().toString();
     }
 
     public @Nullable Entity deserializeEntity(String nbtString, World world) {
-        ServerLevel nmsWorld = NmsUtils.toNmsWorld(world);
+        ServerLevel nmsWorld = NmsUtils.toNms(world);
         try {
             CompoundTag compoundTag = TagParser.parseCompoundFully(nbtString);
             ValueInput valueInput = TagValueInput.createGlobal(ProblemReporter.DISCARDING, compoundTag);
-            Optional<net.minecraft.world.entity.Entity> optionalEntity = net.minecraft.world.entity.EntityType.create(valueInput, nmsWorld, EntitySpawnReason.COMMAND);
+            var optionalEntity = net.minecraft.world.entity.EntityType.create(valueInput, nmsWorld,
+                    new EntitySpawnRequest(EntitySpawnReason.COMMAND, true));
             if (optionalEntity.isEmpty()) return null;
-            net.minecraft.world.entity.Entity entity = optionalEntity.get();
-            return entity.getBukkitEntity();
+            return optionalEntity.get().getBukkitEntity();
         } catch (CommandSyntaxException e) {
             LogUtils.coreuError(e);
             return null;
@@ -732,8 +705,8 @@ public class Nms {
     }
 
     public DownfallType getDownfallType(Location location){
-        BlockPos blockPosition = CraftLocation.toBlockPosition(location);
-        Biome.Precipitation precipitation = NmsUtils.toNmsWorld(location.getWorld()).getBiome(blockPosition).value().getPrecipitationAt(blockPosition, location.getWorld().getSeaLevel());
+        BlockPos blockPosition = NmsUtils.toNms(location.getBlock());
+        Biome.Precipitation precipitation = NmsUtils.toNms(location.getWorld()).getBiome(blockPosition).value().getPrecipitationAt(blockPosition, location.getWorld().getSeaLevel());
         return DownfallType.fromNMS(precipitation);
     }
 }

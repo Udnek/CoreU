@@ -3,11 +3,13 @@ package me.udnek.coreu.nms.loot.condition;
 import me.udnek.coreu.nms.NmsUtils;
 import me.udnek.coreu.nms.NmsWrapper;
 import net.kyori.adventure.key.Key;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.advancements.criterion.LocationPredicate;
-import net.minecraft.advancements.criterion.RaiderPredicate;
+import net.minecraft.advancements.predicates.LocationPredicate;
+
+import net.minecraft.advancements.predicates.entity.*;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.clock.WorldClocks;
 import net.minecraft.world.level.storage.loot.IntRange;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.*;
@@ -39,6 +41,7 @@ import java.util.Set;
 
     public static LootConditionWrapper time(Range<Integer> range, @Nullable Long period){
         return new LootConditionWrapper(new TimeCheck(
+                NmsUtils.getRegistry(Registries.WORLD_CLOCK).getOrThrow(WorldClocks.OVERWORLD),
                 Optional.ofNullable(period), IntRange.range(range.getMinimum(), range.getMaximum()))
         );
     }
@@ -76,7 +79,7 @@ import java.util.Set;
     }
 
     public LootConditionPortrait getPortrait(){
-        LootConditionPortrait portrait = new LootConditionPortrait();
+        var portrait = new LootConditionPortrait();
         switch (condition) {
             case TimeCheck time -> {}// todo
 
@@ -101,7 +104,7 @@ import java.util.Set;
                     portrait.unenchantedRandomChance = randomChanceCondition.unenchantedChance();
 
             case MatchTool matchTool -> {
-                // tool enchantments
+                // todo  tool enchantments
 //                matchTool.predicate()
 //                        .flatMap(predicate -> predicate.)
 //                        .ifPresent(
@@ -110,38 +113,45 @@ import java.util.Set;
 //                                        ));
             }
 
-            case LootItemEntityPropertyCondition entityCondition -> {
-
-                if (entityCondition.entityTarget() == LootContext.EntityTarget.THIS){
-                    // raider
-                    entityCondition.predicate()
-                            .flatMap(EntityPredicate::subPredicate)
-                            .ifPresent(p -> {
-                                if (p instanceof RaiderPredicate(boolean hasRaid, boolean isCaptain)){
-                                    portrait.raiderInRaid = hasRaid;
-                                    portrait.raiderIsCaptain = isCaptain;
-                                }
-                            });
-
-                    // vehicle
-                    entityCondition.predicate()
-                            .flatMap(EntityPredicate::vehicle)
-                            .flatMap(EntityPredicate::entityType)
-                            .ifPresent(
-                                    typePredicate -> typePredicate.types()
-                                            .forEach(type -> portrait.vehicles.add(CraftEntityType.minecraftToBukkit(type.value()))
-                                            ));
-                }
-                // killer
-                else if (entityCondition.entityTarget() == LootContext.EntityTarget.ATTACKER){
-                    entityCondition.predicate()
-                            .flatMap(EntityPredicate::entityType)
-                            .ifPresent(
-                                    typePredicate -> typePredicate.types()
-                                            .forEach(type -> portrait.attackers.add(CraftEntityType.minecraftToBukkit(type.value()))
-                                            ));
-                }
-            }
+            // TODO
+//            case LootItemEntityPropertyCondition entityCondition -> {
+//                if (entityCondition.predicate().isEmpty()) break;
+//                var predicate = entityCondition.predicate().orElse(null);
+//
+//                if (entityCondition.entityTarget() == LootContext.EntityTarget.THIS){
+//
+//                    predicate.parts.values().forEach(part -> {
+//                        // raider
+//                        if (part instanceof RaiderPredicate raiderPredicate){
+//                            portrait.raiderInRaid = raiderPredicate.hasRaid();
+//                            portrait.raiderIsCaptain = raiderPredicate.isCaptain();
+//                        }
+//
+//                        // vehicle
+//                        else if (part instanceof VehiclePredicate vehiclePredicate){
+//                            vehiclePredicate.
+//                        }
+//                    });
+//
+//
+//                    entityCondition.predicate()
+//                            .flatMap(EntityPredicate::vehicle)
+//                            .flatMap(EntityPredicate::entityType)
+//                            .ifPresent(
+//                                    typePredicate -> typePredicate.types()
+//                                            .forEach(type -> portrait.vehicles.add(CraftEntityType.minecraftToBukkit(type.value()))
+//                                            ));
+//                }
+//                // killer
+//                else if (entityCondition.entityTarget() == LootContext.EntityTarget.ATTACKER){
+//                    entityCondition.predicate()
+//                            .flatMap(EntityPredicate::entityType)
+//                            .ifPresent(
+//                                    typePredicate -> typePredicate.types()
+//                                            .forEach(type -> portrait.attackers.add(CraftEntityType.minecraftToBukkit(type.value()))
+//                                            ));
+//                }
+//            }
             default -> {
             }
         }

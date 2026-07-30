@@ -31,14 +31,14 @@ import java.util.List;
     }
 
     public static void stop(org.bukkit.entity.Entity entity){
-        FakeGlow fakeGlow = fakes.get(NmsUtils.toNmsEntity(entity));
+        FakeGlow fakeGlow = fakes.get(NmsUtils.toNms(entity));
         if (fakeGlow == null) return;
         fakeGlow.stop(true);
     }
 
     private FakeGlow(org.bukkit.entity.Entity entity, List<Player> observers, long duration) {
         this.observers = observers;
-        this.nmsEntity = NmsUtils.toNmsEntity(entity);
+        this.nmsEntity = NmsUtils.toNms(entity);
         this.duration = duration;
     }
 
