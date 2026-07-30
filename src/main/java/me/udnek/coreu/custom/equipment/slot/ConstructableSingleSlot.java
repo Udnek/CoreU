@@ -3,9 +3,10 @@ package me.udnek.coreu.custom.equipment.slot;
 import me.udnek.coreu.custom.equipment.universal.UniversalInventorySlot;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.EquipmentSlotGroup;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@org.jspecify.annotations.NullMarked public class ConstructableSingleSlot extends AbstractCustomEquipmentSlot implements CustomEquipmentSlot.Single{
+@NullMarked public class ConstructableSingleSlot extends AbstractCustomEquipmentSlot implements CustomEquipmentSlot.Single{
 
     protected final String translation;
     protected final EquipmentSlotGroup vanillaGroup;

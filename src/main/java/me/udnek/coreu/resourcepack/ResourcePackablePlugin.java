@@ -1,8 +1,9 @@
 package me.udnek.coreu.resourcepack;
 
 import org.bukkit.plugin.Plugin;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked
+@NullMarked
 public interface ResourcePackablePlugin extends Plugin {
 
     Priority getPriority();

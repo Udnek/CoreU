@@ -9,9 +9,10 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@org.jspecify.annotations.NullMarked public class ClearAttributeCommand implements BasicCommand{
+@NullMarked public class ClearAttributeCommand implements BasicCommand{
 
     @Override
     public void execute(CommandSourceStack commandSourceStack, String[] args) {

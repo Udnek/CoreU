@@ -3,10 +3,11 @@ package me.udnek.coreu.rpgu.component.ability.property.function;
 import me.udnek.coreu.custom.attribute.CustomAttribute;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.LivingEntity;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.function.Function;
 
-@org.jspecify.annotations.NullMarked public class AttributeFunction implements RPGUPropertyFunction<LivingEntity, Double>{
+@NullMarked public class AttributeFunction implements RPGUPropertyFunction<LivingEntity, Double>{
 
     protected CustomAttribute attribute;
     protected RPGUPropertyFunction<LivingEntity, Double> function;

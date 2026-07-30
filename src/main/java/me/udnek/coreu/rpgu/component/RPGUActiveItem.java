@@ -8,10 +8,11 @@ import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.custom.item.LoreProvidingItemComponent;
 import me.udnek.coreu.rpgu.component.ability.active.RPGUItemActiveAbility;
 import me.udnek.coreu.util.LoreBuilder;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked public class RPGUActiveItem extends AbstractComponentHolder<RPGUActiveItem>implements LoreProvidingItemComponent{
+@NullMarked public class RPGUActiveItem extends AbstractComponentHolder<RPGUActiveItem>implements LoreProvidingItemComponent{
 
     public static final RPGUActiveItem DEFAULT = new RPGUActiveItem(){
         @Override

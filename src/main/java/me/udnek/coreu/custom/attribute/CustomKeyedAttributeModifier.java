@@ -4,8 +4,9 @@ import me.udnek.coreu.custom.equipment.slot.CustomEquipmentSlot;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.AttributeModifier;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public class CustomKeyedAttributeModifier extends CustomAttributeModifier implements Keyed{
+@NullMarked public class CustomKeyedAttributeModifier extends CustomAttributeModifier implements Keyed{
     protected final NamespacedKey key;
     public CustomKeyedAttributeModifier(NamespacedKey key, double amount, AttributeModifier.Operation operation, CustomEquipmentSlot equipmentSlot) {
         super(amount, operation, equipmentSlot);

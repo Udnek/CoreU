@@ -4,9 +4,10 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@org.jspecify.annotations.NullMarked public  interface SmartIntractableCustomInventory extends CustomInventory{
+@NullMarked public  interface SmartIntractableCustomInventory extends CustomInventory{
     boolean canPlaceItem(@Nullable ItemStack itemStack, int slot);
     boolean canTakeItem(@Nullable ItemStack itemStack, int slot);
     @Override

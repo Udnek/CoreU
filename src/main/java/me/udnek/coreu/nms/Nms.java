@@ -210,12 +210,12 @@ public class Nms {
     ///////////////////////////////////////////////////////////////////////////
 
 
-    private static final Method GET_LIGHT_BLOCK = Objects.requireNonNull(Reflex.getMethod(BlockBehaviour.class, "getLightBlock"));
+    private static final Method GET_LIGHT_BLOCK_METHOD = Objects.requireNonNull(Reflex.getMethod(BlockBehaviour.class, "getLightBlock"));
 
     public int getHowMuchLightBlockBlocks(Block bukkitBlock){
         BlockBehaviour block = ((CraftBlock) bukkitBlock).getHandle().getBlockIfLoaded(NmsUtils.toNmsBlockPos(bukkitBlock));
         BlockState blockState = NmsUtils.toNmsBlockState(bukkitBlock.getState());
-        return Reflex.invokeMethod(block, GET_LIGHT_BLOCK, blockState);
+        return Reflex.invokeMethod(block, GET_LIGHT_BLOCK_METHOD, blockState);
     }
 
     public Item simulateDropperDrop(ItemStack itemStack, Block block){
@@ -252,7 +252,7 @@ public class Nms {
     }
 
     public int getMapColor(Material block){
-        net.minecraft.world.level.block.Block nmsBlock = CraftBlockType.bukkitToMinecraft(block);
+        var nmsBlock = CraftBlockType.bukkitToMinecraft(block);
         return nmsBlock.defaultMapColor().col;
     }
 

@@ -1,8 +1,9 @@
 package me.udnek.coreu.rpgu.lore.ability;
 
 import me.udnek.coreu.custom.equipment.slot.CustomEquipmentSlot;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public  interface PassiveAbilityLorePart extends AbilityLorePart{
+@NullMarked public  interface PassiveAbilityLorePart extends AbilityLorePart{
 
     void setEquipmentSlot(CustomEquipmentSlot slot);
 }

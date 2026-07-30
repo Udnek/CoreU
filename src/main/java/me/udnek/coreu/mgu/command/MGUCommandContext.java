@@ -6,9 +6,10 @@ import me.udnek.coreu.mgu.game.MGUGameType;
 import me.udnek.coreu.mgu.player.MGUPlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@org.jspecify.annotations.NullMarked public  record MGUCommandContext(
+@NullMarked public  record MGUCommandContext(
         MGUCommandType commandType,
         CommandSender sender,
         String[] args,

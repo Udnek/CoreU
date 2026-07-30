@@ -15,11 +15,12 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.persistence.PersistentDataType;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-@org.jspecify.annotations.NullMarked public  interface CustomItem extends Registrable, ComponentHolder<CustomItem>, Translatable{
+@NullMarked public  interface CustomItem extends Registrable, ComponentHolder<CustomItem>, Translatable{
 
     NamespacedKey PERSISTENT_DATA_CONTAINER_NAMESPACE = new NamespacedKey(CoreU.getPlugin(), "item");
     ///////////////////////////////////////////////////////////////////////////

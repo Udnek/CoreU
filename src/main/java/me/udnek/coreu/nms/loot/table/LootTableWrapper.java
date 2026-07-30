@@ -7,11 +7,12 @@ import me.udnek.coreu.nms.loot.util.NmsFunctioned;
 import net.minecraft.world.level.storage.loot.LootTable;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 import java.util.function.Consumer;
 
-@org.jspecify.annotations.NullMarked
+@NullMarked
 public interface LootTableWrapper extends NmsWrapper<LootTable>, NmsFunctioned{
     void addPool(PoolWrapper container);
     PoolWrapper getPool(int n);

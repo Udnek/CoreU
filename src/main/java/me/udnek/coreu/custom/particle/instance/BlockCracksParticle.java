@@ -11,8 +11,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Transformation;
 import org.checkerframework.checker.index.qual.Positive;
 import org.jetbrains.annotations.Range;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public class BlockCracksParticle extends ConstructableCustomParticle<ItemDisplay>{
+@NullMarked public class BlockCracksParticle extends ConstructableCustomParticle<ItemDisplay>{
 
     protected int strength;
 

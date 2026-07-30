@@ -2,8 +2,9 @@ package me.udnek.coreu.mgu.event;
 
 import me.udnek.coreu.custom.event.CustomEvent;
 import me.udnek.coreu.mgu.game.MGUGameInstance;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public class MGUEvent extends CustomEvent{
+@NullMarked public class MGUEvent extends CustomEvent{
 
     protected MGUGameInstance game;
 

@@ -13,11 +13,12 @@ import me.udnek.coreu.resourcepack.file.RpJsonFile;
 import net.kyori.adventure.key.Key;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.NamespacedKey;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked
+@NullMarked
 public interface AutoGeneratingFilesItem extends CustomComponent<CustomItem>{
 
     Generated GENERATED = new Generated();

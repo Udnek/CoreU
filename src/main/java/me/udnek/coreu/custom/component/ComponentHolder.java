@@ -1,5 +1,7 @@
 package me.udnek.coreu.custom.component;
 
-@org.jspecify.annotations.NullMarked public  interface ComponentHolder<HolderType>{
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked public  interface ComponentHolder<HolderType>{
      CustomComponentMap<HolderType> getComponents();
 }

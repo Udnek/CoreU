@@ -3,12 +3,13 @@ package me.udnek.coreu.util;
 import org.bukkit.Bukkit;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlotGroup;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
 
-@org.jspecify.annotations.NullMarked public class ClickRateLimit{
+@NullMarked public class ClickRateLimit{
 
     private static final HashMap<UUID, Trigger> triggers = new HashMap<>();
 

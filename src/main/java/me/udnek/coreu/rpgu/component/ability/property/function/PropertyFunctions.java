@@ -5,10 +5,11 @@ import me.udnek.coreu.util.Utils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.LivingEntity;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.function.Function;
 
-@org.jspecify.annotations.NullMarked public class PropertyFunctions{
+@NullMarked public class PropertyFunctions{
 
     public static final boolean IS_DEBUG = false;
 
@@ -39,7 +40,7 @@ import java.util.function.Function;
             }
 
             @Override
-            public me.udnek.coreu.rpgu.component.ability.property.function.MultiLineDescription describeWithModifier(Function<Double, Double> modifier) {
+            public MultiLineDescription describeWithModifier(Function<Double, Double> modifier) {
                 if (IS_DEBUG) return new MultiLineDescription().add(Component.text("const(" + modifier.apply(modifier.apply(value.doubleValue())) + ")"));
                 return new MultiLineDescription().add(Component.text(Utils.roundToTwoDigits(modifier.apply(value.doubleValue()))));
             }

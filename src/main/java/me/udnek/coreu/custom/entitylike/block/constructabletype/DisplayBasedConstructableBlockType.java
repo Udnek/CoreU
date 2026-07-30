@@ -21,11 +21,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Transformation;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
-@org.jspecify.annotations.NullMarked public abstract class DisplayBasedConstructableBlockType extends AbstractCustomBlockType{
+@NullMarked public abstract class DisplayBasedConstructableBlockType extends AbstractCustomBlockType{
 
     public static final BlockState DEFAULT_FAKE_STATE = Material.BARRIER.createBlockData().createBlockState();
     public static final TileState DEFAULT_REAL_STATE;

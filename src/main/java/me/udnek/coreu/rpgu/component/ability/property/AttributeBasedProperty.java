@@ -5,8 +5,9 @@ import me.udnek.coreu.rpgu.component.ability.property.function.RPGUPropertyFunct
 import me.udnek.coreu.rpgu.component.ability.property.type.AttributeBasedPropertyType;
 import me.udnek.coreu.rpgu.lore.ability.AbilityLorePart;
 import org.bukkit.entity.LivingEntity;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public class AttributeBasedProperty implements RPGUAbilityProperty<LivingEntity, Double>{
+@NullMarked public class AttributeBasedProperty implements RPGUAbilityProperty<LivingEntity, Double>{
 
     protected AttributeBasedPropertyType type;
     protected RPGUPropertyFunction<LivingEntity, Double> function;

@@ -12,13 +12,14 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@org.jspecify.annotations.NullMarked public class CustomAttributeUtils{
+@NullMarked public class CustomAttributeUtils{
 
     private final CustomAttribute attribute;
     private final Collection<CustomEquipmentSlot> searchTroughSlots;

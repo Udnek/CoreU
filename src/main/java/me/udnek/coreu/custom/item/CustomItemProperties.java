@@ -13,12 +13,13 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.ItemStack;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Supplier;
 
-@org.jspecify.annotations.NullMarked public  interface CustomItemProperties{
+@NullMarked public  interface CustomItemProperties{
     Material getMaterial();
     // OPTIONAL
     @Nullable default List<ItemFlag> getTooltipHides(){return null;}
@@ -128,7 +129,7 @@ import java.util.function.Supplier;
     default CustomItemProperties.@Nullable DataSupplier<SwingAnimation> getSwingAnimation(){return null;}
 
 
-    static <Value, Type extends DataComponentType.Valued<Value>> Value getInDataOrInStack(ItemStack itemStack, @NonNull Type type, CustomItemProperties.@Nullable DataSupplier<Value> dataSupplier, @NonNull Value fallback){
+    static <Value, Type extends DataComponentType.Valued<Value>> Value getInDataOrInStack(ItemStack itemStack, Type type, CustomItemProperties.@Nullable DataSupplier<Value> dataSupplier, @NonNull Value fallback){
         if (dataSupplier == null) return itemStack.getDataOrDefault(type, fallback);
         Value value = dataSupplier.get();
         return value == null ? fallback : value;
@@ -150,9 +151,5 @@ import java.util.function.Supplier;
         public static <T> DataSupplier<T> of(@Nullable T data){
             return new DataSupplier<>(data);
         }
-    }
-
-    interface AttributeConsumer{
-        void consume(Attribute attribute, AttributeModifier modifier);
     }
 }

@@ -8,6 +8,7 @@ import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.resources.Identifier;
 import org.bukkit.NamespacedKey;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
@@ -15,7 +16,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-@org.jspecify.annotations.NullMarked public class ConstructableCustomAdvancement implements me.udnek.coreu.custom.advancement.CustomAdvancementContainer {
+@NullMarked public class ConstructableCustomAdvancement implements CustomAdvancementContainer {
     protected boolean registered = false;
     protected @Nullable CustomAdvancementContainer parent;
     protected AdvancementHolder itself = null;

@@ -3,13 +3,14 @@ package me.udnek.coreu.rpgu.lore.ability;
 import me.udnek.coreu.rpgu.lore.AttributeLoreGenerator;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-@org.jspecify.annotations.NullMarked public class ActiveAbilityLorePart implements AbilityLorePart{
+@NullMarked public class ActiveAbilityLorePart implements AbilityLorePart{
 
     protected @Nullable Component header;
     protected List<Component> description = new ArrayList<>();

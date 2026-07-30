@@ -2,10 +2,11 @@ package me.udnek.coreu.custom.recipe.choice;
 
 import me.udnek.coreu.custom.item.CustomItem;
 import org.bukkit.Material;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Set;
 
-@org.jspecify.annotations.NullMarked public class CustomSingleRecipeChoice extends me.udnek.coreu.custom.recipe.choice.CustomCompatibleRecipeChoice {
+@NullMarked public class CustomSingleRecipeChoice extends CustomCompatibleRecipeChoice {
 
     public CustomSingleRecipeChoice(CustomItem customItem) {
         super(Set.of(customItem), Set.of());

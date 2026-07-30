@@ -11,8 +11,9 @@ import me.udnek.coreu.rpgu.component.ability.property.CastTimeProperty;
 import me.udnek.coreu.rpgu.component.ability.property.EffectsProperty;
 import me.udnek.coreu.rpgu.component.ability.property.MissUsageCooldownMultiplierProperty;
 import me.udnek.coreu.rpgu.component.ability.property.type.AttributeBasedPropertyType;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public class RPGUComponents{
+@NullMarked public class RPGUComponents{
 
     public static final CustomComponentType<CustomItem, RPGUActiveItem> ACTIVE_ABILITY_ITEM;
     public static final CustomComponentType<CustomItem, RPGUPassiveItem> PASSIVE_ABILITY_ITEM;

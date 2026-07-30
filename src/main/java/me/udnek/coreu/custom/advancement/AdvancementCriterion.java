@@ -11,12 +11,13 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-@org.jspecify.annotations.NullMarked
+@NullMarked
 public  interface AdvancementCriterion extends Supplier<Criterion<?>>{
 
     AdvancementCriterion TICK = () -> CriteriaTriggers.TICK.createCriterion(PlayerTrigger.TriggerInstance.tick().triggerInstance());

@@ -1,20 +1,28 @@
 package me.udnek.coreu.util;
 
 import com.google.common.base.Preconditions;
-import org.jetbrains.annotations.UnknownNullability;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-@org.jspecify.annotations.NullMarked
+@NullMarked
 public final class Either<Left, Right>{
 
-    @UnknownNullability
+    @Nullable
     private final Left left;
-    @UnknownNullability
+    @Nullable
     private final Right right;
 
-    public Either(@UnknownNullability Left left, @UnknownNullability Right right){
+    public static <L, R> Either<L, R> ofLeft(L left){
+        return new Either<>(left, null);
+    }
+
+    public static <L, R> Either<L, R> ofRight(R right){
+        return new Either<>(null, right);
+    }
+
+    private Either(@Nullable Left left, @Nullable Right right){
         Preconditions.checkArgument(!(left == null && right == null), "Either can no be both null");
         Preconditions.checkArgument(left == null || right == null, "Either can no be both not null");
         this.left = left;
@@ -35,12 +43,5 @@ public final class Either<Left, Right>{
 
     public void consumeIfLeft(Consumer<Left> consumer){
         if (isLeft()) consumer.accept(left);
-    }
-
-    public Right getRight() {
-        return right;
-    }
-    public Left getLeft() {
-        return left;
     }
 }

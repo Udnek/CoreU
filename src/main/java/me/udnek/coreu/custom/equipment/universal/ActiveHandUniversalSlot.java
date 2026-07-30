@@ -3,9 +3,10 @@ package me.udnek.coreu.custom.equipment.universal;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@org.jspecify.annotations.NullMarked public class ActiveHandUniversalSlot implements me.udnek.coreu.custom.equipment.universal.UniversalInventorySlot{
+@NullMarked public class ActiveHandUniversalSlot implements UniversalInventorySlot{
 
 
     @Override

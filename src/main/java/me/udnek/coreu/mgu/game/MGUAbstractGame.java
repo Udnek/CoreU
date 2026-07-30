@@ -8,12 +8,13 @@ import me.udnek.coreu.mgu.player.MGUPlayer;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@org.jspecify.annotations.NullMarked public abstract class MGUAbstractGame implements MGUGameInstance{
+@NullMarked public abstract class MGUAbstractGame implements MGUGameInstance{
 
     private final MGUId id = MGUId.generateNew(this);
 

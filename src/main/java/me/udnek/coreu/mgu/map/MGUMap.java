@@ -1,7 +1,8 @@
 package me.udnek.coreu.mgu.map;
 
 import org.bukkit.Location;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public  interface MGUMap{
+@NullMarked public  interface MGUMap{
     Location getOrigin();
 }

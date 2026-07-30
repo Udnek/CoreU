@@ -1,8 +1,9 @@
 package me.udnek.coreu.custom.event;
 
 import org.bukkit.event.Cancellable;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public abstract class CancellableCustomEvent extends CustomEvent implements Cancellable{
+@NullMarked public abstract class CancellableCustomEvent extends CustomEvent implements Cancellable{
 
     protected boolean cancelled = false;
 

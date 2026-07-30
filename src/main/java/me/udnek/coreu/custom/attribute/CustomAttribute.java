@@ -7,8 +7,9 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.translation.Translatable;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.LivingEntity;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public  interface CustomAttribute extends Translatable, Registrable{
+@NullMarked public  interface CustomAttribute extends Translatable, Registrable{
 
     TextColor EQUALS_COLOR = NamedTextColor.DARK_GREEN;
     TextColor TAKE_COLOR = NamedTextColor.RED;

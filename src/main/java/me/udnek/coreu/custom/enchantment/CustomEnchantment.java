@@ -5,9 +5,10 @@ import me.udnek.coreu.custom.registry.CustomRegistries;
 import me.udnek.coreu.custom.registry.Registrable;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@org.jspecify.annotations.NullMarked public  interface CustomEnchantment extends Registrable{
+@NullMarked public  interface CustomEnchantment extends Registrable{
 
     static @Nullable CustomEnchantment get(Enchantment enchantment){
         return CustomRegistries.ENCHANTMENT.get(enchantment.getKey().toString());

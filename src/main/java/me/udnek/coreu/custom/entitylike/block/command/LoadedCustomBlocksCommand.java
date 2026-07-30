@@ -7,8 +7,10 @@ import me.udnek.coreu.custom.entitylike.block.CustomBlockManager;
 import me.udnek.coreu.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
-@org.jspecify.annotations.NullMarked public class LoadedCustomBlocksCommand implements BasicCommand{
+@NullMarked public class LoadedCustomBlocksCommand implements BasicCommand{
 
     @Override
     public void execute(CommandSourceStack commandSourceStack, String[] args) {
@@ -22,7 +24,7 @@ import org.bukkit.command.CommandSender;
     }
 
     @Override
-    public @org.jspecify.annotations.Nullable String permission() {
+    public @Nullable String permission() {
         return "coreu.admin";
     }
 }

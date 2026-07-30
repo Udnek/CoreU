@@ -1,8 +1,9 @@
 package me.udnek.coreu.mgu;
 
 import me.udnek.coreu.mgu.game.MGUGameInstance;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public class MGUId{
+@NullMarked public class MGUId{
 
     private static int CREATED_IDS = 0;
 

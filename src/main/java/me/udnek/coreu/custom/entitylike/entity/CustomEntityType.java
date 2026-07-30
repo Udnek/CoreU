@@ -10,11 +10,12 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-@org.jspecify.annotations.NullMarked
+@NullMarked
 public interface CustomEntityType extends EntityLikeType<Entity>, ComponentHolder<CustomEntityType>{
 
     CustomEntityType BLOCK_DISPLAY = CustomRegistries.ENTITY_TYPE.register(CoreU.getPlugin(), new DisplayBasedConstructableBlockType.DisplayEntity());

@@ -6,12 +6,13 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.BiConsumer;
 
-@org.jspecify.annotations.NullMarked public  interface UniversalInventorySlot{
+@NullMarked public  interface UniversalInventorySlot{
     static void iterateThroughNotEmpty(BiConsumer<BaseUniversalSlot, ItemStack> consumer, LivingEntity entity) {
         iterateThroughAll((universalInventorySlot, itemStack) -> {
             if (itemStack == null || itemStack.isEmpty()) return;

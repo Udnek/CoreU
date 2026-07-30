@@ -6,8 +6,9 @@ import me.udnek.coreu.rpgu.component.RPGUComponents;
 import me.udnek.coreu.rpgu.component.ability.RPGUItemAbility;
 import me.udnek.coreu.rpgu.lore.ability.AbilityLorePart;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public class MissUsageCooldownMultiplierProperty implements RPGUAbilityProperty<Player, Double>{
+@NullMarked public class MissUsageCooldownMultiplierProperty implements RPGUAbilityProperty<Player, Double>{
 
     protected double base;
 

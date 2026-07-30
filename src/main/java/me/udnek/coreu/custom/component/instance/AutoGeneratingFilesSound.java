@@ -7,10 +7,11 @@ import me.udnek.coreu.custom.sound.ConstructableCustomSound;
 import me.udnek.coreu.custom.sound.CustomSound;
 import me.udnek.coreu.resourcepack.file.RpFile;
 import me.udnek.coreu.resourcepack.file.RpJsonFile;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked public class AutoGeneratingFilesSound implements CustomComponent<CustomSound>{
+@NullMarked public class AutoGeneratingFilesSound implements CustomComponent<CustomSound>{
 
     public static final AutoGeneratingFilesSound DEFAULT = new AutoGeneratingFilesSound();
 

@@ -4,8 +4,9 @@ import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.item.CustomItem;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public  interface InventoryInteractableItem extends CustomComponent<CustomItem>{
+@NullMarked public  interface InventoryInteractableItem extends CustomComponent<CustomItem>{
     InventoryInteractableItem EMPTY = new InventoryInteractableItem() {
         @Override
         public void onBeingClicked(CustomItem item, InventoryClickEvent event) {}

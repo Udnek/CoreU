@@ -3,8 +3,9 @@ package me.udnek.coreu.custom.hud;
 import me.udnek.coreu.util.ComponentU;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public class OffsettedCustomHud implements CustomHud{
+@NullMarked public class OffsettedCustomHud implements CustomHud{
 
     protected Component text;
 

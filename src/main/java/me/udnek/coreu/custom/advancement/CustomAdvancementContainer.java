@@ -3,12 +3,13 @@ package me.udnek.coreu.custom.advancement;
 import net.kyori.adventure.key.Key;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementRequirements;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 import java.util.function.Supplier;
 
-@org.jspecify.annotations.NullMarked public  interface CustomAdvancementContainer extends Supplier<AdvancementHolder>{
+@NullMarked public  interface CustomAdvancementContainer extends Supplier<AdvancementHolder>{
     AdvancementHolder get();
     @Nullable CustomAdvancementDisplayBuilder getDisplay();
     Set<CustomAdvancementContainer> getFakes();

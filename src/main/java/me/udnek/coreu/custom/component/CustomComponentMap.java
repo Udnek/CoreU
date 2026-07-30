@@ -1,11 +1,12 @@
 package me.udnek.coreu.custom.component;
 
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
-@org.jspecify.annotations.NullMarked public class CustomComponentMap<Holder> implements Iterable<CustomComponent<? super Holder>>{
+@NullMarked public class CustomComponentMap<Holder> implements Iterable<CustomComponent<? super Holder>>{
 
 
     public static <H> CustomComponentMap<H> immutableEmpty(){

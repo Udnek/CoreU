@@ -5,12 +5,14 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import me.udnek.coreu.custom.registry.CustomRegistries;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked public class CustomItemGiveCommand implements BasicCommand{
+@NullMarked public class CustomItemGiveCommand implements BasicCommand {
 
     @Override
     public void execute(CommandSourceStack commandSourceStack, String[] args) {
@@ -31,14 +33,14 @@ import java.util.List;
         if (args.length > 1) return List.of();
 
         String arg = args.length == 0 ? "" : args[0];
-        List<String> ids = new ArrayList<>(CustomRegistries.ITEM.getIds());
+        List<String> ids = CustomRegistries.ITEM.getIds();
         ids.removeIf(id -> !id.contains(arg));
 
         return ids;
     }
 
     @Override
-    public @org.jspecify.annotations.Nullable String permission() {
+    public @Nullable String permission() {
         return "coreu.admin";
     }
 }

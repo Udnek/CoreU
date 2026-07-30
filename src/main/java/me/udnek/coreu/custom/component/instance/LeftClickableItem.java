@@ -4,8 +4,9 @@ import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.item.CustomItem;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public  interface LeftClickableItem extends CustomComponent<CustomItem>{
+@NullMarked public  interface LeftClickableItem extends CustomComponent<CustomItem>{
 
     LeftClickableItem EMPTY = (item, event) -> {};
 

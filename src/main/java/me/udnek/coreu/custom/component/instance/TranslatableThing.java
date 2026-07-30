@@ -8,11 +8,12 @@ import me.udnek.coreu.custom.registry.Registrable;
 import me.udnek.coreu.resourcepack.file.RpFile;
 import me.udnek.coreu.resourcepack.file.RpJsonFile;
 import net.kyori.adventure.translation.Translatable;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
-@org.jspecify.annotations.NullMarked public class TranslatableThing implements CustomComponent<Object>{
+@NullMarked public class TranslatableThing implements CustomComponent<Object>{
 
     public static final TranslatableThing DEFAULT = new TranslatableThing(null)
         {

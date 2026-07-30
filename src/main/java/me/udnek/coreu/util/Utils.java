@@ -15,6 +15,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.text.DecimalFormat;
@@ -23,7 +24,7 @@ import java.util.Collection;
 import java.util.Locale;
 import java.util.function.Consumer;
 
-@org.jspecify.annotations.NullMarked public class Utils{
+@NullMarked public class Utils{
 
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##", new DecimalFormatSymbols(Locale.US));
 

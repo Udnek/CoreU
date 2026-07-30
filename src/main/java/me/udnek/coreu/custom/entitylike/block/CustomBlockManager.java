@@ -27,6 +27,7 @@ import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@org.jspecify.annotations.NullMarked public class CustomBlockManager extends EntityLikeManager<TileState, CustomBlockType, CustomBlockEntity>implements Listener{
+@NullMarked public class CustomBlockManager extends EntityLikeManager<TileState, CustomBlockType, CustomBlockEntity>implements Listener{
 
     public static final int MAX_CUSTOM_BLOCK_PACKETS_PER_TICK = 50;
     private static @Nullable CustomBlockManager instance;

@@ -30,12 +30,15 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public class CustomItemListener extends SelfRegisteringListener{
+@NullMarked
+public class CustomItemListener extends SelfRegisteringListener{
     public CustomItemListener(Plugin plugin) {
         super(plugin);
     }
 
+    // fixes bug when player respawn and cooldowns visually reset
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event){
         new BukkitRunnable() {
@@ -53,8 +56,10 @@ import org.bukkit.scheduler.BukkitRunnable;
         CustomItem customItem = CustomItem.get(event.getItem());
         if (customItem == null) return;
         Action action = event.getAction();
-        if (action.isRightClick()) customItem.getComponents().getOrDefault(CustomComponentType.RIGHT_CLICKABLE_ITEM).onRightClick(customItem, event);
-        if (action.isLeftClick()) customItem.getComponents().getOrDefault(CustomComponentType.LEFT_CLICKABLE_ITEM).onLeftClick(customItem, event);
+        if (action.isRightClick())
+            customItem.getComponents().getOrDefault(CustomComponentType.RIGHT_CLICKABLE_ITEM).onRightClick(customItem, event);
+        if (action.isLeftClick())
+            customItem.getComponents().getOrDefault(CustomComponentType.LEFT_CLICKABLE_ITEM).onLeftClick(customItem, event);
     }
 
     @EventHandler
@@ -74,11 +79,13 @@ import org.bukkit.scheduler.BukkitRunnable;
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerConsume(InventoryClickEvent event){
+    public void onInventoryInteract(InventoryClickEvent event){
         CustomItem currentItem = CustomItem.get(event.getCurrentItem());
         CustomItem cursorItem = CustomItem.get(event.getCursor());
-        if (currentItem != null) currentItem.getComponents().getOrDefault(CustomComponentType.INVENTORY_INTERACTABLE_ITEM).onBeingClicked(currentItem, event);
-        if (cursorItem != null) cursorItem.getComponents().getOrDefault(CustomComponentType.INVENTORY_INTERACTABLE_ITEM).onClickWith(cursorItem, event);
+        if (currentItem != null)
+            currentItem.getComponents().getOrDefault(CustomComponentType.INVENTORY_INTERACTABLE_ITEM).onBeingClicked(currentItem, event);
+        if (cursorItem != null)
+            cursorItem.getComponents().getOrDefault(CustomComponentType.INVENTORY_INTERACTABLE_ITEM).onClickWith(cursorItem, event);
     }
 
     @EventHandler

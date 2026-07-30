@@ -8,12 +8,14 @@ import org.bukkit.Location;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked public class SummonCustomEntityCommand implements BasicCommand{
+@NullMarked public class SummonCustomEntityCommand implements BasicCommand{
 
     @Override
     public void execute(CommandSourceStack commandSourceStack, String[] args) {
@@ -42,7 +44,7 @@ import java.util.List;
     }
 
     @Override
-    public @org.jspecify.annotations.Nullable String permission() {
+    public @Nullable String permission() {
         return "coreu.admin";
     }
 }

@@ -2,10 +2,11 @@ package me.udnek.coreu.nms.loot.function;
 
 import me.udnek.coreu.nms.NmsWrapper;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked public class LootFunctionWrapper implements NmsWrapper<LootItemFunction>{
+@NullMarked public class LootFunctionWrapper implements NmsWrapper<LootItemFunction>{
 
     public static List<LootFunctionWrapper> wrap(List<LootItemFunction> functions) {
         return functions.stream().map(LootFunctionWrapper::new).toList();

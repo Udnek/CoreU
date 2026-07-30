@@ -10,12 +10,13 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureSpawnOverride;
 import org.bukkit.Location;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-@org.jspecify.annotations.NullMarked
+@NullMarked
 public class StructureWrapper implements NmsWrapper<Structure>{
 
     protected Structure structure;
@@ -28,7 +29,7 @@ public class StructureWrapper implements NmsWrapper<Structure>{
         return Reflex.getFieldValue(structure, "settings");
     }
 
-    public void editSpawnOverrides(Function<HashMap<MobCategoryWrapper, me.udnek.coreu.nms.structure.StructureSpawnOverrideWrapper>, HashMap<MobCategoryWrapper, StructureSpawnOverrideWrapper>> edit){
+    public void editSpawnOverrides(Function<HashMap<MobCategoryWrapper, StructureSpawnOverrideWrapper>, HashMap<MobCategoryWrapper, StructureSpawnOverrideWrapper>> edit){
         HashMap<MobCategoryWrapper, StructureSpawnOverrideWrapper> overrides = getSpawnOverrides();
         overrides = edit.apply(overrides);
         setSpawnOverrides(overrides);

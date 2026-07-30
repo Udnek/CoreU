@@ -4,10 +4,11 @@ import me.udnek.coreu.custom.recipe.choice.CustomRecipeChoice;
 import org.bukkit.Keyed;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.function.Consumer;
 
-@org.jspecify.annotations.NullMarked public  interface CustomRecipe extends Recipe, Keyed{
+@NullMarked public  interface CustomRecipe extends Recipe, Keyed{
     void getPossibleResults(Consumer<ItemStack> consumer);
     void getPossibleIngredients(Consumer<CustomRecipeChoice> consumer);
     CustomRecipeType<?> getType();

@@ -6,8 +6,9 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.TileState;
 import org.bukkit.entity.ItemDisplay;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public abstract class RotatableCustomBlockType extends me.udnek.coreu.custom.entitylike.block.constructabletype.DisplayBasedConstructableBlockType {
+@NullMarked public abstract class RotatableCustomBlockType extends DisplayBasedConstructableBlockType {
 
     protected static final String FACING_DATA_KEY = "face";
 

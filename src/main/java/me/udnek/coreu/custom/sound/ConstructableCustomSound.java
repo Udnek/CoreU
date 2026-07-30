@@ -7,11 +7,12 @@ import org.bukkit.Location;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked public class ConstructableCustomSound extends AbstractRegistrableComponentable<CustomSound>implements CustomSound{
+@NullMarked public class ConstructableCustomSound extends AbstractRegistrableComponentable<CustomSound>implements CustomSound{
 
     private final String rawId;
     public final SoundCategory category;

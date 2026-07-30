@@ -8,8 +8,9 @@ import me.udnek.coreu.mgu.component.MGUComponents;
 import me.udnek.coreu.mgu.component.MGUPlayerDataHolder;
 import me.udnek.coreu.mgu.game.MGUGameInstance;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public  interface MGUPlayer extends ComponentHolder<MGUPlayer>, Resettable{
+@NullMarked public  interface MGUPlayer extends ComponentHolder<MGUPlayer>, Resettable{
 
     MGUGameInstance getGame();
 

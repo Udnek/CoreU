@@ -1,7 +1,8 @@
 package me.udnek.coreu.custom.entitylike;
 
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public  interface EntityLikeTickingType<Real, Entity extends EntityLike<?, ?>> extends EntityLikeType<Real>{
+@NullMarked public  interface EntityLikeTickingType<Real, Entity extends EntityLike<?, ?>> extends EntityLikeType<Real>{
     @NonNull Entity createNewClass();
 }

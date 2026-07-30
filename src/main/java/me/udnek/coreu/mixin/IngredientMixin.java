@@ -31,6 +31,8 @@ abstract class IngredientMixin{
     @Final
     @Shadow
     public HolderSet<Item> values;
+
+    // now used only to display
     @Shadow
     private @Nullable Set<ItemStack> itemStacks;
     @Unique
@@ -52,7 +54,7 @@ abstract class IngredientMixin{
 
         var result = Ingredient.of(stacks.stream().map(ItemStack::getItem));
         var ingredientMixin = (IngredientMixin) (Object) result;
-        ingredientMixin.coreu$customItems = new HashSet<>(customItems);
+        ingredientMixin.coreu$customItems = new LinkedHashSet<>(customItems);
         ingredientMixin.itemStacks = ItemStackLinkedSet.createTypeAndComponentsSet();
         ingredientMixin.itemStacks.addAll(stacks);
         return result;

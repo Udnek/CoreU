@@ -1,11 +1,12 @@
 package me.udnek.coreu.nms.loot.util;
 
 import me.udnek.coreu.nms.loot.condition.LootConditionWrapper;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked
+@NullMarked
 public record LootInfo(float probability, List<LootConditionWrapper> conditions){
 
     public LootInfo copyAndMultiplyProbability(float mul){

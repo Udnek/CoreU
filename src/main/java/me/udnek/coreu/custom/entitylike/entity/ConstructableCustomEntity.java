@@ -3,9 +3,10 @@ package me.udnek.coreu.custom.entitylike.entity;
 import me.udnek.coreu.custom.entitylike.AbstractEntityLike;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
+import org.jspecify.annotations.NullMarked;
 
 
-@org.jspecify.annotations.NullMarked public abstract class ConstructableCustomEntity<VType extends Entity> extends AbstractEntityLike<Entity, me.udnek.coreu.custom.entitylike.entity.CustomTickingEntityType<?>>implements CustomEntity{
+@NullMarked public abstract class ConstructableCustomEntity<VType extends Entity> extends AbstractEntityLike<Entity, CustomTickingEntityType<?>>implements CustomEntity{
 
     protected VType entity;
 

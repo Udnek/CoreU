@@ -4,12 +4,13 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.NamespacedKey;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@org.jspecify.annotations.NullMarked public class ComponentU{
+@NullMarked public class ComponentU{
 
     public static final Key SPACE_FONT = new NamespacedKey("space", "default");
 

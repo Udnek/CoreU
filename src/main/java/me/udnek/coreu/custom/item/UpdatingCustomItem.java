@@ -3,10 +3,11 @@ package me.udnek.coreu.custom.item;
 import io.papermc.paper.datacomponent.DataComponentType;
 import io.papermc.paper.datacomponent.DataComponentTypes;import org.bukkit.inventory.ItemStack;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 
 import static io.papermc.paper.datacomponent.DataComponentTypes.*;
 
-@org.jspecify.annotations.NullMarked
+@NullMarked
 public interface UpdatingCustomItem extends CustomItem{
 
     default boolean isUpdateMaterial(){return true;}

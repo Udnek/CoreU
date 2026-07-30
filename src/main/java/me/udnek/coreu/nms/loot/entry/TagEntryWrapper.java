@@ -9,6 +9,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.storage.loot.entries.TagEntry;
 import org.apache.commons.lang3.tuple.Pair;
+import org.bukkit.inventory.ItemStack;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
@@ -31,7 +32,7 @@ public class TagEntryWrapper extends SingletonEntryWrapperImpl {
     }
 
     @Override
-    public void extractItems(LootInfo baseInfo, Consumer<Pair<org.bukkit.inventory.ItemStack, LootInfo>> consumer) {
+    public void extractItems(LootInfo baseInfo, Consumer<Pair<ItemStack, LootInfo>> consumer) {
         if (expand()){
             // decreases chance for each item
             Iterable<Holder<Item>> tag = BuiltInRegistries.ITEM.getTagOrEmpty(tagNms());

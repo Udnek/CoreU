@@ -1,8 +1,9 @@
 package me.udnek.coreu.custom.recipe;
 
 import me.udnek.coreu.custom.registry.AbstractRegistrableComponentable;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public class CustomRecipeType<Recipe extends CustomRecipe> extends AbstractRegistrableComponentable<CustomRecipeType<Recipe>>{
+@NullMarked public class CustomRecipeType<Recipe extends CustomRecipe> extends AbstractRegistrableComponentable<CustomRecipeType<Recipe>>{
 
     private final String rawId;
 

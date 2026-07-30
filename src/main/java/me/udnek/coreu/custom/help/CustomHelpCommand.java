@@ -6,12 +6,13 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.UnknownNullability;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked public class CustomHelpCommand implements BasicCommand{
+@NullMarked public class CustomHelpCommand implements BasicCommand{
 
     @UnknownNullability
     private static CustomHelpCommand instance;

@@ -19,17 +19,19 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionEffectTypeCategory;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.lang.reflect.Constructor;
 
-@org.jspecify.annotations.NullMarked public abstract class ConstructableCustomEffect extends AbstractRegistrableComponentable<CustomEffect>implements CustomEffect{
+@NullMarked public abstract class ConstructableCustomEffect extends AbstractRegistrableComponentable<CustomEffect>implements CustomEffect{
     protected @Nullable Holder<MobEffect> nmsEffect;
     protected @Nullable PotionEffectType bukkitEffect;
 
@@ -128,7 +130,7 @@ import java.lang.reflect.Constructor;
     }
 
     public interface AttributeConsumer{
-        void accept(Attribute attribute, Key key, double amount, org.bukkit.attribute.AttributeModifier.Operation operation);
+        void accept(Attribute attribute, Key key, double amount, AttributeModifier.Operation operation);
     }
 
     public interface ModifyParticleConsumer{

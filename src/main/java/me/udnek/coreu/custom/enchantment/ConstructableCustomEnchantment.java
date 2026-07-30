@@ -23,9 +23,10 @@ import org.checkerframework.checker.index.qual.Positive;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Range;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@org.jspecify.annotations.NullMarked public abstract class ConstructableCustomEnchantment extends AbstractRegistrable implements me.udnek.coreu.custom.enchantment.CustomEnchantment {
+@NullMarked public abstract class ConstructableCustomEnchantment extends AbstractRegistrable implements CustomEnchantment {
 
     protected @Nullable Holder<Enchantment> nms;
     protected org.bukkit.enchantments.@Nullable Enchantment bukkit;

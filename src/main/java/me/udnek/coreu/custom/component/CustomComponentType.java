@@ -8,8 +8,9 @@ import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.custom.registry.CustomRegistries;
 import me.udnek.coreu.custom.registry.Registrable;
 import me.udnek.coreu.custom.sound.CustomSound;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked
+@NullMarked
 public interface CustomComponentType<HolderType, Component extends CustomComponent<HolderType>> extends Registrable{
 
     // OBJECT

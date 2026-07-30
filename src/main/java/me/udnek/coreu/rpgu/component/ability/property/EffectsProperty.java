@@ -14,12 +14,13 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked public class EffectsProperty implements RPGUAbilityProperty<LivingEntity, List<PotionEffect>>{
+@NullMarked public class EffectsProperty implements RPGUAbilityProperty<LivingEntity, List<PotionEffect>>{
 
     public static EffectsProperty DEFAULT = new EffectsProperty(){
         @Override

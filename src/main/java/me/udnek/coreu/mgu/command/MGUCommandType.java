@@ -5,12 +5,13 @@ import me.udnek.coreu.mgu.game.MGUGameInstance;
 import me.udnek.coreu.mgu.player.MGUPlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
 
-@org.jspecify.annotations.NullMarked public enum MGUCommandType{
+@NullMarked public enum MGUCommandType{
     START("start", 1,false),
     STOP("stop", 1,false),
     JOIN("join", 1,true),

@@ -10,10 +10,11 @@ import net.kyori.adventure.translation.Translatable;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked public  interface RPGUItemAbility<ActivationContext> extends ComponentHolder<RPGUItemAbility<?>>, Translatable{
+@NullMarked public  interface RPGUItemAbility<ActivationContext> extends ComponentHolder<RPGUItemAbility<?>>, Translatable{
 
     int INFINITE_COOLDOWN = 100*60*60*20;
     int INFINITE_COOLDOWN_THRESHOLD = INFINITE_COOLDOWN/2;

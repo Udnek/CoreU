@@ -1,12 +1,13 @@
 package me.udnek.coreu.serializabledata;
 
 import org.bukkit.plugin.Plugin;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@org.jspecify.annotations.NullMarked public  interface SerializableData{
+@NullMarked public  interface SerializableData{
 
     static String serializeMap(Map<String, Object> data){
         StringBuilder builder = new StringBuilder();

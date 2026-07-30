@@ -26,6 +26,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.UnknownNullability;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
@@ -35,7 +36,7 @@ import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-@org.jspecify.annotations.NullMarked public abstract class AbstractCustomBlockType extends AbstractRegistrableComponentable<CustomBlockType>implements CustomBlockType{
+@NullMarked public abstract class AbstractCustomBlockType extends AbstractRegistrableComponentable<CustomBlockType>implements CustomBlockType{
 
     public abstract TileState getRealState();
     public abstract @Nullable ItemStack getParticleBase();
@@ -82,7 +83,7 @@ import java.util.function.Function;
     public @Nullable Either<LootTable, List<ItemStack>> getLoot(){
         CustomItem item = getItem();
         if (item == null) return null;
-        return new Either<>(null, List.of(item.getItem()));
+        return Either.ofRight(List.of(item.getItem()));
     }
 
     @Override

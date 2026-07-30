@@ -3,11 +3,12 @@ package me.udnek.coreu.custom.attribute;
 import me.udnek.coreu.custom.equipment.slot.CustomEquipmentSlot;
 import org.bukkit.attribute.AttributeModifier;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 import java.util.Map;
 
-@org.jspecify.annotations.NullMarked public class CustomAttributesContainer extends AbstractAttributeContainer<CustomAttribute, CustomAttributeModifier, CustomAttributesContainer>{
+@NullMarked public class CustomAttributesContainer extends AbstractAttributeContainer<CustomAttribute, CustomAttributeModifier, CustomAttributesContainer>{
 
     private CustomAttributesContainer(){}
 

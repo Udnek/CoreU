@@ -17,10 +17,11 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.loot.LootTable;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Optional;
 
-@org.jspecify.annotations.NullMarked public class LootContextBuilder{
+@NullMarked public class LootContextBuilder{
 
     protected LootParams.Builder paramsBuilder;
     protected ContextKeySet keySet;

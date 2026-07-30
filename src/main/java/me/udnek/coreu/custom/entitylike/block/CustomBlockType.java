@@ -15,11 +15,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.persistence.PersistentDataType;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-@org.jspecify.annotations.NullMarked public  interface CustomBlockType extends ComponentHolder<CustomBlockType>, EntityLikeType<TileState>{
+@NullMarked public  interface CustomBlockType extends ComponentHolder<CustomBlockType>, EntityLikeType<TileState>{
 
     NamespacedKey PDC_KEY = new NamespacedKey(CoreU.getPlugin(), "custom_block_type");
 

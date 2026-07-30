@@ -16,13 +16,14 @@ import org.apache.commons.lang3.Range;
 import org.bukkit.craftbukkit.block.CraftBiome;
 import org.bukkit.craftbukkit.entity.CraftEntityType;
 import org.bukkit.craftbukkit.generator.structure.CraftStructure;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-@org.jspecify.annotations.NullMarked public class LootConditionWrapper implements NmsWrapper<LootItemCondition> {
+@NullMarked public class LootConditionWrapper implements NmsWrapper<LootItemCondition> {
 
     public static List<LootConditionWrapper> wrap(List<LootItemCondition> conditions) {
         return conditions.stream().map(LootConditionWrapper::new).toList();

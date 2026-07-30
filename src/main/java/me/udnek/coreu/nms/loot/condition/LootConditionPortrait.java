@@ -3,12 +3,13 @@ package me.udnek.coreu.nms.loot.condition;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.EntityType;
 import org.bukkit.generator.structure.Structure;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@org.jspecify.annotations.NullMarked
+@NullMarked
 public class LootConditionPortrait{
 
     public Set<Structure> structures = new HashSet<>();

@@ -14,13 +14,14 @@ import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer
 import net.minecraft.world.level.storage.loot.entries.NestedLootTable;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.function.Consumer;
 
-@org.jspecify.annotations.NullMarked
+@NullMarked
 public class NestedEntryWrapper extends SingletonEntryWrapperImpl {
 
     public static NestedEntryWrapper createFromLootTable(LootTableWrapper lootTable){
@@ -59,7 +60,7 @@ public class NestedEntryWrapper extends SingletonEntryWrapperImpl {
     }
 
     @Override
-    public void extractAllSingleton(Consumer<me.udnek.coreu.nms.loot.entry.SingletonEntryWrapper> consumer) {
+    public void extractAllSingleton(Consumer<SingletonEntryWrapper> consumer) {
         for (PoolWrapper pool : getLootTable().getPools()) {
             for (EntryWrapper entry : pool.getEntries()) {
                 entry.extractAllSingleton(consumer);

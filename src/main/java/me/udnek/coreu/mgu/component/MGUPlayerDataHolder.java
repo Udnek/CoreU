@@ -6,8 +6,9 @@ import me.udnek.coreu.custom.component.CustomComponentMap;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.mgu.Resettable;
 import me.udnek.coreu.mgu.player.MGUPlayer;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public class MGUPlayerDataHolder extends AbstractComponentHolder<MGUPlayerDataHolder>implements CustomComponent<MGUPlayer>, Resettable{
+@NullMarked public class MGUPlayerDataHolder extends AbstractComponentHolder<MGUPlayerDataHolder>implements CustomComponent<MGUPlayer>, Resettable{
 
     public static final MGUPlayerDataHolder DEFAULT = new MGUPlayerDataHolder(){
         @Override

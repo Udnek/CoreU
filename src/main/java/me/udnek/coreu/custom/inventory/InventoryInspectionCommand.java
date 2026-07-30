@@ -4,12 +4,13 @@ import io.papermc.paper.command.brigadier.BasicCommand;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked public class InventoryInspectionCommand implements BasicCommand{
+@NullMarked public class InventoryInspectionCommand implements BasicCommand{
     static final List<Player> inspectingPlayers = new ArrayList<>();
 
 

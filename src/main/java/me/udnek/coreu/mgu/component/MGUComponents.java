@@ -5,8 +5,9 @@ import me.udnek.coreu.custom.component.ConstructableComponentType;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.registry.CustomRegistries;
 import me.udnek.coreu.mgu.player.MGUPlayer;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public class MGUComponents{
+@NullMarked public class MGUComponents{
 
     public static final CustomComponentType<MGUPlayer, MGUPlayerDataHolder> PLAYER_DATA =
             register(new ConstructableComponentType<>("mgu_player_data", MGUPlayerDataHolder.DEFAULT, MGUPlayerDataHolder::new));

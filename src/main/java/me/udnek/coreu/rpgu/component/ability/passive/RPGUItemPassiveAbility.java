@@ -7,8 +7,9 @@ import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.rpgu.component.RPGUPassiveItem;
 import me.udnek.coreu.rpgu.component.ability.RPGUItemAbility;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public  interface RPGUItemPassiveAbility<ActivationContext> extends RPGUItemAbility<ActivationContext>, CustomComponent<RPGUPassiveItem>{
+@NullMarked public  interface RPGUItemPassiveAbility<ActivationContext> extends RPGUItemAbility<ActivationContext>, CustomComponent<RPGUPassiveItem>{
     CustomEquipmentSlot getSlot();
 
     void tick(CustomItem customItem, Player player, BaseUniversalSlot slot, int tickDelay);

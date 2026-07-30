@@ -10,11 +10,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.bukkit.craftbukkit.util.CraftChatMessage;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 
-@org.jspecify.annotations.NullMarked public class CustomAdvancementDisplayBuilder{
+@NullMarked public class CustomAdvancementDisplayBuilder{
     ItemStack icon;
     @Nullable String background;
     net.kyori.adventure.text.@Nullable Component title;

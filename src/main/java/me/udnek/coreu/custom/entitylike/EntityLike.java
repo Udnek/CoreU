@@ -1,9 +1,9 @@
 package me.udnek.coreu.custom.entitylike;
 
-import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public  interface EntityLike<Real, Type extends EntityLikeTickingType<?, ?>>{
-    void load(@NonNull Real real);
+@NullMarked public  interface EntityLike<Real, Type extends EntityLikeTickingType<?, ?>>{
+    void load(Real real);
     void unload();
     void tick();
 
@@ -11,6 +11,6 @@ import org.jspecify.annotations.NonNull;
      * @return false, if entityLike should be unloaded next tick
      */
     boolean isValid();
-    @NonNull Real getReal();
-    @NonNull Type getType();
+    Real getReal();
+    Type getType();
 }

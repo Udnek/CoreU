@@ -4,11 +4,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked public  interface CustomInventory extends InventoryHolder{
+@NullMarked public  interface CustomInventory extends InventoryHolder{
     static boolean isCustom(Inventory inventory){
         return inventory.getHolder() instanceof CustomInventory;
     }

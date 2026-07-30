@@ -4,12 +4,13 @@ import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.ItemLore;
 import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
 
-@org.jspecify.annotations.NullMarked public class LoreBuilder{
+@NullMarked public class LoreBuilder{
 
     Map<Integer, Componentable> lore = new HashMap<>();
 

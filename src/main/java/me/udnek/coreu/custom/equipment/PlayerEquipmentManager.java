@@ -2,17 +2,18 @@ package me.udnek.coreu.custom.equipment;
 
 import me.udnek.coreu.util.TickingTask;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@org.jspecify.annotations.NullMarked public class PlayerEquipmentManager extends TickingTask{
+@NullMarked public class PlayerEquipmentManager extends TickingTask{
 
     public static final int DELAY = 1;
     private static @Nullable PlayerEquipmentManager instance;
 
-    private final Map<Player, me.udnek.coreu.custom.equipment.PlayerEquipment> playersData = new HashMap<>();
+    private final Map<Player, PlayerEquipment> playersData = new HashMap<>();
 
     public static PlayerEquipmentManager getInstance() {
         if (instance == null) instance = new PlayerEquipmentManager();

@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.loot.LootTable;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -19,7 +20,8 @@ import java.util.List;
 import java.util.function.Predicate;
 
 
-@org.jspecify.annotations.NullMarked public class ItemUtils{
+@NullMarked
+public class ItemUtils{
 
     public static List<LootTable> getWhereItemOccurs(Predicate<ItemStack> predicate) {
         Nms nms = Nms.get();

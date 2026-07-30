@@ -17,6 +17,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
+import org.jspecify.annotations.NullMarked;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -24,7 +25,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-@org.jspecify.annotations.NullMarked public class CoordinateWand extends ConstructableCustomItem{
+@NullMarked public class CoordinateWand extends ConstructableCustomItem{
 
     public static final NamespacedKey ORIGIN_KEY = new NamespacedKey(CoreU.getPlugin(), "origin");
 

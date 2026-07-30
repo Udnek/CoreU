@@ -10,11 +10,12 @@ import me.udnek.coreu.rpgu.component.ability.property.function.MultiLineDescript
 import me.udnek.coreu.rpgu.lore.ability.AbilityLorePart;
 import net.kyori.adventure.text.Component;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 import java.util.function.Function;
 
-@org.jspecify.annotations.NullMarked public class AttributeBasedPropertyType extends AbstractRegistrable implements CustomComponentType<RPGUItemAbility<?>, AttributeBasedProperty>{
+@NullMarked public class AttributeBasedPropertyType extends AbstractRegistrable implements CustomComponentType<RPGUItemAbility<?>, AttributeBasedProperty>{
 
     protected AttributeBasedProperty defaultComponent;
     protected String rawId;

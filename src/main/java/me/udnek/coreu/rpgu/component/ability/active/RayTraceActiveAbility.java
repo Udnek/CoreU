@@ -6,11 +6,12 @@ import me.udnek.coreu.util.Utils;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.RayTraceResult;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 
-@org.jspecify.annotations.NullMarked public  interface RayTraceActiveAbility<Context> extends me.udnek.coreu.rpgu.component.ability.active.RPGUItemActiveAbility<Context> {
+@NullMarked public  interface RayTraceActiveAbility<Context> extends RPGUItemActiveAbility<Context> {
 
     default @Nullable Collection<LivingEntity> findLivingEntitiesInRayTraceRadius(LivingEntity livingEntity, @Nullable ParticleBuilder particle){
         RayTraceResult rayTraceResult = Utils.rayTraceBlockOrEntity(livingEntity, getComponents().getOrException(RPGUComponents.ABILITY_CAST_RANGE).get(livingEntity));

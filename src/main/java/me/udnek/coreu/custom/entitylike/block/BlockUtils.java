@@ -3,8 +3,9 @@ package me.udnek.coreu.custom.entitylike.block;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public class BlockUtils{
+@NullMarked public class BlockUtils{
 
     public static void safeSet(Block block, BlockData blockData, boolean updatePhysics){
         CustomBlockType custom = CustomBlockType.get(block);

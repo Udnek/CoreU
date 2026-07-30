@@ -5,12 +5,13 @@ import me.udnek.coreu.nms.NmsWrapper;
 import me.udnek.coreu.nms.loot.pool.PoolWrapper;
 import me.udnek.coreu.nms.loot.util.NmsConditioned;
 import net.minecraft.world.level.storage.loot.entries.*;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Consumer;
 
-@org.jspecify.annotations.NullMarked
+@NullMarked
 public interface EntryWrapper extends NmsConditioned{
 
     static EntryWrapper fromNms(@Nullable PoolWrapper parent, LootPoolEntryContainer entry){

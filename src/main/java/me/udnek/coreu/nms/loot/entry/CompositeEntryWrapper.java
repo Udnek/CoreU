@@ -8,6 +8,7 @@ import net.minecraft.world.level.storage.loot.entries.AlternativesEntry;
 import net.minecraft.world.level.storage.loot.entries.CompositeEntryBase;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Constructor;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-@org.jspecify.annotations.NullMarked
+@NullMarked
 public class CompositeEntryWrapper implements EntryWrapper{
 
     protected final CompositeEntryBase entry;
@@ -61,7 +62,7 @@ public class CompositeEntryWrapper implements EntryWrapper{
     }
 
     @Override
-    public void extractAllSingleton(Consumer<me.udnek.coreu.nms.loot.entry.SingletonEntryWrapper> consumer) {
+    public void extractAllSingleton(Consumer<SingletonEntryWrapper> consumer) {
         getChildrenNms().forEach(container -> EntryWrapper.fromNms(null, container).extractAllSingleton(consumer));
     }
 

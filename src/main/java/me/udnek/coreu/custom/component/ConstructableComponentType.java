@@ -5,11 +5,12 @@ import me.udnek.coreu.custom.registry.AbstractRegistrableComponentable;
 import me.udnek.coreu.custom.registry.Registrable;
 import me.udnek.coreu.resourcepack.file.RpJsonFile;
 import net.kyori.adventure.translation.Translatable;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 import java.util.function.Supplier;
 
-@org.jspecify.annotations.NullMarked
+@NullMarked
 public class ConstructableComponentType<HolderType, Component extends CustomComponent<HolderType>>
         extends AbstractRegistrableComponentable<CustomComponentType<HolderType, Component>>
         implements CustomComponentType<HolderType, Component>, Translatable

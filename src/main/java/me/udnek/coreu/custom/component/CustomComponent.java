@@ -1,6 +1,8 @@
 package me.udnek.coreu.custom.component;
 
-@org.jspecify.annotations.NullMarked public  interface CustomComponent<HolderType>{
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked public  interface CustomComponent<HolderType>{
 
     default void throwCanNotChangeDefault(){
         throw new RuntimeException("Can not change default component: " + this + ", create default or apply new firstly");

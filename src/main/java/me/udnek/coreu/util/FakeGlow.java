@@ -9,13 +9,14 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked public class FakeGlow{
+@NullMarked public class FakeGlow{
     private static final HashMap<Entity, FakeGlow> fakes = new HashMap<>();
 
     private static final EntityDataAccessor<Byte> DATA_KEY = Reflex.getFieldValue(Entity.class, "DATA_SHARED_FLAGS_ID");

@@ -2,11 +2,12 @@ package me.udnek.coreu.rpgu.component.ability.property.function;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked public class MultiLineDescription{
+@NullMarked public class MultiLineDescription{
 
     public static MultiLineDescription of(Component component){
         return new MultiLineDescription().add(component);

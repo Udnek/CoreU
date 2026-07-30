@@ -11,12 +11,13 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.UnknownNullability;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
 
-@org.jspecify.annotations.NullMarked public class AttributeUtils{
+@NullMarked public class AttributeUtils{
 
     public static void removeAttribute(ItemStack itemStack, Attribute attribute){
         itemStack.editMeta(itemMeta -> itemMeta.removeAttributeModifier(attribute));

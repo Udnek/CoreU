@@ -10,9 +10,10 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@org.jspecify.annotations.NullMarked
+@NullMarked
 public abstract class ConstructableCustomEntityType<T extends Entity> extends AbstractRegistrableComponentable<CustomEntityType> implements CustomEntityType{
 
     public abstract EntityType getVanillaType();

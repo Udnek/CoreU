@@ -8,9 +8,10 @@ import net.kyori.adventure.translation.Translatable;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@org.jspecify.annotations.NullMarked public  interface CustomEffect extends Registrable, ComponentHolder<CustomEffect>, Translatable{
+@NullMarked public  interface CustomEffect extends Registrable, ComponentHolder<CustomEffect>, Translatable{
 
     static boolean isCustom(PotionEffectType bukkit){
         return CustomRegistries.EFFECT.contains(bukkit.key().asString());

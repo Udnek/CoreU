@@ -14,13 +14,15 @@ import org.bukkit.event.inventory.PrepareGrindstoneEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.*;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-@org.jspecify.annotations.NullMarked public class CraftListener extends SelfRegisteringListener{
+@NullMarked
+public class CraftListener extends SelfRegisteringListener{
 
     public CraftListener(JavaPlugin plugin) {
         super(plugin);
@@ -148,37 +150,37 @@ import java.util.function.Consumer;
 //        if (!extraTestChoice(recipe.getInputChoice(), event.getSource())) event.setCancelled(true);
 //    }
 
-//    @EventHandler
-//    public void onGrindstone(PrepareGrindstoneEvent event){
-//        ItemStack upperItem = event.getInventory().getUpperItem();
-//        ItemStack lowerItem = event.getInventory().getLowerItem();
-//        if (upperItem == null || lowerItem == null) return;
-//        if (ItemUtils.isSameIds(upperItem, lowerItem)) return;
-//        event.setResult(new ItemStack(Material.AIR));
-//    }
+    @EventHandler
+    public void onGrindstone(PrepareGrindstoneEvent event){
+        ItemStack upperItem = event.getInventory().getUpperItem();
+        ItemStack lowerItem = event.getInventory().getLowerItem();
+        if (upperItem == null || lowerItem == null) return;
+        if (ItemUtils.isSameIds(upperItem, lowerItem)) return;
+        event.setResult(ItemStack.empty());
+    }
 
-//    @EventHandler
-//    public void onAnvil(PrepareAnvilEvent event){
-//        ItemStack firstItem = event.getInventory().getFirstItem();
-//        ItemStack secondItem = event.getInventory().getSecondItem();
-//
-//        if (firstItem == null || secondItem == null) return;
-//        if (secondItem.getType() == Material.ENCHANTED_BOOK) return;
-//        if (ItemUtils.isSameIds(firstItem, secondItem)) return;
-//
-//        if (!canBeRepaired(firstItem, secondItem)) event.setResult(new ItemStack(Material.AIR));
-//    }
+    @EventHandler
+    public void onAnvil(PrepareAnvilEvent event){
+        ItemStack firstItem = event.getInventory().getFirstItem();
+        ItemStack secondItem = event.getInventory().getSecondItem();
 
-//    public boolean canBeRepaired(ItemStack toBeRepaired, ItemStack repairer){
-//        CustomItem toBeRepairedCustom = CustomItem.get(toBeRepaired);
-//        CustomItem repairerCustom = CustomItem.get(repairer);
-//        if (toBeRepairedCustom != null){
-//            RepairData repairData = toBeRepairedCustom.getRepairData();
-//            if (repairData == null) return true;
-//            return repairData.contains(repairer);
-//        }
-//        return repairerCustom == null;
-//    }
+        if (firstItem == null || secondItem == null) return;
+        if (secondItem.getType() == Material.ENCHANTED_BOOK) return;
+        if (ItemUtils.isSameIds(firstItem, secondItem)) return;
+
+        if (!canBeRepaired(firstItem, secondItem)) event.setResult(new ItemStack(Material.AIR));
+    }
+
+    private boolean canBeRepaired(ItemStack toBeRepaired, ItemStack repairer){
+        CustomItem toBeRepairedCustom = CustomItem.get(toBeRepaired);
+        CustomItem repairerCustom = CustomItem.get(repairer);
+        if (toBeRepairedCustom != null){
+            RepairData repairData = toBeRepairedCustom.getRepairData();
+            if (repairData == null) return true;
+            return repairData.contains(repairer);
+        }
+        return repairerCustom == null;
+    }
 }
 
 

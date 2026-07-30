@@ -6,8 +6,9 @@ import me.udnek.coreu.custom.entitylike.block.CustomBlockPlaceContext;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockType;
 import me.udnek.coreu.custom.item.CustomItem;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public class BlockPlacingItem implements CustomComponent<CustomItem>{
+@NullMarked public class BlockPlacingItem implements CustomComponent<CustomItem>{
 
     public static final BlockPlacingItem EMPTY = new BlockPlacingItem(){
         @Override

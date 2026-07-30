@@ -7,8 +7,9 @@ import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.rpgu.component.RPGUToggleItem;
 import me.udnek.coreu.rpgu.component.ability.RPGUItemAbility;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public  interface RPGUItemToggleAbility<ActivationContext> extends RPGUItemAbility<ActivationContext>, CustomComponent<RPGUToggleItem>{
+@NullMarked public  interface RPGUItemToggleAbility<ActivationContext> extends RPGUItemAbility<ActivationContext>, CustomComponent<RPGUToggleItem>{
 
     CustomEquipmentSlot getSlot();
 

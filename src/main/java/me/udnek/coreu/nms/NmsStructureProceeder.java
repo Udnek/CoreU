@@ -29,13 +29,14 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.level.storage.loot.LootTable;
 import org.bukkit.Bukkit;
+import org.jspecify.annotations.NullMarked;
 
 import java.lang.reflect.Method;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 
-@org.jspecify.annotations.NullMarked public class NmsStructureProceeder{
+@NullMarked public class NmsStructureProceeder{
 
     private final StructureTemplateManager structureManager;
     private final Registry<StructureTemplatePool> poolRegistry;

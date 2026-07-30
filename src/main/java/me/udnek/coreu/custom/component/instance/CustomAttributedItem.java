@@ -10,11 +10,12 @@ import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.custom.item.LoreProvidingItemComponent;
 import me.udnek.coreu.rpgu.lore.AttributesLorePart;
 import me.udnek.coreu.util.LoreBuilder;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 import java.util.Map;
 
-@org.jspecify.annotations.NullMarked public class CustomAttributedItem implements LoreProvidingItemComponent{
+@NullMarked public class CustomAttributedItem implements LoreProvidingItemComponent{
 
     public static final CustomAttributedItem EMPTY = new CustomAttributedItem(){
         @Override

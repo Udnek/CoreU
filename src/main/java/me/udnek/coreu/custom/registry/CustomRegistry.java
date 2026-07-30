@@ -3,12 +3,13 @@ package me.udnek.coreu.custom.registry;
 import com.google.common.base.Preconditions;
 import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.function.Consumer;
 
-@org.jspecify.annotations.NullMarked public  interface CustomRegistry<T extends Registrable> extends Registrable{
+@NullMarked public  interface CustomRegistry<T extends Registrable> extends Registrable{
     @NonNull <V extends T>  V register(Plugin plugin, @NonNull V custom);
     @Nullable T get(@Nullable String id);
     @NonNull T get(int index);
@@ -19,8 +20,8 @@ import java.util.function.Consumer;
         return item;
     }
     boolean contains(@Nullable String id);
-    Collection<String> getIds();
-    Collection<T> getAllByPlugin(Plugin plugin);
+    List<String> getIds();
+    List<T> getAllByPlugin(Plugin plugin);
     void getAll(Consumer<T> consumer);
-    Collection<T> getAll();
+    List<T> getAll();
 }

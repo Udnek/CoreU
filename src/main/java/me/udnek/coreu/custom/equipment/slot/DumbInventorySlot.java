@@ -4,11 +4,12 @@ import me.udnek.coreu.custom.equipment.universal.UniversalInventorySlot;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.EquipmentSlotGroup;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-@org.jspecify.annotations.NullMarked public class DumbInventorySlot extends AbstractCustomEquipmentSlot implements CustomEquipmentSlot.Group{
+@NullMarked public class DumbInventorySlot extends AbstractCustomEquipmentSlot implements CustomEquipmentSlot.Group{
     public DumbInventorySlot(String id) {
         super(id);
     }

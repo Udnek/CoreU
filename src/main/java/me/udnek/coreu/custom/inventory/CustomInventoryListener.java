@@ -11,8 +11,9 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public class CustomInventoryListener extends SelfRegisteringListener{
+@NullMarked public class CustomInventoryListener extends SelfRegisteringListener{
 
     public CustomInventoryListener(JavaPlugin plugin) {
         super(plugin);

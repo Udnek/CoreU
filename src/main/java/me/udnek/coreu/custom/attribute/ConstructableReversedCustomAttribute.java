@@ -1,8 +1,9 @@
 package me.udnek.coreu.custom.attribute;
 
 import org.bukkit.entity.LivingEntity;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public class ConstructableReversedCustomAttribute extends ConstructableCustomAttribute{
+@NullMarked public class ConstructableReversedCustomAttribute extends ConstructableCustomAttribute{
     public ConstructableReversedCustomAttribute(String rawId, double defaultValue, double min, double max, boolean beneficial, boolean numberAsPercentageLore) {
         super(rawId, defaultValue, min, max, beneficial, numberAsPercentageLore);
     }

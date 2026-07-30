@@ -8,10 +8,11 @@ import org.bukkit.Tag;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.ApiStatus;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 @ApiStatus.NonExtendable
-@org.jspecify.annotations.NullMarked
+@NullMarked
 public class VanillaBasedCustomItem extends AbstractRegistrableComponentable<CustomItem>implements UpdatingCustomItem{
 
     protected @Nullable ItemStack itemStack;

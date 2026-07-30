@@ -22,8 +22,9 @@ import net.minecraft.world.effect.MobEffect;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.potion.PotionEffectType;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked
+@NullMarked
 public class PacketHandler{
 
     public static void initialize() {
@@ -33,6 +34,7 @@ public class PacketHandler{
             @Override
             public void onPacketSending(PacketEvent event) {
                 PacketContainer packet = event.getPacket();
+                @SuppressWarnings("unchecked")
                 Holder.Reference<MobEffect> holder = (Holder.Reference<MobEffect>) packet.getModifier().read(1);
                 Identifier id = holder.key().identifier();
                 if (id.getNamespace().equals(Identifier.DEFAULT_NAMESPACE)) return;

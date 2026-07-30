@@ -4,9 +4,10 @@ import me.udnek.coreu.custom.item.CustomItem;
 import me.udnek.coreu.custom.item.RepairData;
 import me.udnek.coreu.util.LoreBuilder;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@org.jspecify.annotations.NullMarked public class CustomItemGeneratedEvent extends CustomEvent{
+@NullMarked public class CustomItemGeneratedEvent extends CustomEvent{
     protected CustomItem customItem;
     protected ItemStack itemStack;
     protected LoreBuilder loreBuilder;

@@ -1,12 +1,13 @@
 package me.udnek.coreu.util;
 
 import org.jetbrains.annotations.UnknownNullability;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.*;
 
-@org.jspecify.annotations.NullMarked
+@NullMarked
 public class Reflex{
 
     public static Field getField(Class<?> source, String name) {

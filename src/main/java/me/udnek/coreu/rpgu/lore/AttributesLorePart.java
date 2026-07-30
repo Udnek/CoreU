@@ -7,6 +7,7 @@ import me.udnek.coreu.rpgu.lore.ability.PassiveAbilityLorePart;
 import me.udnek.coreu.util.LoreBuilder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
@@ -15,7 +16,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Consumer;
 
-@org.jspecify.annotations.NullMarked public class AttributesLorePart implements LoreBuilder.Componentable, PassiveAbilityLorePart{
+@NullMarked public class AttributesLorePart implements LoreBuilder.Componentable, PassiveAbilityLorePart{
 
     protected HashMap<CustomEquipmentSlot, Simple> attributeData = new HashMap<>();
     protected HashMap<CustomEquipmentSlot, Simple> passiveData = new HashMap<>();

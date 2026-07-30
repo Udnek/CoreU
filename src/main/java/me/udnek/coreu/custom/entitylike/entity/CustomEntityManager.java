@@ -14,11 +14,12 @@ import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.event.world.EntitiesLoadEvent;
 import org.bukkit.event.world.EntitiesUnloadEvent;
 import org.jetbrains.annotations.UnknownNullability;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Arrays;
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked public class CustomEntityManager extends EntityLikeManager<Entity, CustomEntityType, CustomEntity> implements Listener{
+@NullMarked public class CustomEntityManager extends EntityLikeManager<Entity, CustomEntityType, CustomEntity> implements Listener{
 
     private static @UnknownNullability CustomEntityManager instance;
 

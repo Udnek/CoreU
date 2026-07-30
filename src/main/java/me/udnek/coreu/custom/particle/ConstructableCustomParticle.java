@@ -8,8 +8,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.checkerframework.checker.index.qual.Positive;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.UnknownNullability;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public abstract class ConstructableCustomParticle<EntityT extends Entity> implements CustomParticle{
+@NullMarked public abstract class ConstructableCustomParticle<EntityT extends Entity> implements CustomParticle{
     public int frameNumber;
     protected @UnknownNullability BukkitRunnable task;
     protected @UnknownNullability EntityT display;

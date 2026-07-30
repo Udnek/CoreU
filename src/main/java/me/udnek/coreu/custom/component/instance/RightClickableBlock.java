@@ -4,8 +4,9 @@ import me.udnek.coreu.custom.component.CustomComponent;
 import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockType;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked
+@NullMarked
 public interface RightClickableBlock extends CustomComponent<CustomBlockType>{
 
     RightClickableBlock EMPTY = (block, event) -> {};

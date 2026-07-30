@@ -4,8 +4,9 @@ import me.udnek.coreu.custom.equipment.slot.CustomEquipmentSlot;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.EquipmentSlotGroup;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public class CustomAttributeModifier{
+@NullMarked public class CustomAttributeModifier{
 
     protected final double amount;
     protected final AttributeModifier.Operation operation;

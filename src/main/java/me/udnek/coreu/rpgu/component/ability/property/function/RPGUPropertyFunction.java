@@ -1,10 +1,11 @@
 package me.udnek.coreu.rpgu.component.ability.property.function;
 
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.function.Function;
 
-@org.jspecify.annotations.NullMarked public  interface RPGUPropertyFunction<Context, Value> extends Function<Context, Value>{
+@NullMarked public  interface RPGUPropertyFunction<Context, Value> extends Function<Context, Value>{
     @NonNull Value getBase();
     @Override
     @NonNull Value apply(@NonNull Context context);

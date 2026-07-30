@@ -1,10 +1,11 @@
 package me.udnek.coreu.rpgu.component.ability.property.function;
 
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.function.Function;
 
-@org.jspecify.annotations.NullMarked public class Modifiers{
+@NullMarked public class Modifiers{
 
     public static <Context extends Number> Function<Context, Double> TICKS_TO_SECONDS(){
         return new Function<>() {

@@ -6,9 +6,10 @@ import net.kyori.adventure.translation.Translatable;
 import org.bukkit.Location;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@org.jspecify.annotations.NullMarked public  interface CustomSound extends Registrable, ComponentHolder<CustomSound>, Translatable{
+@NullMarked public  interface CustomSound extends Registrable, ComponentHolder<CustomSound>, Translatable{
     void play(@Nullable Location location, @Nullable Player player, SoundCategory category, float volume, float pitch);
     void play(@Nullable Location location, @Nullable Player player, float volume, float pitch);
     void play(@Nullable Location location, @Nullable Player player, float volume);

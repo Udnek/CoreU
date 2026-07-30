@@ -8,8 +8,9 @@ import org.bukkit.entity.ItemDisplay;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Transformation;
 import org.jetbrains.annotations.UnknownNullability;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public abstract class CustomFlatParticle extends ConstructableCustomParticle<ItemDisplay>{
+@NullMarked public abstract class CustomFlatParticle extends ConstructableCustomParticle<ItemDisplay>{
     protected @UnknownNullability ItemStack displayItem;
 
     protected abstract NamespacedKey getCurrentModelPath();

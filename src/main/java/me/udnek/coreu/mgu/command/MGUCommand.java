@@ -7,17 +7,19 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked public class MGUCommand implements BasicCommand{
+@NullMarked public class MGUCommand implements BasicCommand{
 
     public List<String> getOptions(CommandSender commandSender, String[] args){
         if (args.length == 1){
             List<String> option = new ArrayList<>();
-            for (me.udnek.coreu.mgu.command.MGUCommandType value : MGUCommandType.values()) option.add(value.name);
+            for (MGUCommandType value : MGUCommandType.values()) option.add(value.name);
             return option;
         }
         MGUCommandType type = MGUCommandType.getType(args);
@@ -46,7 +48,7 @@ import java.util.List;
     }
 
     @Override
-    public @org.jspecify.annotations.Nullable String permission() {
+    public @Nullable String permission() {
         return "coreu.admin";
     }
 }

@@ -4,8 +4,9 @@ import me.udnek.coreu.rpgu.component.ability.RPGUItemAbstractAbility;
 import me.udnek.coreu.rpgu.lore.ability.ActiveAbilityLorePart;
 import me.udnek.coreu.util.LoreBuilder;
 import net.kyori.adventure.text.Component;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public abstract class RPGUConstructableActiveAbility<ActivationContext> extends RPGUItemAbstractAbility<ActivationContext>implements me.udnek.coreu.rpgu.component.ability.active.RPGUItemActiveAbility<ActivationContext> {
+@NullMarked public abstract class RPGUConstructableActiveAbility<ActivationContext> extends RPGUItemAbstractAbility<ActivationContext>implements RPGUItemActiveAbility<ActivationContext> {
 
 
     @Override

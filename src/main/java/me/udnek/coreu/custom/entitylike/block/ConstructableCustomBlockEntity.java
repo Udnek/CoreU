@@ -4,8 +4,9 @@ import me.udnek.coreu.custom.entitylike.AbstractEntityLike;
 import org.bukkit.block.TileState;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public abstract class ConstructableCustomBlockEntity<T extends TileState> extends AbstractEntityLike<TileState, CustomBlockEntityType>implements CustomBlockEntity{
+@NullMarked public abstract class ConstructableCustomBlockEntity<T extends TileState> extends AbstractEntityLike<TileState, CustomBlockEntityType>implements CustomBlockEntity{
 
     protected T tileState;
 

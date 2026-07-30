@@ -23,13 +23,14 @@ import org.bukkit.inventory.*;
 import org.bukkit.loot.LootTable;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-@org.jspecify.annotations.NullMarked
+@NullMarked
 public class VanillaItemManager extends SelfRegisteringListener{
     private static @Nullable VanillaItemManager instance;
 

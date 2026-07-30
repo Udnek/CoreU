@@ -14,10 +14,11 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Arrays;
 
-@org.jspecify.annotations.NullMarked public class AttributeLoreGenerator{
+@NullMarked public class AttributeLoreGenerator{
 
     public static final TextColor MELEE_DESCRIPTION_COLOR = NamedTextColor.DARK_GREEN;
     public static final TextColor OTHER_DESCRIPTION_COLOR = NamedTextColor.BLUE;

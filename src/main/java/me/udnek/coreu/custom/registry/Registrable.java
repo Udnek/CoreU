@@ -4,8 +4,9 @@ import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public  interface Registrable extends Keyed{
+@NullMarked public  interface Registrable extends Keyed{
     void initialize(Plugin plugin);
     @MustBeInvokedByOverriders
     default void globalInitialization(){}

@@ -6,12 +6,13 @@ import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked public class FakeBlock{
+@NullMarked public class FakeBlock{
 
     private static final HashMap<Block, FakeBlock> fakes = new HashMap<>();
 

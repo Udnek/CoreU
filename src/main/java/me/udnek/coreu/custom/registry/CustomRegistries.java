@@ -13,8 +13,9 @@ import me.udnek.coreu.custom.recipe.CustomRecipeType;
 import me.udnek.coreu.custom.sound.CustomSound;
 import me.udnek.coreu.mgu.game.MGUGameType;
 import org.bukkit.plugin.Plugin;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public class CustomRegistries{
+@NullMarked public class CustomRegistries{
     public static final CustomRegistry<CustomRegistry<?>> REGISTRY;
     public static final CustomRegistry<CustomItem> ITEM;
     public static final CustomRegistry<CustomBlockType> BLOCK_TYPE;

@@ -1,8 +1,9 @@
 package me.udnek.coreu.nms;
 
 import net.minecraft.world.entity.MobCategory;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked
+@NullMarked
 public final class MobCategoryWrapper implements NmsWrapper<MobCategory>{
 
     public static final MobCategoryWrapper MONSTER = new MobCategoryWrapper(MobCategory.MONSTER);

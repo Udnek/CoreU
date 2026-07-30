@@ -7,11 +7,12 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
-@org.jspecify.annotations.NullMarked public class BaseUniversalSlot implements UniversalInventorySlot{
+@NullMarked public class BaseUniversalSlot implements UniversalInventorySlot{
     public final @Nullable Integer slot;
     public final @Nullable EquipmentSlot equipmentSlot;
 

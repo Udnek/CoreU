@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.Plugin;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@org.jspecify.annotations.NullMarked public class MGUManager extends SelfRegisteringListener{
+@NullMarked public class MGUManager extends SelfRegisteringListener{
 
     private static @Nullable MGUManager instance;
     private final HashMap<MGUId, MGUGameInstance> games = new HashMap<>();

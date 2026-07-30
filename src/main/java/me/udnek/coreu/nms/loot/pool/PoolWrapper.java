@@ -22,6 +22,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.loot.LootTable;
 import org.jetbrains.annotations.UnknownNullability;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-@org.jspecify.annotations.NullMarked public  interface PoolWrapper extends NmsWrapper<LootPool>, NmsConditioned, NmsFunctioned{
+@NullMarked public  interface PoolWrapper extends NmsWrapper<LootPool>, NmsConditioned, NmsFunctioned{
 
     void addEntry(EntryWrapper entry);
     void removeEntry(int n);

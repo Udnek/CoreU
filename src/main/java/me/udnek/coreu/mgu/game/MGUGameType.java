@@ -4,9 +4,10 @@ import me.udnek.coreu.custom.registry.Registrable;
 import me.udnek.coreu.mgu.MGUManager;
 import me.udnek.coreu.mgu.player.MGUPlayer;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@org.jspecify.annotations.NullMarked public  interface MGUGameType extends Registrable{
+@NullMarked public  interface MGUGameType extends Registrable{
     default boolean isPlayerInThisGame(Player player){
         return getIfPlayerInThisGame(player) != null;
     }

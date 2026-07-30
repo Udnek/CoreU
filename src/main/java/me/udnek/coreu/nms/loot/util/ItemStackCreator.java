@@ -3,8 +3,9 @@ package me.udnek.coreu.nms.loot.util;
 import me.udnek.coreu.custom.item.CustomItem;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.loot.LootContext;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public  interface ItemStackCreator{
+@NullMarked public  interface ItemStackCreator{
     ItemStack createItemStack(LootContext lootContext);
 
     class Material implements ItemStackCreator{

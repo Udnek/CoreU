@@ -12,12 +12,13 @@ import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.UnknownNullability;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
 
-@org.jspecify.annotations.NullMarked public class CustomSidebar{
+@NullMarked public class CustomSidebar{
     private final String id;
     private Component title;
     private @UnknownNullability Objective objective;

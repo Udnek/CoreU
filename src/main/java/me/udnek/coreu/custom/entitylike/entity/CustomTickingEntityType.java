@@ -4,9 +4,10 @@ import me.udnek.coreu.custom.entitylike.EntityLikeTickingType;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@org.jspecify.annotations.NullMarked public  interface CustomTickingEntityType<CEntity extends CustomEntity> extends EntityLikeTickingType<Entity, CEntity>, CustomEntityType{
+@NullMarked public  interface CustomTickingEntityType<CEntity extends CustomEntity> extends EntityLikeTickingType<Entity, CEntity>, CustomEntityType{
 
     default @NonNull CEntity spawnAndGet(Location location){
         Entity spawned = spawn(location);

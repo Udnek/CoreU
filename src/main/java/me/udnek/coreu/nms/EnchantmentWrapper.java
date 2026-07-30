@@ -11,12 +11,13 @@ import net.minecraft.world.item.enchantment.LevelBasedValue;
 import net.minecraft.world.item.enchantment.effects.EnchantmentAttributeEffect;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
+import org.jspecify.annotations.NullMarked;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked public class EnchantmentWrapper implements NmsWrapper<Enchantment>{
+@NullMarked public class EnchantmentWrapper implements NmsWrapper<Enchantment>{
 
     protected Enchantment enchantment;
 

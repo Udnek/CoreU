@@ -7,8 +7,9 @@ import me.udnek.coreu.rpgu.lore.ability.AbilityLorePart;
 import me.udnek.coreu.util.Utils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public class CastTimeProperty implements RPGUAbilityProperty<Player, Integer>{
+@NullMarked public class CastTimeProperty implements RPGUAbilityProperty<Player, Integer>{
 
     protected int time;
 

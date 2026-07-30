@@ -7,12 +7,13 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
 
-@org.jspecify.annotations.NullMarked public class MappedCustomRegistry<T extends Registrable> extends AbstractRegistrable implements CustomRegistry<T>{
+@NullMarked public class MappedCustomRegistry<T extends Registrable> extends AbstractRegistrable implements CustomRegistry<T>{
 
     protected HashMap<String, T> map = new HashMap<>();
     protected List<String> indexes = new ArrayList<>();
@@ -61,7 +62,7 @@ import java.util.function.Consumer;
     }
 
     @Override
-    public Collection<String> getIds() {
+    public List<String> getIds() {
         return new ArrayList<>(map.keySet());
     }
 
@@ -74,12 +75,12 @@ import java.util.function.Consumer;
         map.values().forEach(consumer);
     }
     @Override
-    public Collection<T> getAll() {
+    public List<T> getAll() {
         return new ArrayList<>(map.values());
     }
     @Override
-    public Collection<T> getAllByPlugin(Plugin plugin) {
-        Collection<T> all = getAll();
+    public List<T> getAllByPlugin(Plugin plugin) {
+        var all = getAll();
         String namespace = new NamespacedKey(plugin, "text").getNamespace();
         all.removeIf(object -> !object.getKey().getNamespace().equals(namespace));
         return all;

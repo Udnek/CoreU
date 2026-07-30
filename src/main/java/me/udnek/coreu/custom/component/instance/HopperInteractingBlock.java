@@ -5,8 +5,9 @@ import me.udnek.coreu.custom.component.CustomComponentType;
 import me.udnek.coreu.custom.entitylike.block.CustomBlockType;
 import org.bukkit.event.inventory.HopperInventorySearchEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public  interface HopperInteractingBlock extends CustomComponent<CustomBlockType>{
+@NullMarked public  interface HopperInteractingBlock extends CustomComponent<CustomBlockType>{
 
     HopperInteractingBlock DENY = new HopperInteractingBlock() {
         @Override

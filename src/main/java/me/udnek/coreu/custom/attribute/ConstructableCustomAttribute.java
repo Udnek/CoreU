@@ -7,8 +7,9 @@ import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.LivingEntity;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public class ConstructableCustomAttribute extends AbstractRegistrable implements CustomAttribute{
+@NullMarked public class ConstructableCustomAttribute extends AbstractRegistrable implements CustomAttribute{
 
     protected final String rawId;
     protected final double defaultValue;

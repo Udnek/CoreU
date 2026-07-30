@@ -21,6 +21,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
@@ -32,7 +33,7 @@ import java.util.function.Consumer;
 import static io.papermc.paper.datacomponent.DataComponentTypes.*;
 
 
-@org.jspecify.annotations.NullMarked public abstract class ConstructableCustomItem extends AbstractRegistrableComponentable<CustomItem>implements CustomItemProperties, UpdatingCustomItem{
+@NullMarked public abstract class ConstructableCustomItem extends AbstractRegistrableComponentable<CustomItem>implements CustomItemProperties, UpdatingCustomItem{
     public static final Material DEFAULT_MATERIAL = Material.GUNPOWDER;
     public static final Material DEFAULT_MATERIAL_FOR_BLOCK_PLACEABLE = Material.BARRIER;
 

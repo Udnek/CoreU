@@ -4,9 +4,10 @@ import com.google.common.base.Preconditions;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@org.jspecify.annotations.NullMarked public abstract class AbstractRegistrable implements Registrable{
+@NullMarked public abstract class AbstractRegistrable implements Registrable{
     protected @Nullable String id;
 
     @Override

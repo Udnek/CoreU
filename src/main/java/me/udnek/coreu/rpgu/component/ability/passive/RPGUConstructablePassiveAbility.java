@@ -9,8 +9,9 @@ import me.udnek.coreu.util.LoreBuilder;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.LivingEntity;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public abstract class RPGUConstructablePassiveAbility<ActivationContext> extends RPGUItemAbstractAbility<ActivationContext>implements RPGUItemPassiveAbility<ActivationContext>{
+@NullMarked public abstract class RPGUConstructablePassiveAbility<ActivationContext> extends RPGUItemAbstractAbility<ActivationContext>implements RPGUItemPassiveAbility<ActivationContext>{
 
     @Override
     public void getLore(LoreBuilder loreBuilder){

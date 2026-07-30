@@ -7,9 +7,10 @@ import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@org.jspecify.annotations.NullMarked public abstract class ConstructableCustomInventory implements CustomInventory{
+@NullMarked public abstract class ConstructableCustomInventory implements CustomInventory{
 
     private @Nullable Inventory inventory;
 

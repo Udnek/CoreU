@@ -6,11 +6,12 @@ import me.udnek.coreu.mgu.MGUManager;
 import me.udnek.coreu.mgu.game.MGUGameInstance;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked public abstract class MGUAbstractPlayer extends AbstractComponentHolder<MGUPlayer>implements MGUPlayer{
+@NullMarked public abstract class MGUAbstractPlayer extends AbstractComponentHolder<MGUPlayer>implements MGUPlayer{
 
     private final MGUGameInstance game;
     private final Player player;

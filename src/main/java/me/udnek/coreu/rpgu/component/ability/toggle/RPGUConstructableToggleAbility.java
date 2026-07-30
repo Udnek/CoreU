@@ -15,10 +15,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.function.Consumer;
 
-@org.jspecify.annotations.NullMarked public abstract class RPGUConstructableToggleAbility<ActivationContext> extends RPGUItemAbstractAbility<ActivationContext>implements me.udnek.coreu.rpgu.component.ability.toggle.RPGUItemToggleAbility<ActivationContext> {
+@NullMarked public abstract class RPGUConstructableToggleAbility<ActivationContext> extends RPGUItemAbstractAbility<ActivationContext>implements RPGUItemToggleAbility<ActivationContext> {
 
     public static final NamespacedKey TOGGLE_KEY = new NamespacedKey(CoreU.getPlugin(), "rpgu_toggle_ability_is_toggled");
 

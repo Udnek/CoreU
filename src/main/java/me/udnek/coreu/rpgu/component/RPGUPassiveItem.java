@@ -11,10 +11,11 @@ import me.udnek.coreu.custom.item.LoreProvidingItemComponent;
 import me.udnek.coreu.rpgu.component.ability.passive.RPGUItemPassiveAbility;
 import me.udnek.coreu.util.LoreBuilder;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked public class RPGUPassiveItem extends AbstractComponentHolder<RPGUPassiveItem>implements LoreProvidingItemComponent, EquippableItem{
+@NullMarked public class RPGUPassiveItem extends AbstractComponentHolder<RPGUPassiveItem>implements LoreProvidingItemComponent, EquippableItem{
 
     public static final RPGUPassiveItem DEFAULT = new RPGUPassiveItem(){
         @Override

@@ -4,10 +4,11 @@ import me.udnek.coreu.mgu.MGUId;
 import me.udnek.coreu.mgu.command.MGUCommandContext;
 import me.udnek.coreu.mgu.command.MGUCommandType;
 import me.udnek.coreu.mgu.map.MGUMap;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked public  interface MGUGameInstance{
+@NullMarked public  interface MGUGameInstance{
 
     MGUGameType getType();
 

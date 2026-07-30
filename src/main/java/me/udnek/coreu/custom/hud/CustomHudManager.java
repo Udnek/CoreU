@@ -5,11 +5,12 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 
-@org.jspecify.annotations.NullMarked public class CustomHudManager extends TickingTask{
+@NullMarked public class CustomHudManager extends TickingTask{
 
     private static final HashMap<JavaPlugin, CustomHud> tickets = new HashMap<>();
 

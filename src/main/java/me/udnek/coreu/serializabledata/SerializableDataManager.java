@@ -6,9 +6,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.UnknownNullability;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@org.jspecify.annotations.NullMarked public class SerializableDataManager{
+@NullMarked public class SerializableDataManager{
 
     private static @UnknownNullability FileConfiguration config;
     private static final String PLUGIN_PATH = "plugin";

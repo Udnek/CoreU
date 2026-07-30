@@ -16,11 +16,12 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 import java.util.Map;
 
-@org.jspecify.annotations.NullMarked public class VanillaAttributedItem implements LoreProvidingItemComponent, EquippableItem{
+@NullMarked public class VanillaAttributedItem implements LoreProvidingItemComponent, EquippableItem{
 
     public static final VanillaAttributedItem EMPTY = new VanillaAttributedItem(){
         @Override

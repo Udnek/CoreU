@@ -1,13 +1,14 @@
 package me.udnek.coreu.custom.attribute;
 
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@org.jspecify.annotations.NullMarked public abstract class AbstractAttributeContainer<Attribute, Modifier, Self extends AbstractAttributeContainer<Attribute, Modifier, ?>>{
+@NullMarked public abstract class AbstractAttributeContainer<Attribute, Modifier, Self extends AbstractAttributeContainer<Attribute, Modifier, ?>>{
 
     protected final HashMap<Attribute, List<Modifier>> attributes = new HashMap<>();
 

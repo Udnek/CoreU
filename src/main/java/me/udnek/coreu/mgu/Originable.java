@@ -1,8 +1,9 @@
 package me.udnek.coreu.mgu;
 
 import org.bukkit.Location;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public  interface Originable{
+@NullMarked public  interface Originable{
 
     static Location setOrigin(Location location, Location origin){
         location.setWorld(origin.getWorld());

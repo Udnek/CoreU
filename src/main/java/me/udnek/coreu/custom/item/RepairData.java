@@ -6,13 +6,14 @@ import io.papermc.paper.registry.set.RegistrySet;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ItemType;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@org.jspecify.annotations.NullMarked public class RepairData{
+@NullMarked public class RepairData{
 
     public static final RepairData EMPTY = new RepairData(Set.of(), Set.of());
 

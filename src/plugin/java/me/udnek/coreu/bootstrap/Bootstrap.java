@@ -23,6 +23,7 @@ import me.udnek.coreu.resourcepack.ResourcePackCommand;
 import me.udnek.coreu.custom.item.ResetCooldownCommand;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
+import org.jspecify.annotations.NullMarked;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +38,7 @@ import java.util.jar.JarFile;
 import java.util.stream.Stream;
 
 @SuppressWarnings("CallToPrintStackTrace")
-@org.jspecify.annotations.NullMarked
+@NullMarked
 class Bootstrap implements PluginBootstrap{
 
     @Override

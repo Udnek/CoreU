@@ -11,8 +11,9 @@ import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public  interface DispensableItem extends CustomComponent<CustomItem>{
+@NullMarked public  interface DispensableItem extends CustomComponent<CustomItem>{
     DispensableItem DEFAULT = new DispensableItem() {
         @Override
         public void onDispense(CustomItem item, BlockDispenseEvent event) {}

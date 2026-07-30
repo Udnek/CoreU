@@ -1,8 +1,9 @@
 package me.udnek.coreu.custom.event;
 
 import me.udnek.coreu.custom.registry.InitializationProcess;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public class InitializationEvent extends CustomEvent{
+@NullMarked public class InitializationEvent extends CustomEvent{
 
     protected final InitializationProcess.Step step;
 

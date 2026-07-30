@@ -7,11 +7,13 @@ import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.structure.StructureSpawnOverride;
 import org.bukkit.craftbukkit.entity.CraftEntityType;
+import org.bukkit.entity.EntityType;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@org.jspecify.annotations.NullMarked
+@NullMarked
 public class StructureSpawnOverrideWrapper implements NmsWrapper<StructureSpawnOverride>{
 
     public static StructureSpawnOverrideWrapper of(BoundingBoxTypeWrapper box){
@@ -66,5 +68,5 @@ public class StructureSpawnOverrideWrapper implements NmsWrapper<StructureSpawnO
         }).toList();
     }
 
-    public record SpawnEntry(int weight, org.bukkit.entity.EntityType entityType, int min, int max){}
+    public record SpawnEntry(int weight, EntityType entityType, int min, int max){}
 }

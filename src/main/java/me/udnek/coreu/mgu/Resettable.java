@@ -1,5 +1,7 @@
 package me.udnek.coreu.mgu;
 
-@org.jspecify.annotations.NullMarked public  interface Resettable{
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked public  interface Resettable{
     void reset();
 }

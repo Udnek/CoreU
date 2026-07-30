@@ -3,8 +3,9 @@ package me.udnek.coreu.custom.registry;
 import me.udnek.coreu.custom.event.InitializationEvent;
 import me.udnek.coreu.custom.item.VanillaItemManager;
 import me.udnek.coreu.util.LogUtils;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public class InitializationProcess{
+@NullMarked public class InitializationProcess{
 
     private static Step step = Step.BEFORE_REGISTRIES_LOADED;
 

@@ -4,9 +4,10 @@ import io.papermc.paper.command.brigadier.BasicCommand;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
-@org.jspecify.annotations.NullMarked public class CurrentEquipmentCommand implements BasicCommand{
+@NullMarked public class CurrentEquipmentCommand implements BasicCommand{
 
     @Override
     public void execute(CommandSourceStack commandSourceStack, String[] args) {
@@ -14,7 +15,7 @@ import org.jspecify.annotations.Nullable;
         if (!(sender instanceof Player player)){
             return;
         }
-        PlayerEquipment data = me.udnek.coreu.custom.equipment.PlayerEquipmentManager.getInstance().getData(player);
+        PlayerEquipment data = PlayerEquipmentManager.getInstance().getData(player);
         data.getEquipment((slot, customItem) -> {
             sender.sendMessage(slot + ": " + customItem.getId());
         });

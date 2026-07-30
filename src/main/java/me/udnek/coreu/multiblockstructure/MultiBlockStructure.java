@@ -7,8 +7,9 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
+import org.jspecify.annotations.NullMarked;
 
-@org.jspecify.annotations.NullMarked public class MultiBlockStructure{
+@NullMarked public class MultiBlockStructure{
 
     BlockChoice[] blocks;
     public final int xSize;
